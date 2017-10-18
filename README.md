@@ -6,28 +6,28 @@ Testsuite for the HAL management console based on [Drone & Graphene](http://arqu
 
 The testsuite uses various profiles to decide how and which tests to run. The following profiles are available:
 
-- `chrome` | `firefox` | `safari`: Defined the browser to run the tests
-- `basic`: Runs basic tests (module `tests/basic`)
-- `standalone` | `domain`: Runs tests w/ category `org.jboss.hal.testsuite.category.Standalone` or `org.jboss.hal.testsuite.category.Domain`
+- `chrome` | `firefox` | `safari`: Defines the browser to run the tests (mutual exclusive)
+- `basic` | `rbac` | `transaction`: Defines which tests to run (can be combined)
+- `standalone` | `domain`: Defines the operation mode (mutual exclusive)
 
-Combine multiple profiles to define your setup. You have to choose one profile from each line. But you cannot combine profiles which are on the same line. 
+Combine multiple profiles to define your setup. Choose at least one profile from each line. Please note that you cannot combine profiles which are marked as mutual exclusive. 
 
 Valid combinations:
 
 - `chrome,basic,standalone`
-- `firefox,basic,domain`
-- `safari,basic,domain`
+- `firefox,basic,rbac,domain`
+- `safari,rbac,transaction,standalone`
 
 Invalid combinations:
 
 - `safari,firefox`
-- `basic`
+- `basic,transaction`
 - `standalone,domain`
-- `chrome,basic,standalone,,domain`
+- `chrome,basic,standalone,domain`
 
 ## Run Tests 
 
-Running tests requires a running WildFly / JBoss EAP server with an insecure management interface. Use the following command to remove the security realm from the management interface:
+RIn order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. Use the following commands to remove the security realm from the management interface:
 
 **Standalone**
 

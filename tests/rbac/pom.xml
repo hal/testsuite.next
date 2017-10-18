@@ -25,7 +25,7 @@
         <relativePath>../pom.xml</relativePath>
     </parent>
 
-    <artifactId>hal-testsuite-tests-basic</artifactId>
-    <name>HAL Testsuite :: Tests :: Basic</name>
-    <description>Basic tests</description>
+    <artifactId>hal-testsuite-tests-rbac</artifactId>
+    <name>HAL Testsuite :: Tests :: RBAC</name>
+    <description>RBAC tests</description>
 </project>

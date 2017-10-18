@@ -303,8 +303,19 @@
         <profile>
             <id>basic</id>
             <modules>
-                <module>tests</module>
                 <module>tests/basic</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>rbac</id>
+            <modules>
+                <module>tests/rbac</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>transaction</id>
+            <modules>
+                <module>tests/transaction</module>
             </modules>
         </profile>
         <profile>

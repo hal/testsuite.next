@@ -17,6 +17,7 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.arquillian.graphene.page.Location;
+import org.jboss.hal.testsuite.page.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
