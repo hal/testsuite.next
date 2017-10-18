@@ -35,7 +35,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
-public class BatchTestCase {
+public class BatchTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;

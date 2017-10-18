@@ -13,26 +13,26 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration;
+package org.jboss.hal.testsuite.test;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.page.configuration.ConfigurationPage;
-import org.jboss.hal.testsuite.util.ConfigUtils;
+import org.jboss.hal.testsuite.page.HomePage;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 import static org.junit.Assert.assertTrue;
 
-/** Test case for the configuration top level category */
 @RunWith(Arquillian.class)
-public class ConfigurationTestCase {
+public class HomePageTest {
 
     @Drone private WebDriver browser;
-    @Page private ConfigurationPage page;
+    @Page private HomePage page;
 
     @Before
     public void setUp() throws Exception {
@@ -40,15 +40,18 @@ public class ConfigurationTestCase {
     }
 
     @Test
-    public void items() throws Exception {
-        if (ConfigUtils.isDomain()) {
-            assertTrue(page.getProfiles().isDisplayed());
-        } else {
-            assertTrue(page.getSubsystems().isDisplayed());
-        }
-        assertTrue(page.getInterfaces().isDisplayed());
-        assertTrue(page.getSocketBindings().isDisplayed());
-        assertTrue(page.getPaths().isDisplayed());
-        assertTrue(page.getSystemProperties().isDisplayed());
+    public void modules() throws Exception {
+        assertTrue(containsModule("Deployments"));
+        assertTrue(containsModule("Configuration"));
+        assertTrue(containsModule("Runtime"));
+        assertTrue(containsModule("Access Control"));
+        assertTrue(containsModule("Patching"));
+
+        By selector = ByJQuery.selector(".eap-home-module-header > h2:contains('Need Help?')");
+        assertTrue(page.getRootContainer().findElement(selector).isDisplayed());
+    }
+
+    private boolean containsModule(String name) {
+        return page.getModules().stream().anyMatch(e -> e.getText().equals(name));
     }
 }
