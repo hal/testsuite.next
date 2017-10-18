@@ -30,16 +30,22 @@ Running tests requires a running WildFly / JBoss EAP server with an insecure man
 /host=master:reload
 ```
 
-### Run Tests
+Run all tests:
 
 ```bash
 mvn test -P<profiles>
 ```
 
-If you want to run a single test use 
+Run a single test: 
 
 ```bash
 mvn test -P<profiles> -Dtest=<fully qualified classname>
 ```
 
-To debug the test(s) add the option `-Dmaven.surefire.debug`. 
+To debug the test(s) use the `maven.surefire.debug` property: 
+ 
+```bash
+mvn test -P<profiles> -Dtest=<fully qualified classname> -Dmaven.surefire.debug
+```
+
+The tests will automatically pause and await a remote debugger on port 5005. You can then attach to the running tests using your IDE. 
