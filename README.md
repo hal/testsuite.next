@@ -10,7 +10,20 @@ The testsuite uses various profiles to decide how and which tests to run. The fo
 - `basic`: Runs basic tests (module `tests/basic`)
 - `standalone` | `domain`: Runs tests w/ category `org.jboss.hal.testsuite.category.Standalone` or `org.jboss.hal.testsuite.category.Domain`
 
-Combine multiple profiles to define your setup.
+Combine multiple profiles to define your setup. You have to choose one profile from each line. But you cannot combine profiles which are on the same line. 
+
+Valid combinations:
+
+- `chrome,basic,standalone`
+- `firefox,basic,domain`
+- `safari,basic,domain`
+
+Invalid combinations:
+
+- `safari,firefox`
+- `basic`
+- `standalone,domain`
+- `chrome,basic,standalone,,domain`
 
 ## Run Tests 
 
