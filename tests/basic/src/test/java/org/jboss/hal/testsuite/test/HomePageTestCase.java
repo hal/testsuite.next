@@ -29,7 +29,7 @@ import org.openqa.selenium.WebDriver;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class HomepageTestCase {
+public class HomePageTestCase {
 
     @Drone private WebDriver browser;
     @Page private HomePage page;
