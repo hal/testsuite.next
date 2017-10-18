@@ -15,25 +15,18 @@
  */
 package org.jboss.hal.testsuite.page;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.Graphene;
-import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.util.Console;
-import org.openqa.selenium.WebDriver;
+import java.util.List;
+
+import org.jboss.arquillian.graphene.page.Location;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-public abstract class BasePage {
+@Location("#home")
+public class HomePage extends BasePage {
 
-    @Drone protected WebDriver browser;
-    @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
+    @FindBy(css = "a[data-element=moduleHeader]") private List<WebElement> modules;
 
-    public void navigate() {
-        Graphene.goTo(this.getClass());
-        Console.withBrowser(browser).waitUntilLoaded();
-    }
-
-    public WebElement getRootContainer() {
-        return rootContainer;
+    public List<WebElement> getModules() {
+        return modules;
     }
 }

@@ -72,12 +72,12 @@
                     <artifactId>gin</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>org.jetbrains</groupId>
-                    <artifactId>annotations</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.google.gwt</groupId>
                     <artifactId>gwt-user</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>

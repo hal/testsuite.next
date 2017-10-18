@@ -22,14 +22,18 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 @Location("#configuration")
-public class StandaloneConfigurationPage extends BasePage {
+public class ConfigurationPage extends BasePage {
 
+    @FindBy(id = "profiles") private WebElement profiles;
     @FindBy(id = "subsystems") private WebElement subsystems;
     @FindBy(id = "interfaces") private WebElement interfaces;
     @FindBy(id = "socket-bindings") private WebElement socketBindings;
     @FindBy(id = "paths") private WebElement paths;
     @FindBy(id = "system-properties") private WebElement systemProperties;
-    @FindBy(css = "a[href='#runtime']") private WebElement runtimeLink;
+
+    public WebElement getProfiles() {
+        return profiles;
+    }
 
     public WebElement getSubsystems() {
         return subsystems;
@@ -49,9 +53,5 @@ public class StandaloneConfigurationPage extends BasePage {
 
     public WebElement getSystemProperties() {
         return systemProperties;
-    }
-
-    public WebElement getRuntimeLink() {
-        return runtimeLink;
     }
 }
