@@ -27,7 +27,7 @@ Invalid combinations:
 
 ## Run Tests 
 
-RIn order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. Use the following commands to remove the security realm from the management interface:
+In order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. Use the following commands to remove the security realm from the management interface:
 
 **Standalone**
 
