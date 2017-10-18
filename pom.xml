@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2015-2016 Red Hat, Inc, and individual contributors.
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.jboss</groupId>
+        <artifactId>jboss-parent</artifactId>
+        <version>25</version>
+    </parent>
+
+    <groupId>org.jboss.hal</groupId>
+    <artifactId>hal-testsuite</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>HAL Testsuite :: Parent</name>
+    <description>Testsuite for HAL.next</description>
+    <packaging>pom</packaging>
+
+    <organization>
+        <name>JBoss, a division of Red Hat</name>
+        <url>http://www.jboss.org</url>
+    </organization>
+
+    <licenses>
+        <license>
+            <name>Apache License 2.0</name>
+            <url>http://repository.jboss.org/licenses/apache-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:hpehl/testsuite.next.git</connection>
+        <developerConnection>scm:git:git@github.com:hpehl/testsuite.next.git</developerConnection>
+        <url>https://github.com/hpehl/testsuite.next/</url>
+    </scm>
+
+    <properties>
+        <!-- configuration settings -->
+        <as.managementAddress>127.0.0.1</as.managementAddress>
+        <as.managementPort>9990</as.managementPort>
+        <browser>phantomjs</browser>
+        <checkstyle.hal.version>2</checkstyle.hal.version>
+        <linkXRef>false</linkXRef>
+        <maven.compiler.target>1.8</maven.compiler.target>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <suite.domain.default.host>master</suite.domain.default.host>
+        <suite.domain.default.profile>full</suite.domain.default.profile>
+        <suite.domain.default.server>server-one</suite.domain.default.server>
+        <suite.mode/>
+        <suite.url>http://localhost:9990/console/index.html</suite.url>
+        <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
+        <test.excluded.category/>
+        <test.included.category/>
+
+        <!-- dependency versions -->
+        <arquillian.version>1.1.13.Final</arquillian.version>
+        <arquillian.drone.version>2.4.2</arquillian.drone.version>
+        <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
+        <commons-io.version>2.5</commons-io.version>
+        <commons-lang.version>3.6</commons-lang.version>
+        <creaper.version>1.6.1</creaper.version>
+        <graphene.version>2.3.1</graphene.version>
+        <guava.version>23.0</guava.version>
+        <hal.next.version>0.9.2-SNAPSHOT</hal.next.version>
+        <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
+        <jgrapht.version>1.0.1</jgrapht.version>
+        <junit.version>4.12</junit.version>
+        <selenium.version>3.5.3</selenium.version>
+        <slf4j.version>1.7.25</slf4j.version>
+        <wildfly.version>11.0.0.CR1</wildfly.version>
+        <wildfly.cli.version>3.0.6.Final</wildfly.cli.version>
+        <wildfly.core.version>3.0.3.Final</wildfly.core.version>
+    </properties>
+
+    <modules>
+        <module>common</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Testsuite -->
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>hal-testsuite-common</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <!-- Arquillian & Co -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${arquillian.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.selenium</groupId>
+                <artifactId>selenium-bom</artifactId>
+                <version>${selenium.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.extension</groupId>
+                <artifactId>arquillian-drone-bom</artifactId>
+                <version>${arquillian.drone.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.graphene</groupId>
+                <artifactId>graphene-webdriver</artifactId>
+                <version>${graphene.version}</version>
+                <type>pom</type>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.arquillian.graphene</groupId>
+                <artifactId>arquillian-browser-screenshooter</artifactId>
+                <version>${graphene.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-remote</artifactId>
+                <version>${arquillian.wildfly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
+                <version>${arquillian.wildfly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+            <!-- WildFly & Co -->
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-client-all</artifactId>
+                <version>${wildfly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.bom</groupId>
+                <artifactId>wildfly-javaee7</artifactId>
+                <scope>import</scope>
+                <type>pom</type>
+                <version>${wildfly.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.extras.creaper</groupId>
+                <artifactId>creaper-core</artifactId>
+                <version>${creaper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.extras.creaper</groupId>
+                <artifactId>creaper-commands</artifactId>
+                <version>${creaper.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly.core</groupId>
+                <artifactId>wildfly-cli</artifactId>
+                <version>${wildfly.cli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss</groupId>
+                <artifactId>jboss-dmr</artifactId>
+                <version>${jboss.dmr.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>hal-bom</artifactId>
+                <version>${hal.next.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <!-- Utilities -->
+            <dependency>
+                <groupId>commons-io</groupId>
+                <artifactId>commons-io</artifactId>
+                <version>${commons-io.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${commons-lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.google.guava</groupId>
+                <artifactId>guava</artifactId>
+                <version>${guava.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jgrapht</groupId>
+                <artifactId>jgrapht-core</artifactId>
+                <version>${jgrapht.version}</version>
+            </dependency>
+            <!-- Logging -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>1.7.25</version>
+            </dependency>
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>1.2.3</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-checkstyle-plugin</artifactId>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jboss.hal</groupId>
+                        <artifactId>checkstyle-config</artifactId>
+                        <version>${checkstyle.hal.version}</version>
+                    </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                        <id>validate</id>
+                        <phase>validate</phase>
+                        <configuration>
+                            <configLocation>checkstyle/checkstyle.xml</configLocation>
+                            <encoding>UTF-8</encoding>
+                            <consoleOutput>true</consoleOutput>
+                        </configuration>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>findbugs-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>finding-bugs</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <threshold>Low</threshold>
+                            <xmlOutput>true</xmlOutput>
+                            <failOnError>true</failOnError>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-release-plugin</artifactId>
+                <configuration>
+                    <tagNameFormat>v@{version}</tagNameFormat>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>chrome</id>
+            <properties>
+                <browser>chrome</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>firefox</id>
+            <properties>
+                <browser>firefox</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>safari</id>
+            <properties>
+                <browser>safari</browser>
+            </properties>
+        </profile>
+        <profile>
+            <id>basic</id>
+            <modules>
+                <module>tests</module>
+                <module>tests/basic</module>
+            </modules>
+        </profile>
+        <profile>
+            <id>standalone</id>
+            <properties>
+                <suite.mode>standalone</suite.mode>
+                <test.excluded.category>
+                    org.jboss.hal.testsuite.category.Domain
+                </test.excluded.category>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>domain</id>
+            <properties>
+                <suite.mode>domain</suite.mode>
+                <test.excluded.category>
+                    org.jboss.hal.testsuite.category.Standalone
+                </test.excluded.category>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+    </profiles>
+
+    <repositories>
+        <repository>
+            <id>jboss-public-repository-group</id>
+            <name>JBoss Public Maven Repository Group</name>
+            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+        </repository>
+        <repository>
+            <id>jboss-snapshots-repository</id>
+            <name>JBoss Snapshots Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/snapshots/</url>
+        </repository>
+    </repositories>
+</project>
