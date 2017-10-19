@@ -13,11 +13,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.batch;
+package org.jboss.hal.testsuite.fragment;
 
-import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.openqa.selenium.support.FindBy;
 
-public interface BatchSubsystem {
+import static org.jboss.hal.resources.CSS.formSection;
+import static org.jboss.hal.resources.CSS.modalBody;
 
-    Address CONFIGURATION_ADDRESS = Address.subsystem("batch-jberet");
+public class AddResourceDialogFragment extends DialogFragment {
+
+    @FindBy(css = "." + modalBody + " > ." + formSection) private FormFragment form;
+
+    public FormFragment getForm() {
+        return form;
+    }
+
+    /** Shortcut for {@link DialogFragment#primaryButton()} */
+    public void add() {
+        primaryButton();
+    }
 }

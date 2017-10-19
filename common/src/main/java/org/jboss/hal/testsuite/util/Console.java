@@ -15,12 +15,16 @@
  */
 package org.jboss.hal.testsuite.util;
 
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jboss.arquillian.graphene.Graphene.waitModel;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 
 public class Console {
 
@@ -38,9 +42,26 @@ public class Console {
 
     /** Waits until the console is loaded. */
     public Console waitUntilLoaded() {
-        waitModel(browser).withTimeout(DEFAULT_PAGE_LOAD_TIMEOUT, SECONDS)
+        waitGui().withTimeout(DEFAULT_PAGE_LOAD_TIMEOUT, SECONDS)
                 .until().element(By.id(Ids.ROOT_CONTAINER))
                 .is().present();
         return this;
+    }
+
+    /** Returns the currently opened dialog */
+    public DialogFragment dialog() {
+        return dialog(DialogFragment.class);
+    }
+
+    /** Returns the currently opened add resource dialog */
+    public AddResourceDialogFragment addResourceDialog() {
+        return dialog(AddResourceDialogFragment.class);
+    }
+
+    private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
+        WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
+        T dialog = Graphene.createPageFragment(dialogClass, dialogElement);
+        waitGui().until().element(dialogElement).is().visible();
+        return dialog;
     }
 }

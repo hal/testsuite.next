@@ -33,8 +33,6 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchSubsystem.CONFIGURATION_ADDRESS;
-
 @RunWith(Arquillian.class)
 public class BatchConfigurationTest {
 
@@ -46,7 +44,7 @@ public class BatchConfigurationTest {
 
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(CONFIGURATION_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(BatchFixtures.SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -65,11 +63,11 @@ public class BatchConfigurationTest {
     public void update() throws Exception {
         FormFragment form = page.getConfigurationForm();
         form.edit();
-        form.checkbox("batch-configuration-form-restart-jobs-on-resume-editing", false);
+        form.checkbox("restart-jobs-on-resume", false);
         form.save();
         Notification.withBrowser(browser).success();
 
-        new ResourceVerifier(CONFIGURATION_ADDRESS, client, 500)
+        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
                 .verifyAttribute("restart-jobs-on-resume", false);
     }
 }

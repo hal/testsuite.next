@@ -75,8 +75,9 @@
         <arquillian.version>1.1.13.Final</arquillian.version>
         <arquillian.drone.version>2.4.2</arquillian.drone.version>
         <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
-        <commons-io.version>2.5</commons-io.version>
-        <commons-lang.version>3.6</commons-lang.version>
+        <commons.io.version>2.5</commons.io.version>
+        <commons.lang.version>3.6</commons.lang.version>
+        <commons.text.version>1.1</commons.text.version>
         <creaper.version>1.6.1</creaper.version>
         <graphene.version>2.3.1</graphene.version>
         <guava.version>23.0</guava.version>
@@ -97,12 +98,14 @@
 
     <dependencyManagement>
         <dependencies>
+
             <!-- Testsuite -->
             <dependency>
                 <groupId>org.jboss.hal</groupId>
                 <artifactId>hal-testsuite-common</artifactId>
                 <version>${project.version}</version>
             </dependency>
+
             <!-- Arquillian & Co -->
             <dependency>
                 <groupId>org.jboss.arquillian</groupId>
@@ -151,6 +154,7 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
             </dependency>
+
             <!-- WildFly & Co -->
             <dependency>
                 <groupId>org.wildfly</groupId>
@@ -191,16 +195,22 @@
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
+
             <!-- Utilities -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
-                <version>${commons-io.version}</version>
+                <version>${commons.io.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.commons</groupId>
                 <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang.version}</version>
+                <version>${commons.lang.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-text</artifactId>
+                <version>${commons.text.version}</version>
             </dependency>
             <dependency>
                 <groupId>com.google.guava</groupId>
@@ -212,6 +222,7 @@
                 <artifactId>jgrapht-core</artifactId>
                 <version>${jgrapht.version}</version>
             </dependency>
+
             <!-- Logging -->
             <dependency>
                 <groupId>org.slf4j</groupId>

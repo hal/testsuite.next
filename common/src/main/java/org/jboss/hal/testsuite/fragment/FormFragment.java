@@ -16,6 +16,8 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.resources.Ids;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -31,39 +33,56 @@ import static org.jboss.hal.resources.CSS.readonly;
 public class FormFragment {
 
     @Drone private WebDriver browser;
+    @Root private WebElement root;
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
     @FindBy(css = "." + formButtons + " ." + btnPrimary) private WebElement saveButton;
     @FindBy(css = "." + readonly) private WebElement readOnlySection;
     @FindBy(css = "." + editing) private WebElement editingSection;
 
-
     // ------------------------------------------------------ edit mode
 
     public void edit() {
         editLink.click();
-        waitGui(browser).until().element(editingSection).is().visible();
+        waitGui().until().element(editingSection).is().visible();
     }
 
     public void save() {
         saveButton.click();
-        waitGui(browser).until().element(readOnlySection).is().visible();
+        waitGui().until().element(readOnlySection).is().visible();
     }
 
-    public void checkbox(String id, boolean value) {
-        WebElement element = browser.findElement(By.id(id));
-        boolean inputValue = parseBoolean(element.getAttribute("value"));
+    public void text(String name, String value) {
+        WebElement inputElement = inputElement(name);
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+        inputElement.sendKeys(value);
+        waitGui().until().element(inputElement).value().equalTo(value);
+    }
+
+    public void checkbox(String name, boolean value) {
+        WebElement inputElement = inputElement(name);
+        boolean inputValue = parseBoolean(inputElement.getAttribute("value"));
         if (inputValue != value) {
-            WebElement switchContainer = browser.findElement(By.cssSelector(".bootstrap-switch-id-" + id));
+            WebElement switchContainer = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name)));
             switchContainer.click();
             if (value) {
-                waitGui(browser).until().element(element).is().selected();
+                waitGui().until().element(inputElement).is().selected();
             } else {
-                waitGui(browser).until().element(element).is().not().selected();
+                waitGui().until().element(inputElement).is().not().selected();
             }
         }
     }
 
     private boolean parseBoolean(String text) {
         return "on".equals(text) || Boolean.parseBoolean(text);
+    }
+
+    private WebElement inputElement(String name) {
+        return browser.findElement(By.id(editingId(name)));
+    }
+
+    private String editingId(String name) {
+        String id = root.getAttribute("id");
+        return Ids.build(id, name, "editing");
     }
 }

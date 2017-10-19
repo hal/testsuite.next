@@ -19,6 +19,7 @@ package org.jboss.hal.testsuite.page.configuration;
 import org.jboss.arquillian.graphene.page.Location;
 import org.jboss.hal.testsuite.arquillian.HalScheme;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -30,6 +31,8 @@ public class BatchPage extends BasePage {
     @FindBy(id = "batch-configuration-form") private FormFragment configurationForm;
 
     @FindBy(id = "batch-in-memory-job-repo-item") private WebElement inMemoryItem;
+    @FindBy(id = "batch-in-memory-job-repo-table_wrapper") private TableFragment inMemoryTable;
+
     @FindBy(id = "batch-jdbc-job-repo-item") private WebElement jdbcItem;
     @FindBy(id = "batch-thread-factory-item") private WebElement threadFactoryItem;
     @FindBy(id = "batch-thread-pool-item") private WebElement threadPoolItem;
@@ -44,6 +47,10 @@ public class BatchPage extends BasePage {
 
     public WebElement getInMemoryItem() {
         return inMemoryItem;
+    }
+
+    public TableFragment getInMemoryTable() {
+        return inMemoryTable;
     }
 
     public WebElement getJdbcItem() {

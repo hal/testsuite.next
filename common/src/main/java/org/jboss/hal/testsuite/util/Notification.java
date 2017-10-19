@@ -15,11 +15,12 @@
  */
 package org.jboss.hal.testsuite.util;
 
-import org.jboss.hal.resources.CSS;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
+import static org.jboss.hal.resources.CSS.alertSuccess;
 import static org.jboss.hal.resources.CSS.toastNotificationsListPf;
 
 public class Notification {
@@ -35,7 +36,8 @@ public class Notification {
     }
 
     public void success() {
-        By selector = By.cssSelector("." + toastNotificationsListPf + " > ." + CSS.alertSuccess);
-        waitGui(browser).until().element(selector).is().present();
+        WebElement element = browser.findElement(By.cssSelector("." + toastNotificationsListPf + " ." + alertSuccess));
+        // use waitModel() since it might take some time until the notification is visible
+        waitModel().until().element(element).is().visible();
     }
 }

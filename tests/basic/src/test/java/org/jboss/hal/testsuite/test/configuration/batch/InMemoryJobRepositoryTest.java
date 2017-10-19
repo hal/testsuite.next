@@ -18,18 +18,38 @@ package org.jboss.hal.testsuite.test.configuration.batch;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
+import org.jboss.hal.testsuite.util.Console;
+import org.jboss.hal.testsuite.util.Notification;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_TO_BE_ADDED;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_TO_BE_REMOVED;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.inMemoryAddress;
 
 @RunWith(Arquillian.class)
 public class InMemoryJobRepositoryTest {
 
+    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    private static final Operations operations = new Operations(client);
+
     @Drone private WebDriver browser;
     @Page private BatchPage page;
+
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        operations.add(inMemoryAddress(IN_MEMORY_TO_BE_REMOVED));
+    }
 
     @Before
     public void setUp() throws Exception {
@@ -37,13 +57,28 @@ public class InMemoryJobRepositoryTest {
         page.getInMemoryItem().click();
     }
 
+    @AfterClass
+    public static void tearDown() throws Exception {
+        operations.removeIfExists(inMemoryAddress(IN_MEMORY_TO_BE_ADDED));
+        operations.removeIfExists(inMemoryAddress(IN_MEMORY_TO_BE_REMOVED));
+    }
+
     @Test
     public void create() throws Exception {
+        page.getInMemoryTable().add();
+        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
+        dialog.getForm().text("name", IN_MEMORY_TO_BE_ADDED);
+        dialog.add();
 
+        Notification.withBrowser(browser).success();
+        new ResourceVerifier(inMemoryAddress(IN_MEMORY_TO_BE_ADDED), client).verifyExists();
     }
 
     @Test
     public void delete() throws Exception {
+        page.getInMemoryTable().remove(IN_MEMORY_TO_BE_REMOVED);
 
+        Notification.withBrowser(browser).success();
+        new ResourceVerifier(inMemoryAddress(IN_MEMORY_TO_BE_REMOVED), client).verifyDoesNotExist();
     }
 }
