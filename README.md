@@ -7,7 +7,7 @@ Testsuite for the HAL management console based on [Drone & Graphene](http://arqu
 The testsuite uses various profiles to decide how and which tests to run. The following profiles are available:
 
 - `chrome` | `firefox` | `safari`: Defines the browser to run the tests (mutual exclusive)
-- `basic` | `rbac` | `transaction`: Defines which tests to run (can be combined)
+- `basic`, `rbac`, `transaction`: Defines which tests to run (can be combined)
 - `standalone` | `domain`: Defines the operation mode (mutual exclusive)
 
 Combine multiple profiles to define your setup. Choose at least one profile from each line. Please note that you cannot combine profiles which are marked as mutual exclusive. 
