@@ -34,6 +34,9 @@ public class BatchPage extends BasePage {
     @FindBy(id = "batch-in-memory-job-repo-table_wrapper") private TableFragment inMemoryTable;
 
     @FindBy(id = "batch-jdbc-job-repo-item") private WebElement jdbcItem;
+    @FindBy(id = "batch-jdbc-job-repo-table_wrapper") private TableFragment jdbcTable;
+    @FindBy(id = "batch-jdbc-job-repo-form") private FormFragment jdbcForm;
+
     @FindBy(id = "batch-thread-factory-item") private WebElement threadFactoryItem;
     @FindBy(id = "batch-thread-pool-item") private WebElement threadPoolItem;
 
@@ -55,6 +58,14 @@ public class BatchPage extends BasePage {
 
     public WebElement getJdbcItem() {
         return jdbcItem;
+    }
+
+    public TableFragment getJdbcTable() {
+        return jdbcTable;
+    }
+
+    public FormFragment getJdbcForm() {
+        return jdbcForm;
     }
 
     public WebElement getThreadFactoryItem() {

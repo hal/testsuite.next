@@ -40,9 +40,8 @@ public class TableFragment {
 
     /** Clicks on the remove button and confirms the confirms the confirmation dialog */
     public void remove(String name) {
+        select(name);
         WebElement button = button("Remove");
-        By selector = ByJQuery.selector("td:contains('" + name + "')");
-        root.findElement(selector).click();
         waitGui().until().element(button).is().enabled();
         button.click();
         Console.withBrowser(browser).dialog().primaryButton(); // confirm
@@ -51,5 +50,10 @@ public class TableFragment {
     private WebElement button(String text) {
         By selector = ByJQuery.selector(":contains('" + text + "')");
         return buttons.findElement(selector);
+    }
+
+    public void select(String name) {
+        By selector = ByJQuery.selector("td:contains('" + name + "')");
+        root.findElement(selector).click();
     }
 }

@@ -39,6 +39,19 @@ public class FormFragment {
     @FindBy(css = "." + readonly) private WebElement readOnlySection;
     @FindBy(css = "." + editing) private WebElement editingSection;
 
+
+    // ------------------------------------------------------ read-only mode
+
+    public void view() {
+        waitGui().until().element(readOnlySection).is().visible();
+    }
+
+    /** Returns the value of the specified attribute in the read-only section */
+    public String value(String name) {
+        return browser.findElement(By.id(readOnlyId(name))).getText();
+    }
+
+
     // ------------------------------------------------------ edit mode
 
     public void edit() {
@@ -81,8 +94,16 @@ public class FormFragment {
         return browser.findElement(By.id(editingId(name)));
     }
 
+
+    // ------------------------------------------------------ helper methods
+
     private String editingId(String name) {
         String id = root.getAttribute("id");
         return Ids.build(id, name, "editing");
+    }
+
+    private String readOnlyId(String name) {
+        String id = root.getAttribute("id");
+        return Ids.build(id, name, "readonly");
     }
 }

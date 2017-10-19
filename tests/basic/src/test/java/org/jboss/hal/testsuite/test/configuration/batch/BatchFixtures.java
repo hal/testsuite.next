@@ -24,12 +24,25 @@ public interface BatchFixtures {
     Address SUBSYSTEM_ADDRESS = Address.subsystem("batch-jberet");
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
-    // ------------------------------------------------------ in memory
+
+    // ------------------------------------------------------ in memory repository
 
     String IN_MEMORY_TO_BE_ADDED = Ids.build("in-memory", "tba", GENERATOR.generate(10));
     String IN_MEMORY_TO_BE_REMOVED = Ids.build("in-memory", "tbr", GENERATOR.generate(10));
 
     static Address inMemoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("in-memory-job-repository", name);
+    }
+
+
+    // ------------------------------------------------------ jdbc repository
+
+    String DATA_SOURCE = Ids.build("ds", GENERATOR.generate(10));
+    String JDBC_TO_BE_ADDED = Ids.build("jdbc", "tba", GENERATOR.generate(10));
+    String JDBC_TO_BE_VIEWD = Ids.build("hdbc", "tbv", GENERATOR.generate(10));
+    String JDBC_TO_BE_REMOVED = Ids.build("hdbc", "tbr", GENERATOR.generate(10));
+
+    static Address jdbcAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("jdbc-job-repository", name);
     }
 }
