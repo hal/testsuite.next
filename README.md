@@ -12,13 +12,13 @@ The testsuite uses various profiles to decide how and which tests to run. The fo
 
 Combine multiple profiles to define your setup. Choose at least one profile from each line. Please note that you cannot combine profiles which are marked as mutual exclusive. 
 
-Valid combinations:
+Examples of valid combinations:
 
 - `chrome,basic,standalone`
 - `firefox,basic,rbac,domain`
 - `safari,rbac,transaction,standalone`
 
-Invalid combinations:
+Examples of invalid combinations:
 
 - `safari,firefox`
 - `basic,transaction`
