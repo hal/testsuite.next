@@ -38,7 +38,12 @@ public class BatchPage extends BasePage {
     @FindBy(id = "batch-jdbc-job-repo-form") private FormFragment jdbcForm;
 
     @FindBy(id = "batch-thread-factory-item") private WebElement threadFactoryItem;
+    @FindBy(id = "batch-thread-factory-table_wrapper") private TableFragment threadFactoryTable;
+    @FindBy(id = "batch-thread-factory-form") private FormFragment threadFactoryForm;
+
     @FindBy(id = "batch-thread-pool-item") private WebElement threadPoolItem;
+    @FindBy(id = "batch-thread-pool-table_wrapper") private TableFragment threadPoolTable;
+    @FindBy(id = "batch-thread-pool-form") private FormFragment threadPoolForm;
 
     public WebElement getConfigurationItem() {
         return configurationItem;
@@ -72,7 +77,23 @@ public class BatchPage extends BasePage {
         return threadFactoryItem;
     }
 
+    public TableFragment getThreadFactoryTable() {
+        return threadFactoryTable;
+    }
+
+    public FormFragment getThreadFactoryForm() {
+        return threadFactoryForm;
+    }
+
     public WebElement getThreadPoolItem() {
         return threadPoolItem;
+    }
+
+    public TableFragment getThreadPoolTable() {
+        return threadPoolTable;
+    }
+
+    public FormFragment getThreadPoolForm() {
+        return threadPoolForm;
     }
 }

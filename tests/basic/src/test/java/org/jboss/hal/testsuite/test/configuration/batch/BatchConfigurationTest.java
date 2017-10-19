@@ -39,19 +39,10 @@ public class BatchConfigurationTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
 
-    @Drone private WebDriver browser;
-    @Page private BatchPage page;
-
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
         backup = new BackupAndRestoreAttributes.Builder(BatchFixtures.SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
-    }
-
-    @Before
-    public void setUp() throws Exception {
-        page.navigate();
-        page.getConfigurationItem().click();
     }
 
     @AfterClass
@@ -59,9 +50,20 @@ public class BatchConfigurationTest {
         client.apply(backup.restore());
     }
 
+    @Drone private WebDriver browser;
+    @Page private BatchPage page;
+    private FormFragment form;
+
+    @Before
+    public void setUp() throws Exception {
+        page.navigate();
+        page.getConfigurationItem().click();
+
+        form = page.getConfigurationForm();
+    }
+
     @Test
     public void update() throws Exception {
-        FormFragment form = page.getConfigurationForm();
         form.edit();
         form.checkbox("restart-jobs-on-resume", false);
         form.save();

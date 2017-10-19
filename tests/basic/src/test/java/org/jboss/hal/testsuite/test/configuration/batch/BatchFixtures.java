@@ -27,8 +27,8 @@ public interface BatchFixtures {
 
     // ------------------------------------------------------ in memory repository
 
-    String IN_MEMORY_TO_BE_ADDED = Ids.build("in-memory", "tba", GENERATOR.generate(10));
-    String IN_MEMORY_TO_BE_REMOVED = Ids.build("in-memory", "tbr", GENERATOR.generate(10));
+    String IN_MEMORY_CREATE = Ids.build("in-memory", "create", GENERATOR.generate(10));
+    String IN_MEMORY_DELETE = Ids.build("in-memory", "delete", GENERATOR.generate(10));
 
     static Address inMemoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("in-memory-job-repository", name);
@@ -38,11 +38,36 @@ public interface BatchFixtures {
     // ------------------------------------------------------ jdbc repository
 
     String DATA_SOURCE = Ids.build("ds", GENERATOR.generate(10));
-    String JDBC_TO_BE_ADDED = Ids.build("jdbc", "tba", GENERATOR.generate(10));
-    String JDBC_TO_BE_VIEWD = Ids.build("hdbc", "tbv", GENERATOR.generate(10));
-    String JDBC_TO_BE_REMOVED = Ids.build("hdbc", "tbr", GENERATOR.generate(10));
+    String JDBC_CREATE = Ids.build("jdbc", "create", GENERATOR.generate(10));
+    String JDBC_READ = Ids.build("jdbc", "read", GENERATOR.generate(10));
+    String JDBC_DELETE = Ids.build("jdbc", "remove", GENERATOR.generate(10));
 
     static Address jdbcAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("jdbc-job-repository", name);
+    }
+
+
+    // ------------------------------------------------------ thread factory
+
+    String THREAD_FACTORY_CREATE = Ids.build("thread-factory", "create", GENERATOR.generate(10));
+    String THREAD_FACTORY_READ = Ids.build("thread-factory", "read", GENERATOR.generate(10));
+    String THREAD_FACTORY_UPDATE = Ids.build("thread-factory", "update", GENERATOR.generate(10));
+    String THREAD_FACTORY_DELETE = Ids.build("thread-factory", "delete", GENERATOR.generate(10));
+
+    static Address threadFactoryAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("thread-factory", name);
+    }
+
+
+    // ------------------------------------------------------ thread pool
+
+    int MAX_THREADS = 11;
+    String THREAD_POOL_CREATE = Ids.build("thread-pool", "create", GENERATOR.generate(10));
+    String THREAD_POOL_READ = Ids.build("thread-pool", "read", GENERATOR.generate(10));
+    String THREAD_POOL_UPDATE = Ids.build("thread-pool", "update", GENERATOR.generate(10));
+    String THREAD_POOL_DELETE = Ids.build("thread-pool", "delete", GENERATOR.generate(10));
+
+    static Address threadPoolAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("thread-pool", name);
     }
 }

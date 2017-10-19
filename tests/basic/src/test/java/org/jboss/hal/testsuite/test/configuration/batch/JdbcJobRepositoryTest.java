@@ -21,6 +21,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
 import org.jboss.hal.testsuite.util.Console;
 import org.jboss.hal.testsuite.util.Notification;
@@ -36,9 +38,9 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.DATA_SOURCE;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_TO_BE_ADDED;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_TO_BE_REMOVED;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_TO_BE_VIEWD;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.JDBC_READ;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.jdbcAddress;
 import static org.junit.Assert.assertEquals;
 
@@ -49,9 +51,6 @@ public class JdbcJobRepositoryTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    @Drone private WebDriver browser;
-    @Page private BatchPage page;
-
     @BeforeClass
     public static void beforeClass() throws Exception {
         String connectionUrl = "jdbc:h2:mem:" + DATA_SOURCE + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
@@ -60,48 +59,56 @@ public class JdbcJobRepositoryTest {
                         .and("jndi-name", "java:/jboss/" + DATA_SOURCE)
                         .and("driver-name", "h2")
                         .and("connection-url", connectionUrl));
-        operations.add(jdbcAddress(JDBC_TO_BE_VIEWD), Values.empty().and("data-source", DATA_SOURCE));
-        operations.add(jdbcAddress(JDBC_TO_BE_REMOVED), Values.empty().and("data-source", DATA_SOURCE));
+        operations.add(jdbcAddress(JDBC_READ), Values.empty().and("data-source", DATA_SOURCE));
+        operations.add(jdbcAddress(JDBC_DELETE), Values.empty().and("data-source", DATA_SOURCE));
     }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        operations.removeIfExists(jdbcAddress(JDBC_CREATE));
+        operations.removeIfExists(jdbcAddress(JDBC_READ));
+        operations.removeIfExists(jdbcAddress(JDBC_DELETE));
+        operations.removeIfExists(Address.subsystem("datasources").and("data-source", DATA_SOURCE));
+    }
+
+    @Drone private WebDriver browser;
+    @Page private BatchPage page;
+    private TableFragment table;
+    private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         page.getJdbcItem().click();
-    }
 
-    @AfterClass
-    public static void tearDown() throws Exception {
-        operations.removeIfExists(jdbcAddress(JDBC_TO_BE_ADDED));
-        operations.removeIfExists(jdbcAddress(JDBC_TO_BE_VIEWD));
-        operations.removeIfExists(jdbcAddress(JDBC_TO_BE_REMOVED));
-        operations.removeIfExists(Address.subsystem("datasources").and("data-source", DATA_SOURCE));
+        form = page.getJdbcForm();
+        table = page.getJdbcTable();
+        table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        page.getJdbcTable().add();
+        table.add();
         AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", JDBC_TO_BE_ADDED);
+        dialog.getForm().text("name", JDBC_CREATE);
         dialog.getForm().text("data-source", DATA_SOURCE);
         dialog.add();
 
         Notification.withBrowser(browser).success();
-        new ResourceVerifier(jdbcAddress(JDBC_TO_BE_ADDED), client).verifyExists();
+        new ResourceVerifier(jdbcAddress(JDBC_CREATE), client).verifyExists();
     }
 
     @Test
     public void read() throws Exception {
-        page.getJdbcTable().select(JDBC_TO_BE_VIEWD);
-        page.getJdbcForm().view();
-        assertEquals(DATA_SOURCE, page.getJdbcForm().value("data-source"));
+        table.select(JDBC_READ);
+        assertEquals(DATA_SOURCE, form.value("data-source"));
     }
 
     @Test
     public void delete() throws Exception {
-        page.getJdbcTable().remove(JDBC_TO_BE_REMOVED);
+        table.remove(JDBC_DELETE);
 
         Notification.withBrowser(browser).success();
-        new ResourceVerifier(jdbcAddress(JDBC_TO_BE_REMOVED), client).verifyDoesNotExist();
+        new ResourceVerifier(jdbcAddress(JDBC_DELETE), client).verifyDoesNotExist();
     }
 }

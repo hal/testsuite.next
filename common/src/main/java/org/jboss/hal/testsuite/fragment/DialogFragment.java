@@ -29,7 +29,12 @@ public class DialogFragment {
 
     /** Clicks on the primary button and waits until the dialog has been closed */
     public void primaryButton() {
-        root.findElement(By.cssSelector("." + modalFooter + " ." + btnPrimary)).click();
+        WebElement primaryButton = getPrimaryButton();
+        primaryButton.click();
         waitGui().until().element(root).is().not().visible();
+    }
+
+    public WebElement getPrimaryButton() {
+        return root.findElement(By.cssSelector("." + modalFooter + " ." + btnPrimary));
     }
 }

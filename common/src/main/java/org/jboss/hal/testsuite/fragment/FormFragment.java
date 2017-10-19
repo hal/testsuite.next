@@ -17,6 +17,7 @@ package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -24,10 +25,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.resources.CSS.btnPrimary;
-import static org.jboss.hal.resources.CSS.editing;
-import static org.jboss.hal.resources.CSS.formButtons;
-import static org.jboss.hal.resources.CSS.readonly;
+import static org.jboss.hal.resources.CSS.*;
 
 /** Page fragment for a form using read-only and editing states. */
 public class FormFragment {
@@ -51,6 +49,10 @@ public class FormFragment {
         return browser.findElement(By.id(readOnlyId(name))).getText();
     }
 
+    public int intValue(String name) {
+        return Integer.parseInt(value(name));
+    }
+
 
     // ------------------------------------------------------ edit mode
 
@@ -72,6 +74,16 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
+    public void number(String name, int value) {
+        text(name, String.valueOf(value));
+    }
+
+    public void clear(String name) {
+        WebElement inputElement = inputElement(name);
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+    }
+
     public void checkbox(String name, boolean value) {
         WebElement inputElement = inputElement(name);
         boolean inputValue = parseBoolean(inputElement.getAttribute("value"));
@@ -86,12 +98,28 @@ public class FormFragment {
         }
     }
 
+    public void expectError(String name) {
+        By selector = By.cssSelector("." + hasError + "[data-form-item-group=" + editingId(name) + "]");
+        WebElement formItemGroup = editingSection.findElement(selector);
+        WebElement helpBlock = formItemGroup.findElement(By.cssSelector("." + CSS.helpBlock));
+
+        waitGui().until().element(formItemGroup).is().visible();
+        waitGui().until().element(helpBlock).is().visible();
+    }
+
     private boolean parseBoolean(String text) {
         return "on".equals(text) || Boolean.parseBoolean(text);
     }
 
     private WebElement inputElement(String name) {
         return browser.findElement(By.id(editingId(name)));
+    }
+
+
+    // ------------------------------------------------------ properties
+
+    public WebElement getSaveButton() {
+        return saveButton;
     }
 
 

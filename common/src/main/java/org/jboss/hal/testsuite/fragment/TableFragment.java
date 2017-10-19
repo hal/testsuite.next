@@ -32,6 +32,7 @@ public class TableFragment {
     @Drone private WebDriver browser;
     @Root private WebElement root;
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
+    private FormFragment form;
 
     /** Clicks on the add button */
     public void add() {
@@ -55,5 +56,16 @@ public class TableFragment {
     public void select(String name) {
         By selector = ByJQuery.selector("td:contains('" + name + "')");
         root.findElement(selector).click();
+        if (form != null) {
+            form.view();
+        }
+    }
+
+    /**
+     * Binds the form to the table. Calling {@link TableFragment#select(String)} will trigger {@link
+     * FormFragment#view()}.
+     */
+    public void bind(FormFragment form) {
+        this.form = form;
     }
 }
