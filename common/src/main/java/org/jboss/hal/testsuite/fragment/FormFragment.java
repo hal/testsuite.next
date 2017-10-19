@@ -40,11 +40,12 @@ public class FormFragment {
 
     // ------------------------------------------------------ read-only mode
 
+    /** Waits until the read-only section. */
     public void view() {
         waitGui().until().element(readOnlySection).is().visible();
     }
 
-    /** Returns the value of the specified attribute in the read-only section */
+    /** Returns the value of the specified attribute in the read-only section. */
     public String value(String name) {
         return browser.findElement(By.id(readOnlyId(name))).getText();
     }
@@ -56,16 +57,22 @@ public class FormFragment {
 
     // ------------------------------------------------------ edit mode
 
+    /** Clicks on the edit link and waits until the editing section is visible. */
     public void edit() {
         editLink.click();
         waitGui().until().element(editingSection).is().visible();
     }
 
+    /**
+     * Saves the form and waits until the read-only section is visible. Expects no errors. If you expect errors, use
+     * {@code getSaveButton().click()} instead.
+     */
     public void save() {
         saveButton.click();
         waitGui().until().element(readOnlySection).is().visible();
     }
 
+    /** Changes the specified text field. */
     public void text(String name, String value) {
         WebElement inputElement = inputElement(name);
         inputElement.clear();
@@ -74,6 +81,7 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
+    /** Changes the specified number field. */
     public void number(String name, int value) {
         text(name, String.valueOf(value));
     }
@@ -84,7 +92,8 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo("");
     }
 
-    public void checkbox(String name, boolean value) {
+    /** Changes the specified bootstrap switch. */
+    public void bootstrapSwitch(String name, boolean value) {
         WebElement inputElement = inputElement(name);
         boolean inputValue = parseBoolean(inputElement.getAttribute("value"));
         if (inputValue != value) {
@@ -98,6 +107,7 @@ public class FormFragment {
         }
     }
 
+    /** Expects an error for the specified attribute */
     public void expectError(String name) {
         By selector = By.cssSelector("." + hasError + "[data-form-item-group=" + editingId(name) + "]");
         WebElement formItemGroup = editingSection.findElement(selector);

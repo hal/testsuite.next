@@ -18,12 +18,12 @@ package org.jboss.hal.testsuite.test.configuration.batch;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Console;
 import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -69,9 +69,8 @@ public class InMemoryJobRepositoryTest {
 
     @Test
     public void create() throws Exception {
-        table.add();
-        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", IN_MEMORY_CREATE);
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(ModelDescriptionConstants.NAME, IN_MEMORY_CREATE);
         dialog.add();
 
         Notification.withBrowser(browser).success();

@@ -48,12 +48,12 @@ public class Console {
         return this;
     }
 
-    /** Returns the currently opened dialog */
+    /** Returns the currently opened dialog. */
     public DialogFragment dialog() {
         return dialog(DialogFragment.class);
     }
 
-    /** Returns the currently opened add resource dialog */
+    /** Returns the currently opened add resource dialog. */
     public AddResourceDialogFragment addResourceDialog() {
         return dialog(AddResourceDialogFragment.class);
     }

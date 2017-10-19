@@ -20,9 +20,10 @@ import org.openqa.selenium.support.FindBy;
 import static org.jboss.hal.resources.CSS.formSection;
 import static org.jboss.hal.resources.CSS.modalBody;
 
+/** Page fragment for an add resource dialog with a add-only form. */
 public class AddResourceDialogFragment extends DialogFragment {
 
-    @FindBy(css = "." + modalBody + " > ." + formSection) private FormFragment form;
+    @FindBy(css = "." + modalBody + " ." + formSection) private FormFragment form;
 
     public FormFragment getForm() {
         return form;

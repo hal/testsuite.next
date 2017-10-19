@@ -34,9 +34,10 @@ public class TableFragment {
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
     private FormFragment form;
 
-    /** Clicks on the add button */
-    public void add() {
+    /** Clicks on the add button and returns an {@link AddResourceDialogFragment}. */
+    public AddResourceDialogFragment add() {
         button("Add").click();
+        return Console.withBrowser(browser).addResourceDialog();
     }
 
     /** Clicks on the remove button and confirms the confirms the confirmation dialog */
@@ -53,8 +54,9 @@ public class TableFragment {
         return buttons.findElement(selector);
     }
 
-    public void select(String name) {
-        By selector = ByJQuery.selector("td:contains('" + name + "')");
+    /** Selects the first {@code td} which contains the specified value, then clicks on it. */
+    public void select(String value) {
+        By selector = ByJQuery.selector("td:contains('" + value + "')");
         root.findElement(selector).click();
         if (form != null) {
             form.view();

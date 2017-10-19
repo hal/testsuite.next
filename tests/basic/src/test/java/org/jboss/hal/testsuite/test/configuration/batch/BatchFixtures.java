@@ -61,7 +61,7 @@ public interface BatchFixtures {
 
     // ------------------------------------------------------ thread pool
 
-    int MAX_THREADS = 11;
+    int MAX_THREADS_VALUE = 11;
     String THREAD_POOL_CREATE = Ids.build("thread-pool", "create", GENERATOR.generate(10));
     String THREAD_POOL_READ = Ids.build("thread-pool", "read", GENERATOR.generate(10));
     String THREAD_POOL_UPDATE = Ids.build("thread-pool", "update", GENERATOR.generate(10));

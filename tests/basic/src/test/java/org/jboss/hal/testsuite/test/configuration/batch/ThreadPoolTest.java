@@ -19,13 +19,13 @@ import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Console;
 import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -43,14 +43,15 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ThreadPoolTest {
 
+    private static final String MAX_THREADS = "max-threads";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(threadPoolAddress(THREAD_POOL_READ), Values.empty().and("max-threads", MAX_THREADS));
-        operations.add(threadPoolAddress(THREAD_POOL_UPDATE), Values.empty().and("max-threads", MAX_THREADS));
-        operations.add(threadPoolAddress(THREAD_POOL_DELETE), Values.empty().and("max-threads", MAX_THREADS));
+        operations.add(threadPoolAddress(THREAD_POOL_READ), Values.empty().and(MAX_THREADS, MAX_THREADS_VALUE));
+        operations.add(threadPoolAddress(THREAD_POOL_UPDATE), Values.empty().and(MAX_THREADS, MAX_THREADS_VALUE));
+        operations.add(threadPoolAddress(THREAD_POOL_DELETE), Values.empty().and(MAX_THREADS, MAX_THREADS_VALUE));
     }
 
     @AfterClass
@@ -78,10 +79,9 @@ public class ThreadPoolTest {
 
     @Test
     public void create() throws Exception {
-        table.add();
-        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", THREAD_POOL_CREATE);
-        dialog.getForm().number("max-threads", MAX_THREADS);
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
+        dialog.getForm().number(MAX_THREADS, MAX_THREADS_VALUE);
         dialog.add();
 
         Notification.withBrowser(browser).success();
@@ -90,28 +90,26 @@ public class ThreadPoolTest {
 
     @Test
     public void createNoMaxThreads() throws Exception {
-        table.add();
-        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", THREAD_POOL_CREATE);
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
         dialog.getPrimaryButton().click();
-        dialog.getForm().expectError("max-threads");
+        dialog.getForm().expectError(MAX_THREADS);
     }
 
     @Test
     public void createInvalidMaxThreads() throws Exception {
-        table.add();
-        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", THREAD_POOL_CREATE);
-        dialog.getForm().number("name", -1);
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
+        dialog.getForm().number(MAX_THREADS, -1);
         dialog.getPrimaryButton().click();
-        dialog.getForm().expectError("max-threads");
+        dialog.getForm().expectError(MAX_THREADS);
     }
 
     @Test
     public void read() throws Exception {
         table.select(THREAD_POOL_READ);
-        assertEquals(THREAD_POOL_READ, form.value("name"));
-        assertEquals(MAX_THREADS, form.intValue("max-threads"));
+        assertEquals(THREAD_POOL_READ, form.value(ModelDescriptionConstants.NAME));
+        assertEquals(MAX_THREADS_VALUE, form.intValue(MAX_THREADS));
     }
 
     @Test
@@ -120,31 +118,30 @@ public class ThreadPoolTest {
 
         table.select(THREAD_POOL_UPDATE);
         form.edit();
-        form.number("max-threads", maxThreads);
+        form.number(MAX_THREADS, maxThreads);
         form.save();
 
         Notification.withBrowser(browser).success();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
-                .verifyAttribute("max-threads", maxThreads);
+                .verifyAttribute(MAX_THREADS, maxThreads);
     }
 
     @Test
     public void updateNoMaxThreads() throws Exception {
         table.select(THREAD_POOL_UPDATE);
         form.edit();
-        form.clear("max-threads");
+        form.clear(MAX_THREADS);
         form.getSaveButton().click();
-        form.expectError("max-threads");
+        form.expectError(MAX_THREADS);
     }
 
     @Test
     public void updateInvalidMaxThreads() throws Exception {
-        int maxThreads = -1;
         table.select(THREAD_POOL_UPDATE);
         form.edit();
-        form.number("max-threads", maxThreads);
+        form.number(MAX_THREADS, -1);
         form.getSaveButton().click();
-        form.expectError("max-threads");
+        form.expectError(MAX_THREADS);
     }
 
     @Test

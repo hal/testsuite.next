@@ -36,6 +36,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 @RunWith(Arquillian.class)
 public class BatchConfigurationTest {
 
+    private static final String RESTART_JOBS_ON_RESUME = "restart-jobs-on-resume";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
 
@@ -65,11 +66,11 @@ public class BatchConfigurationTest {
     @Test
     public void update() throws Exception {
         form.edit();
-        form.checkbox("restart-jobs-on-resume", false);
+        form.bootstrapSwitch(RESTART_JOBS_ON_RESUME, false);
         form.save();
         Notification.withBrowser(browser).success();
 
         new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
-                .verifyAttribute("restart-jobs-on-resume", false);
+                .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
     }
 }

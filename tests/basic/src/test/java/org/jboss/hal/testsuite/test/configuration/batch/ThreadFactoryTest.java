@@ -19,13 +19,13 @@ import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Console;
 import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -42,6 +42,9 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ThreadFactoryTest {
 
+    private static final String GROUP_NAME = "group-name";
+    private static final String PRIORITY = "priority";
+    private static final String THREAD_NAME_PATTERN = "thread-name-pattern";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
@@ -77,9 +80,8 @@ public class ThreadFactoryTest {
 
     @Test
     public void create() throws Exception {
-        table.add();
-        AddResourceDialogFragment dialog = Console.withBrowser(browser).addResourceDialog();
-        dialog.getForm().text("name", THREAD_FACTORY_CREATE);
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_FACTORY_CREATE);
         dialog.add();
 
         Notification.withBrowser(browser).success();
@@ -89,7 +91,7 @@ public class ThreadFactoryTest {
     @Test
     public void read() throws Exception {
         table.select(THREAD_FACTORY_READ);
-        assertEquals(THREAD_FACTORY_READ, form.value("name"));
+        assertEquals(THREAD_FACTORY_READ, form.value(ModelDescriptionConstants.NAME));
     }
 
     @Test
@@ -100,16 +102,16 @@ public class ThreadFactoryTest {
 
         table.select(THREAD_FACTORY_UPDATE);
         form.edit();
-        form.text("group-name", groupName);
-        form.number("priority", priority);
-        form.text("thread-name-pattern", pattern);
+        form.text(GROUP_NAME, groupName);
+        form.number(PRIORITY, priority);
+        form.text(THREAD_NAME_PATTERN, pattern);
         form.save();
 
         Notification.withBrowser(browser).success();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyAttribute("group-name", groupName)
-                .verifyAttribute("priority", priority)
-                .verifyAttribute("thread-name-pattern", pattern);
+                .verifyAttribute(GROUP_NAME, groupName)
+                .verifyAttribute(PRIORITY, priority)
+                .verifyAttribute(THREAD_NAME_PATTERN, pattern);
     }
 
     @Test
@@ -117,9 +119,9 @@ public class ThreadFactoryTest {
         int priority = 42;
         table.select(THREAD_FACTORY_UPDATE);
         form.edit();
-        form.number("priority", priority);
+        form.number(PRIORITY, priority);
         form.getSaveButton().click();
-        form.expectError("priority");
+        form.expectError(PRIORITY);
     }
 
     @Test
