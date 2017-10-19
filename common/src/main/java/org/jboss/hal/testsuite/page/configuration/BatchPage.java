@@ -29,10 +29,10 @@ public class BatchPage extends BasePage {
     @FindBy(id = "batch-configuration-item") private WebElement configurationItem;
     @FindBy(id = "batch-configuration-form") private FormFragment configurationForm;
 
-    @FindBy(id = "batch-in-memory-job-repo-item") private WebElement inMemory;
-    @FindBy(id = "batch-jdbc-job-repo-item") private WebElement jdbc;
-    @FindBy(id = "batch-thread-factory-item") private WebElement threadFactory;
-    @FindBy(id = "batch-thread-pool-item") private WebElement threadPool;
+    @FindBy(id = "batch-in-memory-job-repo-item") private WebElement inMemoryItem;
+    @FindBy(id = "batch-jdbc-job-repo-item") private WebElement jdbcItem;
+    @FindBy(id = "batch-thread-factory-item") private WebElement threadFactoryItem;
+    @FindBy(id = "batch-thread-pool-item") private WebElement threadPoolItem;
 
     public WebElement getConfigurationItem() {
         return configurationItem;
@@ -42,19 +42,19 @@ public class BatchPage extends BasePage {
         return configurationForm;
     }
 
-    public WebElement getInMemory() {
-        return inMemory;
+    public WebElement getInMemoryItem() {
+        return inMemoryItem;
     }
 
-    public WebElement getJdbc() {
-        return jdbc;
+    public WebElement getJdbcItem() {
+        return jdbcItem;
     }
 
-    public WebElement getThreadFactory() {
-        return threadFactory;
+    public WebElement getThreadFactoryItem() {
+        return threadFactoryItem;
     }
 
-    public WebElement getThreadPool() {
-        return threadPool;
+    public WebElement getThreadPoolItem() {
+        return threadPoolItem;
     }
 }

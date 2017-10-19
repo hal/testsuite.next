@@ -24,6 +24,7 @@ import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
 import org.jboss.hal.testsuite.util.ConfigUtils;
+import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -35,7 +36,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 @RunWith(Arquillian.class)
-public class BatchTest {
+public class BatchConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
@@ -60,6 +61,7 @@ public class BatchTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
+        page.getConfigurationItem().click();
     }
 
     @AfterClass
@@ -68,13 +70,12 @@ public class BatchTest {
     }
 
     @Test
-    public void batchSubsystem() throws Exception {
-        page.getConfigurationItem().click();
+    public void update() throws Exception {
         FormFragment form = page.getConfigurationForm();
         form.edit();
         form.checkbox("batch-configuration-form-restart-jobs-on-resume-editing", false);
         form.save();
-        // Notification.withBrowser(browser).success();
+        Notification.withBrowser(browser).success();
 
         new ResourceVerifier(address(), client, 500)
                 .verifyAttribute("restart-jobs-on-resume", false);
