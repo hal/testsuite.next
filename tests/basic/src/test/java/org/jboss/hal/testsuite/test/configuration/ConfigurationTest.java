@@ -19,7 +19,6 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.page.configuration.ConfigurationPage;
-import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -41,11 +40,7 @@ public class ConfigurationTest {
 
     @Test
     public void items() throws Exception {
-        if (ConfigUtils.isDomain()) {
-            assertTrue(page.getProfiles().isDisplayed());
-        } else {
-            assertTrue(page.getSubsystems().isDisplayed());
-        }
+        assertTrue(page.getSubsystems().isDisplayed());
         assertTrue(page.getInterfaces().isDisplayed());
         assertTrue(page.getSocketBindings().isDisplayed());
         assertTrue(page.getPaths().isDisplayed());

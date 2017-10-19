@@ -24,16 +24,11 @@ import org.openqa.selenium.support.FindBy;
 @Location("#configuration")
 public class ConfigurationPage extends BasePage {
 
-    @FindBy(id = "profiles") private WebElement profiles;
     @FindBy(id = "subsystems") private WebElement subsystems;
     @FindBy(id = "interfaces") private WebElement interfaces;
     @FindBy(id = "socket-bindings") private WebElement socketBindings;
     @FindBy(id = "paths") private WebElement paths;
     @FindBy(id = "system-properties") private WebElement systemProperties;
-
-    public WebElement getProfiles() {
-        return profiles;
-    }
 
     public WebElement getSubsystems() {
         return subsystems;

@@ -23,7 +23,6 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -33,7 +32,8 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
-import org.wildfly.extras.creaper.core.online.operations.Address;
+
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchSubsystem.CONFIGURATION_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class BatchConfigurationTest {
@@ -46,16 +46,8 @@ public class BatchConfigurationTest {
 
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(address()).build();
+        backup = new BackupAndRestoreAttributes.Builder(CONFIGURATION_ADDRESS).build();
         client.apply(backup.backup());
-    }
-
-    private static Address address() {
-        Address address = Address.root();
-        if (ConfigUtils.isDomain()) {
-            address = address.and("profile", ConfigUtils.getDefaultProfile());
-        }
-        return address.and("subsystem", "batch-jberet");
     }
 
     @Before
@@ -77,7 +69,7 @@ public class BatchConfigurationTest {
         form.save();
         Notification.withBrowser(browser).success();
 
-        new ResourceVerifier(address(), client, 500)
+        new ResourceVerifier(CONFIGURATION_ADDRESS, client, 500)
                 .verifyAttribute("restart-jobs-on-resume", false);
     }
 }

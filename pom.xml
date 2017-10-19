@@ -337,9 +337,9 @@
             <id>domain</id>
             <properties>
                 <suite.mode>domain</suite.mode>
-                <test.excluded.category>
-                    org.jboss.hal.testsuite.category.Standalone
-                </test.excluded.category>
+                <test.included.category>
+                    org.jboss.hal.testsuite.category.Domain
+                </test.included.category>
             </properties>
             <dependencies>
                 <dependency>

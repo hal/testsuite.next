@@ -21,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 
