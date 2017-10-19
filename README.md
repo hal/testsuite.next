@@ -29,14 +29,14 @@ Examples of invalid combinations:
 
 In order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. Use the following commands to remove the security realm from the management interface:
 
-*Standalone*
+Standalone
 
 ```
 /core-service=management/management-interface=http-interface:undefine-attribute(name=security-realm)
 :reload
 ```
 
-*Domain*
+Domain
 
 ```
 /host=master/core-service=management/management-interface=http-interface:undefine-attribute(name=security-realm)
