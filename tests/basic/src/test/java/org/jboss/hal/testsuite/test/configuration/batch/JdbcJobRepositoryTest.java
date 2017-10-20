@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test.configuration.batch;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -37,6 +36,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -86,7 +86,7 @@ public class JdbcJobRepositoryTest {
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(ModelDescriptionConstants.NAME, JDBC_CREATE);
+        dialog.getForm().text(NAME, JDBC_CREATE);
         dialog.getForm().text(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE);
         dialog.add();
 

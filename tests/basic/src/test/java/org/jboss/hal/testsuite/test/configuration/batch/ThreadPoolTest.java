@@ -19,7 +19,6 @@ import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -37,13 +36,14 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 public class ThreadPoolTest {
 
-    private static final String MAX_THREADS = "max-threads";
+    public static final String MAX_THREADS = "max-threads";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
@@ -80,7 +80,7 @@ public class ThreadPoolTest {
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
+        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
         dialog.getForm().number(MAX_THREADS, MAX_THREADS_VALUE);
         dialog.add();
 
@@ -91,7 +91,7 @@ public class ThreadPoolTest {
     @Test
     public void createNoMaxThreads() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
+        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
         dialog.getPrimaryButton().click();
         dialog.getForm().expectError(MAX_THREADS);
     }
@@ -99,7 +99,7 @@ public class ThreadPoolTest {
     @Test
     public void createInvalidMaxThreads() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_POOL_CREATE);
+        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
         dialog.getForm().number(MAX_THREADS, -1);
         dialog.getPrimaryButton().click();
         dialog.getForm().expectError(MAX_THREADS);
@@ -108,7 +108,7 @@ public class ThreadPoolTest {
     @Test
     public void read() throws Exception {
         table.select(THREAD_POOL_READ);
-        assertEquals(THREAD_POOL_READ, form.value(ModelDescriptionConstants.NAME));
+        assertEquals(THREAD_POOL_READ, form.value(NAME));
         assertEquals(MAX_THREADS_VALUE, form.intValue(MAX_THREADS));
     }
 

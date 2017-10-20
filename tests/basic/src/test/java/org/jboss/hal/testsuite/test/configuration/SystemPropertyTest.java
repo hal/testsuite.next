@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.batch;
+package org.jboss.hal.testsuite.test.configuration;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -21,8 +21,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.configuration.BatchPage;
+import org.jboss.hal.testsuite.page.configuration.SystemPropertyPage;
 import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -32,56 +33,87 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.inMemoryAddress;
+import static org.jboss.as.domain.management.ModelDescriptionConstants.VALUE;
+import static org.jboss.hal.testsuite.test.configuration.SystemPropertyFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.GENERATOR;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.threadFactoryAddress;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class InMemoryJobRepositoryTest {
+public class SystemPropertyTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(inMemoryAddress(IN_MEMORY_DELETE));
+        operations.add(systemPropertyAddress(READ_NAME), Values.empty().and(VALUE, READ_VALUE));
+        operations.add(systemPropertyAddress(UPDATE_NAME), Values.empty().and(VALUE, UPDATE_VALUE));
+        operations.add(systemPropertyAddress(DELETE_NAME), Values.empty().and(VALUE, DELETE_VALUE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(inMemoryAddress(IN_MEMORY_CREATE));
-        operations.removeIfExists(inMemoryAddress(IN_MEMORY_DELETE));
+        operations.removeIfExists(systemPropertyAddress(CREATE_NAME));
+        operations.removeIfExists(systemPropertyAddress(READ_NAME));
+        operations.removeIfExists(systemPropertyAddress(UPDATE_NAME));
+        operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
     }
 
     @Drone private WebDriver browser;
-    @Page private BatchPage page;
+    @Page private SystemPropertyPage page;
     private TableFragment table;
+    private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getInMemoryItem().click();
 
-        table = page.getInMemoryTable();
+        form = page.getForm();
+        table = page.getTable();
+        table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, IN_MEMORY_CREATE);
+        dialog.getForm().text(NAME, CREATE_NAME);
+        dialog.getForm().text(VALUE, CREATE_VALUE);
         dialog.add();
 
         Notification.withBrowser(browser).success();
-        new ResourceVerifier(inMemoryAddress(IN_MEMORY_CREATE), client).verifyExists();
+        new ResourceVerifier(systemPropertyAddress(CREATE_NAME), client)
+                .verifyExists();
+    }
+
+    @Test
+    public void read() throws Exception {
+        table.select(READ_NAME);
+        assertEquals(READ_VALUE, form.value(VALUE));
+    }
+
+    @Test
+    public void update() throws Exception {
+        String value = GENERATOR.generate(20);
+        table.select(UPDATE_NAME);
+        form.edit();
+        form.text(VALUE, value);
+        form.save();
+
+        Notification.withBrowser(browser).success();
+        new ResourceVerifier(systemPropertyAddress(UPDATE_NAME), client)
+                .verifyAttribute(VALUE, value);
+
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(IN_MEMORY_DELETE);
+        table.remove(DELETE_NAME);
 
         Notification.withBrowser(browser).success();
-        new ResourceVerifier(inMemoryAddress(IN_MEMORY_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(threadFactoryAddress(DELETE_NAME), client).verifyDoesNotExist();
     }
 }

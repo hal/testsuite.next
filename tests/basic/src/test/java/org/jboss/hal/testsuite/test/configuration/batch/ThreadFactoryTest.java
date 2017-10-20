@@ -19,7 +19,6 @@ import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.as.domain.management.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -36,6 +35,7 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -81,7 +81,7 @@ public class ThreadFactoryTest {
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(ModelDescriptionConstants.NAME, THREAD_FACTORY_CREATE);
+        dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
         dialog.add();
 
         Notification.withBrowser(browser).success();
@@ -91,7 +91,7 @@ public class ThreadFactoryTest {
     @Test
     public void read() throws Exception {
         table.select(THREAD_FACTORY_READ);
-        assertEquals(THREAD_FACTORY_READ, form.value(ModelDescriptionConstants.NAME));
+        assertEquals(THREAD_FACTORY_READ, form.value(NAME));
     }
 
     @Test
