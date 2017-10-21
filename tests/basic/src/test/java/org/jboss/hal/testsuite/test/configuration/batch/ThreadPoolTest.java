@@ -43,7 +43,7 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class ThreadPoolTest {
 
-    public static final String MAX_THREADS = "max-threads";
+    private static final String MAX_THREADS = "max-threads";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 

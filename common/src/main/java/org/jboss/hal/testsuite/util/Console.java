@@ -19,12 +19,15 @@ import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
+import org.jboss.hal.testsuite.fragment.FooterFragment;
+import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.navbar;
 
 public class Console {
 
@@ -46,6 +49,14 @@ public class Console {
                 .until().element(By.id(Ids.ROOT_CONTAINER))
                 .is().present();
         return this;
+    }
+
+    public HeaderFragment header() {
+        return Graphene.createPageFragment(HeaderFragment.class, browser.findElement(By.cssSelector("nav." + navbar)));
+    }
+
+    public FooterFragment footer() {
+        return Graphene.createPageFragment(FooterFragment.class, browser.findElement(By.cssSelector("footer.footer")));
     }
 
     /** Returns the currently opened dialog. */

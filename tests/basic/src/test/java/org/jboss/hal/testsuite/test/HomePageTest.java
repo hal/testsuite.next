@@ -15,17 +15,24 @@
  */
 package org.jboss.hal.testsuite.test;
 
+import java.util.List;
+
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.page.HomePage;
+import org.jboss.hal.testsuite.util.Console;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
@@ -40,6 +47,21 @@ public class HomePageTest {
     }
 
     @Test
+    public void topLevelCategories() throws Exception {
+        HeaderFragment header = Console.withBrowser(browser).header();
+        List<WebElement> topLevelCategories = header.getTopLevelCategories();
+        assertEquals(7, topLevelCategories.size());
+        assertEquals(Ids.TLC_HOMEPAGE, header.getSelectedTopLevelCategory().getAttribute("id"));
+
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_HOMEPAGE));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_DEPLOYMENTS));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_RUNTIME));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_PATCHING));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_ACCESS_CONTROL));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_MANAGEMENT));
+    }
+
+    @Test
     public void modules() throws Exception {
         assertTrue(containsModule("Deployments"));
         assertTrue(containsModule("Configuration"));
@@ -49,6 +71,10 @@ public class HomePageTest {
 
         By selector = ByJQuery.selector(".eap-home-module-header > h2:contains('Need Help?')");
         assertTrue(page.getRootContainer().findElement(selector).isDisplayed());
+    }
+
+    private boolean containsTopLevelCategory(List<WebElement> topLevelCategories, String id) {
+        return topLevelCategories.stream().anyMatch(tlc -> id.equals(tlc.getAttribute("id")));
     }
 
     private boolean containsModule(String name) {

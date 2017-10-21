@@ -15,13 +15,48 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.util.List;
+
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
+
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.drawerPf;
+import static org.jboss.hal.resources.CSS.drawerPfHal;
 
 public class HeaderFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
+    @FindBy(css = "a[data-element='reloadLink']") private WebElement reload;
+    @FindBy(css = "a[data-element='messages']") private WebElement notifications;
+    @FindBy(css = "span[data-element='badgeIcon']") private WebElement badgeIcon;
+    @FindBy(css = "." + drawerPf + "." + drawerPfHal) private NotificationDrawerFragment notificationDrawer;
+    @FindBy(css = "ul[data-element=topLevelCategories] > li > a") private List<WebElement> topLevelCategories;
+    @FindBy(css = "ul[data-element=topLevelCategories] > li.active > a") private WebElement selectedTopLevelCategory;
+
+    public NotificationDrawerFragment openNotificationDrawer() {
+        notifications.click();
+        waitGui().until().element(notificationDrawer.getRoot()).is().visible();
+        return notificationDrawer;
+    }
+
+    public WebElement getNotifications() {
+        return notifications;
+    }
+
+    public WebElement getBadgeIcon() {
+        return badgeIcon;
+    }
+
+    public List<WebElement> getTopLevelCategories() {
+        return topLevelCategories;
+    }
+
+    public WebElement getSelectedTopLevelCategory() {
+        return selectedTopLevelCategory;
+    }
 }

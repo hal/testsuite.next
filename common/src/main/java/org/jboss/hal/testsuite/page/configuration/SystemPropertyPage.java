@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.arquillian.graphene.page.Location;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
@@ -24,8 +25,8 @@ import org.openqa.selenium.support.FindBy;
 @Location("#system-properties")
 public class SystemPropertyPage extends BasePage {
 
-    @FindBy(id = "system-property-table_wrapper") private TableFragment table;
-    @FindBy(id = "system-property-form") private FormFragment form;
+    @FindBy(id = Ids.SYSTEM_PROPERTY_TABLE + "_wrapper") private TableFragment table;
+    @FindBy(id = Ids.SYSTEM_PROPERTY_FORM) private FormFragment form;
 
     public TableFragment getTable() {
         return table;
