@@ -13,19 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.fragment;
+package org.jboss.hal.testsuite.fragment.finder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
-
-import com.google.common.base.Splitter;
-
-import static com.google.common.base.Strings.nullToEmpty;
 
 /**
  * The finder path holds the selection in the finder. It's a collection of segments with each segment holding
@@ -40,27 +34,6 @@ public class FinderPath implements Iterable<FinderSegment> {
     /** Separator is used in URL tokens. Please choose a string which is safe to use in URLs */
     private static final String SEPARATOR = "!";
 
-
-    // ------------------------------------------------------ static methods
-
-    public static FinderPath from(String path) {
-        List<FinderSegment> segments = new ArrayList<>();
-
-        if (nullToEmpty(path).trim().length() != 0) {
-            Map<String, String> parts = Splitter
-                    .on(FinderPath.SEPARATOR)
-                    .withKeyValueSeparator(FinderSegment.SEPARATOR)
-                    .split(path);
-            for (Map.Entry<String, String> entry : parts.entrySet()) {
-                segments.add(new FinderSegment(entry.getKey(), entry.getValue()));
-            }
-        }
-
-        return new FinderPath(segments);
-    }
-
-
-    // ------------------------------------------------------ instance section
 
     private final LinkedList<FinderSegment> segments;
 

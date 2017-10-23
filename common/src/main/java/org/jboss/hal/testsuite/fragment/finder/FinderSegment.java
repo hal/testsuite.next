@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.fragment;
+package org.jboss.hal.testsuite.fragment.finder;
 
 
 /** A segment inside a {@link FinderPath}. */

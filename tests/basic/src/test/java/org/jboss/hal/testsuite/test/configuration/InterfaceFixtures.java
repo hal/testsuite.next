@@ -24,7 +24,8 @@ public interface InterfaceFixtures {
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
     String CREATE = Ids.build("interface", "create", "name", GENERATOR.generate(10));
-    String READ = Ids.build("interface", "read", "name", GENERATOR.generate(10));
+    String READ1 = Ids.build("interface", "read1", "name", GENERATOR.generate(10));
+    String READ2 = Ids.build("interface", "read2", "name", GENERATOR.generate(10));
     String UPDATE = Ids.build("interface", "update", "name", GENERATOR.generate(10));
     String DELETE = Ids.build("interface", "delete", "name", GENERATOR.generate(10));
 

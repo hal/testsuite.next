@@ -13,21 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.page;
+package org.jboss.hal.testsuite.fragment.finder;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.testsuite.Console;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
-/**
- * Specifies a place in the console. If possible use constants from {@link org.jboss.hal.meta.token.NameTokens}.
- *
- * <p>The place is turned into an absolute URL using <code>${suite.url}#&lt;value()&gt;</code>.</p>
- */
-@Retention(RetentionPolicy.RUNTIME)
-@Target({ElementType.TYPE})
-public @interface Place {
+/** Fragment for the finder preview. Use {@link FinderFragment#preview()} to get an instance. */
+public class FinderPreviewFragment {
 
-    String value();
+    @Drone private WebDriver browser;
+    @Root private WebElement root;
+    @Inject private Console console;
 }

@@ -13,17 +13,19 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.fragment;
+package org.jboss.hal.testsuite.fragment.finder;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 
 /** Fragment for the finder. Use {@link Console#finder(String)} to get an instance. */
 public class FinderFragment {
@@ -31,28 +33,43 @@ public class FinderFragment {
     @Drone private WebDriver browser;
     @Root private WebElement root;
     @Inject private Console console;
-    private String token;
-
-    /**
-     * Initializes the finder with its token. Must not be called manually. Instead use {@link
-     * org.jboss.hal.testsuite.Console#finder(String)} which calls this method automatically.
-     */
-    public void initToken(String token) {
-        this.token = token;
-    }
+    private String place;
 
     /** Selects the specified finder path and waits until the last column ID in the path is present */
-    public void select(FinderPath path) {
+    public FinderFragment select(FinderPath path) {
         if (!path.isEmpty()) {
-            assert token != null : "No token available. Did you obtain the finder using Console.finder(String)?";
+            assertPlace();
+            browser.get(console.absoluteUrl(place + ";path=" + path.toString()));
             console.waitUntilLoaded(path.getLastColumnId());
         }
+        return this;
     }
 
     /** Returns the specified column. */
     public ColumnFragment column(String columnId) {
-        ColumnFragment column = createPageFragment(ColumnFragment.class, browser.findElement(By.id(columnId)));
-        column.initId(columnId);
+        By selector = By.id(columnId);
+        ColumnFragment column = createPageFragment(ColumnFragment.class, browser.findElement(selector));
+        waitGui().until().element(selector).is().visible();
+        column.initColumnId(columnId);
         return column;
+    }
+
+    public FinderPreviewFragment preview() {
+        By selector = By.id(Ids.PREVIEW_ID);
+        FinderPreviewFragment preview = createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
+        waitGui().until().element(selector).is().visible();
+        return preview;
+    }
+
+    /**
+     * Initializes the finder with its place. Must not be called manually. Instead use {@link
+     * org.jboss.hal.testsuite.Console#finder(String)} which calls this method automatically.
+     */
+    public void initPlace(String place) {
+        this.place = place;
+    }
+
+    private void assertPlace() {
+        assert place != null : "No place available. Did you obtain the finder using Console.finder(String)?";
     }
 }

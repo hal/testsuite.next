@@ -15,12 +15,10 @@
  */
 package org.jboss.hal.testsuite.page;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.location.exception.LocationException;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
@@ -42,13 +40,8 @@ public abstract class BasePage {
                     String.format("The page object '%s' that you are navigating to is not annotated with @Place",
                             this.getClass().getSimpleName()));
         }
-        try {
-            String absoluteUrl = new URL(url, "#" + place.value()).toExternalForm();
-            browser.get(absoluteUrl);
-            console.waitUntilLoaded();
-        } catch (MalformedURLException e) {
-            throw new LocationException("URL to construct is malformed.", e.getCause());
-        }
+        browser.get(console.absoluteUrl(place.value()));
+        console.waitUntilLoaded();
     }
 
     public WebElement getRootContainer() {

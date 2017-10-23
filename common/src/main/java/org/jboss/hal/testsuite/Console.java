@@ -24,7 +24,7 @@ import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
-import org.jboss.hal.testsuite.fragment.FinderFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.FooterFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.openqa.selenium.By;
@@ -75,6 +75,15 @@ public class Console {
                 .is().present();
     }
 
+    public String absoluteUrl(String fragment) {
+        String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
+        try {
+            return new URL(url, hashFragment).toExternalForm();
+        } catch (MalformedURLException e) {
+            throw new LocationException("URL to construct is malformed.", e.getCause());
+        }
+    }
+
 
     // ------------------------------------------------------ notifications
 
@@ -88,18 +97,13 @@ public class Console {
 
     // ------------------------------------------------------ fragment access
 
-    /** Navigates to the specified finder token, creates the finder fragment */
-    public FinderFragment finder(String token) {
-        try {
-            String absoluteUrl = new URL(url, token).toExternalForm();
-            browser.navigate().to(absoluteUrl);
-            waitUntilLoaded();
-            FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
-            finder.initToken(token);
-            return finder;
-        } catch (MalformedURLException e) {
-            throw new LocationException("URL to construct is malformed.", e.getCause());
-        }
+    /** Navigates to the specified place, creates and returns the finder fragment */
+    public FinderFragment finder(String place) {
+        browser.get(absoluteUrl(place));
+        waitUntilLoaded();
+        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
+        finder.initPlace(place);
+        return finder;
     }
 
     public HeaderFragment header() {

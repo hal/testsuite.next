@@ -18,10 +18,12 @@ package org.jboss.hal.testsuite.test.configuration;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.fragment.ColumnFragment;
-import org.jboss.hal.testsuite.fragment.FinderFragment;
+import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -39,16 +41,16 @@ public class ConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        finder = console.finder("#configuration");
+        finder = console.finder(NameTokens.CONFIGURATION);
     }
 
     @Test
     public void items() throws Exception {
         ColumnFragment column = finder.column(Ids.CONFIGURATION);
-        assertTrue(column.containsItem("subsystems"));
-        assertTrue(column.containsItem("interfaces"));
-        assertTrue(column.containsItem("socket-bindings"));
-        assertTrue(column.containsItem("paths"));
-        assertTrue(column.containsItem("system-properties"));
+        assertTrue(column.containsItem(Ids.asId(Names.SUBSYSTEMS)));
+        assertTrue(column.containsItem(Ids.asId(Names.INTERFACES)));
+        assertTrue(column.containsItem(Ids.asId(Names.SOCKET_BINDINGS)));
+        assertTrue(column.containsItem(Ids.asId(Names.PATHS)));
+        assertTrue(column.containsItem(Ids.asId(Names.SYSTEM_PROPERTIES)));
     }
 }
