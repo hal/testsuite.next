@@ -36,8 +36,8 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
-import static org.jboss.as.domain.management.ModelDescriptionConstants.VALUE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
 import static org.jboss.hal.testsuite.test.configuration.SystemPropertyFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.GENERATOR;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.threadFactoryAddress;

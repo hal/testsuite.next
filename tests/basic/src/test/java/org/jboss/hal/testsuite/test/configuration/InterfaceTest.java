@@ -35,13 +35,13 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.InterfaceFixtures.*;
 
 @RunWith(Arquillian.class)
 public class InterfaceTest {
 
-    private static final String INET_ADDRESS = "inet-address";
     private static final String LOCALHOST = "127.0.0.1";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);

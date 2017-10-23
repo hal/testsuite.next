@@ -53,7 +53,7 @@ public class NotificationDrawerFragment {
     }
 
     public List<WebElement> getNotifications() {
-        return root.findElements(By.cssSelector("div[id^=gwt-uid]"));
+        return root.findElements(By.cssSelector("div[id^=hal-uid]"));
     }
 
     public WebElement getClearAll() {

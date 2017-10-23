@@ -52,34 +52,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.hal</groupId>
-            <artifactId>hal-resources</artifactId>
-            <classifier>testsuite</classifier>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.jboss.hal</groupId>
-                    <artifactId>hal-spi</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jboss.gwt.elemento</groupId>
-                    <artifactId>elemento-core</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.guava</groupId>
-                    <artifactId>guava-gwt</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.gwt.inject</groupId>
-                    <artifactId>gin</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>com.google.gwt</groupId>
-                    <artifactId>gwt-user</artifactId>
-                </exclusion>
-                <exclusion>
-                    <groupId>org.jetbrains</groupId>
-                    <artifactId>annotations</artifactId>
-                </exclusion>
-            </exclusions>
+            <artifactId>hal-testsuite-resources</artifactId>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -92,6 +65,10 @@
         <dependency>
             <groupId>org.jgrapht</groupId>
             <artifactId>jgrapht-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
         </dependency>
     </dependencies>
 

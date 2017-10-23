@@ -17,11 +17,11 @@ package org.jboss.hal.testsuite.page;
 
 import java.util.List;
 
-import org.jboss.arquillian.graphene.page.Location;
+import org.jboss.hal.meta.token.NameTokens;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-@Location("#home")
+@Place(NameTokens.HOMEPAGE)
 public class HomePage extends BasePage {
 
     @FindBy(css = "a[data-element=moduleHeader]") private List<WebElement> modules;

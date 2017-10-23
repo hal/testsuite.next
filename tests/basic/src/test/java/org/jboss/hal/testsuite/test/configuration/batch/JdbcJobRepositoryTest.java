@@ -19,6 +19,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -37,7 +38,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -45,20 +46,20 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class JdbcJobRepositoryTest {
 
-    private static final String DATA_SOURCE_ATTRIBUTE = "data-source";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         String connectionUrl = "jdbc:h2:mem:" + DATA_SOURCE + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
-        operations.add(Address.subsystem("datasources").and(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE),
+        operations.add(Address.subsystem("datasources").and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE),
                 Values.empty()
                         .and("jndi-name", "java:/jboss/" + DATA_SOURCE)
                         .and("driver-name", "h2")
                         .and("connection-url", connectionUrl));
-        operations.add(jdbcAddress(JDBC_READ), Values.empty().and(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE));
-        operations.add(jdbcAddress(JDBC_DELETE), Values.empty().and(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE));
+        operations.add(jdbcAddress(JDBC_READ), Values.empty().and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
+        operations.add(jdbcAddress(JDBC_DELETE),
+                Values.empty().and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
     }
 
     @AfterClass
@@ -66,7 +67,8 @@ public class JdbcJobRepositoryTest {
         operations.removeIfExists(jdbcAddress(JDBC_CREATE));
         operations.removeIfExists(jdbcAddress(JDBC_READ));
         operations.removeIfExists(jdbcAddress(JDBC_DELETE));
-        operations.removeIfExists(Address.subsystem("datasources").and(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE));
+        operations.removeIfExists(
+                Address.subsystem("datasources").and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
     }
 
     @Drone private WebDriver browser;
@@ -89,7 +91,7 @@ public class JdbcJobRepositoryTest {
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
         dialog.getForm().text(NAME, JDBC_CREATE);
-        dialog.getForm().text(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE);
+        dialog.getForm().text(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE);
         dialog.add();
 
         console.success();
@@ -99,7 +101,7 @@ public class JdbcJobRepositoryTest {
     @Test
     public void read() throws Exception {
         table.select(JDBC_READ);
-        assertEquals(DATA_SOURCE, form.value(DATA_SOURCE_ATTRIBUTE));
+        assertEquals(DATA_SOURCE, form.value(ModelDescriptionConstants.DATA_SOURCE));
     }
 
     @Test

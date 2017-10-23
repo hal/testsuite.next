@@ -37,14 +37,14 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 public class ThreadPoolTest {
 
-    private static final String MAX_THREADS = "max-threads";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 

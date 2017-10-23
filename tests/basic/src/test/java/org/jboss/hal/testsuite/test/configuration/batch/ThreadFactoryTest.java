@@ -36,7 +36,8 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PRIORITY;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -44,7 +45,6 @@ import static org.junit.Assert.assertEquals;
 public class ThreadFactoryTest {
 
     private static final String GROUP_NAME = "group-name";
-    private static final String PRIORITY = "priority";
     private static final String THREAD_NAME_PATTERN = "thread-name-pattern";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);

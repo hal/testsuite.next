@@ -15,14 +15,15 @@
  */
 package org.jboss.hal.testsuite.page.configuration;
 
-import org.jboss.arquillian.graphene.page.Location;
+import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
+import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
-@Location("#system-properties")
+@Place(NameTokens.SYSTEM_PROPERTIES)
 public class SystemPropertyPage extends BasePage {
 
     @FindBy(id = Ids.SYSTEM_PROPERTY_TABLE + "_wrapper") private TableFragment table;

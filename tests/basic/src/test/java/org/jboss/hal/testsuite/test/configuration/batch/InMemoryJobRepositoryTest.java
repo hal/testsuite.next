@@ -34,7 +34,7 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.IN_MEMORY_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.inMemoryAddress;

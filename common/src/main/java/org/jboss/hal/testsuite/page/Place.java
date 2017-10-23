@@ -13,13 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package org.jboss.hal.testsuite.page;
 
-package org.jboss.hal.testsuite.page.configuration;
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
-import org.jboss.hal.meta.token.NameTokens;
-import org.jboss.hal.testsuite.page.BasePage;
-import org.jboss.hal.testsuite.page.Place;
+/** Specifies a name token in the console. If possible use constants from {@link org.jboss.hal.meta.token.NameTokens}. */
+@Retention(RetentionPolicy.RUNTIME)
+@Target({ElementType.TYPE})
+public @interface Place {
 
-@Place(NameTokens.CONFIGURATION)
-public class ConfigurationPage extends BasePage {
+    String value();
 }
