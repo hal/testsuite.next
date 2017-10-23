@@ -69,8 +69,8 @@ public class BatchConfigurationTest {
         form.edit();
         form.bootstrapSwitch(RESTART_JOBS_ON_RESUME, false);
         form.save();
-        console.success();
 
+        console.success();
         new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
                 .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
     }

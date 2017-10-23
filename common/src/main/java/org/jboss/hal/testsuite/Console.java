@@ -18,19 +18,26 @@ package org.jboss.hal.testsuite;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import com.google.common.net.UrlEscapers;
+import com.gwtplatform.common.shared.UrlUtils;
+import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.location.exception.LocationException;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.ConfirmationDialogFragment;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
-import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.FooterFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -38,6 +45,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.alertSuccess;
 import static org.jboss.hal.resources.CSS.navbar;
 import static org.jboss.hal.resources.CSS.toastNotificationsListPf;
+import static org.junit.Assert.assertEquals;
 
 /**
  * Holds global methods and provides access to central classes such as {@linkplain HeaderFragment header}, {@linkplain
@@ -60,6 +68,11 @@ public class Console {
 
     @Drone private WebDriver browser;
     @ArquillianResource private URL url;
+    private ParameterTokenFormatter tokenFormatter;
+
+    public Console() {
+        tokenFormatter = new ParameterTokenFormatter(new EncodeOnlyUrlUtils());
+    }
 
 
     // ------------------------------------------------------ navigation
@@ -75,6 +88,10 @@ public class Console {
                 .is().present();
     }
 
+    public String absoluteUrl(PlaceRequest placeRequest) {
+        return absoluteUrl(tokenFormatter.toHistoryToken(singletonList(placeRequest)));
+    }
+
     public String absoluteUrl(String fragment) {
         String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
         try {
@@ -82,6 +99,12 @@ public class Console {
         } catch (MalformedURLException e) {
             throw new LocationException("URL to construct is malformed.", e.getCause());
         }
+    }
+
+    public void assertPlace(PlaceRequest placeRequest) {
+        String expected = tokenFormatter.toHistoryToken(singletonList(placeRequest));
+        String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
+        assertEquals(expected, actual);
     }
 
 
@@ -124,10 +147,52 @@ public class Console {
         return dialog(AddResourceDialogFragment.class);
     }
 
+    /** Returns the currently opened confirmation dialog. */
+    public ConfirmationDialogFragment confirmationDialog() {
+        return dialog(ConfirmationDialogFragment.class);
+    }
+
     private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
         T dialog = createPageFragment(dialogClass, dialogElement);
         waitGui().until().element(dialogElement).is().visible();
         return dialog;
+    }
+
+
+    // ------------------------------------------------------ inner classes
+
+
+    private static class EncodeOnlyUrlUtils implements UrlUtils {
+
+        @Override
+        public String decodeQueryString(String s) {
+            return s;
+        }
+
+        @Override
+        public String encodeQueryString(String s) {
+            return UrlEscapers.urlFragmentEscaper().escape(s);
+        }
+
+        @Override
+        public String decodePathSegment(String s) {
+            return s;
+        }
+
+        @Override
+        public String encodePathSegment(String s) {
+            return UrlEscapers.urlPathSegmentEscaper().escape(s);
+        }
+
+        @Override
+        public String decodeMatrixParameter(String s) {
+            return s;
+        }
+
+        @Override
+        public String encodeMatrixParameter(String s) {
+            return UrlEscapers.urlFragmentEscaper().escape(s);
+        }
     }
 }

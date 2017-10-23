@@ -81,6 +81,7 @@
         <creaper.version>1.6.1</creaper.version>
         <graphene.version>2.3.1</graphene.version>
         <guava.version>23.0</guava.version>
+        <gwtp.version>1.6</gwtp.version>
         <hal.next.version>0.9.2-SNAPSHOT</hal.next.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
@@ -194,6 +195,11 @@
                 <version>${hal.next.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.gwtplatform</groupId>
+                <artifactId>gwtp-mvp-shared</artifactId>
+                <version>${gwtp.version}</version>
             </dependency>
 
             <!-- Utilities -->

@@ -48,7 +48,7 @@ public class TableFragment {
         WebElement button = button("Remove");
         waitGui().until().element(button).is().enabled();
         button.click();
-        console.dialog().primaryButton(); // confirm
+        console.confirmationDialog().confirm();
     }
 
     private WebElement button(String text) {

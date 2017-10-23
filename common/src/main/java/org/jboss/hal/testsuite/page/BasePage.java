@@ -17,6 +17,7 @@ package org.jboss.hal.testsuite.page;
 
 import java.net.URL;
 
+import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.test.api.ArquillianResource;
@@ -33,18 +34,35 @@ public abstract class BasePage {
     @Inject private Console console;
     @ArquillianResource private URL url;
 
+    /** Navigates to the name token specified in the {@code @Place} annotation. */
     public void navigate() {
+        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
+        browser.get(console.absoluteUrl(placeRequest));
+        console.waitUntilLoaded();
+    }
+
+    /**
+     * Navigates to the name token specified in the {@code @Place} annotation appending the specified name/value pair.
+     */
+    public void navigate(String name, String value) {
+        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
+                .with(name, value)
+                .build();
+        browser.get(console.absoluteUrl(placeRequest));
+        console.waitUntilLoaded();
+    }
+
+    public WebElement getRootContainer() {
+        return rootContainer;
+    }
+
+    private Place assertPlace() {
         Place place = this.getClass().getAnnotation(Place.class);
         if (place == null) {
             throw new IllegalArgumentException(
                     String.format("The page object '%s' that you are navigating to is not annotated with @Place",
                             this.getClass().getSimpleName()));
         }
-        browser.get(console.absoluteUrl(place.value()));
-        console.waitUntilLoaded();
-    }
-
-    public WebElement getRootContainer() {
-        return rootContainer;
+        return place;
     }
 }
