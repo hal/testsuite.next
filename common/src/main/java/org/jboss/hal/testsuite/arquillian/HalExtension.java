@@ -16,12 +16,12 @@
 package org.jboss.hal.testsuite.arquillian;
 
 import org.jboss.arquillian.core.spi.LoadableExtension;
-import org.jboss.arquillian.graphene.spi.location.LocationDecider;
+import org.jboss.arquillian.graphene.spi.enricher.SearchContextTestEnricher;
 
 public class HalExtension implements LoadableExtension {
 
     @Override
     public void register(ExtensionBuilder builder) {
-        builder.service(LocationDecider.class, HalLocationDecider.class);
+        builder.service(SearchContextTestEnricher.class, ConsoleEnricher.class);
     }
 }

@@ -15,10 +15,11 @@
  */
 package org.jboss.hal.testsuite.page;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.util.Console;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -27,10 +28,11 @@ public abstract class BasePage {
 
     @Drone protected WebDriver browser;
     @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
+    @Inject private Console console;
 
     public void navigate() {
         Graphene.goTo(this.getClass());
-        Console.withBrowser(browser).waitUntilLoaded();
+        console.waitUntilLoaded();
     }
 
     public WebElement getRootContainer() {

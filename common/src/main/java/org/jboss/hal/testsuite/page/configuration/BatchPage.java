@@ -17,14 +17,13 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.arquillian.graphene.page.Location;
-import org.jboss.hal.testsuite.arquillian.HalScheme;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-@Location(scheme = HalScheme.class, value = "#batch-jberet-configuration${profile}")
+@Location("#batch-jberet-configuration")
 public class BatchPage extends BasePage {
 
     @FindBy(id = "batch-configuration-item") private WebElement configurationItem;

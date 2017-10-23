@@ -16,7 +16,7 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.jboss.hal.testsuite.util.Console;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -24,9 +24,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.btnPrimary;
 import static org.jboss.hal.resources.CSS.modalFooter;
 
-/**
- * Page fragment for a modal dialog. Use {@link Console#dialog()} to get the instance for the currently opened dialog.
- */
+/** Page fragment for modal dialogs. Use {@link Console#dialog()} to get an instance. */
 public class DialogFragment {
 
     @Root private WebElement root;

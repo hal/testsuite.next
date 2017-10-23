@@ -15,10 +15,11 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.jboss.hal.testsuite.util.Console;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,12 +33,13 @@ public class TableFragment {
     @Drone private WebDriver browser;
     @Root private WebElement root;
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
+    @Inject private Console console;
     private FormFragment form;
 
     /** Clicks on the add button and returns an {@link AddResourceDialogFragment}. */
     public AddResourceDialogFragment add() {
         button("Add").click();
-        return Console.withBrowser(browser).addResourceDialog();
+        return console.addResourceDialog();
     }
 
     /** Clicks on the remove button and confirms the confirms the confirmation dialog */
@@ -46,7 +48,7 @@ public class TableFragment {
         WebElement button = button("Remove");
         waitGui().until().element(button).is().enabled();
         button.click();
-        Console.withBrowser(browser).dialog().primaryButton(); // confirm
+        console.dialog().primaryButton(); // confirm
     }
 
     private WebElement button(String text) {

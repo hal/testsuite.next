@@ -15,15 +15,16 @@
  */
 package org.jboss.hal.testsuite.test.configuration.batch;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -53,13 +54,13 @@ public class BatchConfigurationTest {
 
     @Drone private WebDriver browser;
     @Page private BatchPage page;
+    @Inject private Console console;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         page.getConfigurationItem().click();
-
         form = page.getConfigurationForm();
     }
 
@@ -68,7 +69,7 @@ public class BatchConfigurationTest {
         form.edit();
         form.bootstrapSwitch(RESTART_JOBS_ON_RESUME, false);
         form.save();
-        Notification.withBrowser(browser).success();
+        console.success();
 
         new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
                 .verifyAttribute(RESTART_JOBS_ON_RESUME, false);

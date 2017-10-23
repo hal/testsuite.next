@@ -19,20 +19,16 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-public interface SystemPropertyFixtures {
+public interface InterfaceFixtures {
 
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
-    String CREATE_NAME = Ids.build("system-property", "create", "name", GENERATOR.generate(10));
-    String CREATE_VALUE = Ids.build("system-property", "create", "value", GENERATOR.generate(10));
-    String READ_NAME = Ids.build("system-property", "read", "name", GENERATOR.generate(10));
-    String READ_VALUE = Ids.build("system-property", "read", "value", GENERATOR.generate(10));
-    String UPDATE_NAME = Ids.build("system-property", "update", "name", GENERATOR.generate(10));
-    String UPDATE_VALUE = Ids.build("system-property", "update", "value", GENERATOR.generate(10));
-    String DELETE_NAME = Ids.build("system-property", "delete", "name", GENERATOR.generate(10));
-    String DELETE_VALUE = Ids.build("system-property", "delete", "value", GENERATOR.generate(10));
+    String CREATE = Ids.build("interface", "create", "name", GENERATOR.generate(10));
+    String READ = Ids.build("interface", "read", "name", GENERATOR.generate(10));
+    String UPDATE = Ids.build("interface", "update", "name", GENERATOR.generate(10));
+    String DELETE = Ids.build("interface", "delete", "name", GENERATOR.generate(10));
 
-    static Address systemPropertyAddress(String name) {
-        return Address.of("system-property", name);
+    static Address interfaceAddress(String name) {
+        return Address.of("interface", name);
     }
 }

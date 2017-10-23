@@ -17,14 +17,15 @@ package org.jboss.hal.testsuite.test;
 
 import java.util.List;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.page.HomePage;
-import org.jboss.hal.testsuite.util.Console;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +41,7 @@ public class HomePageTest {
 
     @Drone private WebDriver browser;
     @Page private HomePage page;
+    @Inject private Console console;
 
     @Before
     public void setUp() throws Exception {
@@ -48,7 +50,7 @@ public class HomePageTest {
 
     @Test
     public void topLevelCategories() throws Exception {
-        HeaderFragment header = Console.withBrowser(browser).header();
+        HeaderFragment header = console.header();
         List<WebElement> topLevelCategories = header.getTopLevelCategories();
         assertEquals(7, topLevelCategories.size());
         assertEquals(Ids.TLC_HOMEPAGE, header.getSelectedTopLevelCategory().getAttribute("id"));

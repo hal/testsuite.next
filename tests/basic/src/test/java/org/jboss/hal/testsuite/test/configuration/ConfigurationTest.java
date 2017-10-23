@@ -15,10 +15,13 @@
  */
 package org.jboss.hal.testsuite.test.configuration;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.page.configuration.ConfigurationPage;
+import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.fragment.ColumnFragment;
+import org.jboss.hal.testsuite.fragment.FinderFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,19 +34,21 @@ import static org.junit.Assert.assertTrue;
 public class ConfigurationTest {
 
     @Drone private WebDriver browser;
-    @Page private ConfigurationPage page;
+    @Inject private Console console;
+    private FinderFragment finder;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate();
+        finder = console.finder("#configuration");
     }
 
     @Test
     public void items() throws Exception {
-        assertTrue(page.getSubsystems().isDisplayed());
-        assertTrue(page.getInterfaces().isDisplayed());
-        assertTrue(page.getSocketBindings().isDisplayed());
-        assertTrue(page.getPaths().isDisplayed());
-        assertTrue(page.getSystemProperties().isDisplayed());
+        ColumnFragment column = finder.column(Ids.CONFIGURATION);
+        assertTrue(column.containsItem("subsystems"));
+        assertTrue(column.containsItem("interfaces"));
+        assertTrue(column.containsItem("socket-bindings"));
+        assertTrue(column.containsItem("paths"));
+        assertTrue(column.containsItem("system-properties"));
     }
 }

@@ -27,6 +27,10 @@ import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.resources.CSS.blankSlatePf;
 
+/**
+ * Fragment for the panel which collects notifications already shown to the user. Should be obtained using {@link
+ * HeaderFragment#openNotificationDrawer()}
+ */
 public class NotificationDrawerFragment {
 
     @Drone private WebDriver browser;

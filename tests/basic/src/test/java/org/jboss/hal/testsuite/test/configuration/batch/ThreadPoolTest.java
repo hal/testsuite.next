@@ -16,16 +16,17 @@
 package org.jboss.hal.testsuite.test.configuration.batch;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -64,6 +65,7 @@ public class ThreadPoolTest {
 
     @Drone private WebDriver browser;
     @Page private BatchPage page;
+    @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
 
@@ -84,7 +86,7 @@ public class ThreadPoolTest {
         dialog.getForm().number(MAX_THREADS, MAX_THREADS_VALUE);
         dialog.add();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_CREATE), client).verifyExists();
     }
 
@@ -121,7 +123,7 @@ public class ThreadPoolTest {
         form.number(MAX_THREADS, maxThreads);
         form.save();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
                 .verifyAttribute(MAX_THREADS, maxThreads);
     }
@@ -148,7 +150,7 @@ public class ThreadPoolTest {
     public void delete() throws Exception {
         table.remove(THREAD_POOL_DELETE);
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_DELETE), client).verifyDoesNotExist();
     }
 }

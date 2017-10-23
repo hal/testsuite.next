@@ -19,6 +19,7 @@ import java.util.List;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -27,6 +28,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.drawerPf;
 import static org.jboss.hal.resources.CSS.drawerPfHal;
 
+/** Fragment for the console header. Use {@link Console#header()} to get an instance. */
 public class HeaderFragment {
 
     @Drone private WebDriver browser;

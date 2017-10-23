@@ -15,16 +15,17 @@
  */
 package org.jboss.hal.testsuite.test.configuration;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SystemPropertyPage;
-import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,6 +66,7 @@ public class SystemPropertyTest {
 
     @Drone private WebDriver browser;
     @Page private SystemPropertyPage page;
+    @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
 
@@ -84,7 +86,7 @@ public class SystemPropertyTest {
         dialog.getForm().text(VALUE, CREATE_VALUE);
         dialog.add();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(systemPropertyAddress(CREATE_NAME), client)
                 .verifyExists();
     }
@@ -103,7 +105,7 @@ public class SystemPropertyTest {
         form.text(VALUE, value);
         form.save();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(systemPropertyAddress(UPDATE_NAME), client)
                 .verifyAttribute(VALUE, value);
 
@@ -113,7 +115,7 @@ public class SystemPropertyTest {
     public void delete() throws Exception {
         table.remove(DELETE_NAME);
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadFactoryAddress(DELETE_NAME), client).verifyDoesNotExist();
     }
 }

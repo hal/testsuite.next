@@ -15,16 +15,17 @@
  */
 package org.jboss.hal.testsuite.test.configuration.batch;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -70,6 +71,7 @@ public class JdbcJobRepositoryTest {
 
     @Drone private WebDriver browser;
     @Page private BatchPage page;
+    @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
 
@@ -90,7 +92,7 @@ public class JdbcJobRepositoryTest {
         dialog.getForm().text(DATA_SOURCE_ATTRIBUTE, DATA_SOURCE);
         dialog.add();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(jdbcAddress(JDBC_CREATE), client).verifyExists();
     }
 
@@ -104,7 +106,7 @@ public class JdbcJobRepositoryTest {
     public void delete() throws Exception {
         table.remove(JDBC_DELETE);
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(jdbcAddress(JDBC_DELETE), client).verifyDoesNotExist();
     }
 }

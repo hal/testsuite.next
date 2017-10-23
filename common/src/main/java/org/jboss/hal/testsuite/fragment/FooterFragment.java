@@ -17,9 +17,11 @@ package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+/** Fragment for the console footer. Use {@link Console#footer()} to get an instance. */
 public class FooterFragment {
 
     @Drone private WebDriver browser;

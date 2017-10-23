@@ -16,16 +16,17 @@
 package org.jboss.hal.testsuite.test.configuration.batch;
 
 import org.apache.commons.lang3.RandomUtils;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
-import org.jboss.hal.testsuite.util.Notification;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,6 +66,7 @@ public class ThreadFactoryTest {
 
     @Drone private WebDriver browser;
     @Page private BatchPage page;
+    @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
 
@@ -84,7 +86,7 @@ public class ThreadFactoryTest {
         dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
         dialog.add();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_CREATE), client).verifyExists();
     }
 
@@ -107,7 +109,7 @@ public class ThreadFactoryTest {
         form.text(THREAD_NAME_PATTERN, pattern);
         form.save();
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
                 .verifyAttribute(GROUP_NAME, groupName)
                 .verifyAttribute(PRIORITY, priority)
@@ -128,7 +130,7 @@ public class ThreadFactoryTest {
     public void delete() throws Exception {
         table.remove(THREAD_FACTORY_DELETE);
 
-        Notification.withBrowser(browser).success();
+        console.success();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_DELETE), client).verifyDoesNotExist();
     }
 }

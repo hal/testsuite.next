@@ -18,17 +18,18 @@ package org.jboss.hal.testsuite.test;
 import java.util.HashSet;
 
 import org.apache.commons.text.RandomStringGenerator;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.fragment.NotificationDrawerFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SystemPropertyPage;
-import org.jboss.hal.testsuite.util.Console;
 import org.jboss.hal.testsuite.util.Library;
 import org.junit.After;
 import org.junit.Before;
@@ -57,6 +58,7 @@ public class NotificationTest {
 
     @Drone private WebDriver browser;
     @Page private SystemPropertyPage page;
+    @Inject private Console console;
     private HeaderFragment header;
     private HashSet<String> properties;
 
@@ -64,7 +66,7 @@ public class NotificationTest {
     public void setUp() throws Exception {
         page.navigate();
         TableFragment table = page.getTable();
-        header = Console.withBrowser(browser).header();
+        header = console.header();
 
         properties = new HashSet<>();
         for (int i = 0; i < COUNT; i++) {
