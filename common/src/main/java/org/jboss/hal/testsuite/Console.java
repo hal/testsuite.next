@@ -64,7 +64,7 @@ import static org.junit.Assert.assertEquals;
  */
 public class Console {
 
-    private static final long DEFAULT_PAGE_LOAD_TIMEOUT = 30;
+    public static final long DEFAULT_LOAD_TIMEOUT = 30;
 
     @Drone private WebDriver browser;
     @ArquillianResource private URL url;
@@ -77,21 +77,27 @@ public class Console {
 
     // ------------------------------------------------------ navigation
 
-    /** Waits until the console is loaded, that is until the root container is present. */
-    public void waitUntilLoaded() {
-        waitUntilLoaded(Ids.ROOT_CONTAINER);
+    /**
+     * Waits until the console is loaded using {@link #DEFAULT_LOAD_TIMEOUT} as timeout. That is until the root
+     * container is present.
+     */
+    public void waitUntilPresent() {
+        waitUntilPresent(Ids.ROOT_CONTAINER);
     }
 
-    public void waitUntilLoaded(String id) {
-        waitGui().withTimeout(DEFAULT_PAGE_LOAD_TIMEOUT, SECONDS)
+    /** Waits until the specified ID is present using {@link #DEFAULT_LOAD_TIMEOUT} as timeout. */
+    public void waitUntilPresent(String id) {
+        waitGui().withTimeout(DEFAULT_LOAD_TIMEOUT, SECONDS)
                 .until().element(By.id(id))
                 .is().present();
     }
 
+    /** Returns an absolute URL for the specified place request. */
     public String absoluteUrl(PlaceRequest placeRequest) {
-        return absoluteUrl(tokenFormatter.toHistoryToken(singletonList(placeRequest)));
+        return absoluteUrl(fragment(placeRequest));
     }
 
+    /** Returns an absolute URL ending with the specified fragment (w/o '#'). */
     public String absoluteUrl(String fragment) {
         String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
         try {
@@ -102,9 +108,13 @@ public class Console {
     }
 
     public void assertPlace(PlaceRequest placeRequest) {
-        String expected = tokenFormatter.toHistoryToken(singletonList(placeRequest));
+        String expected = fragment(placeRequest);
         String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
         assertEquals(expected, actual);
+    }
+
+    private String fragment(PlaceRequest placeRequest) {
+        return tokenFormatter.toHistoryToken(singletonList(placeRequest));
     }
 
 
@@ -112,9 +122,9 @@ public class Console {
 
     /** Verifies that a success notification is visible */
     public void success() {
-        WebElement element = browser.findElement(By.cssSelector("." + toastNotificationsListPf + " ." + alertSuccess));
-        // use waitModel() since it might take some time until the notification is visible
-        waitModel().until().element(element).is().visible();
+        waitModel().until() // use waitModel() since it might take some time until the notification is visible
+                .element(By.cssSelector("." + toastNotificationsListPf + " ." + alertSuccess))
+                .is().visible();
     }
 
 
@@ -123,7 +133,7 @@ public class Console {
     /** Navigates to the specified place, creates and returns the finder fragment */
     public FinderFragment finder(String place) {
         browser.get(absoluteUrl(place));
-        waitUntilLoaded();
+        waitUntilPresent(Ids.FINDER);
         FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
         finder.initPlace(place);
         return finder;

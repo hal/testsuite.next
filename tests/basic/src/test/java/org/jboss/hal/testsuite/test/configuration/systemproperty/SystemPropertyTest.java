@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration;
+package org.jboss.hal.testsuite.test.configuration.systemproperty;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -38,7 +38,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
-import static org.jboss.hal.testsuite.test.configuration.SystemPropertyFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.systemproperty.SystemPropertyFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.GENERATOR;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.threadFactoryAddress;
 import static org.junit.Assert.assertEquals;

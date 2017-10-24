@@ -13,12 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration;
+package org.jboss.hal.testsuite.test.configuration.interfce;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -30,7 +29,6 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.page.Places;
-import org.jboss.hal.testsuite.page.configuration.InterfacePage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,7 +41,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.InterfaceFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -56,8 +54,7 @@ public class InterfaceFinderTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(interfaceAddress(READ1), Values.empty().and(INET_ADDRESS, LOCALHOST));
-        operations.add(interfaceAddress(READ2), Values.empty().and(INET_ADDRESS, LOCALHOST));
+        operations.add(interfaceAddress(READ), Values.empty().and(INET_ADDRESS, LOCALHOST));
         operations.add(interfaceAddress(UPDATE), Values.empty().and(INET_ADDRESS, LOCALHOST));
         operations.add(interfaceAddress(DELETE), Values.empty().and(INET_ADDRESS, LOCALHOST));
     }
@@ -65,8 +62,7 @@ public class InterfaceFinderTest {
     @AfterClass
     public static void tearDown() throws Exception {
         operations.removeIfExists(interfaceAddress(CREATE));
-        operations.removeIfExists(interfaceAddress(READ1));
-        operations.removeIfExists(interfaceAddress(READ2));
+        operations.removeIfExists(interfaceAddress(READ));
         operations.removeIfExists(interfaceAddress(UPDATE));
         operations.removeIfExists(interfaceAddress(DELETE));
     }
@@ -74,7 +70,6 @@ public class InterfaceFinderTest {
 
     @Drone private WebDriver browser;
     @Inject private Console console;
-    @Page private InterfacePage page;
     private ColumnFragment column;
 
     @Before
@@ -98,25 +93,24 @@ public class InterfaceFinderTest {
 
     @Test
     public void read() throws Exception {
-        assertTrue(column.containsItem(READ1));
-        assertTrue(column.containsItem(READ2));
+        assertTrue(column.containsItem(READ));
     }
 
     @Test
     public void select() throws Exception {
-        column.selectItem(READ1);
+        column.selectItem(READ);
         PlaceRequest placeRequest = Places.finderPlace(Ids.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.INTERFACES))
-                .append(Ids.INTERFACE, READ1));
+                .append(Ids.INTERFACE, READ));
         console.assertPlace(placeRequest);
     }
 
     @Test
     public void view() throws Exception {
-        column.selectItem(READ1).view();
+        column.selectItem(READ).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.INTERFACE)
-                .with(NAME, READ1)
+                .with(NAME, READ)
                 .build();
         console.assertPlace(placeRequest);
     }

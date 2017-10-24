@@ -38,7 +38,7 @@ public abstract class BasePage {
     public void navigate() {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
         browser.get(console.absoluteUrl(placeRequest));
-        console.waitUntilLoaded();
+        console.waitUntilPresent();
     }
 
     /**
@@ -49,7 +49,7 @@ public abstract class BasePage {
                 .with(name, value)
                 .build();
         browser.get(console.absoluteUrl(placeRequest));
-        console.waitUntilLoaded();
+        console.waitUntilPresent();
     }
 
     public WebElement getRootContainer() {

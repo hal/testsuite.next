@@ -24,8 +24,10 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.testsuite.Console.DEFAULT_LOAD_TIMEOUT;
 
 /** Fragment for the finder. Use {@link Console#finder(String)} to get an instance. */
 public class FinderFragment {
@@ -40,7 +42,6 @@ public class FinderFragment {
         if (!path.isEmpty()) {
             assertPlace();
             browser.get(console.absoluteUrl(place + ";path=" + path.toString()));
-            console.waitUntilLoaded(path.getLastColumnId());
         }
         return this;
     }
@@ -48,16 +49,17 @@ public class FinderFragment {
     /** Returns the specified column. */
     public ColumnFragment column(String columnId) {
         By selector = By.id(columnId);
+        waitGui().withTimeout(DEFAULT_LOAD_TIMEOUT, SECONDS)
+                .until().element(selector).is().visible();
         ColumnFragment column = createPageFragment(ColumnFragment.class, browser.findElement(selector));
-        waitGui().until().element(selector).is().visible();
         column.initColumnId(columnId);
         return column;
     }
 
     public FinderPreviewFragment preview() {
         By selector = By.id(Ids.PREVIEW_ID);
-        FinderPreviewFragment preview = createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
         waitGui().until().element(selector).is().visible();
+        FinderPreviewFragment preview = createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
         return preview;
     }
 

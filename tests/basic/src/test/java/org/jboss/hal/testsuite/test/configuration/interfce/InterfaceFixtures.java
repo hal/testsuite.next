@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration;
+package org.jboss.hal.testsuite.test.configuration.interfce;
 
 import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
@@ -24,8 +24,7 @@ public interface InterfaceFixtures {
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
     String CREATE = Ids.build("interface", "create", GENERATOR.generate(10));
-    String READ1 = Ids.build("interface", "read1", GENERATOR.generate(10));
-    String READ2 = Ids.build("interface", "read2", GENERATOR.generate(10));
+    String READ = Ids.build("interface", "read", GENERATOR.generate(10));
     String UPDATE = Ids.build("interface", "update", GENERATOR.generate(10));
     String DELETE = Ids.build("interface", "delete", GENERATOR.generate(10));
 

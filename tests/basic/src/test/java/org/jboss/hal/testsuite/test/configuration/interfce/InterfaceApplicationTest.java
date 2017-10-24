@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.batch;
+package org.jboss.hal.testsuite.test.configuration.interfce;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -22,61 +22,66 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.page.configuration.BatchPage;
+import org.jboss.hal.testsuite.page.configuration.InterfacePage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.READ;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.interfaceAddress;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class BatchConfigurationTest {
+public class InterfaceApplicationTest {
 
-    private static final String RESTART_JOBS_ON_RESUME = "restart-jobs-on-resume";
+    private static final String LOCALHOST = "127.0.0.1";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static BackupAndRestoreAttributes backup;
+    private static final Operations operations = new Operations(client);
 
     @BeforeClass
-    public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(BatchFixtures.SUBSYSTEM_ADDRESS).build();
-        client.apply(backup.backup());
+    public static void beforeClass() throws Exception {
+        operations.add(interfaceAddress(READ), Values.empty().and(INET_ADDRESS, LOCALHOST));
     }
 
     @AfterClass
-    public static void afterClass() throws CommandFailedException {
-        client.apply(backup.restore());
+    public static void tearDown() throws Exception {
+        operations.removeIfExists(interfaceAddress(READ));
     }
 
+
     @Drone private WebDriver browser;
-    @Page private BatchPage page;
     @Inject private Console console;
+    @Page private InterfacePage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate();
-        page.getConfigurationItem().click();
-        form = page.getConfigurationForm();
+        page.navigate(NAME, READ);
+        form = page.getForm();
     }
 
     @Test
-    public void view() throws Exception {
-        // console.header()
+    public void read() throws Exception {
+        assertEquals(READ, form.value(NAME));
     }
 
     @Test
     public void update() throws Exception {
         form.edit();
-        form.bootstrapSwitch(RESTART_JOBS_ON_RESUME, false);
+        form.text(INET_ADDRESS, "127.0.0.2");
         form.save();
 
         console.success();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
-                .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
+        new ResourceVerifier(interfaceAddress(READ), client)
+                .verifyAttribute(INET_ADDRESS, "127.0.0.2");
     }
 }

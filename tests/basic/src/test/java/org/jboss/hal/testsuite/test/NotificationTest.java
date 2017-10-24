@@ -42,7 +42,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
-import static org.jboss.hal.testsuite.test.configuration.SystemPropertyFixtures.systemPropertyAddress;
+import static org.jboss.hal.testsuite.test.configuration.systemproperty.SystemPropertyFixtures.systemPropertyAddress;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 

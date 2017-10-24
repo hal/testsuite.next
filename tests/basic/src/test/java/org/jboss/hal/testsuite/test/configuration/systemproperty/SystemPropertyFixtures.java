@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration;
+package org.jboss.hal.testsuite.test.configuration.systemproperty;
 
 import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
