@@ -25,6 +25,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.blankSlatePf;
 
 /**
@@ -39,6 +40,18 @@ public class NotificationDrawerFragment {
     @FindBy(id = Ids.NOTIFICATION_DRAWER_CLOSE) private WebElement close;
     @FindBy(id = Ids.NOTIFICATION_DRAWER_CLEAR_ALL) private WebElement clearAll;
     @FindBy(id = Ids.NOTIFICATION_DRAWER_MARK_ALL_READ) private WebElement markAllRead;
+
+    public void clearAll() {
+        if (clearAll.isDisplayed()) {
+            clearAll.click();
+            waitGui().until().element(blankSlate).is().visible();
+        }
+    }
+
+    public void close() {
+        close.click();
+        waitGui().until().element(root).is().not().visible();
+    }
 
     public WebElement getRoot() {
         return root;

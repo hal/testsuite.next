@@ -67,6 +67,9 @@ public class NotificationTest {
         page.navigate();
         TableFragment table = page.getTable();
         header = console.header();
+        NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
+        notificationDrawer.clearAll(); // to get rid of any "Please reload" notifications
+        notificationDrawer.close();
 
         properties = new HashSet<>();
         for (int i = 0; i < COUNT; i++) {
@@ -120,7 +123,8 @@ public class NotificationTest {
     @Test
     public void clearAll() throws Exception {
         NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
-        notificationDrawer.getClearAll().click();
-        waitGui().until().element(notificationDrawer.getBlankSlate()).is().visible();
+        notificationDrawer.clearAll();
+        waitGui().until().element(notificationDrawer.getMarkAllRead()).is().not().visible();
+        waitGui().until().element(notificationDrawer.getClearAll()).is().not().visible();
     }
 }
