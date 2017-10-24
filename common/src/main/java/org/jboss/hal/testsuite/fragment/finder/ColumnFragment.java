@@ -20,7 +20,6 @@ import java.util.List;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -31,13 +30,14 @@ import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.finderItem;
 
 /** Page fragment for one finder column. Use {@link FinderFragment#column(String)} to get an instance. */
 public class ColumnFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
-    @FindBy(css = "ul > li." + CSS.finderItem) private List<WebElement> items;
+    @FindBy(css = "ul > li." + finderItem) private List<WebElement> items;
     @Inject private Console console;
     private String columnId;
 
@@ -57,6 +57,12 @@ public class ColumnFragment {
     /** Returns the specified column action */
     public WebElement action(String id) {
         return root.findElement(By.id(id));
+    }
+
+    public void filter(String filter) {
+        assertColumnId();
+        WebElement filterInput = root.findElement(By.id(Ids.build(columnId, "filter")));
+        filterInput.sendKeys(filter);
     }
 
 

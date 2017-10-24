@@ -15,76 +15,71 @@
  */
 package org.jboss.hal.testsuite.test.configuration;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.resources.Ids;
+import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.page.configuration.InterfacePage;
-import org.junit.AfterClass;
+import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.InterfaceFixtures.READ1;
-import static org.jboss.hal.testsuite.test.configuration.InterfaceFixtures.READ2;
-import static org.jboss.hal.testsuite.test.configuration.InterfaceFixtures.interfaceAddress;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SUBSYSTEM;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class InterfaceApplicationTest {
+public class SubsystemsTest {
 
-    private static final String LOCALHOST = "127.0.0.1";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static List<String> subsystems = new ArrayList<>();
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(interfaceAddress(READ1), Values.empty().and(INET_ADDRESS, LOCALHOST));
-        operations.add(interfaceAddress(READ2), Values.empty().and(INET_ADDRESS, LOCALHOST));
+        subsystems = operations.readChildrenNames(Address.root(), SUBSYSTEM).stringListValue();
     }
-
-    @AfterClass
-    public static void tearDown() throws Exception {
-        operations.removeIfExists(interfaceAddress(READ1));
-        operations.removeIfExists(interfaceAddress(READ2));
-    }
-
 
     @Drone private WebDriver browser;
     @Inject private Console console;
-    @Page private InterfacePage page;
-    private FormFragment form;
+    private ColumnFragment column;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, READ1);
-        form = page.getForm();
+        column = console.finder(NameTokens.CONFIGURATION)
+                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS)))
+                .column(Ids.CONFIGURATION_SUBSYSTEM);
     }
 
     @Test
-    public void read() throws Exception {
-        assertEquals(READ1, form.value(NAME));
+    public void numberOfSubsystems() throws Exception {
+        assertEquals(subsystems.size(), column.getItems().size());
     }
 
     @Test
-    public void update() throws Exception {
-        form.edit();
-        form.text(INET_ADDRESS, "127.0.0.2");
-        form.save();
+    public void filter() throws Exception {
+        String filter = "io";
+        column.filter(filter);
 
-        console.success();
-        new ResourceVerifier(interfaceAddress(READ1), client)
-                .verifyAttribute(INET_ADDRESS, "127.0.0.2");
+        long filtered = subsystems.stream()
+                .filter(subsystem -> subsystem.toLowerCase().contains(filter))
+                .count();
+        long visible = column.getItems().stream()
+                .filter(WebElement::isDisplayed)
+                .count();
+        assertEquals(filtered, visible);
     }
 }
