@@ -17,11 +17,12 @@ package org.jboss.hal.testsuite;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.List;
+import java.util.Set;
 
-import com.google.common.net.UrlEscapers;
-import com.gwtplatform.common.shared.UrlUtils;
-import com.gwtplatform.mvp.shared.proxy.ParameterTokenFormatter;
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
+import com.gwtplatform.mvp.shared.proxy.TokenFormatException;
+import com.gwtplatform.mvp.shared.proxy.TokenFormatter;
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.location.exception.LocationException;
@@ -37,7 +38,6 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static java.util.Collections.singletonList;
 import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -68,10 +68,10 @@ public class Console {
 
     @Drone private WebDriver browser;
     @ArquillianResource private URL url;
-    private ParameterTokenFormatter tokenFormatter;
+    private TokenFormatter tokenFormatter;
 
     public Console() {
-        tokenFormatter = new ParameterTokenFormatter(new EncodeOnlyUrlUtils());
+        tokenFormatter = new HalTokenFormatter();
     }
 
 
@@ -114,7 +114,7 @@ public class Console {
     }
 
     private String fragment(PlaceRequest placeRequest) {
-        return tokenFormatter.toHistoryToken(singletonList(placeRequest));
+        return tokenFormatter.toPlaceToken(placeRequest);
     }
 
 
@@ -173,36 +173,37 @@ public class Console {
     // ------------------------------------------------------ inner classes
 
 
-    private static class EncodeOnlyUrlUtils implements UrlUtils {
+    private static class HalTokenFormatter implements TokenFormatter {
 
         @Override
-        public String decodeQueryString(String s) {
-            return s;
+        public String toHistoryToken(List<PlaceRequest> placeRequestHierarchy) throws TokenFormatException {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public String encodeQueryString(String s) {
-            return UrlEscapers.urlFragmentEscaper().escape(s);
+        public PlaceRequest toPlaceRequest(String placeToken) throws TokenFormatException {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public String decodePathSegment(String s) {
-            return s;
+        public List<PlaceRequest> toPlaceRequestHierarchy(String historyToken) throws TokenFormatException {
+            throw new UnsupportedOperationException();
         }
 
         @Override
-        public String encodePathSegment(String s) {
-            return UrlEscapers.urlPathSegmentEscaper().escape(s);
-        }
-
-        @Override
-        public String decodeMatrixParameter(String s) {
-            return s;
-        }
-
-        @Override
-        public String encodeMatrixParameter(String s) {
-            return UrlEscapers.urlFragmentEscaper().escape(s);
+        public String toPlaceToken(PlaceRequest placeRequest) throws TokenFormatException {
+            StringBuilder builder = new StringBuilder();
+            builder.append(placeRequest.getNameToken());
+            Set<String> params = placeRequest.getParameterNames();
+            if (params != null) {
+                for (String param : params) {
+                    builder.append(";")
+                            .append(param)
+                            .append("=")
+                            .append(placeRequest.getParameter(param, null));
+                }
+            }
+            return builder.toString();
         }
     }
 }
