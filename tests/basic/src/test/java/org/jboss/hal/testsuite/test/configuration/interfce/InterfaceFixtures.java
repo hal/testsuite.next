@@ -19,16 +19,18 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.INTERFACE;
+
 public interface InterfaceFixtures {
 
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
-    String CREATE = Ids.build("interface", "create", GENERATOR.generate(10));
-    String READ = Ids.build("interface", "read", GENERATOR.generate(10));
-    String UPDATE = Ids.build("interface", "update", GENERATOR.generate(10));
-    String DELETE = Ids.build("interface", "delete", GENERATOR.generate(10));
+    String CREATE = Ids.build("ifc", "create", GENERATOR.generate(10));
+    String READ = Ids.build("ifc", "read", GENERATOR.generate(10));
+    String UPDATE = Ids.build("ifc", "update", GENERATOR.generate(10));
+    String DELETE = Ids.build("ifc", "delete", GENERATOR.generate(10));
 
     static Address interfaceAddress(String name) {
-        return Address.of("interface", name);
+        return Address.of(INTERFACE, name);
     }
 }

@@ -19,16 +19,20 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.BATCH_JBERET;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.THREAD_FACTORY;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.THREAD_POOL;
+
 public interface BatchFixtures {
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem("batch-jberet");
+    Address SUBSYSTEM_ADDRESS = Address.subsystem(BATCH_JBERET);
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
 
     // ------------------------------------------------------ in memory repository
 
-    String IN_MEMORY_CREATE = Ids.build("in-memory", "create", GENERATOR.generate(10));
-    String IN_MEMORY_DELETE = Ids.build("in-memory", "delete", GENERATOR.generate(10));
+    String IN_MEMORY_CREATE = Ids.build("im", "create", GENERATOR.generate(10));
+    String IN_MEMORY_DELETE = Ids.build("im", "delete", GENERATOR.generate(10));
 
     static Address inMemoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("in-memory-job-repository", name);
@@ -49,25 +53,25 @@ public interface BatchFixtures {
 
     // ------------------------------------------------------ thread factory
 
-    String THREAD_FACTORY_CREATE = Ids.build("thread-factory", "create", GENERATOR.generate(10));
-    String THREAD_FACTORY_READ = Ids.build("thread-factory", "read", GENERATOR.generate(10));
-    String THREAD_FACTORY_UPDATE = Ids.build("thread-factory", "update", GENERATOR.generate(10));
-    String THREAD_FACTORY_DELETE = Ids.build("thread-factory", "delete", GENERATOR.generate(10));
+    String THREAD_FACTORY_CREATE = Ids.build("tf", "create", GENERATOR.generate(10));
+    String THREAD_FACTORY_READ = Ids.build("tf", "read", GENERATOR.generate(10));
+    String THREAD_FACTORY_UPDATE = Ids.build("tf", "update", GENERATOR.generate(10));
+    String THREAD_FACTORY_DELETE = Ids.build("tf", "delete", GENERATOR.generate(10));
 
     static Address threadFactoryAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("thread-factory", name);
+        return SUBSYSTEM_ADDRESS.and(THREAD_FACTORY, name);
     }
 
 
     // ------------------------------------------------------ thread pool
 
     int MAX_THREADS_VALUE = 11;
-    String THREAD_POOL_CREATE = Ids.build("thread-pool", "create", GENERATOR.generate(10));
-    String THREAD_POOL_READ = Ids.build("thread-pool", "read", GENERATOR.generate(10));
-    String THREAD_POOL_UPDATE = Ids.build("thread-pool", "update", GENERATOR.generate(10));
-    String THREAD_POOL_DELETE = Ids.build("thread-pool", "delete", GENERATOR.generate(10));
+    String THREAD_POOL_CREATE = Ids.build("tp", "create", GENERATOR.generate(10));
+    String THREAD_POOL_READ = Ids.build("tp", "read", GENERATOR.generate(10));
+    String THREAD_POOL_UPDATE = Ids.build("tp", "update", GENERATOR.generate(10));
+    String THREAD_POOL_DELETE = Ids.build("tp", "delete", GENERATOR.generate(10));
 
     static Address threadPoolAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("thread-pool", name);
+        return SUBSYSTEM_ADDRESS.and(THREAD_POOL, name);
     }
 }

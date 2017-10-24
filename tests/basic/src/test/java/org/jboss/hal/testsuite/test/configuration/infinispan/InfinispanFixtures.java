@@ -13,24 +13,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.socketbinding;
+package org.jboss.hal.testsuite.test.configuration.infinispan;
 
 import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 
-public interface SocketBindingFixtures {
+public interface InfinispanFixtures {
 
+    Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
-    String CREATE = Ids.build("sbg", "create", GENERATOR.generate(10));
-    String READ = Ids.build("sbg", "read", GENERATOR.generate(10));
-    String UPDATE = Ids.build("sbg", "update", GENERATOR.generate(10));
-    String DELETE = Ids.build("sbg", "delete", GENERATOR.generate(10));
+    // ------------------------------------------------------ cache container
 
-    static Address socketBindingGroupAddress(String name) {
-        return Address.of(SOCKET_BINDING_GROUP, name);
+    String CC_CREATE = Ids.build("cc", "create", GENERATOR.generate(10));
+    String CC_READ = Ids.build("cc", "read", GENERATOR.generate(10));
+    String CC_UPDATE = Ids.build("cc", "update", GENERATOR.generate(10));
+    String CC_DELETE = Ids.build("cc", "update", GENERATOR.generate(10));
+
+    static Address cacheContainerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CACHE_CONTAINER, name);
     }
 }

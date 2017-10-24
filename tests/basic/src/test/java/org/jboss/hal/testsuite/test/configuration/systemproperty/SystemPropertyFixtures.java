@@ -19,20 +19,22 @@ import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SYSTEM_PROPERTY;
+
 public interface SystemPropertyFixtures {
 
     RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
-    String CREATE_NAME = Ids.build("system-property", "create", "name", GENERATOR.generate(10));
-    String CREATE_VALUE = Ids.build("system-property", "create", "value", GENERATOR.generate(10));
-    String READ_NAME = Ids.build("system-property", "read", "name", GENERATOR.generate(10));
-    String READ_VALUE = Ids.build("system-property", "read", "value", GENERATOR.generate(10));
-    String UPDATE_NAME = Ids.build("system-property", "update", "name", GENERATOR.generate(10));
-    String UPDATE_VALUE = Ids.build("system-property", "update", "value", GENERATOR.generate(10));
-    String DELETE_NAME = Ids.build("system-property", "delete", "name", GENERATOR.generate(10));
-    String DELETE_VALUE = Ids.build("system-property", "delete", "value", GENERATOR.generate(10));
+    String CREATE_NAME = Ids.build("sp", "create", "name", GENERATOR.generate(10));
+    String CREATE_VALUE = Ids.build("sp", "create", "value", GENERATOR.generate(10));
+    String READ_NAME = Ids.build("sp", "read", "name", GENERATOR.generate(10));
+    String READ_VALUE = Ids.build("sp", "read", "value", GENERATOR.generate(10));
+    String UPDATE_NAME = Ids.build("sp", "update", "name", GENERATOR.generate(10));
+    String UPDATE_VALUE = Ids.build("sp", "update", "value", GENERATOR.generate(10));
+    String DELETE_NAME = Ids.build("sp", "delete", "name", GENERATOR.generate(10));
+    String DELETE_VALUE = Ids.build("sp", "delete", "value", GENERATOR.generate(10));
 
     static Address systemPropertyAddress(String name) {
-        return Address.of("system-property", name);
+        return Address.of(SYSTEM_PROPERTY, name);
     }
 }
