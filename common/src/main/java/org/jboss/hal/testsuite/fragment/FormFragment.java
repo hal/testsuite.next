@@ -15,10 +15,12 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -32,6 +34,7 @@ public class FormFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
+    @Inject private Console console;
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
     @FindBy(css = "." + formButtons + " ." + btnPrimary) private WebElement saveButton;
     @FindBy(css = "." + readonly) private WebElement readOnlySection;
@@ -68,7 +71,7 @@ public class FormFragment {
      * {@code getSaveButton().click()} instead.
      */
     public void save() {
-        saveButton.click();
+        console.scrollIntoView(saveButton).click();
         waitGui().until().element(readOnlySection).is().visible();
     }
 

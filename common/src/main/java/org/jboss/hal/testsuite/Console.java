@@ -35,6 +35,7 @@ import org.jboss.hal.testsuite.fragment.FooterFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -169,6 +170,15 @@ public class Console {
         return dialog;
     }
 
+
+    // ------------------------------------------------------ elements
+
+    /** Makes sure that the element is visible and returns the element. */
+    public WebElement scrollIntoView(WebElement element) {
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        return element;
+    }
 
     // ------------------------------------------------------ inner classes
 
