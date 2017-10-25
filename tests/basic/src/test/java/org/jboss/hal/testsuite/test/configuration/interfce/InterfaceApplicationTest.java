@@ -77,12 +77,6 @@ public class InterfaceApplicationTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         form.edit();
         form.text(INET_ADDRESS, "127.0.0.2");

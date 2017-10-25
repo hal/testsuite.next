@@ -34,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -53,11 +52,13 @@ public class JdbcJobRepositoryTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        client.apply(new AddDataSource.Builder(DATA_SOURCE)
-                .connectionUrl("jdbc:h2:mem:" + DATA_SOURCE + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE")
-                .driverName("h2")
-                .jndiName(Random.jndiName(DATA_SOURCE))
-                .build());
+        // Does not work with client.apply(new AddDataSource.Builder<>(...).build());
+        String connectionUrl = "jdbc:h2:mem:" + DATA_SOURCE + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE";
+        operations.add(Address.subsystem("datasources").and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE),
+                Values.empty()
+                        .and("jndi-name", Random.jndiName(DATA_SOURCE))
+                        .and("driver-name", "h2")
+                        .and("connection-url", connectionUrl));
         operations.add(jdbcAddress(JDBC_READ), Values.empty().and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
         operations.add(jdbcAddress(JDBC_DELETE),
                 Values.empty().and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
@@ -103,13 +104,6 @@ public class JdbcJobRepositoryTest {
     public void read() throws Exception {
         table.select(JDBC_READ);
         assertEquals(DATA_SOURCE, form.value(ModelDescriptionConstants.DATA_SOURCE));
-    }
-
-    @Test
-    public void reset() throws Exception {
-        table.select(JDBC_READ);
-        form.reset();
-        console.success();
     }
 
     @Test
