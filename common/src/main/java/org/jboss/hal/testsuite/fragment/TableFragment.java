@@ -15,6 +15,9 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
@@ -34,7 +37,11 @@ public class TableFragment {
     @Root private WebElement root;
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
     @Inject private Console console;
-    private FormFragment form;
+    private List<FormFragment> forms;
+
+    public TableFragment() {
+        this.forms = new ArrayList<>();
+    }
 
     /** Clicks on the add button and returns an {@link AddResourceDialogFragment}. */
     public AddResourceDialogFragment add() {
@@ -56,13 +63,28 @@ public class TableFragment {
         return buttons.findElement(selector);
     }
 
-    /** Selects the first {@code td} which contains the specified value, then clicks on it. */
+    /**
+     * Selects the first {@code td} which contains the specified value, then clicks on it. If forms were bound to this
+     * table, {@link FormFragment#view()} is called.
+     */
     public void select(String value) {
         By selector = ByJQuery.selector("td:contains('" + value + "')");
         root.findElement(selector).click();
-        if (form != null) {
-            form.view();
+        if (!forms.isEmpty()) {
+            for (FormFragment form : forms) {
+                if (form.getRoot().isDisplayed()) {
+                    form.view();
+                }
+            }
         }
+    }
+
+    /**
+     * Binds the forms to the table. Calling {@link TableFragment#select(String)} will trigger {@link
+     * FormFragment#view()}.
+     */
+    public void bind(List<FormFragment> forms) {
+        this.forms.addAll(forms);
     }
 
     /**
@@ -70,6 +92,6 @@ public class TableFragment {
      * FormFragment#view()}.
      */
     public void bind(FormFragment form) {
-        this.form = form;
+        this.forms.add(form);
     }
 }

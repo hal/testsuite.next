@@ -21,6 +21,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -97,10 +98,15 @@ public class ThreadFactoryTest {
     }
 
     @Test
+    public void reset() throws Exception {
+        // TODO Test reset
+    }
+
+    @Test
     public void update() throws Exception {
-        String groupName = GENERATOR.generate(20);
+        String groupName = Random.name();
         int priority = RandomUtils.nextInt(1, 10);
-        String pattern = GENERATOR.generate(20);
+        String pattern = Random.name();
 
         table.select(THREAD_FACTORY_UPDATE);
         form.edit();
@@ -122,7 +128,7 @@ public class ThreadFactoryTest {
         table.select(THREAD_FACTORY_UPDATE);
         form.edit();
         form.number(PRIORITY, priority);
-        form.getSaveButton().click();
+        form.trySave();
         form.expectError(PRIORITY);
     }
 

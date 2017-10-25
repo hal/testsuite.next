@@ -15,8 +15,8 @@
  */
 package org.jboss.hal.testsuite.test.configuration.infinispan;
 
-import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
@@ -25,16 +25,25 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 public interface InfinispanFixtures {
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
-    RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
 
     // ------------------------------------------------------ cache container
 
-    String CC_CREATE = Ids.build("cc", "create", GENERATOR.generate(10));
-    String CC_READ = Ids.build("cc", "read", GENERATOR.generate(10));
-    String CC_UPDATE = Ids.build("cc", "update", GENERATOR.generate(10));
-    String CC_DELETE = Ids.build("cc", "update", GENERATOR.generate(10));
+    String CC_CREATE = Ids.build("cc", "create", Random.name());
+    String CC_READ = Ids.build("cc", "read", Random.name());
+    String CC_UPDATE = Ids.build("cc", "update", Random.name());
+    String CC_DELETE = Ids.build("cc", "update", Random.name());
 
     static Address cacheContainerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CACHE_CONTAINER, name);
+    }
+
+
+    // ------------------------------------------------------ local cache
+
+    String LC_CREATE = Ids.build("lc", "create", Random.name());
+    String LC_UPDATE = Ids.build("lc", "update", Random.name());
+
+    static Address localCacheAddress(String cacheContainer, String localCache) {
+        return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
     }
 }

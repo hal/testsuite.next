@@ -65,8 +65,8 @@ public class BatchConfigurationTest {
     }
 
     @Test
-    public void view() throws Exception {
-        // console.header()
+    public void reset() throws Exception {
+        // TODO Test reset
     }
 
     @Test

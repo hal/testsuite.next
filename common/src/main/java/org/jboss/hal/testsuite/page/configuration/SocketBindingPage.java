@@ -16,7 +16,9 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.WebElement;
@@ -25,8 +27,12 @@ import org.openqa.selenium.support.FindBy;
 @Place(NameTokens.SOCKET_BINDING_GROUP)
 public class SocketBindingPage extends BasePage {
 
-    @FindBy(id = "socket-binding-group-configuration-item") private WebElement configurationItem;
-    @FindBy(id = "socket-binding-group-configuration-form") private FormFragment configurationForm;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP + "-" + Ids.CONFIGURATION + "-" + Ids.ITEM) private WebElement configurationItem;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP + "-" + Ids.CONFIGURATION + "-" + Ids.FORM) private FormFragment configurationForm;
+
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.ITEM) private WebElement inboundItem;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.TABLE + "_wrapper") private TableFragment inboundTable;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.FORM) private FormFragment inboundForm;
 
     public WebElement getConfigurationItem() {
         return configurationItem;
@@ -34,5 +40,17 @@ public class SocketBindingPage extends BasePage {
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
+    }
+
+    public WebElement getInboundItem() {
+        return inboundItem;
+    }
+
+    public TableFragment getInboundTable() {
+        return inboundTable;
+    }
+
+    public FormFragment getInboundForm() {
+        return inboundForm;
     }
 }

@@ -37,6 +37,7 @@ public class FormFragment {
     @Root private WebElement root;
     @Inject private Console console;
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
+    @FindBy(css = "a[data-operation=reset]") private WebElement resetLink;
     @FindBy(css = "." + formButtons + " ." + btnPrimary) private WebElement saveButton;
     @FindBy(css = "." + readonly) private WebElement readOnlySection;
     @FindBy(css = "." + editing) private WebElement editingSection;
@@ -44,9 +45,18 @@ public class FormFragment {
 
     // ------------------------------------------------------ read-only mode
 
-    /** Waits until the read-only section. */
+    /**
+     * Waits until the read-only section is visible. If this form is part of a tab pane, make sure to {@linkplain
+     * TabsFragment#select(String) select} the tab first!
+     */
     public void view() {
         waitGui().until().element(readOnlySection).is().visible();
+    }
+
+    /** Clicks on the reset link and confirms the confirmation dialog */
+    public void reset() {
+        resetLink.click();
+        console.confirmationDialog().confirm();
     }
 
     /** Returns the value of the specified attribute in the read-only section. */
@@ -68,8 +78,16 @@ public class FormFragment {
     }
 
     /**
+     * Clicks on the save button w/o waiting for the read-only section to become visible. Use this method if you expect
+     * (validation) errors when saving the form
+     */
+    public void trySave() {
+        console.scrollIntoView(saveButton).click();
+    }
+
+    /**
      * Saves the form and waits until the read-only section is visible. Expects no errors. If you expect errors, use
-     * {@code getSaveButton().click()} instead.
+     * {@link #trySave()} instead.
      */
     public void save() {
         console.scrollIntoView(saveButton).click();
@@ -98,7 +116,7 @@ public class FormFragment {
     /** Changes the specified bootstrap switch. */
     public void bootstrapSwitch(String name, boolean value) {
         WebElement inputElement = inputElement(name);
-        boolean inputValue = parseBoolean(inputElement.getAttribute("value"));
+        boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
             WebElement switchContainer = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name)));
             switchContainer.click();
@@ -141,8 +159,8 @@ public class FormFragment {
 
     // ------------------------------------------------------ properties
 
-    public WebElement getSaveButton() {
-        return saveButton;
+    public WebElement getRoot() {
+        return root;
     }
 
 

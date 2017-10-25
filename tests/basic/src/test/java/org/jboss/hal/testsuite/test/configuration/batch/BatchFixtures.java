@@ -15,8 +15,8 @@
  */
 package org.jboss.hal.testsuite.test.configuration.batch;
 
-import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.BATCH_JBERET;
@@ -26,13 +26,11 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.THREAD_POOL;
 public interface BatchFixtures {
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(BATCH_JBERET);
-    RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
-
 
     // ------------------------------------------------------ in memory repository
 
-    String IN_MEMORY_CREATE = Ids.build("im", "create", GENERATOR.generate(10));
-    String IN_MEMORY_DELETE = Ids.build("im", "delete", GENERATOR.generate(10));
+    String IN_MEMORY_CREATE = Ids.build("im", "create", Random.name());
+    String IN_MEMORY_DELETE = Ids.build("im", "delete", Random.name());
 
     static Address inMemoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("in-memory-job-repository", name);
@@ -41,10 +39,10 @@ public interface BatchFixtures {
 
     // ------------------------------------------------------ jdbc repository
 
-    String DATA_SOURCE = Ids.build("ds", GENERATOR.generate(10));
-    String JDBC_CREATE = Ids.build("jdbc", "create", GENERATOR.generate(10));
-    String JDBC_READ = Ids.build("jdbc", "read", GENERATOR.generate(10));
-    String JDBC_DELETE = Ids.build("jdbc", "remove", GENERATOR.generate(10));
+    String DATA_SOURCE = Ids.build("ds", Random.name());
+    String JDBC_CREATE = Ids.build("jdbc", "create", Random.name());
+    String JDBC_READ = Ids.build("jdbc", "read", Random.name());
+    String JDBC_DELETE = Ids.build("jdbc", "remove", Random.name());
 
     static Address jdbcAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("jdbc-job-repository", name);
@@ -53,10 +51,10 @@ public interface BatchFixtures {
 
     // ------------------------------------------------------ thread factory
 
-    String THREAD_FACTORY_CREATE = Ids.build("tf", "create", GENERATOR.generate(10));
-    String THREAD_FACTORY_READ = Ids.build("tf", "read", GENERATOR.generate(10));
-    String THREAD_FACTORY_UPDATE = Ids.build("tf", "update", GENERATOR.generate(10));
-    String THREAD_FACTORY_DELETE = Ids.build("tf", "delete", GENERATOR.generate(10));
+    String THREAD_FACTORY_CREATE = Ids.build("tf", "create", Random.name());
+    String THREAD_FACTORY_READ = Ids.build("tf", "read", Random.name());
+    String THREAD_FACTORY_UPDATE = Ids.build("tf", "update", Random.name());
+    String THREAD_FACTORY_DELETE = Ids.build("tf", "delete", Random.name());
 
     static Address threadFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(THREAD_FACTORY, name);
@@ -66,10 +64,10 @@ public interface BatchFixtures {
     // ------------------------------------------------------ thread pool
 
     int MAX_THREADS_VALUE = 11;
-    String THREAD_POOL_CREATE = Ids.build("tp", "create", GENERATOR.generate(10));
-    String THREAD_POOL_READ = Ids.build("tp", "read", GENERATOR.generate(10));
-    String THREAD_POOL_UPDATE = Ids.build("tp", "update", GENERATOR.generate(10));
-    String THREAD_POOL_DELETE = Ids.build("tp", "delete", GENERATOR.generate(10));
+    String THREAD_POOL_CREATE = Ids.build("tp", "create", Random.name());
+    String THREAD_POOL_READ = Ids.build("tp", "read", Random.name());
+    String THREAD_POOL_UPDATE = Ids.build("tp", "update", Random.name());
+    String THREAD_POOL_DELETE = Ids.build("tp", "delete", Random.name());
 
     static Address threadPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(THREAD_POOL, name);

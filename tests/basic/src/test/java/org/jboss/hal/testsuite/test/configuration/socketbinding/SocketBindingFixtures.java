@@ -15,22 +15,37 @@
  */
 package org.jboss.hal.testsuite.test.configuration.socketbinding;
 
-import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
 
 public interface SocketBindingFixtures {
 
-    RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z').build();
+    String STANDARD_SOCKETS = "standard-sockets";
 
-    String CREATE = Ids.build("sbg", "create", GENERATOR.generate(10));
-    String READ = Ids.build("sbg", "read", GENERATOR.generate(10));
-    String UPDATE = Ids.build("sbg", "update", GENERATOR.generate(10));
-    String DELETE = Ids.build("sbg", "delete", GENERATOR.generate(10));
+    // ------------------------------------------------------ socket binding group
+
+    String SBG_CREATE = Ids.build("sbg", "create", Random.name());
+    String SBG_READ = Ids.build("sbg", "read", Random.name());
+    String SBG_UPDATE = Ids.build("sbg", "update", Random.name());
+    String SBG_DELETE = Ids.build("sbg", "delete", Random.name());
 
     static Address socketBindingGroupAddress(String name) {
         return Address.of(SOCKET_BINDING_GROUP, name);
+    }
+
+
+    // ------------------------------------------------------ inbound / socket binding
+
+    String INBOUND_CREATE = Ids.build("inbound", "create", Random.name());
+    String INBOUND_RESET = Ids.build("inbound", "read", Random.name());
+    String INBOUND_UPDATE = Ids.build("inbound", "update", Random.name());
+    String INBOUND_DELETE = Ids.build("inbound", "delete", Random.name());
+
+    static Address socketBindingAddress(String sbg, String name) {
+        return socketBindingGroupAddress(sbg).and(SOCKET_BINDING, name);
     }
 }

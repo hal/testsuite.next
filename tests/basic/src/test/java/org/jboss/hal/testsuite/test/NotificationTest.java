@@ -17,13 +17,13 @@ package org.jboss.hal.testsuite.test;
 
 import java.util.HashSet;
 
-import org.apache.commons.text.RandomStringGenerator;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
@@ -51,8 +51,6 @@ import static org.junit.Assert.assertTrue;
 public class NotificationTest {
 
     private static final int COUNT = 2;
-    private static final RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z')
-            .build();
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
@@ -73,8 +71,8 @@ public class NotificationTest {
 
         properties = new HashSet<>();
         for (int i = 0; i < COUNT; i++) {
-            String name = Ids.build(Ids.SYSTEM_PROPERTY, NAME, String.valueOf(i), GENERATOR.generate(10));
-            String value = Ids.build(Ids.SYSTEM_PROPERTY, VALUE, String.valueOf(i), GENERATOR.generate(10));
+            String name = Ids.build(Ids.SYSTEM_PROPERTY, NAME, String.valueOf(i), Random.name());
+            String value = Ids.build(Ids.SYSTEM_PROPERTY, VALUE, String.valueOf(i), Random.name());
 
             AddResourceDialogFragment dialog = table.add();
             dialog.getForm().text(NAME, name);

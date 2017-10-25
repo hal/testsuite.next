@@ -39,7 +39,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_INTERFACE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.socketBindingGroupAddress;
 import static org.junit.Assert.assertEquals;
 
@@ -54,12 +54,12 @@ public class SocketBindingConfigurationTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(socketBindingGroupAddress(UPDATE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
+        operations.add(socketBindingGroupAddress(SBG_UPDATE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(socketBindingGroupAddress(UPDATE));
+        operations.removeIfExists(socketBindingGroupAddress(SBG_UPDATE));
     }
 
     @Drone private WebDriver browser;
@@ -69,14 +69,14 @@ public class SocketBindingConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, UPDATE);
+        page.navigate(NAME, SBG_UPDATE);
         page.getConfigurationItem().click();
         form = page.getConfigurationForm();
     }
 
     @Test
     public void view() throws Exception {
-        assertEquals(BreadcrumbFragment.abbreviate(UPDATE), console.header().breadcrumb().lastValue());
+        assertEquals(BreadcrumbFragment.abbreviate(SBG_UPDATE), console.header().breadcrumb().lastValue());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class SocketBindingConfigurationTest {
         form.save();
 
         console.success();
-        new ResourceVerifier(socketBindingGroupAddress(UPDATE), client, 500)
+        new ResourceVerifier(socketBindingGroupAddress(SBG_UPDATE), client, 500)
                 .verifyAttribute(DEFAULT_INTERFACE, PRIVATE);
     }
 }

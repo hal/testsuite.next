@@ -20,6 +20,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.BreadcrumbFragment;
@@ -36,7 +37,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.GENERATOR;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
 import static org.junit.Assert.assertEquals;
 
@@ -76,8 +76,13 @@ public class CacheContainerConfigurationTest {
     }
 
     @Test
+    public void reset() throws Exception {
+        // TODO Test reset
+    }
+
+    @Test
     public void update() throws Exception {
-        String aliases = GENERATOR.generate(10);
+        String aliases = Random.name();
         form.edit();
         form.list(ALIASES).add(aliases);
         form.save();

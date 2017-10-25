@@ -43,9 +43,9 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_INTERFACE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.CREATE;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.DELETE;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.READ;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_READ;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.socketBindingGroupAddress;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -60,15 +60,15 @@ public class SocketBindingFinderTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(socketBindingGroupAddress(READ), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
-        operations.add(socketBindingGroupAddress(DELETE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
+        operations.add(socketBindingGroupAddress(SBG_READ), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
+        operations.add(socketBindingGroupAddress(SBG_DELETE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(socketBindingGroupAddress(CREATE));
-        operations.removeIfExists(socketBindingGroupAddress(READ));
-        operations.removeIfExists(socketBindingGroupAddress(DELETE));
+        operations.removeIfExists(socketBindingGroupAddress(SBG_CREATE));
+        operations.removeIfExists(socketBindingGroupAddress(SBG_READ));
+        operations.removeIfExists(socketBindingGroupAddress(SBG_DELETE));
     }
 
 
@@ -86,46 +86,46 @@ public class SocketBindingFinderTest {
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
-        dialog.getForm().text(NAME, CREATE);
+        dialog.getForm().text(NAME, SBG_CREATE);
         dialog.getForm().text(DEFAULT_INTERFACE, PUBLIC);
         dialog.add();
 
         console.success();
-        assertTrue(column.containsItem(CREATE));
-        new ResourceVerifier(socketBindingGroupAddress(CREATE), client).verifyExists();
+        assertTrue(column.containsItem(SBG_CREATE));
+        new ResourceVerifier(socketBindingGroupAddress(SBG_CREATE), client).verifyExists();
     }
 
     @Test
     public void read() throws Exception {
-        assertTrue(column.containsItem(READ));
+        assertTrue(column.containsItem(SBG_READ));
     }
 
     @Test
     public void select() throws Exception {
-        column.selectItem(READ);
+        column.selectItem(SBG_READ);
         PlaceRequest placeRequest = Places.finderPlace(Ids.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.SOCKET_BINDINGS))
-                .append(Ids.SOCKET_BINDING_GROUP, READ));
+                .append(Ids.SOCKET_BINDING_GROUP, SBG_READ));
         console.assertPlace(placeRequest);
     }
 
     @Test
     public void view() throws Exception {
-        column.selectItem(READ).view();
+        column.selectItem(SBG_READ).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.SOCKET_BINDING_GROUP)
-                .with(NAME, READ)
+                .with(NAME, SBG_READ)
                 .build();
         console.assertPlace(placeRequest);
     }
 
     @Test
     public void delete() throws Exception {
-        column.selectItem(DELETE).dropdown().click("Remove");
+        column.selectItem(SBG_DELETE).dropdown().click("Remove");
         console.confirmationDialog().confirm();
 
         console.success();
-        assertFalse(column.containsItem(DELETE));
-        new ResourceVerifier(socketBindingGroupAddress(DELETE), client).verifyDoesNotExist();
+        assertFalse(column.containsItem(SBG_DELETE));
+        new ResourceVerifier(socketBindingGroupAddress(SBG_DELETE), client).verifyDoesNotExist();
     }
 }

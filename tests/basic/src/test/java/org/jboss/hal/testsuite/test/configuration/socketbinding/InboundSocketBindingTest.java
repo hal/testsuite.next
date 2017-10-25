@@ -13,109 +13,123 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.systemproperty;
+package org.jboss.hal.testsuite.test.configuration.socketbinding;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.configuration.SystemPropertyPage;
+import org.jboss.hal.testsuite.page.configuration.SocketBindingPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.commands.socketbindings.AddSocketBinding;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.threadFactoryAddress;
-import static org.jboss.hal.testsuite.test.configuration.systemproperty.SystemPropertyFixtures.*;
-import static org.junit.Assert.assertEquals;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PORT;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.*;
 
 @RunWith(Arquillian.class)
-public class SystemPropertyTest {
+public class InboundSocketBindingTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(systemPropertyAddress(READ_NAME), Values.empty().and(VALUE, READ_VALUE));
-        operations.add(systemPropertyAddress(UPDATE_NAME), Values.empty().and(VALUE, UPDATE_VALUE));
-        operations.add(systemPropertyAddress(DELETE_NAME), Values.empty().and(VALUE, DELETE_VALUE));
+        client.apply(new AddSocketBinding.Builder(INBOUND_RESET).port(2222).build());
+        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET));
+        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
+        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(systemPropertyAddress(CREATE_NAME));
-        operations.removeIfExists(systemPropertyAddress(READ_NAME));
-        operations.removeIfExists(systemPropertyAddress(UPDATE_NAME));
-        operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
+        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE));
+        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET));
+        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
+        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
     }
 
     @Drone private WebDriver browser;
-    @Page private SystemPropertyPage page;
     @Inject private Console console;
+    @Page private SocketBindingPage page;
     private TableFragment table;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate();
+        page.navigate(NAME, STANDARD_SOCKETS);
+        page.getInboundItem().click();
 
-        form = page.getForm();
-        table = page.getTable();
+        table = page.getInboundTable();
+        form = page.getInboundForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CREATE_NAME);
-        dialog.getForm().text(VALUE, CREATE_VALUE);
+        dialog.getForm().text(NAME, INBOUND_CREATE);
         dialog.add();
 
         console.success();
-        new ResourceVerifier(systemPropertyAddress(CREATE_NAME), client)
+        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE), client)
                 .verifyExists();
     }
 
     @Test
-    public void read() throws Exception {
-        table.select(READ_NAME);
-        assertEquals(READ_VALUE, form.value(VALUE));
+    public void reset() throws Exception {
+        table.select(INBOUND_RESET);
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET), client)
+                .verifyAttribute(PORT, 0);
     }
 
     @Test
     public void update() throws Exception {
-        String value = Random.name();
-        table.select(UPDATE_NAME);
+        int port = 1234;
+
+        table.select(INBOUND_UPDATE);
         form.edit();
-        form.text(VALUE, value);
+        form.number(PORT, port);
         form.save();
 
         console.success();
-        new ResourceVerifier(systemPropertyAddress(UPDATE_NAME), client)
-                .verifyAttribute(VALUE, value);
+        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
+                .verifyAttribute(PORT, port);
+    }
 
+    @Test
+    public void updateInvalidPort() throws Exception {
+        int port = -1;
+
+        table.select(INBOUND_UPDATE);
+        form.edit();
+        form.number(PORT, port);
+        form.trySave();
+        form.expectError(PORT);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(DELETE_NAME);
+        table.remove(INBOUND_DELETE);
 
         console.success();
-        new ResourceVerifier(threadFactoryAddress(DELETE_NAME), client).verifyDoesNotExist();
+        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE), client)
+                .verifyDoesNotExist();
     }
 }

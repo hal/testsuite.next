@@ -115,6 +115,11 @@ public class ThreadPoolTest {
     }
 
     @Test
+    public void reset() throws Exception {
+        // TODO Test reset
+    }
+
+    @Test
     public void update() throws Exception {
         int maxThreads = RandomUtils.nextInt(100, 200);
 
@@ -133,7 +138,7 @@ public class ThreadPoolTest {
         table.select(THREAD_POOL_UPDATE);
         form.edit();
         form.clear(MAX_THREADS);
-        form.getSaveButton().click();
+        form.trySave();
         form.expectError(MAX_THREADS);
     }
 
@@ -142,7 +147,7 @@ public class ThreadPoolTest {
         table.select(THREAD_POOL_UPDATE);
         form.edit();
         form.number(MAX_THREADS, -1);
-        form.getSaveButton().click();
+        form.trySave();
         form.expectError(MAX_THREADS);
     }
 
