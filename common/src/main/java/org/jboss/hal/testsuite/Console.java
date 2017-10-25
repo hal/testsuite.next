@@ -39,7 +39,6 @@ import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
@@ -77,21 +76,6 @@ public class Console {
 
 
     // ------------------------------------------------------ navigation
-
-    /**
-     * Waits until the console is loaded using {@link #DEFAULT_LOAD_TIMEOUT} as timeout. That is until the root
-     * container is present.
-     */
-    public void waitUntilPresent() {
-        waitUntilPresent(Ids.ROOT_CONTAINER);
-    }
-
-    /** Waits until the specified ID is present using {@link #DEFAULT_LOAD_TIMEOUT} as timeout. */
-    public void waitUntilPresent(String id) {
-        waitGui().withTimeout(DEFAULT_LOAD_TIMEOUT, SECONDS)
-                .until().element(By.id(id))
-                .is().present();
-    }
 
     /** Returns an absolute URL for the specified place request. */
     public String absoluteUrl(PlaceRequest placeRequest) {
@@ -134,7 +118,7 @@ public class Console {
     /** Navigates to the specified place, creates and returns the finder fragment */
     public FinderFragment finder(String place) {
         browser.get(absoluteUrl(place));
-        waitUntilPresent(Ids.FINDER);
+        waitModel().until().element(By.id(Ids.FINDER)).is().present();
         FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
         finder.initPlace(place);
         return finder;
@@ -179,6 +163,7 @@ public class Console {
         js.executeScript("arguments[0].scrollIntoView(true);", element);
         return element;
     }
+
 
     // ------------------------------------------------------ inner classes
 

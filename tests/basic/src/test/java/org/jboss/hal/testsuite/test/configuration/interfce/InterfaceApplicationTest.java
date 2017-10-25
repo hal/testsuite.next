@@ -22,6 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.BreadcrumbFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.InterfacePage;
 import org.junit.AfterClass;
@@ -36,7 +37,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.READ;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.interfaceAddress;
 import static org.junit.Assert.assertEquals;
 
@@ -49,12 +50,12 @@ public class InterfaceApplicationTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(interfaceAddress(READ), Values.empty().and(INET_ADDRESS, LOCALHOST));
+        operations.add(interfaceAddress(UPDATE), Values.empty().and(INET_ADDRESS, LOCALHOST));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(interfaceAddress(READ));
+        operations.removeIfExists(interfaceAddress(UPDATE));
     }
 
 
@@ -65,13 +66,14 @@ public class InterfaceApplicationTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, READ);
+        page.navigate(NAME, UPDATE);
         form = page.getForm();
     }
 
     @Test
     public void read() throws Exception {
-        assertEquals(READ, form.value(NAME));
+        assertEquals(BreadcrumbFragment.abbreviate(UPDATE), console.header().breadcrumb().lastValue());
+        assertEquals(UPDATE, form.value(NAME));
     }
 
     @Test
@@ -81,7 +83,7 @@ public class InterfaceApplicationTest {
         form.save();
 
         console.success();
-        new ResourceVerifier(interfaceAddress(READ), client)
+        new ResourceVerifier(interfaceAddress(UPDATE), client)
                 .verifyAttribute(INET_ADDRESS, "127.0.0.2");
     }
 }

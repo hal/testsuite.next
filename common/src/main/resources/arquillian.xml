@@ -31,8 +31,8 @@
 
     <extension qualifier="graphene">
         <property name="waitGuiInterval">3</property>
-        <property name="waitAjaxInterval">5</property>
-        <property name="waitModelInterval">10</property>
+        <property name="waitAjaxInterval">10</property>
+        <property name="waitModelInterval">20</property>
         <property name="url">${suite.url}</property>
     </extension>
 </arquillian>

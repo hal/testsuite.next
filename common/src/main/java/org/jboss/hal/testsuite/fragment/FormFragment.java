@@ -17,6 +17,7 @@ package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
@@ -89,10 +90,9 @@ public class FormFragment {
         text(name, String.valueOf(value));
     }
 
-    public void clear(String name) {
-        WebElement inputElement = inputElement(name);
-        inputElement.clear();
-        waitGui().until().element(inputElement).value().equalTo("");
+    /** Returns an list input fragment for the specified form item. */
+    public ListInputFragment list(String name) {
+        return Graphene.createPageFragment(ListInputFragment.class, formGroup(name));
     }
 
     /** Changes the specified bootstrap switch. */
@@ -110,6 +110,12 @@ public class FormFragment {
         }
     }
 
+    public void clear(String name) {
+        WebElement inputElement = inputElement(name);
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+    }
+
     /** Expects an error for the specified attribute */
     public void expectError(String name) {
         By selector = By.cssSelector("." + hasError + "[data-form-item-group=" + editingId(name) + "]");
@@ -122,6 +128,10 @@ public class FormFragment {
 
     private boolean parseBoolean(String text) {
         return "on".equals(text) || Boolean.parseBoolean(text);
+    }
+
+    private WebElement formGroup(String name) {
+        return browser.findElement(By.cssSelector("div[data-form-item-group=" + editingId(name) + "]"));
     }
 
     private WebElement inputElement(String name) {

@@ -46,7 +46,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.CREATE;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.DELETE;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.READ;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.socketBindingGroupAddress;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -62,7 +61,6 @@ public class SocketBindingFinderTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
         operations.add(socketBindingGroupAddress(READ), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
-        operations.add(socketBindingGroupAddress(UPDATE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
         operations.add(socketBindingGroupAddress(DELETE), Values.empty().and(DEFAULT_INTERFACE, PUBLIC));
     }
 
@@ -70,7 +68,6 @@ public class SocketBindingFinderTest {
     public static void tearDown() throws Exception {
         operations.removeIfExists(socketBindingGroupAddress(CREATE));
         operations.removeIfExists(socketBindingGroupAddress(READ));
-        operations.removeIfExists(socketBindingGroupAddress(UPDATE));
         operations.removeIfExists(socketBindingGroupAddress(DELETE));
     }
 

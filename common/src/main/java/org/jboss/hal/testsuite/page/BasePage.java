@@ -23,9 +23,12 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
 
 public abstract class BasePage {
 
@@ -38,7 +41,7 @@ public abstract class BasePage {
     public void navigate() {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
         browser.get(console.absoluteUrl(placeRequest));
-        console.waitUntilPresent();
+        waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
     }
 
     /**
@@ -49,7 +52,7 @@ public abstract class BasePage {
                 .with(name, value)
                 .build();
         browser.get(console.absoluteUrl(placeRequest));
-        console.waitUntilPresent();
+        waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
     }
 
     public WebElement getRootContainer() {
