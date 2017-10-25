@@ -88,6 +88,14 @@ public class LocalCacheTest {
     }
 
     @Test
+    public void resetAttributes() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
+        page.getLocalCacheForm().reset();
+        console.success();
+    }
+
+    @Test
     public void updateAttributes() throws Exception {
         table.select(LC_UPDATE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
@@ -106,8 +114,11 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetAttributes() throws Exception {
-
+    public void resetEviction() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
+        page.getEvictionForm().reset();
+        console.success();
     }
 
     @Test
@@ -116,7 +127,11 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetEviction() throws Exception {
+    public void resetExpiration() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
+        page.getExpirationForm().reset();
+        console.success();
 
     }
 
@@ -126,8 +141,11 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetExpiration() throws Exception {
-
+    public void resetLocking() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
+        page.getLockingForm().reset();
+        console.success();
     }
 
     @Test
@@ -136,17 +154,15 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetLocking() throws Exception {
-
+    public void resetTransaction() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
+        page.getTransactionForm().reset();
+        console.success();
     }
 
     @Test
     public void updateTransaction() throws Exception {
-
-    }
-
-    @Test
-    public void resetTransaction() throws Exception {
 
     }
 }
