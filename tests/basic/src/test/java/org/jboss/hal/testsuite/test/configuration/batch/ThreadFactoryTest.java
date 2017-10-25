@@ -99,7 +99,9 @@ public class ThreadFactoryTest {
 
     @Test
     public void reset() throws Exception {
-        // TODO Test reset
+        table.select(THREAD_FACTORY_UPDATE);
+        form.reset();
+        console.success();
     }
 
     @Test

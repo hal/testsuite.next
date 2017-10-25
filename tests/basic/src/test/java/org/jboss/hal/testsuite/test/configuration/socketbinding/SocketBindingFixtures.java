@@ -41,7 +41,6 @@ public interface SocketBindingFixtures {
     // ------------------------------------------------------ inbound / socket binding
 
     String INBOUND_CREATE = Ids.build("inbound", "create", Random.name());
-    String INBOUND_RESET = Ids.build("inbound", "read", Random.name());
     String INBOUND_UPDATE = Ids.build("inbound", "update", Random.name());
     String INBOUND_DELETE = Ids.build("inbound", "delete", Random.name());
 

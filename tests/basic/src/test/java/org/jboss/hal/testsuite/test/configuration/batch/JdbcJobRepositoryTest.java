@@ -107,7 +107,9 @@ public class JdbcJobRepositoryTest {
 
     @Test
     public void reset() throws Exception {
-        // TODO Test reset
+        table.select(JDBC_READ);
+        form.reset();
+        console.success();
     }
 
     @Test

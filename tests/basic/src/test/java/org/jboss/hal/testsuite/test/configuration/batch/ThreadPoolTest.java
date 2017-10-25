@@ -116,7 +116,9 @@ public class ThreadPoolTest {
 
     @Test
     public void reset() throws Exception {
-        // TODO Test reset
+        table.select(THREAD_POOL_UPDATE);
+        form.reset();
+        console.success();
     }
 
     @Test

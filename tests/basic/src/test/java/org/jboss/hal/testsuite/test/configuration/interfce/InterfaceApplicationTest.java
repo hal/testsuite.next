@@ -78,7 +78,8 @@ public class InterfaceApplicationTest {
 
     @Test
     public void reset() throws Exception {
-        // TODO Test reset
+        form.reset();
+        console.success();
     }
 
     @Test

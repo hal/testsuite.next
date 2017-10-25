@@ -32,7 +32,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
-import org.wildfly.extras.creaper.commands.socketbindings.AddSocketBinding;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -48,8 +47,6 @@ public class InboundSocketBindingTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        client.apply(new AddSocketBinding.Builder(INBOUND_RESET).port(2222).build());
-        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET));
         operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
         operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
     }
@@ -57,7 +54,6 @@ public class InboundSocketBindingTest {
     @AfterClass
     public static void tearDown() throws Exception {
         operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE));
-        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET));
         operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
         operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
     }
@@ -91,12 +87,9 @@ public class InboundSocketBindingTest {
 
     @Test
     public void reset() throws Exception {
-        table.select(INBOUND_RESET);
+        table.select(INBOUND_UPDATE);
         form.reset();
-
         console.success();
-        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_RESET), client)
-                .verifyAttribute(PORT, 0);
     }
 
     @Test
