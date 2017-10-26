@@ -86,13 +86,6 @@ public class InboundSocketBindingTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        table.select(INBOUND_UPDATE);
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         int port = 1234;
 
@@ -115,6 +108,16 @@ public class InboundSocketBindingTest {
         form.number(PORT, port);
         form.trySave();
         form.expectError(PORT);
+    }
+
+    @Test
+    public void reset() throws Exception {
+        table.select(INBOUND_UPDATE);
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
+                .verifyReset();
     }
 
     @Test

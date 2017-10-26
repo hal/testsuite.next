@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.fragment;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
@@ -38,9 +39,11 @@ public class FormFragment {
     @Inject private Console console;
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
     @FindBy(css = "a[data-operation=reset]") private WebElement resetLink;
+    @FindBy(css = "a[data-operation=remove]") private WebElement removeLink;
     @FindBy(css = "." + formButtons + " ." + btnPrimary) private WebElement saveButton;
     @FindBy(css = "." + readonly) private WebElement readOnlySection;
     @FindBy(css = "." + editing) private WebElement editingSection;
+    @FindBy(css = "." + blankSlatePf) private WebElement blankSlate;
 
 
     // ------------------------------------------------------ read-only mode
@@ -51,12 +54,6 @@ public class FormFragment {
      */
     public void view() {
         waitGui().until().element(readOnlySection).is().visible();
-    }
-
-    /** Clicks on the reset link and confirms the confirmation dialog */
-    public void reset() {
-        resetLink.click();
-        console.confirmationDialog().confirm();
     }
 
     /** Returns the value of the specified attribute in the read-only section. */
@@ -94,7 +91,7 @@ public class FormFragment {
         waitGui().until().element(readOnlySection).is().visible();
     }
 
-    /** Changes the specified text field. */
+    /** Changes the specified text input element. */
     public void text(String name, String value) {
         WebElement inputElement = inputElement(name);
         inputElement.clear();
@@ -103,7 +100,7 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
-    /** Changes the specified number field. */
+    /** Changes the specified number input element. */
     public void number(String name, int value) {
         text(name, String.valueOf(value));
     }
@@ -113,8 +110,22 @@ public class FormFragment {
         return Graphene.createPageFragment(ListInputFragment.class, formGroup(name));
     }
 
-    /** Changes the specified bootstrap switch. */
-    public void bootstrapSwitch(String name, boolean value) {
+    /** Changes the specified bootstrap select element. */
+    public void select(String name, String value) {
+        String buttonWithDataId = "button[data-id=" + editingId(name) + "]";
+        By buttonSelector = By.cssSelector(buttonWithDataId);
+        By dropDownSelector = By.cssSelector(buttonWithDataId + " + div." + dropdownMenu);
+        By valueSelector = ByJQuery.selector("a:contains('" + value + "')");
+        WebElement inputElement = inputElement(name);
+
+        root.findElement(buttonSelector).click();
+        waitGui().until().element(dropDownSelector).is().visible();
+        root.findElement(valueSelector).click();
+        waitGui().until().element(inputElement).value().equalTo(value);
+    }
+
+    /** Changes the specified bootstrap switch element. */
+    public void flip(String name, boolean value) {
         WebElement inputElement = inputElement(name);
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
@@ -154,6 +165,22 @@ public class FormFragment {
 
     private WebElement inputElement(String name) {
         return browser.findElement(By.id(editingId(name)));
+    }
+
+
+    // ------------------------------------------------------ reset & remove
+
+    /** Clicks on the reset link and confirms the confirmation dialog */
+    public void reset() {
+        resetLink.click();
+        console.confirmationDialog().confirm();
+    }
+
+    /** Clicks on the remove link and confirms the confirmation dialog */
+    public void remove() {
+        removeLink.click();
+        console.confirmationDialog().confirm();
+        waitGui().until().element(blankSlate).is().visible();
     }
 
 

@@ -98,13 +98,6 @@ public class ThreadFactoryTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        table.select(THREAD_FACTORY_UPDATE);
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         String groupName = Random.name();
         int priority = RandomUtils.nextInt(1, 10);
@@ -132,6 +125,16 @@ public class ThreadFactoryTest {
         form.number(PRIORITY, priority);
         form.trySave();
         form.expectError(PRIORITY);
+    }
+
+    @Test
+    public void reset() throws Exception {
+        table.select(THREAD_FACTORY_UPDATE);
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
+                .verifyReset();
     }
 
     @Test

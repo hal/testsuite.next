@@ -76,12 +76,6 @@ public class CacheContainerConfigurationTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         String aliases = Random.name();
         form.edit();
@@ -89,7 +83,16 @@ public class CacheContainerConfigurationTest {
         form.save();
 
         console.success();
-        new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client, 500)
+        new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
                 .verifyListAttributeContainsValue(ALIASES, aliases);
+    }
+
+    @Test
+    public void reset() throws Exception {
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
+                .verifyReset();
     }
 }

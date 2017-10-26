@@ -39,14 +39,14 @@ import org.wildfly.extras.creaper.commands.infinispan.cache.AddLocalCache;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.JNDI_NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.STATISTICS_ENABLED;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.*;
 
 @RunWith(Arquillian.class)
 public class LocalCacheTest {
 
+    private static final String MAX_ENTRIES = "max-entries";
+    private static final String STRATEGY = "strategy";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
@@ -87,13 +87,7 @@ public class LocalCacheTest {
         new ResourceVerifier(localCacheAddress(CC_UPDATE, LC_CREATE), client).verifyExists();
     }
 
-    @Test
-    public void resetAttributes() throws Exception {
-        table.select(LC_UPDATE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
-        page.getLocalCacheForm().reset();
-        console.success();
-    }
+    // ------------------------------------------------------ attributes
 
     @Test
     public void updateAttributes() throws Exception {
@@ -104,7 +98,7 @@ public class LocalCacheTest {
         String jndiName = Random.jndiName();
         form.edit();
         form.text(JNDI_NAME, jndiName);
-        form.bootstrapSwitch(STATISTICS_ENABLED, true);
+        form.flip(STATISTICS_ENABLED, true);
         form.save();
 
         console.success();
@@ -114,16 +108,99 @@ public class LocalCacheTest {
     }
 
     @Test
+    public void updateAttributesInvalidJndiName() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
+        FormFragment form = page.getLocalCacheForm();
+
+        String jndiName = Random.name();
+        form.edit();
+        form.text(JNDI_NAME, jndiName);
+        form.trySave();
+        form.expectError(JNDI_NAME);
+    }
+
+    @Test
+    public void resetAttributes() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
+        page.getLocalCacheForm().reset();
+
+        console.success();
+        new ResourceVerifier(localCacheAddress(CC_UPDATE, LC_UPDATE), client)
+                .verifyReset();
+    }
+
+    // ------------------------------------------------------ eviction
+
+    @Test
+    public void updateEviction() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
+        FormFragment form = page.getEvictionForm();
+
+        form.number(MAX_ENTRIES, 23);
+        form.select(STRATEGY, "LRU");
+        form.save();
+
+        console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), client)
+                .verifyAttribute(MAX_ENTRIES, 23)
+                .verifyAttribute(STRATEGY, "LRU");
+    }
+
+    @Test
+    public void updateEvictionInvalidMaxEntries() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
+        FormFragment form = page.getEvictionForm();
+
+        form.clear(MAX_ENTRIES);
+        form.trySave();
+        form.expectError(MAX_ENTRIES);
+    }
+
+    @Test
     public void resetEviction() throws Exception {
         table.select(LC_UPDATE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
         page.getEvictionForm().reset();
+
         console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), client)
+                .verifyReset();
     }
 
     @Test
-    public void updateEviction() throws Exception {
+    public void removeEviction() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
+        page.getEvictionForm().remove();
 
+        console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), client)
+                .verifyDoesNotExist();
+    }
+
+    // ------------------------------------------------------ expiration
+
+    @Test
+    public void updateExpiration() throws Exception {
+        table.select(LC_UPDATE);
+        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
+        FormFragment form = page.getExpirationForm();
+
+        form.edit();
+        form.number("interval", 1);
+        form.number("lifespan", 2);
+        form.number("max-ide", 3);
+        form.save();
+
+        console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), client)
+                .verifyAttribute("interval", 1)
+                .verifyAttribute("lifespan", 2)
+                .verifyAttribute("max-idle", 3);
     }
 
     @Test
@@ -131,12 +208,21 @@ public class LocalCacheTest {
         table.select(LC_UPDATE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
         page.getExpirationForm().reset();
-        console.success();
 
+        console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), client)
+                .verifyReset();
     }
 
     @Test
-    public void updateExpiration() throws Exception {
+    public void removeExpiration() throws Exception {
+
+    }
+
+    // ------------------------------------------------------ locking
+
+    @Test
+    public void updateLocking() throws Exception {
 
     }
 
@@ -145,11 +231,21 @@ public class LocalCacheTest {
         table.select(LC_UPDATE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
         page.getLockingForm().reset();
+
         console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), client)
+                .verifyReset();
     }
 
     @Test
-    public void updateLocking() throws Exception {
+    public void removeLocking() throws Exception {
+
+    }
+
+    // ------------------------------------------------------ transaction
+
+    @Test
+    public void updateTransaction() throws Exception {
 
     }
 
@@ -158,11 +254,14 @@ public class LocalCacheTest {
         table.select(LC_UPDATE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
         page.getTransactionForm().reset();
+
         console.success();
+        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), client)
+                .verifyReset();
     }
 
     @Test
-    public void updateTransaction() throws Exception {
+    public void removeTransaction() throws Exception {
 
     }
 }

@@ -65,19 +65,22 @@ public class BatchConfigurationTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         form.edit();
-        form.bootstrapSwitch(RESTART_JOBS_ON_RESUME, false);
+        form.flip(RESTART_JOBS_ON_RESUME, false);
         form.save();
 
         console.success();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client, 500)
+        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
                 .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
+    }
+
+    @Test
+    public void reset() throws Exception {
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
+                .verifyReset();
     }
 }

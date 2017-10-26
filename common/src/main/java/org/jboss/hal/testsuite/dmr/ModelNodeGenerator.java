@@ -124,7 +124,7 @@ public class ModelNodeGenerator {
                 throw new IllegalStateException("No child node yet set! You have to either set list as empty or add any"
                         + " ModelNode first!");
             }
-            nodeList.forEach(item -> parent.add(item));
+            nodeList.forEach(parent::add);
             return parent;
         }
     }

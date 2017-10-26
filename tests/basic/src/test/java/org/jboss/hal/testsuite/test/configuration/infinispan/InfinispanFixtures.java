@@ -46,4 +46,8 @@ public interface InfinispanFixtures {
     static Address localCacheAddress(String cacheContainer, String localCache) {
         return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
     }
+
+    static Address componentAddress(String cacheContainer, String localCache, String component) {
+        return localCacheAddress(cacheContainer, localCache).and("component", component);
+    }
 }

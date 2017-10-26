@@ -21,9 +21,7 @@ import org.jboss.dmr.ModelNode;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-/**
- * Class wrapping common helper utils for model nodes
- */
+/** Class wrapping common helper utils for model nodes */
 public class ModelNodeUtils {
 
     private static final Logger log = LoggerFactory.getLogger(ModelNodeUtils.class);

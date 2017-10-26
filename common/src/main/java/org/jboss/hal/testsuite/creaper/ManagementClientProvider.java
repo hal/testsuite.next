@@ -20,9 +20,7 @@ import org.wildfly.extras.creaper.core.ManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.OnlineOptions;
 
-/**
- * Provider for Creaper's OnlineManagementClient
- */
+/** Provider for Creaper's OnlineManagementClient */
 public class ManagementClientProvider {
 
     /**

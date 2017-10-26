@@ -115,13 +115,6 @@ public class ThreadPoolTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        table.select(THREAD_POOL_UPDATE);
-        form.reset();
-        console.success();
-    }
-
-    @Test
     public void update() throws Exception {
         int maxThreads = RandomUtils.nextInt(100, 200);
 
@@ -142,6 +135,16 @@ public class ThreadPoolTest {
         form.clear(MAX_THREADS);
         form.trySave();
         form.expectError(MAX_THREADS);
+    }
+
+    @Test
+    public void reset() throws Exception {
+        table.select(THREAD_POOL_UPDATE);
+        form.reset();
+
+        console.success();
+        new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
+                .verifyReset();
     }
 
     @Test
