@@ -80,7 +80,7 @@ public class InboundSocketBindingTest {
         dialog.getForm().text(NAME, INBOUND_CREATE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE), client)
                 .verifyExists();
     }
@@ -94,7 +94,7 @@ public class InboundSocketBindingTest {
         form.number(PORT, port);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
                 .verifyAttribute(PORT, port);
     }
@@ -115,7 +115,7 @@ public class InboundSocketBindingTest {
         table.select(INBOUND_UPDATE);
         form.reset();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
                 .verifyReset();
     }
@@ -124,7 +124,7 @@ public class InboundSocketBindingTest {
     public void delete() throws Exception {
         table.remove(INBOUND_DELETE);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE), client)
                 .verifyDoesNotExist();
     }

@@ -85,7 +85,7 @@ public class SocketBindingConfigurationTest {
         form.text(DEFAULT_INTERFACE, PRIVATE);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(socketBindingGroupAddress(SBG_UPDATE), client)
                 .verifyAttribute(DEFAULT_INTERFACE, PRIVATE);
     }

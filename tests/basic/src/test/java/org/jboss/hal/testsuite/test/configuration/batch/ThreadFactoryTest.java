@@ -86,7 +86,7 @@ public class ThreadFactoryTest {
         dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_CREATE), client).verifyExists();
     }
 
@@ -109,7 +109,7 @@ public class ThreadFactoryTest {
         form.text(THREAD_NAME_PATTERN, pattern);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
                 .verifyAttribute(GROUP_NAME, groupName)
                 .verifyAttribute(PRIORITY, priority)
@@ -131,7 +131,7 @@ public class ThreadFactoryTest {
         table.select(THREAD_FACTORY_UPDATE);
         form.reset();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
                 .verifyReset();
     }
@@ -140,7 +140,7 @@ public class ThreadFactoryTest {
     public void delete() throws Exception {
         table.remove(THREAD_FACTORY_DELETE);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_DELETE), client).verifyDoesNotExist();
     }
 }

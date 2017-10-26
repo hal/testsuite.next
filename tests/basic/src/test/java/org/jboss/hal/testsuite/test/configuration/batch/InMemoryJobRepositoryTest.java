@@ -75,7 +75,7 @@ public class InMemoryJobRepositoryTest {
         dialog.getForm().text(NAME, IN_MEMORY_CREATE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(inMemoryAddress(IN_MEMORY_CREATE), client).verifyExists();
     }
 
@@ -83,7 +83,7 @@ public class InMemoryJobRepositoryTest {
     public void delete() throws Exception {
         table.remove(IN_MEMORY_DELETE);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(inMemoryAddress(IN_MEMORY_DELETE), client).verifyDoesNotExist();
     }
 }

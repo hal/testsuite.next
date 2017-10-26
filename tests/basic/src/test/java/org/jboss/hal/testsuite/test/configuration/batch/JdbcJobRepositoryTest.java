@@ -96,7 +96,7 @@ public class JdbcJobRepositoryTest {
         dialog.getForm().text(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(jdbcAddress(JDBC_CREATE), client).verifyExists();
     }
 
@@ -110,7 +110,7 @@ public class JdbcJobRepositoryTest {
     public void delete() throws Exception {
         table.remove(JDBC_DELETE);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(jdbcAddress(JDBC_DELETE), client).verifyDoesNotExist();
     }
 }

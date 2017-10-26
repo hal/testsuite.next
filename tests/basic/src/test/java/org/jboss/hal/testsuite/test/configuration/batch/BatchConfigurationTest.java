@@ -70,7 +70,7 @@ public class BatchConfigurationTest {
         form.flip(RESTART_JOBS_ON_RESUME, false);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
                 .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
     }
@@ -79,7 +79,7 @@ public class BatchConfigurationTest {
     public void reset() throws Exception {
         form.reset();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
                 .verifyReset();
     }

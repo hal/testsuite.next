@@ -84,7 +84,7 @@ public class InterfaceFinderTest {
         dialog.getForm().text(INET_ADDRESS, LOCALHOST);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         assertTrue(column.containsItem(CREATE));
         new ResourceVerifier(interfaceAddress(CREATE), client).verifyExists();
     }
@@ -118,7 +118,7 @@ public class InterfaceFinderTest {
         column.selectItem(DELETE).dropdown().click("Remove");
         console.confirmationDialog().confirm();
 
-        console.success();
+        console.verifySuccess();
         assertFalse(column.containsItem(DELETE));
         new ResourceVerifier(interfaceAddress(DELETE), client).verifyDoesNotExist();
     }

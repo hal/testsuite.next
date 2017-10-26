@@ -82,7 +82,7 @@ public class CacheContainerConfigurationTest {
         form.list(ALIASES).add(aliases);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
                 .verifyListAttributeContainsValue(ALIASES, aliases);
     }
@@ -91,7 +91,7 @@ public class CacheContainerConfigurationTest {
     public void reset() throws Exception {
         form.reset();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
                 .verifyReset();
     }

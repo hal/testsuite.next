@@ -82,7 +82,7 @@ public class InterfaceApplicationTest {
         form.text(INET_ADDRESS, "127.0.0.2");
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(interfaceAddress(UPDATE), client)
                 .verifyAttribute(INET_ADDRESS, "127.0.0.2");
     }

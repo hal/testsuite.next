@@ -90,7 +90,7 @@ public class SocketBindingFinderTest {
         dialog.getForm().text(DEFAULT_INTERFACE, PUBLIC);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         assertTrue(column.containsItem(SBG_CREATE));
         new ResourceVerifier(socketBindingGroupAddress(SBG_CREATE), client).verifyExists();
     }
@@ -124,7 +124,7 @@ public class SocketBindingFinderTest {
         column.selectItem(SBG_DELETE).dropdown().click("Remove");
         console.confirmationDialog().confirm();
 
-        console.success();
+        console.verifySuccess();
         assertFalse(column.containsItem(SBG_DELETE));
         new ResourceVerifier(socketBindingGroupAddress(SBG_DELETE), client).verifyDoesNotExist();
     }

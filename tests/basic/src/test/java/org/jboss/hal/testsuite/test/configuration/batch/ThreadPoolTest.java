@@ -86,7 +86,7 @@ public class ThreadPoolTest {
         dialog.getForm().number(MAX_THREADS, MAX_THREADS_VALUE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_CREATE), client).verifyExists();
     }
 
@@ -123,7 +123,7 @@ public class ThreadPoolTest {
         form.number(MAX_THREADS, maxThreads);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
                 .verifyAttribute(MAX_THREADS, maxThreads);
     }
@@ -142,7 +142,7 @@ public class ThreadPoolTest {
         table.select(THREAD_POOL_UPDATE);
         form.reset();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
                 .verifyReset();
     }
@@ -160,7 +160,7 @@ public class ThreadPoolTest {
     public void delete() throws Exception {
         table.remove(THREAD_POOL_DELETE);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadPoolAddress(THREAD_POOL_DELETE), client).verifyDoesNotExist();
     }
 }

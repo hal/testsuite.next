@@ -106,7 +106,7 @@ public class Console {
     // ------------------------------------------------------ notifications
 
     /** Verifies that a success notification is visible */
-    public void success() {
+    public void verifySuccess() {
         waitModel().until() // use waitModel() since it might take some time until the notification is visible
                 .element(By.cssSelector("." + toastNotificationsListPf + " ." + alertSuccess))
                 .is().visible();

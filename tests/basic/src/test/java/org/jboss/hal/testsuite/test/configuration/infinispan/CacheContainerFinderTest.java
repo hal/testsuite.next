@@ -86,7 +86,7 @@ public class CacheContainerFinderTest {
         dialog.getForm().text(NAME, CC_CREATE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         assertTrue(column.containsItem(Ids.cacheContainer(CC_CREATE)));
         new ResourceVerifier(cacheContainerAddress(CC_CREATE), client).verifyExists();
     }
@@ -121,7 +121,7 @@ public class CacheContainerFinderTest {
         column.selectItem(Ids.cacheContainer(CC_DELETE)).dropdown().click("Remove");
         console.confirmationDialog().confirm();
 
-        console.success();
+        console.verifySuccess();
         assertFalse(column.containsItem(Ids.cacheContainer(CC_DELETE)));
         new ResourceVerifier(cacheContainerAddress(CC_DELETE), client).verifyDoesNotExist();
     }

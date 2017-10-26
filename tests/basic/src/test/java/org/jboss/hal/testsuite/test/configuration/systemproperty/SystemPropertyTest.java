@@ -86,7 +86,7 @@ public class SystemPropertyTest {
         dialog.getForm().text(VALUE, CREATE_VALUE);
         dialog.add();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(systemPropertyAddress(CREATE_NAME), client)
                 .verifyExists();
     }
@@ -105,7 +105,7 @@ public class SystemPropertyTest {
         form.text(VALUE, value);
         form.save();
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(systemPropertyAddress(UPDATE_NAME), client)
                 .verifyAttribute(VALUE, value);
 
@@ -115,7 +115,7 @@ public class SystemPropertyTest {
     public void delete() throws Exception {
         table.remove(DELETE_NAME);
 
-        console.success();
+        console.verifySuccess();
         new ResourceVerifier(threadFactoryAddress(DELETE_NAME), client).verifyDoesNotExist();
     }
 }
