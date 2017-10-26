@@ -144,7 +144,7 @@ public class LocalCacheTest {
 
         console.verifySuccess();
         new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), client)
-                .verifyAttribute(MAX_ENTRIES, 23)
+                .verifyAttribute(MAX_ENTRIES, 23L)
                 .verifyAttribute(STRATEGY, "LRU");
     }
 

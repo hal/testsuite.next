@@ -99,7 +99,7 @@ public class ThreadFactoryTest {
     @Test
     public void update() throws Exception {
         String groupName = Random.name();
-        int priority = Random.number();
+        int priority = Random.number(1, 10);
         String pattern = Random.name();
 
         table.select(THREAD_FACTORY_UPDATE);

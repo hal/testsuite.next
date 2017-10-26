@@ -19,6 +19,7 @@ import java.io.IOException;
 import java.util.List;
 
 import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
 import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.dmr.ModelNodeUtils;
@@ -32,8 +33,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static java.util.stream.Collectors.toList;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NILLABLE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -341,7 +341,7 @@ public class ResourceVerifier {
                 .collect(toList());
         for (String attribute : attributesWithDefaultValues) {
             verifyAttribute(attribute, resourceDescription.defaultValue(attribute),
-                    String.format("Attribute %s in %s", attribute, address));
+                    String.format("Attribute '%s' in '%s'", attribute, address));
         }
         return this;
     }
@@ -349,12 +349,27 @@ public class ResourceVerifier {
     /** Verifies that all attributes which are marked as nillable and don't have a default value are undefined */
     private ResourceVerifier verifyNillable() throws Exception {
         List<String> nillableAttributes = resourceDescription().getAttributes().stream()
-                .filter(property -> !property.getValue().hasDefined(DEFAULT))
-                .filter(property -> property.getValue().get(NILLABLE).asBoolean(false))
+                .filter(property -> {
+                    ModelNode attributeDescription = property.getValue();
+                    boolean nillable = attributeDescription.hasDefined(NILLABLE) &&
+                            attributeDescription.get(NILLABLE).asBoolean();
+                    boolean readOnly = attributeDescription.hasDefined(ACCESS_TYPE) &&
+                            READ_ONLY.equals(attributeDescription.get(ACCESS_TYPE).asString());
+                    boolean alternatives = attributeDescription.hasDefined(ALTERNATIVES) &&
+                            !attributeDescription.get(ALTERNATIVES).asList().isEmpty();
+                    boolean hasDefault = attributeDescription.hasDefined(DEFAULT);
+                    ModelType type = attributeDescription.get(TYPE).asType();
+                    boolean nillableType = type == ModelType.EXPRESSION ||
+                            type == ModelType.LIST ||
+                            type == ModelType.OBJECT ||
+                            type == ModelType.PROPERTY ||
+                            type == ModelType.STRING;
+                    return nillable && !readOnly && !alternatives && !hasDefault && nillableType;
+                })
                 .map(Property::getName)
                 .collect(toList());
         for (String attribute : nillableAttributes) {
-            verifyAttributeIsUndefined(attribute, String.format("Attribute %s in %s", attribute, address));
+            verifyAttributeIsUndefined(attribute, String.format("Attribute '%s' in '%s'", attribute, address));
         }
         return this;
     }
