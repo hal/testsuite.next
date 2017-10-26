@@ -15,6 +15,7 @@
  */
 package org.jboss.hal.testsuite;
 
+import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.text.RandomStringGenerator;
 
 public class Random {
@@ -37,6 +38,21 @@ public class Random {
     /** Returns a JNDI name starting with "java:/jboss/" followed by the specified name. */
     public static String jndiName(String name) {
         return JNDI_PREFIX + name;
+    }
+
+    /** Returns a random integer between 0 and 99 */
+    public static int number() {
+        return RandomUtils.nextInt(0, 100);
+    }
+
+    /**
+     * Returns a random integer within the specified range.
+     *
+     * @param startInclusive the smallest value that can be returned, must be non-negative
+     * @param endExclusive   the upper bound (not included)
+     */
+    public static int number(int startInclusive, int endExclusive) {
+        return RandomUtils.nextInt(startInclusive, endExclusive);
     }
 
     private Random() {

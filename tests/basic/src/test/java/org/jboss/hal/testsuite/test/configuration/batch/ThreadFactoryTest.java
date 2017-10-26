@@ -15,7 +15,6 @@
  */
 package org.jboss.hal.testsuite.test.configuration.batch;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -100,7 +99,7 @@ public class ThreadFactoryTest {
     @Test
     public void update() throws Exception {
         String groupName = Random.name();
-        int priority = RandomUtils.nextInt(1, 10);
+        int priority = Random.number();
         String pattern = Random.name();
 
         table.select(THREAD_FACTORY_UPDATE);

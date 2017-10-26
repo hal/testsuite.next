@@ -15,12 +15,12 @@
  */
 package org.jboss.hal.testsuite.test.configuration.batch;
 
-import org.apache.commons.lang3.RandomUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -116,7 +116,7 @@ public class ThreadPoolTest {
 
     @Test
     public void update() throws Exception {
-        int maxThreads = RandomUtils.nextInt(100, 200);
+        int maxThreads = Random.number();
 
         table.select(THREAD_POOL_UPDATE);
         form.edit();
