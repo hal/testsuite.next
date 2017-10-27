@@ -23,7 +23,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.category.Domain;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.BreadcrumbFragment;
+import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.SocketBindingPage;
 import org.junit.AfterClass;
@@ -76,7 +76,7 @@ public class SocketBindingConfigurationTest {
 
     @Test
     public void view() throws Exception {
-        assertEquals(BreadcrumbFragment.abbreviate(SBG_UPDATE), console.header().breadcrumb().lastValue());
+        assertEquals(HeaderBreadcrumbFragment.abbreviate(SBG_UPDATE), console.header().breadcrumb().lastValue());
     }
 
     @Test

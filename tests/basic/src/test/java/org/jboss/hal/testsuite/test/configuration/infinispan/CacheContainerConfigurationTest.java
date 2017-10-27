@@ -23,7 +23,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.BreadcrumbFragment;
+import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
 import org.junit.AfterClass;
@@ -72,7 +72,7 @@ public class CacheContainerConfigurationTest {
 
     @Test
     public void view() throws Exception {
-        assertEquals(BreadcrumbFragment.abbreviate(CC_UPDATE), console.header().breadcrumb().lastValue());
+        assertEquals(HeaderBreadcrumbFragment.abbreviate(CC_UPDATE), console.header().breadcrumb().lastValue());
     }
 
     @Test

@@ -29,8 +29,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.columnAction;
 import static org.jboss.hal.resources.CSS.halTableButtons;
+import static org.jboss.hal.testsuite.Selectors.contains;
 
+/** Fragment for a data table. */
 public class TableFragment {
 
     @Drone private WebDriver browser;
@@ -59,7 +62,7 @@ public class TableFragment {
     }
 
     private WebElement button(String text) {
-        By selector = ByJQuery.selector(":contains('" + text + "')");
+        By selector = ByJQuery.selector(contains(text));
         return buttons.findElement(selector);
     }
 
@@ -68,7 +71,7 @@ public class TableFragment {
      * table, {@link FormFragment#view()} is called.
      */
     public void select(String value) {
-        By selector = ByJQuery.selector("td:contains('" + value + "')");
+        By selector = ByJQuery.selector("td" + contains(value));
         root.findElement(selector).click();
         if (!forms.isEmpty()) {
             for (FormFragment form : forms) {
@@ -77,6 +80,12 @@ public class TableFragment {
                 }
             }
         }
+    }
+
+    /** Clicks on the &lt;text&gt column action in the row which contains "&lt;value&gt;". */
+    public void action(String value, String text) {
+        By selector = ByJQuery.selector("td" + contains(value) + " + td > a." + columnAction + contains(text));
+        root.findElement(selector).click();
     }
 
     /**

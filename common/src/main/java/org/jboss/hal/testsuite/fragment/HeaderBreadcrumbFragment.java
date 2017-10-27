@@ -26,7 +26,7 @@ import org.openqa.selenium.WebElement;
 import static org.jboss.hal.resources.CSS.dropdown;
 
 /** Fragment for the breadcrumb element in the header. Use {@link HeaderFragment#breadcrumb()} to get an instance. */
-public class BreadcrumbFragment {
+public class HeaderBreadcrumbFragment {
 
     // Must match org.jboss.hal.client.skeleton.HeaderPresenter#MAX_BREADCRUMB_VALUE_LENGTH
     private static final int MAX_BREADCRUMB_VALUE_LENGTH = 20;

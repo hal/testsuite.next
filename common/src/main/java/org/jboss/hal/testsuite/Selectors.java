@@ -13,23 +13,16 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.fragment;
+package org.jboss.hal.testsuite;
 
-import org.jboss.arquillian.graphene.findby.ByJQuery;
-import org.jboss.arquillian.graphene.fragment.Root;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+/** Helper methods for common CSS / JQuery selectors */
+public class Selectors {
 
-import static org.jboss.hal.testsuite.Selectors.contains;
+    /** returns the JQuery selector {@code :contains('<value>')} <strong>w/ the colon</strong>. */
+    public static String contains(String value) {
+        return ":contains('" + value + "')";
+    }
 
-/** Fragment for a PatternFly dropdown */
-public class DropdownFragment {
-
-    @Root private WebElement root;
-
-    /** Clicks on the item with the specified title */
-    public void click(String title) {
-        By selector = ByJQuery.selector("li a" + contains(title));
-        root.findElement(selector).click();
+    private Selectors() {
     }
 }

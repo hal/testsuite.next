@@ -34,6 +34,7 @@ import static org.jboss.hal.resources.CSS.btnGroup;
 import static org.jboss.hal.resources.CSS.dropdownMenu;
 import static org.jboss.hal.resources.CSS.dropdownToggle;
 import static org.jboss.hal.testsuite.Console.DEFAULT_LOAD_TIMEOUT;
+import static org.jboss.hal.testsuite.Selectors.contains;
 
 /** Fragment for a finder item. Use {@link ColumnFragment#selectItem(String)} to get an instance. */
 public class ItemFragment {
@@ -46,7 +47,7 @@ public class ItemFragment {
 
     /** Executes the standard view action on this item and returns the current browser URL. */
     public String view() {
-        By selector = ByJQuery.selector("." + btnGroup + " a." + btnFinder + ":contains('View')");
+        By selector = ByJQuery.selector("." + btnGroup + " a." + btnFinder + contains("View"));
         root.findElement(selector).click();
         waitGui().withTimeout(DEFAULT_LOAD_TIMEOUT, SECONDS)
                 .until().element(By.id(Ids.FINDER)).is().not().present();

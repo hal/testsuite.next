@@ -15,21 +15,25 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.hal.testsuite.Selectors.contains;
+import static org.jboss.hal.resources.CSS.blankSlatePfMainAction;
+import static org.jboss.hal.resources.CSS.btnPrimary;
 
-/** Fragment for a PatternFly dropdown */
-public class DropdownFragment {
+/** Fragment for an empty state element. */
+public class EmptyState {
 
     @Root private WebElement root;
+    @FindBy(css = "." + blankSlatePfMainAction + " button." + btnPrimary) private WebElement primaryButton;
 
-    /** Clicks on the item with the specified title */
-    public void click(String title) {
-        By selector = ByJQuery.selector("li a" + contains(title));
-        root.findElement(selector).click();
+    /** Clicks on the main action */
+    public void mainAction() {
+        primaryButton.click();
+    }
+
+    public WebElement getRoot() {
+        return root;
     }
 }

@@ -33,6 +33,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
+import static org.jboss.hal.testsuite.Selectors.contains;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -71,7 +72,7 @@ public class HomePageTest {
         assertTrue(containsModule("Access Control"));
         assertTrue(containsModule("Patching"));
 
-        By selector = ByJQuery.selector(".eap-home-module-header > h2:contains('Need Help?')");
+        By selector = ByJQuery.selector(".eap-home-module-header > h2" + contains("Need Help?"));
         assertTrue(page.getRootContainer().findElement(selector).isDisplayed());
     }
 

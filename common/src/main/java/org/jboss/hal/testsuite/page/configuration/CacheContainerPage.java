@@ -17,7 +17,9 @@ package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.PagesFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
@@ -26,6 +28,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static java.util.Arrays.asList;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
 
 @Place(NameTokens.CACHE_CONTAINER)
 public class CacheContainerPage extends BasePage {
@@ -37,10 +40,16 @@ public class CacheContainerPage extends BasePage {
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TAB_CONTAINER) private TabsFragment localCacheTabs;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TABLE + "_wrapper") private TableFragment localCacheTable;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.FORM) private FormFragment localCacheForm;
+    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.PAGES) private PagesFragment localCachePages;
+
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_EVICTION + "-" + Ids.FORM) private FormFragment evictionForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_EXPIRATION + "-" + Ids.FORM) private FormFragment expirationForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_LOCKING + "-" + Ids.FORM) private FormFragment lockingForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_TRANSACTION + "-" + Ids.FORM) private FormFragment transactionForm;
+
+    @FindBy(id = Ids.LOCAL_CACHE + "-" + STORE + "-" + Ids.EMPTY) private EmptyState localCacheNoStore;
+    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_STORE_FILE + "-" + Ids.TAB_CONTAINER) private TabsFragment fileStoreTabs;
+    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_STORE_FILE + "-" + Ids.FORM) private TabsFragment fileStoreForm;
 
     public void bindForms() {
         localCacheTable.bind(asList(localCacheForm, evictionForm, expirationForm, lockingForm, transactionForm));
@@ -70,6 +79,10 @@ public class CacheContainerPage extends BasePage {
         return localCacheForm;
     }
 
+    public PagesFragment getLocalCachePages() {
+        return localCachePages;
+    }
+
     public FormFragment getEvictionForm() {
         return evictionForm;
     }
@@ -84,5 +97,17 @@ public class CacheContainerPage extends BasePage {
 
     public FormFragment getTransactionForm() {
         return transactionForm;
+    }
+
+    public EmptyState getLocalCacheNoStore() {
+        return localCacheNoStore;
+    }
+
+    public TabsFragment getFileStoreTabs() {
+        return fileStoreTabs;
+    }
+
+    public TabsFragment getFileStoreForm() {
+        return fileStoreForm;
     }
 }

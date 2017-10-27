@@ -15,21 +15,22 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.graphene.findby.ByJQuery;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static org.jboss.hal.testsuite.Selectors.contains;
+/**
+ * Breadcrumb used in {@linkplain PagesFragment pages} to navigate to nested resources. Use {@link
+ * PagesFragment#breadcrumb()} to get an instance.
+ */
+public class PageBreadcrumbFragment {
 
-/** Fragment for a PatternFly dropdown */
-public class DropdownFragment {
-
+    @Drone private WebDriver browser;
     @Root private WebElement root;
 
-    /** Clicks on the item with the specified title */
-    public void click(String title) {
-        By selector = ByJQuery.selector("li a" + contains(title));
-        root.findElement(selector).click();
+    public String lastValue() {
+        return root.findElement(By.cssSelector("li:last-child")).getText();
     }
 }

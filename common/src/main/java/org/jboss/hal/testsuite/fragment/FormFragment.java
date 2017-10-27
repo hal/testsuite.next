@@ -34,16 +34,18 @@ import static org.jboss.hal.resources.CSS.*;
 /** Page fragment for a form using read-only and editing states. */
 public class FormFragment {
 
+    private static final String DOT = ".";
+
     @Drone private WebDriver browser;
     @Root private WebElement root;
     @Inject private Console console;
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
     @FindBy(css = "a[data-operation=reset]") private WebElement resetLink;
     @FindBy(css = "a[data-operation=remove]") private WebElement removeLink;
-    @FindBy(css = "." + formButtons + " ." + btnPrimary) private WebElement saveButton;
-    @FindBy(css = "." + readonly) private WebElement readOnlySection;
-    @FindBy(css = "." + editing) private WebElement editingSection;
-    @FindBy(css = "." + blankSlatePf) private WebElement blankSlate;
+    @FindBy(css = DOT + formButtons + " ." + btnPrimary) private WebElement saveButton;
+    @FindBy(css = DOT + readonly) private WebElement readOnlySection;
+    @FindBy(css = DOT + editing) private WebElement editingSection;
+    @FindBy(css = DOT + blankSlatePf) private WebElement blankSlate;
 
 
     // ------------------------------------------------------ read-only mode
@@ -112,16 +114,10 @@ public class FormFragment {
 
     /** Changes the specified bootstrap select element. */
     public void select(String name, String value) {
-        String buttonWithDataId = "button[data-id=" + editingId(name) + "]";
-        By buttonSelector = By.cssSelector(buttonWithDataId);
-        By dropDownSelector = By.cssSelector(buttonWithDataId + " + div." + dropdownMenu);
-        By valueSelector = ByJQuery.selector("a:contains('" + value + "')");
-        WebElement inputElement = inputElement(name);
-
-        root.findElement(buttonSelector).click();
-        waitGui().until().element(dropDownSelector).is().visible();
-        root.findElement(valueSelector).click();
-        waitGui().until().element(inputElement).value().equalTo(value);
+        WebElement formGroup = formGroup(name);
+        WebElement selectElement = formGroup.findElement(By.cssSelector(DOT + bootstrapSelect + DOT + formControl));
+        SelectFragment select = Graphene.createPageFragment(SelectFragment.class, selectElement);
+        select.select(value);
     }
 
     /** Changes the specified bootstrap switch element. */
@@ -147,9 +143,9 @@ public class FormFragment {
 
     /** Expects an error for the specified attribute */
     public void expectError(String name) {
-        By selector = By.cssSelector("." + hasError + "[data-form-item-group=" + editingId(name) + "]");
+        By selector = By.cssSelector(DOT + hasError + "[data-form-item-group=" + editingId(name) + "]");
         WebElement formItemGroup = editingSection.findElement(selector);
-        WebElement helpBlock = formItemGroup.findElement(By.cssSelector("." + CSS.helpBlock));
+        WebElement helpBlock = formItemGroup.findElement(By.cssSelector(DOT + CSS.helpBlock));
 
         waitGui().until().element(formItemGroup).is().visible();
         waitGui().until().element(helpBlock).is().visible();

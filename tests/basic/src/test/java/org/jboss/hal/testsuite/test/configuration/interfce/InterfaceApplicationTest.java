@@ -22,7 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.BreadcrumbFragment;
+import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.InterfacePage;
 import org.junit.AfterClass;
@@ -72,7 +72,7 @@ public class InterfaceApplicationTest {
 
     @Test
     public void read() throws Exception {
-        assertEquals(BreadcrumbFragment.abbreviate(UPDATE), console.header().breadcrumb().lastValue());
+        assertEquals(HeaderBreadcrumbFragment.abbreviate(UPDATE), console.header().breadcrumb().lastValue());
         assertEquals(UPDATE, form.value(NAME));
     }
 

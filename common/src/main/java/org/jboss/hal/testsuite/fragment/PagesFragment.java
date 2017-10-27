@@ -16,32 +16,28 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.openqa.selenium.By;
-import org.openqa.selenium.Keys;
+import org.jboss.hal.resources.CSS;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.resources.CSS.tagManagerTag;
-import static org.jboss.hal.resources.CSS.tags;
-import static org.jboss.hal.testsuite.Selectors.contains;
-
-public class ListInputFragment {
+/**
+ * Fragment for 'pages' inside views to manage deeply nested resources. Not related to real pages with a token.
+ * Typically pages in views consists of a main page with a table which contains a link to sub page(s). The sub page(s)
+ * contain a {@linkplain PageBreadcrumbFragment breadcrumb} to go back to the main page.
+ */
+public class PagesFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
-    @FindBy(css = "input[type=text]." + tags) private WebElement inputElement;
+    @FindBy(css = "ol." + CSS.breadcrumb + "." + CSS.page) private PageBreadcrumbFragment breadcrumb;
 
-    /** Adds an value to this list item. */
-    public void add(String value) {
-        inputElement.clear();
-        waitGui().until().element(inputElement).value().equalTo("");
-        inputElement.sendKeys(value);
-        inputElement.sendKeys(Keys.RETURN);
-        By tagSelector = ByJQuery.selector("." + tagManagerTag + " > span" + contains(value));
-        waitGui().until().element(tagSelector).is().visible();
+    public PageBreadcrumbFragment breadcrumb() {
+        return breadcrumb;
+    }
+
+    public WebElement getRoot() {
+        return root;
     }
 }

@@ -52,4 +52,14 @@ public interface InfinispanFixtures {
     static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and("component", component);
     }
+
+
+    // ------------------------------------------------------ local cache store
+
+    String LC_NO_STORE = Ids.build("lc", "no-store", Random.name());
+    String LC_FILE_STORE = Ids.build("lc", "file-store", Random.name());
+
+    static Address storeAddress(String cacheContainer, String localCache, String store) {
+        return localCacheAddress(cacheContainer, localCache).and("store", store);
+    }
 }
