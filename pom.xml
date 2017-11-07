@@ -73,13 +73,13 @@
 
         <!-- dependency versions -->
         <arquillian.version>1.1.13.Final</arquillian.version>
-        <arquillian.drone.version>2.4.2</arquillian.drone.version>
+        <arquillian.drone.version>2.4.3</arquillian.drone.version>
         <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
         <commons.io.version>2.5</commons.io.version>
         <commons.lang.version>3.6</commons.lang.version>
         <commons.text.version>1.1</commons.text.version>
         <creaper.version>1.6.1</creaper.version>
-        <graphene.version>2.3.1</graphene.version>
+        <graphene.version>2.3.2</graphene.version>
         <guava.version>23.0</guava.version>
         <gwtp.version>1.6</gwtp.version>
         <hal.next.version>0.9.2-SNAPSHOT</hal.next.version>
