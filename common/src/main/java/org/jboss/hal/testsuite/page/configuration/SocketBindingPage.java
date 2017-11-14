@@ -24,6 +24,8 @@ import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.testsuite.Selectors.WRAPPER;
+
 @Place(NameTokens.SOCKET_BINDING_GROUP)
 public class SocketBindingPage extends BasePage {
 
@@ -31,7 +33,7 @@ public class SocketBindingPage extends BasePage {
     @FindBy(id = Ids.SOCKET_BINDING_GROUP + "-" + Ids.CONFIGURATION + "-" + Ids.FORM) private FormFragment configurationForm;
 
     @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.ITEM) private WebElement inboundItem;
-    @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.TABLE + "_wrapper") private TableFragment inboundTable;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.TABLE + WRAPPER) private TableFragment inboundTable;
     @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.FORM) private FormFragment inboundForm;
 
     public WebElement getConfigurationItem() {

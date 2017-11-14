@@ -323,8 +323,8 @@ public class ResourceVerifier {
     // ------------------------------------------------------ default value / nillable
 
     /**
-     * Verifies that all attributes which have default values equal their default values and all attributes which are
-     * marked as nillable and don't have a default value are undefined.
+     * Verifies that all simple attributes which have default values equal their default values and all attributes
+     * which are marked as nillable and don't have a default value are undefined.
      */
     public ResourceVerifier verifyReset() throws Exception {
         verifyDefaultValues();
@@ -359,11 +359,14 @@ public class ResourceVerifier {
                             !attributeDescription.get(ALTERNATIVES).asList().isEmpty();
                     boolean hasDefault = attributeDescription.hasDefined(DEFAULT);
                     ModelType type = attributeDescription.get(TYPE).asType();
-                    boolean nillableType = type == ModelType.EXPRESSION ||
+                    boolean simpleValueType = attributeDescription.hasDefined(VALUE_TYPE) &&
+                            attributeDescription.get(VALUE_TYPE).getType() != ModelType.OBJECT;
+                    boolean nillableType = (type == ModelType.EXPRESSION ||
                             type == ModelType.LIST ||
                             type == ModelType.OBJECT ||
                             type == ModelType.PROPERTY ||
-                            type == ModelType.STRING;
+                            type == ModelType.STRING) &&
+                            simpleValueType;
                     return nillable && !readOnly && !alternatives && !hasDefault && nillableType;
                 })
                 .map(Property::getName)

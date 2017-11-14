@@ -13,18 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite;
+package org.jboss.hal.testsuite.test.configuration.ee;
 
-/** Helper methods for common CSS / JQuery selectors */
-public class Selectors {
+import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Random;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 
-    public static final String WRAPPER = "_wrapper"; // ID suffix of DataTable wrapper div elements
+import static org.jboss.hal.dmr.ModelDescriptionConstants.EE;
 
-    /** returns the JQuery selector {@code :contains('<value>')} <strong>w/ the colon</strong>. */
-    public static String contains(String value) {
-        return ":contains('" + value + "')";
-    }
+public interface EEFixtures {
 
-    private Selectors() {
-    }
+    Address SUBSYSTEM_ADDRESS = Address.subsystem(EE);
+
+    // ------------------------------------------------------ global modules
+
+    String GLOBAL_MODULES_CREATE = Ids.build("gm", "create", Random.name());
+    String GLOBAL_MODULES_DELETE = Ids.build("gm", "delete", Random.name());
 }

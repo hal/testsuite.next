@@ -29,6 +29,7 @@ import org.openqa.selenium.support.FindBy;
 
 import static java.util.Arrays.asList;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
+import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 
 @Place(NameTokens.CACHE_CONTAINER)
 public class CacheContainerPage extends BasePage {
@@ -38,7 +39,7 @@ public class CacheContainerPage extends BasePage {
 
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.ITEM) private WebElement localCacheItem;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TAB_CONTAINER) private TabsFragment localCacheTabs;
-    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TABLE + "_wrapper") private TableFragment localCacheTable;
+    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TABLE + WRAPPER) private TableFragment localCacheTable;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.FORM) private FormFragment localCacheForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.PAGES) private PagesFragment localCachePages;
 

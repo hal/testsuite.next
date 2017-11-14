@@ -23,10 +23,12 @@ import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.testsuite.Selectors.WRAPPER;
+
 @Place(NameTokens.SYSTEM_PROPERTIES)
 public class SystemPropertyPage extends BasePage {
 
-    @FindBy(id = Ids.SYSTEM_PROPERTY_TABLE + "_wrapper") private TableFragment table;
+    @FindBy(id = Ids.SYSTEM_PROPERTY_TABLE + WRAPPER) private TableFragment table;
     @FindBy(id = Ids.SYSTEM_PROPERTY_FORM) private FormFragment form;
 
     public TableFragment getTable() {

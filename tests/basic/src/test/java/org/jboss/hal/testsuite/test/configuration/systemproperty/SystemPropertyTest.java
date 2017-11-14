@@ -37,7 +37,6 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.threadFactoryAddress;
 import static org.jboss.hal.testsuite.test.configuration.systemproperty.SystemPropertyFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -113,6 +112,6 @@ public class SystemPropertyTest {
         table.remove(DELETE_NAME);
 
         console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(DELETE_NAME), client).verifyDoesNotExist();
+        new ResourceVerifier(systemPropertyAddress(DELETE_NAME), client).verifyDoesNotExist();
     }
 }
