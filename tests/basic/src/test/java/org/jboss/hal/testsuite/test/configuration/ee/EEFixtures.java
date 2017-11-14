@@ -20,8 +20,10 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_BINDINGS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVICE;
 
 public interface EEFixtures {
 
@@ -38,4 +40,9 @@ public interface EEFixtures {
         globalModule.get("meta-inf").set(true);
         return globalModule;
     }
+
+
+    // ------------------------------------------------------ default bindings
+
+    Address DEFAULT_BINDINGS_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, DEFAULT_BINDINGS);
 }

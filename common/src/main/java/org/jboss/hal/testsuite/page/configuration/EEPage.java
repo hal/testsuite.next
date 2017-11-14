@@ -36,8 +36,8 @@ public class EEPage extends BasePage {
     @FindBy(id = Ids.EE_GLOBAL_MODULES_ITEM) private WebElement globalModulesItem;
     @FindBy(id = Ids.EE_GLOBAL_MODULES_TABLE + WRAPPER) private TableFragment globalModulesTable;
 
-    @FindBy(id = Ids.EE_DEFAULT_BINDINGS_ITEM) private WebElement defaultItemsItem;
-    @FindBy(id = Ids.EE_DEFAULT_BINDINGS_FORM) private FormFragment defaultItemsForm;
+    @FindBy(id = Ids.EE_DEFAULT_BINDINGS_ITEM) private WebElement defaultBindingsItem;
+    @FindBy(id = Ids.EE_DEFAULT_BINDINGS_FORM) private FormFragment defaultBindingsForm;
 
     @FindBy(id = Ids.EE_SERVICES_ITEM) private WebElement servicesItem;
 
@@ -73,12 +73,12 @@ public class EEPage extends BasePage {
         return globalModulesTable;
     }
 
-    public WebElement getDefaultItemsItem() {
-        return defaultItemsItem;
+    public WebElement getDefaultBindingsItem() {
+        return defaultBindingsItem;
     }
 
-    public FormFragment getDefaultItemsForm() {
-        return defaultItemsForm;
+    public FormFragment getDefaultBindingsForm() {
+        return defaultBindingsForm;
     }
 
     public WebElement getServicesItem() {
