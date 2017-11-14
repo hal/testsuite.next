@@ -19,12 +19,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -36,7 +34,6 @@ import static org.jboss.hal.testsuite.Selectors.contains;
 /** Fragment for a data table. */
 public class TableFragment {
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
     @Inject private Console console;

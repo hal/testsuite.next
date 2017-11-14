@@ -49,9 +49,7 @@ public class ModelNodeGenerator {
         return parent;
     }
 
-    /**
-     * Builder for creating {@link ModelNode} of type {@link ModelType#OBJECT} including map of properties
-     */
+    /** Builder for creating {@link ModelNode} of type {@link ModelType#OBJECT} including map of properties */
     public static final class ModelNodePropertiesBuilder {
 
         private Map<String, ModelNode> propertyMap = new LinkedHashMap<>();
@@ -81,9 +79,7 @@ public class ModelNodeGenerator {
     }
 
 
-    /**
-     * Builder for creating {@link ModelNode} of type {@link ModelType#LIST}
-     */
+    /** Builder for creating {@link ModelNode} of type {@link ModelType#LIST} */
     public static final class ModelNodeListBuilder {
 
         private List<ModelNode> nodeList = new ArrayList<>();

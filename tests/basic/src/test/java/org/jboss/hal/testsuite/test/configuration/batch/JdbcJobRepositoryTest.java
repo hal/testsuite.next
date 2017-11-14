@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration.batch;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
@@ -33,7 +32,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -73,7 +71,6 @@ public class JdbcJobRepositoryTest {
                 Address.subsystem("datasources").and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
     }
 
-    @Drone private WebDriver browser;
     @Page private BatchPage page;
     @Inject private Console console;
     private TableFragment table;

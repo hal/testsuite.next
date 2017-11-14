@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -32,7 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -53,7 +51,6 @@ public class SubsystemsTest {
         subsystems = operations.readChildrenNames(Address.root(), SUBSYSTEM).stringListValue();
     }
 
-    @Drone private WebDriver browser;
     @Inject private Console console;
     private ColumnFragment column;
 

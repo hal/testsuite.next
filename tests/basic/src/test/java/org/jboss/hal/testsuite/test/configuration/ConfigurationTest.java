@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -27,7 +26,6 @@ import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 
 import static org.junit.Assert.assertTrue;
 
@@ -35,7 +33,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class ConfigurationTest {
 
-    @Drone private WebDriver browser;
     @Inject private Console console;
     private FinderFragment finder;
 

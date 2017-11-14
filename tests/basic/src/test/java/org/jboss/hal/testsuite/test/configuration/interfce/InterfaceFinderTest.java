@@ -17,7 +17,6 @@ package org.jboss.hal.testsuite.test.configuration.interfce;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -34,14 +33,16 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.CREATE;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.DELETE;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.READ;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.interfaceAddress;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -66,7 +67,6 @@ public class InterfaceFinderTest {
     }
 
 
-    @Drone private WebDriver browser;
     @Inject private Console console;
     private ColumnFragment column;
 

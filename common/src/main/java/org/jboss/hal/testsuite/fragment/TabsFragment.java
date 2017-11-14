@@ -15,10 +15,8 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -26,7 +24,6 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 /** Fraction for a tab element. */
 public class TabsFragment {
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
 
     /** Switch to the pane with the specified id. */

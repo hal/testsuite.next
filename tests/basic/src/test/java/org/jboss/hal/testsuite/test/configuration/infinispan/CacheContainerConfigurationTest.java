@@ -16,22 +16,20 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -58,7 +56,6 @@ public class CacheContainerConfigurationTest {
     }
 
 
-    @Drone private WebDriver browser;
     @Inject private Console console;
     @Page private CacheContainerPage page;
     private FormFragment form;

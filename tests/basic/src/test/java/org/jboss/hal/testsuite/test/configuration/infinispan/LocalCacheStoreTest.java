@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
@@ -35,7 +34,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.wildfly.extras.creaper.commands.infinispan.cache.AddLocalCache;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -70,7 +68,6 @@ public class LocalCacheStoreTest {
         operations.removeIfExists(cacheContainerAddress(CC_UPDATE));
     }
 
-    @Drone private WebDriver browser;
     @Inject private Console console;
     @Page private CacheContainerPage page;
     private TableFragment table;

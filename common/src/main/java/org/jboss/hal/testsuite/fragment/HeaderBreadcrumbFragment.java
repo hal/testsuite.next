@@ -16,11 +16,9 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.apache.commons.lang3.StringUtils;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.core.Strings;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static org.jboss.hal.resources.CSS.dropdown;
@@ -40,7 +38,6 @@ public class HeaderBreadcrumbFragment {
     }
 
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
 
     public String lastValue() {

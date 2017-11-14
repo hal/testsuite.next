@@ -17,7 +17,6 @@ package org.jboss.hal.testsuite.creaper.command;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -93,9 +92,7 @@ public final class BackupAndRestoreAttributes {
                     BackupAndRestoreAttributes.this.backup.asPropertyList());
 
             if (dependencies != null) { //process dependencies
-                Iterator<String> dependencyIterator = dependencies.iterator();
-                while (dependencyIterator.hasNext()) {
-                    String attributeName = dependencyIterator.next();
+                for (String attributeName : dependencies) {
                     if (!attributeValueMap.containsKey(attributeName)) {
                         throw new CommandFailedException(
                                 "Attribute '" + attributeName + "' is not present or it was previously added and removed!");

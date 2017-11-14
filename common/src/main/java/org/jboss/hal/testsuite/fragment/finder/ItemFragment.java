@@ -15,13 +15,11 @@
  */
 package org.jboss.hal.testsuite.fragment.finder;
 
-import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.fragment.DropdownFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -41,7 +39,6 @@ public class ItemFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
-    @Inject private Console console;
     private String itemId;
 
 

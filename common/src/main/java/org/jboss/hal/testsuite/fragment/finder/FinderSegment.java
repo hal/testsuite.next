@@ -20,7 +20,7 @@ package org.jboss.hal.testsuite.fragment.finder;
 class FinderSegment {
 
     /** Separator is used in URL tokens. Please choose a string which is safe to use in URLs */
-    static final String SEPARATOR = "~";
+    private static final String SEPARATOR = "~";
 
     final String columnId;
     final String itemId;

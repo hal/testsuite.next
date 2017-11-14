@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration.batch;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
@@ -30,7 +29,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
@@ -52,7 +50,6 @@ public class BatchConfigurationTest {
         client.apply(backup.restore());
     }
 
-    @Drone private WebDriver browser;
     @Page private BatchPage page;
     @Inject private Console console;
     private FormFragment form;

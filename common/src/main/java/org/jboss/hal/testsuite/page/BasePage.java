@@ -15,12 +15,9 @@
  */
 package org.jboss.hal.testsuite.page;
 
-import java.net.URL;
-
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
@@ -35,7 +32,6 @@ public abstract class BasePage {
     @Drone protected WebDriver browser;
     @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
     @Inject private Console console;
-    @ArquillianResource private URL url;
 
     /** Navigates to the name token specified in the {@code @Place} annotation. */
     public void navigate() {

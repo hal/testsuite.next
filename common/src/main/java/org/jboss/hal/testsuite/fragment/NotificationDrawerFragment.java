@@ -17,11 +17,9 @@ package org.jboss.hal.testsuite.fragment;
 
 import java.util.List;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.Ids;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -34,7 +32,6 @@ import static org.jboss.hal.resources.CSS.blankSlatePf;
  */
 public class NotificationDrawerFragment {
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
     @FindBy(css = "." + blankSlatePf) private WebElement blankSlate;
     @FindBy(id = Ids.NOTIFICATION_DRAWER_CLOSE) private WebElement close;

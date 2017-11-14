@@ -15,10 +15,8 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -29,7 +27,6 @@ import org.openqa.selenium.support.FindBy;
  */
 public class PagesFragment {
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
     @FindBy(css = "ol." + CSS.breadcrumb + "." + CSS.page) private PageBreadcrumbFragment breadcrumb;
 

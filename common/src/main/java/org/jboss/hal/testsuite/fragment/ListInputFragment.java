@@ -15,12 +15,9 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
-import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -31,8 +28,6 @@ import static org.jboss.hal.testsuite.Selectors.contains;
 
 public class ListInputFragment {
 
-    @Drone private WebDriver browser;
-    @Root private WebElement root;
     @FindBy(css = "input[type=text]." + tags) private WebElement inputElement;
 
     /** Adds an value to this list item. */

@@ -15,10 +15,8 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 /**
@@ -27,7 +25,6 @@ import org.openqa.selenium.WebElement;
  */
 public class PageBreadcrumbFragment {
 
-    @Drone private WebDriver browser;
     @Root private WebElement root;
 
     public String lastValue() {

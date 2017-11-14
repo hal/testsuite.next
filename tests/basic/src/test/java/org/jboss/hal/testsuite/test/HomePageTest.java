@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
@@ -30,7 +29,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static org.jboss.hal.testsuite.Selectors.contains;
@@ -40,7 +38,6 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class HomePageTest {
 
-    @Drone private WebDriver browser;
     @Page private HomePage page;
     @Inject private Console console;
 

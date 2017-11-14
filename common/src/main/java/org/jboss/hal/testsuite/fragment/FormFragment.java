@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.fragment;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
-import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
@@ -149,10 +148,6 @@ public class FormFragment {
 
         waitGui().until().element(formItemGroup).is().visible();
         waitGui().until().element(helpBlock).is().visible();
-    }
-
-    private boolean parseBoolean(String text) {
-        return "on".equals(text) || Boolean.parseBoolean(text);
     }
 
     private WebElement formGroup(String name) {

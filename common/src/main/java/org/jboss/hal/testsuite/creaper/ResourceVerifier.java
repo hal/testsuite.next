@@ -58,7 +58,7 @@ public class ResourceVerifier {
     }
 
     /**
-     * @param timeout - how long to wait for GUI change to be propagated to model in milis
+     * @param timeout - how long to wait for GUI change to be propagated to model in milliseconds
      */
     public ResourceVerifier(Address address, OnlineManagementClient client, int timeout) {
         this.address = address;

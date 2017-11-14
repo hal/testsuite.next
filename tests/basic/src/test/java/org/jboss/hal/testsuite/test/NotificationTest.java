@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test;
 import java.util.HashSet;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
@@ -35,7 +34,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -54,7 +52,6 @@ public class NotificationTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    @Drone private WebDriver browser;
     @Page private SystemPropertyPage page;
     @Inject private Console console;
     private HeaderFragment header;
