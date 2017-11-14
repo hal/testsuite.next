@@ -73,6 +73,8 @@ public class FormFragment {
     public void edit() {
         editLink.click();
         waitGui().until().element(editingSection).is().visible();
+        // wait until the first input element has focus
+        waitGui().until().element(By.cssSelector(DOT + editing + " input:first-of-type:focus")).is().present();
     }
 
     /**
