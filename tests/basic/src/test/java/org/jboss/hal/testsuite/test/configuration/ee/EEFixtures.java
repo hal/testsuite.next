@@ -15,11 +15,13 @@
  */
 package org.jboss.hal.testsuite.test.configuration.ee;
 
+import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 public interface EEFixtures {
 
@@ -29,4 +31,11 @@ public interface EEFixtures {
 
     String GLOBAL_MODULES_CREATE = Ids.build("gm", "create", Random.name());
     String GLOBAL_MODULES_DELETE = Ids.build("gm", "delete", Random.name());
+
+    static ModelNode globalModule(String name) {
+        ModelNode globalModule = new ModelNode();
+        globalModule.get(NAME).set(name);
+        globalModule.get("meta-inf").set(true);
+        return globalModule;
+    }
 }

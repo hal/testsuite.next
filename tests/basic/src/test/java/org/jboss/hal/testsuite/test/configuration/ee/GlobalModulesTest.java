@@ -20,6 +20,7 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -44,7 +45,9 @@ public class GlobalModulesTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.writeListAttribute(EEFixtures.SUBSYSTEM_ADDRESS, GLOBAL_MODULES, EEFixtures.GLOBAL_MODULES_DELETE);
+
+        operations.writeListAttribute(EEFixtures.SUBSYSTEM_ADDRESS, GLOBAL_MODULES,
+                EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_DELETE));
         backup = new BackupAndRestoreAttributes.Builder(EEFixtures.SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
@@ -72,9 +75,19 @@ public class GlobalModulesTest {
         dialog.add();
 
         console.verifySuccess();
+        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
+                .verifyListAttributeContainsValue(GLOBAL_MODULES,
+                        EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_CREATE));
+
     }
 
     @Test
     public void delete() throws Exception {
+        table.remove(EEFixtures.GLOBAL_MODULES_DELETE);
+
+        console.verifySuccess();
+        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
+                .verifyListAttributeDoesNotContainValue(GLOBAL_MODULES,
+                        EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_DELETE));
     }
 }
