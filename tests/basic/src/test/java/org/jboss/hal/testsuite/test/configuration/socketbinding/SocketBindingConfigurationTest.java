@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.socketbinding;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.category.Domain;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -67,7 +68,7 @@ public class SocketBindingConfigurationTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, SBG_UPDATE);
-        page.getConfigurationItem().click();
+        console.verticalNavigation().selectPrimary(Ids.SOCKET_BINDING_GROUP + "-" + Ids.CONFIGURATION + "-" + Ids.ITEM);
         form = page.getConfigurationForm();
     }
 

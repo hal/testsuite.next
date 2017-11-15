@@ -21,7 +21,6 @@ import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
@@ -29,42 +28,21 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.BATCH_CONFIGURATION)
 public class BatchPage extends BasePage {
 
-    @FindBy(id = "batch-configuration-item") private WebElement configurationItem;
     @FindBy(id = "batch-configuration-form") private FormFragment configurationForm;
-
-    @FindBy(id = "batch-in-memory-job-repo-item") private WebElement inMemoryItem;
     @FindBy(id = "batch-in-memory-job-repo-table" + WRAPPER) private TableFragment inMemoryTable;
-
-    @FindBy(id = "batch-jdbc-job-repo-item") private WebElement jdbcItem;
     @FindBy(id = "batch-jdbc-job-repo-table" + WRAPPER) private TableFragment jdbcTable;
     @FindBy(id = "batch-jdbc-job-repo-form") private FormFragment jdbcForm;
-
-    @FindBy(id = "batch-thread-factory-item") private WebElement threadFactoryItem;
     @FindBy(id = "batch-thread-factory-table" + WRAPPER) private TableFragment threadFactoryTable;
     @FindBy(id = "batch-thread-factory-form") private FormFragment threadFactoryForm;
-
-    @FindBy(id = "batch-thread-pool-item") private WebElement threadPoolItem;
     @FindBy(id = "batch-thread-pool-table" + WRAPPER) private TableFragment threadPoolTable;
     @FindBy(id = "batch-thread-pool-form") private FormFragment threadPoolForm;
-
-    public WebElement getConfigurationItem() {
-        return configurationItem;
-    }
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
     }
 
-    public WebElement getInMemoryItem() {
-        return inMemoryItem;
-    }
-
     public TableFragment getInMemoryTable() {
         return inMemoryTable;
-    }
-
-    public WebElement getJdbcItem() {
-        return jdbcItem;
     }
 
     public TableFragment getJdbcTable() {
@@ -75,20 +53,12 @@ public class BatchPage extends BasePage {
         return jdbcForm;
     }
 
-    public WebElement getThreadFactoryItem() {
-        return threadFactoryItem;
-    }
-
     public TableFragment getThreadFactoryTable() {
         return threadFactoryTable;
     }
 
     public FormFragment getThreadFactoryForm() {
         return threadFactoryForm;
-    }
-
-    public WebElement getThreadPoolItem() {
-        return threadPoolItem;
     }
 
     public TableFragment getThreadPoolTable() {

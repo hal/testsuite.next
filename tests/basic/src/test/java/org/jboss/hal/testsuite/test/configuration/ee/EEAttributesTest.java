@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.ee;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -32,6 +33,8 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.SUBSYSTEM_ADDRESS;
+
 @RunWith(Arquillian.class)
 public class EEAttributesTest {
 
@@ -41,7 +44,7 @@ public class EEAttributesTest {
 
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(EEFixtures.SUBSYSTEM_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -57,7 +60,7 @@ public class EEAttributesTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getAttributesItem().click();
+        console.verticalNavigation().selectPrimary(Ids.EE_ATTRIBUTES_ITEM);
         form = page.getAttributesForm();
     }
 
@@ -68,7 +71,7 @@ public class EEAttributesTest {
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
+        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
                 .verifyAttribute(ANNOTATION_PROPERTY_REPLACEMENT, true);
     }
 
@@ -77,7 +80,7 @@ public class EEAttributesTest {
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
+        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
                 .verifyReset();
     }
 }

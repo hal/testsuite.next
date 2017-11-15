@@ -22,7 +22,6 @@ import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
@@ -30,63 +29,28 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.EE)
 public class EEPage extends BasePage {
 
-    @FindBy(id = Ids.EE_ATTRIBUTES_ITEM) private WebElement attributesItem;
     @FindBy(id = Ids.EE_ATTRIBUTES_FORM) private FormFragment attributesForm;
-
-    @FindBy(id = Ids.EE_GLOBAL_MODULES_ITEM) private WebElement globalModulesItem;
     @FindBy(id = Ids.EE_GLOBAL_MODULES_TABLE + WRAPPER) private TableFragment globalModulesTable;
-
-    @FindBy(id = Ids.EE_DEFAULT_BINDINGS_ITEM) private WebElement defaultBindingsItem;
     @FindBy(id = Ids.EE_DEFAULT_BINDINGS_FORM) private FormFragment defaultBindingsForm;
-
-    @FindBy(id = Ids.EE_SERVICES_ITEM) private WebElement servicesItem;
-
-    @FindBy(id = Ids.EE_CONTEXT_SERVICE) private WebElement contextServiceItem;
-    @FindBy(id = Ids.EE_CONTEXT_SERVICE + Ids.TABLE + WRAPPER) private TableFragment contextServiceTable;
-    @FindBy(id = Ids.EE_CONTEXT_SERVICE + Ids.FORM) private FormFragment contextServiceForm;
-
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR) private WebElement managedExecutorItem;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + Ids.TABLE + WRAPPER) private TableFragment managedExecutorTable;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + Ids.FORM) private FormFragment managedExecutorForm;
-
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED) private WebElement managedExecutorScheduledItem;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + Ids.TABLE + WRAPPER) private TableFragment managedExecutorScheduledTable;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + Ids.FORM) private FormFragment managedExecutorScheduledForm;
-
-    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY) private WebElement managedThreadFactoryItem;
-    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + Ids.TABLE + WRAPPER) private TableFragment managedThreadFactoryTable;
-    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + Ids.FORM) private FormFragment managedThreadFactoryForm;
-
-    public WebElement getAttributesItem() {
-        return attributesItem;
-    }
+    @FindBy(id = Ids.EE_CONTEXT_SERVICE + "-" + Ids.TABLE + WRAPPER) private TableFragment contextServiceTable;
+    @FindBy(id = Ids.EE_CONTEXT_SERVICE + "-" + Ids.FORM) private FormFragment contextServiceForm;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.TABLE + WRAPPER) private TableFragment managedExecutorTable;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.FORM) private FormFragment managedExecutorForm;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.TABLE + WRAPPER) private TableFragment managedExecutorScheduledTable;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.FORM) private FormFragment managedExecutorScheduledForm;
+    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.TABLE + WRAPPER) private TableFragment managedThreadFactoryTable;
+    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.FORM) private FormFragment managedThreadFactoryForm;
 
     public FormFragment getAttributesForm() {
         return attributesForm;
-    }
-
-    public WebElement getGlobalModulesItem() {
-        return globalModulesItem;
     }
 
     public TableFragment getGlobalModulesTable() {
         return globalModulesTable;
     }
 
-    public WebElement getDefaultBindingsItem() {
-        return defaultBindingsItem;
-    }
-
     public FormFragment getDefaultBindingsForm() {
         return defaultBindingsForm;
-    }
-
-    public WebElement getServicesItem() {
-        return servicesItem;
-    }
-
-    public WebElement getContextServiceItem() {
-        return contextServiceItem;
     }
 
     public TableFragment getContextServiceTable() {
@@ -97,10 +61,6 @@ public class EEPage extends BasePage {
         return contextServiceForm;
     }
 
-    public WebElement getManagedExecutorItem() {
-        return managedExecutorItem;
-    }
-
     public TableFragment getManagedExecutorTable() {
         return managedExecutorTable;
     }
@@ -109,20 +69,12 @@ public class EEPage extends BasePage {
         return managedExecutorForm;
     }
 
-    public WebElement getManagedExecutorScheduledItem() {
-        return managedExecutorScheduledItem;
-    }
-
     public TableFragment getManagedExecutorScheduledTable() {
         return managedExecutorScheduledTable;
     }
 
     public FormFragment getManagedExecutorScheduledForm() {
         return managedExecutorScheduledForm;
-    }
-
-    public WebElement getManagedThreadFactoryItem() {
-        return managedThreadFactoryItem;
     }
 
     public TableFragment getManagedThreadFactoryTable() {

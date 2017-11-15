@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.ee;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -35,6 +36,10 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.GLOBAL_MODULES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.GLOBAL_MODULES_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.GLOBAL_MODULES_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.SUBSYSTEM_ADDRESS;
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.globalModule;
 
 @RunWith(Arquillian.class)
 public class GlobalModulesTest {
@@ -46,9 +51,9 @@ public class GlobalModulesTest {
     @BeforeClass
     public static void beforeClass() throws Exception {
 
-        operations.writeListAttribute(EEFixtures.SUBSYSTEM_ADDRESS, GLOBAL_MODULES,
-                EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_DELETE));
-        backup = new BackupAndRestoreAttributes.Builder(EEFixtures.SUBSYSTEM_ADDRESS).build();
+        operations.writeListAttribute(SUBSYSTEM_ADDRESS, GLOBAL_MODULES,
+                globalModule(GLOBAL_MODULES_DELETE));
+        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -64,30 +69,28 @@ public class GlobalModulesTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getGlobalModulesItem().click();
+        console.verticalNavigation().selectPrimary(Ids.EE_GLOBAL_MODULES_ITEM);
         table = page.getGlobalModulesTable();
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, EEFixtures.GLOBAL_MODULES_CREATE);
+        dialog.getForm().text(NAME, GLOBAL_MODULES_CREATE);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeContainsValue(GLOBAL_MODULES,
-                        EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_CREATE));
+        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
+                .verifyListAttributeContainsValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_CREATE));
 
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(EEFixtures.GLOBAL_MODULES_DELETE);
+        table.remove(GLOBAL_MODULES_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeDoesNotContainValue(GLOBAL_MODULES,
-                        EEFixtures.globalModule(EEFixtures.GLOBAL_MODULES_DELETE));
+        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
+                .verifyListAttributeDoesNotContainValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_DELETE));
     }
 }

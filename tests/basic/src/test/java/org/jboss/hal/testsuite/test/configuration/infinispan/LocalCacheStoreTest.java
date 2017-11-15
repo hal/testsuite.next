@@ -19,6 +19,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -75,7 +76,7 @@ public class LocalCacheStoreTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, CC_UPDATE);
-        page.getLocalCacheItem().click();
+        console.verticalNavigation().selectPrimary(Ids.LOCAL_CACHE + "-" + Ids.ITEM);
         page.bindForms();
         table = page.getLocalCacheTable();
     }

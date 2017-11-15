@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.socketbinding;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -64,7 +65,7 @@ public class InboundSocketBindingTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, STANDARD_SOCKETS);
-        page.getInboundItem().click();
+        console.verticalNavigation().selectPrimary(Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.ITEM);
 
         table = page.getInboundTable();
         form = page.getInboundForm();

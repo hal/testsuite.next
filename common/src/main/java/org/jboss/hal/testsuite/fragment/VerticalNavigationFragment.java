@@ -21,16 +21,23 @@ import org.openqa.selenium.WebElement;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 
-/** Fragment for a tab element. */
-public class TabsFragment {
+/** Fragment for the vertical navigation. Provides methods to select primary and secondary items. */
+public class VerticalNavigationFragment {
 
     @Root private WebElement root;
 
-    /** Switch to the pane with the specified id. */
-    public void select(String id) {
-        WebElement link = root.findElement(By.cssSelector("a[href='#" + id + "']"));
-        WebElement pane = root.findElement(By.id(id));
-        link.click();
-        waitGui().until().element(pane).is().visible();
+    public void selectPrimary(String id) {
+        selectItem(id);
+    }
+
+    public void selectSecondary(String primaryId, String secondaryId) {
+        root.findElement(By.cssSelector("#" + primaryId + " > a")).click();
+        waitGui().until().element(By.id(primaryId + "-secondary")).is().visible();
+        selectItem(secondaryId);
+    }
+
+    private void selectItem(String id) {
+        root.findElement(By.cssSelector("#" + id + " > a")).click();
+        waitGui().until().element(By.cssSelector("[data-vn-item-for=" + id + "]")).is().visible();
     }
 }

@@ -33,6 +33,7 @@ import org.jboss.hal.testsuite.fragment.ConfirmationDialogFragment;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FooterFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
+import org.jboss.hal.testsuite.fragment.VerticalNavigationFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -43,6 +44,7 @@ import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.alertSuccess;
+import static org.jboss.hal.resources.CSS.navPfVerticalHal;
 import static org.jboss.hal.resources.CSS.navbar;
 import static org.jboss.hal.resources.CSS.toastNotificationsListPf;
 import static org.junit.Assert.assertEquals;
@@ -113,29 +115,7 @@ public class Console {
     }
 
 
-    // ------------------------------------------------------ fragment access
-
-    /** Navigates to the specified place, creates and returns the finder fragment */
-    public FinderFragment finder(String place) {
-        browser.get(absoluteUrl(place));
-        waitModel().until().element(By.id(Ids.FINDER)).is().present();
-        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
-        finder.initPlace(place);
-        return finder;
-    }
-
-    public HeaderFragment header() {
-        return createPageFragment(HeaderFragment.class, browser.findElement(By.cssSelector("nav." + navbar)));
-    }
-
-    public FooterFragment footer() {
-        return createPageFragment(FooterFragment.class, browser.findElement(By.cssSelector("footer.footer")));
-    }
-
-    /** Returns the currently opened dialog. */
-    public DialogFragment dialog() {
-        return dialog(DialogFragment.class);
-    }
+    // ------------------------------------------------------ fragment access (a-z)
 
     /** Returns the currently opened add resource dialog. */
     public AddResourceDialogFragment addResourceDialog() {
@@ -147,11 +127,38 @@ public class Console {
         return dialog(ConfirmationDialogFragment.class);
     }
 
+    /** Returns the currently opened dialog. */
+    public DialogFragment dialog() {
+        return dialog(DialogFragment.class);
+    }
+
     private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
         T dialog = createPageFragment(dialogClass, dialogElement);
         waitGui().until().element(dialogElement).is().visible();
         return dialog;
+    }
+
+    /** Navigates to the specified place, creates and returns the finder fragment */
+    public FinderFragment finder(String place) {
+        browser.get(absoluteUrl(place));
+        waitModel().until().element(By.id(Ids.FINDER)).is().present();
+        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
+        finder.initPlace(place);
+        return finder;
+    }
+
+    public FooterFragment footer() {
+        return createPageFragment(FooterFragment.class, browser.findElement(By.cssSelector("footer.footer")));
+    }
+
+    public HeaderFragment header() {
+        return createPageFragment(HeaderFragment.class, browser.findElement(By.cssSelector("nav." + navbar)));
+    }
+
+    public VerticalNavigationFragment verticalNavigation() {
+        return createPageFragment(VerticalNavigationFragment.class,
+                browser.findElement(By.cssSelector("." + navPfVerticalHal)));
     }
 
 

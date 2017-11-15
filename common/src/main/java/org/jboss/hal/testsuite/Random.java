@@ -21,7 +21,7 @@ import org.apache.commons.text.RandomStringGenerator;
 public class Random {
 
     private static final int LENGTH = 12;
-    private static final String JNDI_PREFIX = "java:/jboss/";
+    private static final String JNDI_PREFIX = "java:jboss/";
     private static final RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z')
             .build();
 
@@ -30,12 +30,12 @@ public class Random {
         return GENERATOR.generate(LENGTH);
     }
 
-    /** Returns a JNDI name starting with "java:/jboss/" followed by a random name. */
+    /** Returns a JNDI name starting with "java:jboss/" followed by a random name. */
     public static String jndiName() {
         return jndiName(name());
     }
 
-    /** Returns a JNDI name starting with "java:/jboss/" followed by the specified name. */
+    /** Returns a JNDI name starting with "java:jboss/" followed by the specified name. */
     public static String jndiName(String name) {
         return JNDI_PREFIX + name;
     }

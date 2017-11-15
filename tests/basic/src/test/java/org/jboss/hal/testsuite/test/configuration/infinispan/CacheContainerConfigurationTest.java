@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.infinispan;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -63,7 +64,7 @@ public class CacheContainerConfigurationTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, CC_UPDATE);
-        page.getConfigurationItem().click();
+        console.verticalNavigation().selectPrimary(Ids.CACHE_CONTAINER_ITEM);
         form = page.getConfigurationForm();
     }
 

@@ -57,7 +57,7 @@ public class BatchConfigurationTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getConfigurationItem().click();
+        console.verticalNavigation().selectPrimary("batch-configuration-item");
         form = page.getConfigurationForm();
     }
 

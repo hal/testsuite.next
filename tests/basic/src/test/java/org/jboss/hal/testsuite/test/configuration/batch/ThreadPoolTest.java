@@ -69,7 +69,7 @@ public class ThreadPoolTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getThreadPoolItem().click();
+        console.verticalNavigation().selectPrimary("batch-thread-pool-item");
 
         form = page.getThreadPoolForm();
         table = page.getThreadPoolTable();

@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.ee;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -34,6 +35,7 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONTEXT_SERVICE;
+import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.DEFAULT_BINDINGS_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class DefaultBindingsTest {
@@ -43,7 +45,7 @@ public class DefaultBindingsTest {
 
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(EEFixtures.DEFAULT_BINDINGS_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(DEFAULT_BINDINGS_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -59,7 +61,7 @@ public class DefaultBindingsTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getDefaultBindingsItem().click();
+        console.verticalNavigation().selectPrimary(Ids.EE_DEFAULT_BINDINGS_ITEM);
         form = page.getDefaultBindingsForm();
     }
 
@@ -71,7 +73,7 @@ public class DefaultBindingsTest {
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.DEFAULT_BINDINGS_ADDRESS, client)
+        new ResourceVerifier(DEFAULT_BINDINGS_ADDRESS, client)
                 .verifyAttribute(CONTEXT_SERVICE, contextService);
     }
 
@@ -80,7 +82,7 @@ public class DefaultBindingsTest {
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(EEFixtures.DEFAULT_BINDINGS_ADDRESS, client)
+        new ResourceVerifier(DEFAULT_BINDINGS_ADDRESS, client)
                 .verifyReset();
     }
 }

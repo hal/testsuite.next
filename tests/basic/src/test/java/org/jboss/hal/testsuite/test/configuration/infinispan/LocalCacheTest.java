@@ -79,7 +79,8 @@ public class LocalCacheTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, CC_UPDATE);
-        page.getLocalCacheItem().click();
+        console.verticalNavigation().selectPrimary(Ids.LOCAL_CACHE + "-" + Ids.ITEM);
+
         page.bindForms();
         table = page.getLocalCacheTable();
         tabs = page.getLocalCacheTabs();

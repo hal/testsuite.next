@@ -70,7 +70,7 @@ public class ThreadFactoryTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getThreadFactoryItem().click();
+        console.verticalNavigation().selectPrimary("batch-thread-factory-item");
 
         form = page.getThreadFactoryForm();
         table = page.getThreadFactoryTable();

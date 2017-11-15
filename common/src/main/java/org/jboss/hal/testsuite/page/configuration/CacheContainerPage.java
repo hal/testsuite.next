@@ -24,7 +24,6 @@ import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static java.util.Arrays.asList;
@@ -34,10 +33,8 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.CACHE_CONTAINER)
 public class CacheContainerPage extends BasePage {
 
-    @FindBy(id = Ids.CACHE_CONTAINER_ITEM) private WebElement configurationItem;
     @FindBy(id = Ids.CACHE_CONTAINER_FORM) private FormFragment configurationForm;
 
-    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.ITEM) private WebElement localCacheItem;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TAB_CONTAINER) private TabsFragment localCacheTabs;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.TABLE + WRAPPER) private TableFragment localCacheTable;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.FORM) private FormFragment localCacheForm;
@@ -56,16 +53,8 @@ public class CacheContainerPage extends BasePage {
         localCacheTable.bind(asList(localCacheForm, evictionForm, expirationForm, lockingForm, transactionForm));
     }
 
-    public WebElement getConfigurationItem() {
-        return configurationItem;
-    }
-
     public FormFragment getConfigurationForm() {
         return configurationForm;
-    }
-
-    public WebElement getLocalCacheItem() {
-        return localCacheItem;
     }
 
     public TabsFragment getLocalCacheTabs() {

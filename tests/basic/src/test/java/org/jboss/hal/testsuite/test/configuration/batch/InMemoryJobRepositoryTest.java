@@ -61,8 +61,7 @@ public class InMemoryJobRepositoryTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        page.getInMemoryItem().click();
-
+        console.verticalNavigation().selectPrimary("batch-in-memory-job-repo-item");
         table = page.getInMemoryTable();
     }
 
