@@ -57,7 +57,7 @@ class ResourceDescription {
         return resourceDescription.get(ATTRIBUTES).asPropertyList();
     }
 
-    private ModelNode getAttribute(String attribute) throws NoSuchElementException {
+    ModelNode getAttribute(String attribute) throws NoSuchElementException {
         if (!resourceDescription.hasDefined(ATTRIBUTES)) {
             throw new NoSuchElementException(String.format("No attributes found in resource description of %s",
                     address));

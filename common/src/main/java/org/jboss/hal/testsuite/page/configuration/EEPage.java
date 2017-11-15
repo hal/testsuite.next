@@ -34,12 +34,12 @@ public class EEPage extends BasePage {
     @FindBy(id = Ids.EE_DEFAULT_BINDINGS_FORM) private FormFragment defaultBindingsForm;
     @FindBy(id = Ids.EE_CONTEXT_SERVICE + "-" + Ids.TABLE + WRAPPER) private TableFragment contextServiceTable;
     @FindBy(id = Ids.EE_CONTEXT_SERVICE + "-" + Ids.FORM) private FormFragment contextServiceForm;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.TABLE + WRAPPER) private TableFragment managedExecutorTable;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.FORM) private FormFragment managedExecutorForm;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.TABLE + WRAPPER) private TableFragment managedExecutorScheduledTable;
-    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.FORM) private FormFragment managedExecutorScheduledForm;
-    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.TABLE + WRAPPER) private TableFragment managedThreadFactoryTable;
-    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.FORM) private FormFragment managedThreadFactoryForm;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.TABLE + WRAPPER) private TableFragment executorTable;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR + "-" + Ids.FORM) private FormFragment executorForm;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.TABLE + WRAPPER) private TableFragment executorScheduledTable;
+    @FindBy(id = Ids.EE_MANAGED_EXECUTOR_SCHEDULED + "-" + Ids.FORM) private FormFragment executorScheduledForm;
+    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.TABLE + WRAPPER) private TableFragment threadFactoryTable;
+    @FindBy(id = Ids.EE_MANAGED_THREAD_FACTORY + "-" + Ids.FORM) private FormFragment threadFactoryForm;
 
     public FormFragment getAttributesForm() {
         return attributesForm;
@@ -61,27 +61,27 @@ public class EEPage extends BasePage {
         return contextServiceForm;
     }
 
-    public TableFragment getManagedExecutorTable() {
-        return managedExecutorTable;
+    public TableFragment getExecutorTable() {
+        return executorTable;
     }
 
-    public FormFragment getManagedExecutorForm() {
-        return managedExecutorForm;
+    public FormFragment getExecutorForm() {
+        return executorForm;
     }
 
-    public TableFragment getManagedExecutorScheduledTable() {
-        return managedExecutorScheduledTable;
+    public TableFragment getExecutorScheduledTable() {
+        return executorScheduledTable;
     }
 
-    public FormFragment getManagedExecutorScheduledForm() {
-        return managedExecutorScheduledForm;
+    public FormFragment getExecutorScheduledForm() {
+        return executorScheduledForm;
     }
 
-    public TableFragment getManagedThreadFactoryTable() {
-        return managedThreadFactoryTable;
+    public TableFragment getThreadFactoryTable() {
+        return threadFactoryTable;
     }
 
-    public FormFragment getManagedThreadFactoryForm() {
-        return managedThreadFactoryForm;
+    public FormFragment getThreadFactoryForm() {
+        return threadFactoryForm;
     }
 }

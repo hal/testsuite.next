@@ -339,9 +339,19 @@ public class ResourceVerifier {
                 .filter(property -> property.getValue().hasDefined(DEFAULT))
                 .map(Property::getName)
                 .collect(toList());
-        for (String attribute : attributesWithDefaultValues) {
-            verifyAttribute(attribute, resourceDescription.defaultValue(attribute),
-                    String.format("Attribute '%s' in '%s'", attribute, address));
+        for (String name : attributesWithDefaultValues) {
+            ModelType attributeType = resourceDescription.getAttribute(name).get(TYPE).asType();
+            ModelNode defaultValue = resourceDescription.defaultValue(name);
+            if (attributeType != defaultValue.getType()) {
+                // some resource descriptions are malformed :-(
+                // skip these, since verifyAttribute() cannot cope with it: 0 != 0L
+                log.warn("Malformed resource description for {} in {}: " +
+                                "Attribute type is {}, but default value uses {}! " +
+                                "Will skip this attribute in verifyDefaultValues()",
+                        name, address, attributeType, defaultValue.getType());
+                continue;
+            }
+            verifyAttribute(name, defaultValue, String.format("Attribute '%s' in '%s'", name, address));
         }
         return this;
     }
