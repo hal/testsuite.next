@@ -125,7 +125,7 @@ public class DataSourceCreateTest {
 
         // connection
         FormFragment connectionForm = wizard.getForm(Ids.DATA_SOURCE_CONNECTION_FORM);
-        String connectionUrl = h2ConnectionUrl(DATA_SOURCE_READ);
+        String connectionUrl = h2ConnectionUrl(DATA_SOURCE_CREATE_CUSTOM);
         connectionForm.text(CONNECTION_URL, connectionUrl);
         wizard.next(Ids.DATA_SOURCE_TEST_CONNECTION);
 

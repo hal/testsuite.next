@@ -23,6 +23,7 @@ import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -80,7 +81,11 @@ public class FormFragment {
         editLink.click();
         waitGui().until().element(editingSection).is().visible();
         // wait until the first input element has focus
-        waitGui().until().element(By.cssSelector(DOT + editing + " input:first-of-type:focus")).is().present();
+        try {
+            waitGui().until().element(By.cssSelector(DOT + editing + " input:first-of-type:focus")).is().present();
+        } catch (TimeoutException ignored) {
+            // some forms have a disabled first input field
+        }
     }
 
     /**

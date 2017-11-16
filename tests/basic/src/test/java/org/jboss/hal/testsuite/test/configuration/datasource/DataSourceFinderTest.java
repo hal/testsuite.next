@@ -29,6 +29,7 @@ import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
@@ -79,5 +80,9 @@ public class DataSourceFinderTest {
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
                 .column("ds-configuration");
         column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);
+    }
+
+    @Test
+    public void todo() throws Exception {
     }
 }
