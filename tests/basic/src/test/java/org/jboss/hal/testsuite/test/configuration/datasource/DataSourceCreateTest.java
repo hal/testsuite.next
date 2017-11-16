@@ -85,7 +85,7 @@ public class DataSourceCreateTest {
                 .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
                         .append(Ids.CONFIGURATION_SUBSYSTEM, DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
-                .column("ds-configuration");
+                .column(Ids.DATA_SOURCE_CONFIGURATION);
         column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);
         wizard = console.wizard();
     }

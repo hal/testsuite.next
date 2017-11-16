@@ -89,7 +89,8 @@ public class SocketBindingFinderTest {
 
         console.verifySuccess();
         assertTrue(column.containsItem(SBG_CREATE));
-        new ResourceVerifier(socketBindingGroupAddress(SBG_CREATE), client).verifyExists();
+        new ResourceVerifier(socketBindingGroupAddress(SBG_CREATE), client)
+                .verifyExists();
     }
 
     @Test
@@ -123,6 +124,7 @@ public class SocketBindingFinderTest {
 
         console.verifySuccess();
         assertFalse(column.containsItem(SBG_DELETE));
-        new ResourceVerifier(socketBindingGroupAddress(SBG_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(socketBindingGroupAddress(SBG_DELETE), client)
+                .verifyDoesNotExist();
     }
 }
