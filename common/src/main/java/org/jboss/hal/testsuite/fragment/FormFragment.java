@@ -62,6 +62,7 @@ public class FormFragment {
         return browser.findElement(By.id(readOnlyId(name))).getText();
     }
 
+    /** Shows the sensitive value of the specified field in read-only mode */
     public void showSensitive(String name) {
         root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye")).click();
         waitGui().until().element(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye-slash")).is().present();
@@ -113,7 +114,7 @@ public class FormFragment {
         text(name, String.valueOf(value));
     }
 
-    /** Returns an list input fragment for the specified form item. */
+    /** Returns a list input fragment for the specified form item. */
     public ListInputFragment list(String name) {
         return Graphene.createPageFragment(ListInputFragment.class, formGroup(name));
     }
