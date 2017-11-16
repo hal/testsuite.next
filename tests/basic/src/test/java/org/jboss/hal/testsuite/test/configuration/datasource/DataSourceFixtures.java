@@ -33,10 +33,12 @@ public interface DataSourceFixtures {
     String H2_USER_NAME = "sa";
     String H2_PASSWORD = "sa";
 
+    String DATA_SOURCE_CREATE_EXISTING = Ids.build("ds", "create-existing", Random.name());
     String DATA_SOURCE_CREATE_CUSTOM = Ids.build("ds", "create-custom", Random.name());
     String DATA_SOURCE_CREATE_H2 = H2_NAME;
     String DATA_SOURCE_CREATE_TEST_CANCEL = Ids.build("ds", "create-test-cancel", Random.name());
     String DATA_SOURCE_CREATE_TEST_FINISH = Ids.build("ds", "create-test-finish", Random.name());
+    String DATA_SOURCE_CREATE_TEST_CHANGE = Ids.build("ds", "create-test-change", Random.name());
     String DATA_SOURCE_READ = Ids.build("ds", "read", Random.name());
     String DATA_SOURCE_UPDATE = Ids.build("ds", "update", Random.name());
     String DATA_SOURCE_DELETE = Ids.build("ds", "delete", Random.name());

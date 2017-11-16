@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.arquillian.graphene.wait.WebDriverWait;
 import org.jboss.hal.testsuite.Console;
@@ -32,8 +33,20 @@ public class WizardFragment {
     @Root private WebElement root;
     @FindBy(css = "." + modalFooter + " ." + btnPrimary) private WebElement primaryButton;
     @FindBy(css = "." + modalFooter + " ." + btnCancel) private WebElement cancelButton;
+    @FindByJQuery("." + modalFooter + " ." + btnDefault + ":contains('Back')") private WebElement backButton;
 
-    /** Clicks on next and returns immediately */
+    /** Clicks on back and waits until the element with the specified ID (which must be part of this wizard) is visible */
+    public void back(String waitForId) {
+        back(By.id(waitForId));
+    }
+
+    /** Clicks on back and waits until the specified element (which must be part of this wizard) is visible */
+    public void back(By waitFor) {
+        backButton.click();
+        verifyStep(waitFor);
+    }
+
+    /** Clicks on next */
     public void next() {
         primaryButton.click();
     }
@@ -46,7 +59,11 @@ public class WizardFragment {
     /** Clicks on next and waits until the specified element (which must be part of this wizard) is visible */
     public void next(By waitFor) {
         primaryButton.click();
-        WebElement element = root.findElement(waitFor);
+        verifyStep(waitFor);
+    }
+
+    private void verifyStep(By by) {
+        WebElement element = root.findElement(by);
         waitGui().until().element(element).is().visible();
     }
 
@@ -71,10 +88,12 @@ public class WizardFragment {
         waitGui().until().element(root).is().not().visible();
     }
 
+    /** Waits until the success icon is visible */
     public void verifySuccess() {
         verifySuccess(waitGui());
     }
 
+    /** Waits using the specified wait instance until the success icon is visible */
     public void verifySuccess(WebDriverWait<Void> wait) {
         wait.until().element(By.cssSelector("." + wizardPfComplete + " ." + wizardPfSuccessIcon)).is().visible();
     }
