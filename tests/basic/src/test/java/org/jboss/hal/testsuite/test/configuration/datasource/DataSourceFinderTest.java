@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.test.configuration.datasource;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -34,19 +35,25 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class DataSourceFinderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final Administration administration = new Administration(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -63,7 +70,7 @@ public class DataSourceFinderTest {
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
+    public static void afterClass() throws Exception {
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_CREATE_CUSTOM));
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_CREATE_H2));
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_CREATE_TEST_CANCEL));
@@ -72,6 +79,7 @@ public class DataSourceFinderTest {
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_DELETE));
     }
 
+    @Drone private WebDriver browser;
     @Inject private Console console;
     private ColumnFragment column;
 
@@ -121,13 +129,14 @@ public class DataSourceFinderTest {
         assertEquals(connectionUrl, reviewForm.value(CONNECTION_URL));
         assertEquals(H2_DRIVER, reviewForm.value(DRIVER_NAME));
 
+        // do it
         wizard.finishStayOpen();
         wizard.verifySuccess();
         wizard.close();
 
         String itemId = Ids.dataSourceConfiguration(DATA_SOURCE_CREATE_CUSTOM, false);
-        column.containsItem(itemId);
-        column.isSelected(itemId);
+        assertTrue(column.containsItem(itemId));
+        assertTrue(column.isSelected(itemId));
         new ResourceVerifier(dataSourceAddress(DATA_SOURCE_CREATE_CUSTOM), client).verifyExists();
     }
 
@@ -136,7 +145,6 @@ public class DataSourceFinderTest {
         column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);
         WizardFragment wizard = console.wizard();
 
-        // choose template
         wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         wizard.next(Ids.DATA_SOURCE_DRIVER_FORM);
@@ -144,7 +152,6 @@ public class DataSourceFinderTest {
         wizard.next(Ids.DATA_SOURCE_TEST_CONNECTION);
         wizard.next(Ids.DATA_SOURCE_REVIEW_FORM); // do nothing here
 
-        // review
         FormFragment reviewForm = wizard.getForm(Ids.DATA_SOURCE_REVIEW_FORM);
         reviewForm.showSensitive(USER_NAME);
         reviewForm.showSensitive(PASSWORD);
@@ -160,8 +167,35 @@ public class DataSourceFinderTest {
         wizard.close();
 
         String itemId = Ids.dataSourceConfiguration(DATA_SOURCE_CREATE_H2, false);
-        column.containsItem(itemId);
-        column.isSelected(itemId);
+        assertTrue(column.containsItem(itemId));
+        assertTrue(column.isSelected(itemId));
         new ResourceVerifier(dataSourceAddress(DATA_SOURCE_CREATE_H2), client).verifyExists();
+    }
+
+    @Test
+    public void createTestCancel() throws Exception {
+        administration.reloadIfRequired();
+
+        column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);
+        WizardFragment wizard = console.wizard();
+
+        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
+        FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
+        namesForms.clear(NAME);
+        namesForms.text(NAME, DATA_SOURCE_CREATE_TEST_CANCEL);
+        namesForms.clear(JNDI_NAME);
+        namesForms.text(JNDI_NAME, Random.jndiName(DATA_SOURCE_CREATE_TEST_CANCEL));
+        wizard.next(Ids.DATA_SOURCE_DRIVER_FORM);
+        wizard.next(Ids.DATA_SOURCE_CONNECTION_FORM);
+        wizard.next(Ids.DATA_SOURCE_TEST_CONNECTION);
+
+        browser.findElement(By.id(Ids.DATA_SOURCE_TEST_CONNECTION)).click();
+        wizard.verifySuccess(waitModel());
+        wizard.cancel();
+
+        String itemId = Ids.dataSourceConfiguration(DATA_SOURCE_CREATE_TEST_CANCEL, false);
+        assertFalse(column.containsItem(itemId));
+        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_CREATE_TEST_CANCEL), client).verifyDoesNotExist();
     }
 }

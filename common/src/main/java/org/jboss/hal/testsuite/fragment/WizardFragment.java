@@ -17,22 +17,21 @@ package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.arquillian.graphene.wait.WebDriverWait;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.resources.CSS.btnPrimary;
-import static org.jboss.hal.resources.CSS.modalFooter;
-import static org.jboss.hal.resources.CSS.wizardPfComplete;
-import static org.jboss.hal.resources.CSS.wizardPfSuccessIcon;
+import static org.jboss.hal.resources.CSS.*;
 
 /** Page fragment for wizards. Use {@link Console#wizard()} to get an instance. */
 public class WizardFragment {
 
     @Root private WebElement root;
     @FindBy(css = "." + modalFooter + " ." + btnPrimary) private WebElement primaryButton;
+    @FindBy(css = "." + modalFooter + " ." + btnCancel) private WebElement cancelButton;
 
     /** Clicks on next and returns immediately */
     public void next() {
@@ -49,6 +48,11 @@ public class WizardFragment {
         primaryButton.click();
         WebElement element = root.findElement(waitFor);
         waitGui().until().element(element).is().visible();
+    }
+
+    public void cancel() {
+        cancelButton.click();
+        waitGui().until().element(root).is().not().visible();
     }
 
     /** Clicks on finish and expects the wizard is closed */
@@ -68,7 +72,11 @@ public class WizardFragment {
     }
 
     public void verifySuccess() {
-        waitGui().until().element(By.cssSelector("." + wizardPfComplete + " ." + wizardPfSuccessIcon)).is().visible();
+        verifySuccess(waitGui());
+    }
+
+    public void verifySuccess(WebDriverWait<Void> wait) {
+        wait.until().element(By.cssSelector("." + wizardPfComplete + " ." + wizardPfSuccessIcon)).is().visible();
     }
 
     public FormFragment getForm(String id) {
