@@ -34,7 +34,9 @@ import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FooterFragment;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.fragment.VerticalNavigationFragment;
+import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
+import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -134,9 +136,8 @@ public class Console {
 
     private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
-        T dialog = createPageFragment(dialogClass, dialogElement);
         waitGui().until().element(dialogElement).is().visible();
-        return dialog;
+        return createPageFragment(dialogClass, dialogElement);
     }
 
     /** Navigates to the specified place, creates and returns the finder fragment */
@@ -159,6 +160,13 @@ public class Console {
     public VerticalNavigationFragment verticalNavigation() {
         return createPageFragment(VerticalNavigationFragment.class,
                 browser.findElement(By.cssSelector("." + navPfVerticalHal)));
+    }
+
+    public WizardFragment wizard() {
+        Library.letsSleep(500); // // don't know why, but seems to be necessary
+        WebElement wizardElement = browser.findElement(By.id(Ids.HAL_WIZARD));
+        waitGui().until().element(wizardElement).is().visible();
+        return createPageFragment(WizardFragment.class, wizardElement);
     }
 
 

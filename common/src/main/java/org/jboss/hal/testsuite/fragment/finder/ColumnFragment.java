@@ -26,10 +26,10 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.active;
 import static org.jboss.hal.resources.CSS.finderItem;
 
 /** Page fragment for one finder column. Use {@link FinderFragment#column(String)} to get an instance. */
@@ -37,7 +37,6 @@ public class ColumnFragment {
 
     @Drone private WebDriver browser;
     @Root private WebElement root;
-    @FindBy(css = "ul > li." + finderItem) private List<WebElement> items;
     @Inject private Console console;
     private String columnId;
 
@@ -52,6 +51,13 @@ public class ColumnFragment {
         assertColumnId();
         action(Ids.build(columnId, Ids.ADD)).click();
         return console.addResourceDialog();
+    }
+
+    /** Opens the action dropdown and clicks on the specified action */
+    public void dropdownAction(String dropdownId, String actionId) {
+        root.findElement(By.id(dropdownId)).click();
+        waitGui().until().element(By.cssSelector("ul[aria-labelledby=" + dropdownId + "]")).is().visible();
+        action(actionId).click();
     }
 
     /** Returns the specified column action */
@@ -69,7 +75,7 @@ public class ColumnFragment {
     // ------------------------------------------------------ items
 
     public boolean containsItem(String itemId) {
-        return items.stream().anyMatch(item -> itemId.equals(item.getAttribute("id")));
+        return getItems().stream().anyMatch(item -> itemId.equals(item.getAttribute("id")));
     }
 
     public ItemFragment selectItem(String itemId) {
@@ -81,8 +87,14 @@ public class ColumnFragment {
         return item;
     }
 
+    public boolean isSelected(String itemId) {
+        By selector = By.cssSelector("#" + itemId + "." + active);
+        waitGui().until().element(selector).is().visible();
+        return true;
+    }
+
     public List<WebElement> getItems() {
-        return items;
+        return root.findElements(By.cssSelector("ul > li." + finderItem));
     }
 
 

@@ -62,6 +62,11 @@ public class FormFragment {
         return browser.findElement(By.id(readOnlyId(name))).getText();
     }
 
+    public void showSensitive(String name) {
+        root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye")).click();
+        waitGui().until().element(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye-slash")).is().present();
+    }
+
     public int intValue(String name) {
         return Integer.parseInt(value(name));
     }
