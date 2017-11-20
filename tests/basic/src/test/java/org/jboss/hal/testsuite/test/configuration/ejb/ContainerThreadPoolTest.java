@@ -67,7 +67,7 @@ public class ContainerThreadPoolTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-container-item", "ejb-thread-pool-item");
+        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-thread-pool-item");
 
         table = page.getThreadPoolTable();
         form = page.getThreadPoolForm();

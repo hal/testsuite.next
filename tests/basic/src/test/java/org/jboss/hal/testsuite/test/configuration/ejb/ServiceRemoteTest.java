@@ -71,7 +71,7 @@ public class ServiceRemoteTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-service-item", "ejb-service-remote-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-remote-item");
 
         form = page.getServiceRemoteForm();
     }

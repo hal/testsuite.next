@@ -67,7 +67,7 @@ public class ContainerRemotingProfileTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-container-item", "ejb-remoting-profile-item");
+        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-remoting-profile-item");
 
         table = page.getRemotingProfileTable();
         form = page.getRemotingProfileForm();

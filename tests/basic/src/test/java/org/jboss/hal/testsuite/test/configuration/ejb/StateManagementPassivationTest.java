@@ -66,7 +66,7 @@ public class StateManagementPassivationTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-state-item", "ejb-passivation-item");
+        console.verticalNavigation().selectSecondary("ejb3-state-item", "ejb3-passivation-item");
 
         table = page.getPassivationTable();
         form = page.getPassivationForm();

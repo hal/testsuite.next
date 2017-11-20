@@ -17,6 +17,7 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
@@ -54,6 +55,7 @@ public class EJBConfigurationPage extends BasePage {
 
     // services / identity
     @FindBy(id = "ejb3-service-identity-form") private FormFragment serviceIdentityForm;
+    @FindBy(id = "ejb3-service-identity-form-empty") private EmptyState serviceIdentityEmptyState;
 
     // services / iiop
     @FindBy(id = "ejb3-service-iiop-form") private FormFragment serviceIiopForm;
@@ -122,6 +124,10 @@ public class EJBConfigurationPage extends BasePage {
 
     public FormFragment getServiceIdentityForm() {
         return serviceIdentityForm;
+    }
+
+    public EmptyState getServiceIdentityEmptyState() {
+        return serviceIdentityEmptyState;
     }
 
     public FormFragment getServiceIiopForm() {

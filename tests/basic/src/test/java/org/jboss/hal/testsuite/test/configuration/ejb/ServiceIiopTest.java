@@ -35,7 +35,6 @@ public class ServiceIiopTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    // private static String OUTFLOW_SEC_DOMAIN = "outflow-security-domains";
     private static String USE_QUALIFIED_NAME = "use-qualified-name";
 
     @AfterClass
@@ -50,7 +49,7 @@ public class ServiceIiopTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-service-item", "ejb-service-iiop-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-iiop-item");
 
         form = page.getServiceIiopForm();
     }

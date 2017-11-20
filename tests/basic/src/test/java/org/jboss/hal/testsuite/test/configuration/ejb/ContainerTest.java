@@ -53,7 +53,7 @@ public class ContainerTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-container-item", "ejb-configuration-item");
+        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-configuration-item");
 
         form = page.getConfigurationForm();
     }

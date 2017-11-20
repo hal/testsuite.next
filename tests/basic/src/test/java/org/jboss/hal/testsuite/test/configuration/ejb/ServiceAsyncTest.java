@@ -60,7 +60,7 @@ public class ServiceAsyncTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-service-item", "ejb-service-async-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-async-item");
 
         form = page.getServiceAsyncForm();
     }

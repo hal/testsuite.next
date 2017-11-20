@@ -15,65 +15,98 @@
  */
 package org.jboss.hal.testsuite.test.configuration.ejb;
 
+import java.util.List;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.TP_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.threadPoolAddress;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.ELYTRON_ADDRESS;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SERVICE_IDENTITY_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class ServiceTimerTest {
+@FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
+public class ServiceIdentityTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static String THREAD_POOL_NAME = "thread-pool-name";
+    private static String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
+    private static String securityDomain;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(threadPoolAddress(TP_CREATE));
+
+        ModelNodeResult result = operations.readChildrenNames(ELYTRON_ADDRESS, SECURITY_DOMAIN);
+        List<String> secDomains = result.stringListValue();
+        if (secDomains.size() > 1) {
+            securityDomain = secDomains.get(0);
+        }
     }
+
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.writeAttribute(EJBFixtures.SERVICE_TIMER_ADDRESS, THREAD_POOL_NAME, DEFAULT);
-        operations.removeIfExists(threadPoolAddress(TP_CREATE));
+        operations.removeIfExists(SERVICE_IDENTITY_ADDRESS);
     }
 
     @Page private EJBConfigurationPage page;
     @Inject private Console console;
     private FormFragment form;
+    private EmptyState emptyState;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-timer-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-identity-item");
 
-        form = page.getServiceTimerForm();
+        form = page.getServiceIdentityForm();
+        emptyState = page.getServiceIdentityEmptyState();
     }
 
     @Test
-    public void updateThreadPool() throws Exception {
+    public void add() throws Exception {
+        emptyState.mainAction();
+
+        console.verifySuccess();
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyExists();
+    }
+
+    @Test
+    public void addOutflow() throws Exception {
         form.edit();
-        form.text(THREAD_POOL_NAME, TP_CREATE);
+        form.list(OUTFLOW_SECURITY_DOMAINS).add(securityDomain);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_TIMER_ADDRESS, client)
-                .verifyAttribute(THREAD_POOL_NAME, TP_CREATE);
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyListAttributeContainsValue(OUTFLOW_SECURITY_DOMAINS, securityDomain);
+    }
+
+    @Test
+    public void remove() throws Exception {
+        form.remove();
+
+        console.verifySuccess();
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyDoesNotExist();
     }
 
 }

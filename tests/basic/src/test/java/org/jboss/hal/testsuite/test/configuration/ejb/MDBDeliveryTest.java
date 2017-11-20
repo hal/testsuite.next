@@ -66,7 +66,7 @@ public class MDBDeliveryTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary("ejb-mdb-delivery-group-item");
+        console.verticalNavigation().selectPrimary("ejb3-mdb-delivery-group-item");
 
         table = page.getMdbDeliveryTable();
         form = page.getMdbDeliveryForm();
