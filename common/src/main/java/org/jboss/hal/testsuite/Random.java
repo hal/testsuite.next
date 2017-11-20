@@ -55,6 +55,10 @@ public class Random {
         return RandomUtils.nextInt(startInclusive, endExclusive);
     }
 
+    public static long number(long startInclusive, long endExclusive) {
+        return RandomUtils.nextLong(startInclusive, endExclusive);
+    }
+
     private Random() {
     }
 }

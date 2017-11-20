@@ -99,7 +99,6 @@
 
     <dependencyManagement>
         <dependencies>
-
             <!-- Testsuite -->
             <dependency>
                 <groupId>org.jboss.hal</groupId>

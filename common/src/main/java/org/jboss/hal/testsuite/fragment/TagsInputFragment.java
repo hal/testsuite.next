@@ -15,6 +15,9 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.util.List;
+import java.util.Map;
+
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
@@ -26,17 +29,43 @@ import static org.jboss.hal.resources.CSS.tagManagerTag;
 import static org.jboss.hal.resources.CSS.tags;
 import static org.jboss.hal.testsuite.Selectors.contains;
 
-public class ListInputFragment {
+public class TagsInputFragment {
 
     @FindBy(css = "input[type=text]." + tags) private WebElement inputElement;
 
-    /** Adds an value to this list item. */
-    public void add(String value) {
+    /** Adds the values to this list item. */
+    public TagsInputFragment add(List<String> values) {
+        for (String value : values) {
+            internalAdd(value);
+        }
+        return this;
+    }
+
+    /** Adds a value to this list item. */
+    public TagsInputFragment add(String value) {
+        return internalAdd(value);
+    }
+
+    /** Adds the name/value pairs to this properties item. */
+    public TagsInputFragment add(Map<String, String> values) {
+        for (Map.Entry<String, String> entry : values.entrySet()) {
+            internalAdd(entry.getKey() + "=" + entry.getValue());
+        }
+        return this;
+    }
+
+    /** Adds a name/value pair to this properties item. */
+    public TagsInputFragment add(String name, String value) {
+        return internalAdd(name + "=" + value);
+    }
+
+    private TagsInputFragment internalAdd(String value) {
         inputElement.clear();
         waitGui().until().element(inputElement).value().equalTo("");
         inputElement.sendKeys(value);
         inputElement.sendKeys(Keys.RETURN);
         By tagSelector = ByJQuery.selector("." + tagManagerTag + " > span" + contains(value));
         waitGui().until().element(tagSelector).is().visible();
+        return this;
     }
 }

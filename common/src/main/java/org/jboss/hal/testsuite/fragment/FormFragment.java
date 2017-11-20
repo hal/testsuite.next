@@ -115,13 +115,23 @@ public class FormFragment {
     }
 
     /** Changes the specified number input element. */
+    public void number(String name, long value) {
+        text(name, String.valueOf(value));
+    }
+
+    /** Changes the specified number input element. */
     public void number(String name, int value) {
         text(name, String.valueOf(value));
     }
 
     /** Returns a list input fragment for the specified form item. */
-    public ListInputFragment list(String name) {
-        return Graphene.createPageFragment(ListInputFragment.class, formGroup(name));
+    public TagsInputFragment list(String name) {
+        return Graphene.createPageFragment(TagsInputFragment.class, formGroup(name));
+    }
+
+    /** Returns a properties input fragment for the specified form item. */
+    public TagsInputFragment properties(String name) {
+        return Graphene.createPageFragment(TagsInputFragment.class, formGroup(name));
     }
 
     /** Changes the specified bootstrap select element. */
