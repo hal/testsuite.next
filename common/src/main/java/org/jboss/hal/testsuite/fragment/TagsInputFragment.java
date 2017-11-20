@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.arquillian.graphene.findby.ByJQuery;
+import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebElement;
@@ -44,6 +46,14 @@ public class TagsInputFragment {
     /** Adds a value to this list item. */
     public TagsInputFragment add(String value) {
         return internalAdd(value);
+    }
+
+    /** Adds the name/value pairs to this properties item. */
+    public TagsInputFragment add(ModelNode values) {
+        for (Property property : values.asPropertyList()) {
+            internalAdd(property.getName() + "=" + property.getValue().asString());
+        }
+        return this;
     }
 
     /** Adds the name/value pairs to this properties item. */

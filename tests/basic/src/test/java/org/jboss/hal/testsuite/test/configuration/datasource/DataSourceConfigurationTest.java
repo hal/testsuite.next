@@ -15,7 +15,6 @@
  */
 package org.jboss.hal.testsuite.test.configuration.datasource;
 
-import com.google.common.collect.ImmutableMap;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
@@ -149,19 +148,19 @@ public class DataSourceConfigurationTest {
         form = page.getValidationForm();
 
         String className = Random.name();
+        ModelNode modelNode = new ModelNode();
+        modelNode.get("a").set("b");
+        modelNode.get("c").set("d");
         long millis = Random.number(1000L, 2000L);
+
         form.edit();
         form.text("valid-connection-checker-class-name", className);
-        form.properties("valid-connection-checker-properties")
-                .add(ImmutableMap.of("a", "b", "c", "d"));
+        form.properties("valid-connection-checker-properties").add(modelNode);
         form.flip("background-validation", true);
         form.number("background-validation-millis", millis);
         form.save();
 
         console.verifySuccess();
-        ModelNode modelNode = new ModelNode();
-        modelNode.get("a").set("b");
-        modelNode.get("c").set("d");
         new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
                 .verifyAttribute("valid-connection-checker-class-name", className)
                 .verifyAttribute("valid-connection-checker-properties", modelNode)

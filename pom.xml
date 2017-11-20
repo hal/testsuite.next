@@ -201,7 +201,7 @@
                 <version>${gwtp.version}</version>
             </dependency>
 
-            <!-- Utilities -->
+            <!-- Misc -->
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>
