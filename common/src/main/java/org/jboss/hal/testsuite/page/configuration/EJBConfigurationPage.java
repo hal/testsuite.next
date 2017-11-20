@@ -27,23 +27,50 @@ import org.openqa.selenium.support.FindBy;
 public class EJBConfigurationPage extends BasePage {
 
     // container page
-    @FindBy(id = "ejb-configuration-form") private FormFragment configurationForm;
+    @FindBy(id = "ejb3-configuration-form") private FormFragment configurationForm;
 
     // container / thread-pool page
-    @FindBy(id = "ejb-thread-pool-table_wrapper") private TableFragment threadPoolTable;
-    @FindBy(id = "ejb-thread-pool-form") private FormFragment threadPoolForm;
+    @FindBy(id = "ejb3-thread-pool-table_wrapper") private TableFragment threadPoolTable;
+    @FindBy(id = "ejb3-thread-pool-form") private FormFragment threadPoolForm;
 
     // container / remoting profile
-    @FindBy(id = "ejb-remoting-profile-table_wrapper") private TableFragment remotingProfileTable;
-    @FindBy(id = "ejb-remoting-profile-form") private FormFragment remotingProfileForm;
+    @FindBy(id = "ejb3-remoting-profile-table_wrapper") private TableFragment remotingProfileTable;
+    @FindBy(id = "ejb3-remoting-profile-form") private FormFragment remotingProfileForm;
 
     // bean pool
-    @FindBy(id = "ejb-bean-pool-table_wrapper") private TableFragment beanPoolTable;
-    @FindBy(id = "ejb-bean-pool-form") private FormFragment beanPoolForm;
+    @FindBy(id = "ejb3-bean-pool-table_wrapper") private TableFragment beanPoolTable;
+    @FindBy(id = "ejb3-bean-pool-form") private FormFragment beanPoolForm;
 
     // state management / cache
-    @FindBy(id = "ejb-cache-table_wrapper") private TableFragment cacheTable;
-    @FindBy(id = "ejb-cache-form") private FormFragment cacheForm;
+    @FindBy(id = "ejb3-cache-table_wrapper") private TableFragment cacheTable;
+    @FindBy(id = "ejb3-cache-form") private FormFragment cacheForm;
+
+    // state management / passivation
+    @FindBy(id = "ejb3-passivation-table_wrapper") private TableFragment passivationTable;
+    @FindBy(id = "ejb3-passivation-form") private FormFragment passivationForm;
+
+    // services / async
+    @FindBy(id = "ejb3-service-async-form") private FormFragment serviceAsyncForm;
+
+    // services / identity
+    @FindBy(id = "ejb3-service-identity-form") private FormFragment serviceIdentityForm;
+
+    // services / iiop
+    @FindBy(id = "ejb3-service-iiop-form") private FormFragment serviceIiopForm;
+
+    // services / remote
+    @FindBy(id = "ejb3-service-remote-form") private FormFragment serviceRemoteForm;
+
+    // services / timer
+    @FindBy(id = "ejb3-service-timer-form") private FormFragment serviceTimerForm;
+
+    // mdb delivery
+    @FindBy(id = "ejb3-mdb-delivery-group-table_wrapper") private TableFragment mdbDeliveryTable;
+    @FindBy(id = "ejb3-mdb-delivery-group-form") private FormFragment mdbDeliveryForm;
+
+    // security domain
+    @FindBy(id = "ejb3-app-security-domain-table_wrapper") private TableFragment securityDomainTable;
+    @FindBy(id = "ejb3-app-security-domain-form") private FormFragment securityDomainForm;
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
@@ -79,5 +106,49 @@ public class EJBConfigurationPage extends BasePage {
 
     public FormFragment getCacheForm() {
         return cacheForm;
+    }
+
+    public TableFragment getPassivationTable() {
+        return passivationTable;
+    }
+
+    public FormFragment getPassivationForm() {
+        return passivationForm;
+    }
+
+    public FormFragment getServiceAsyncForm() {
+        return serviceAsyncForm;
+    }
+
+    public FormFragment getServiceIdentityForm() {
+        return serviceIdentityForm;
+    }
+
+    public FormFragment getServiceIiopForm() {
+        return serviceIiopForm;
+    }
+
+    public FormFragment getServiceRemoteForm() {
+        return serviceRemoteForm;
+    }
+
+    public FormFragment getServiceTimerForm() {
+        return serviceTimerForm;
+    }
+
+    public TableFragment getMdbDeliveryTable() {
+        return mdbDeliveryTable;
+    }
+
+    public FormFragment getMdbDeliveryForm() {
+        return mdbDeliveryForm;
+    }
+
+    public TableFragment getSecurityDomainTable() {
+        return securityDomainTable;
+    }
+
+    public FormFragment getSecurityDomainForm() {
+        return securityDomainForm;
     }
 }
