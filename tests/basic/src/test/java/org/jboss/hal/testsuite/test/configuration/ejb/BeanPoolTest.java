@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_POOL_SIZE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TIMEOUT;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
@@ -42,9 +43,6 @@ public class BeanPoolTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private String DERIVE_SIZE = "derive-size";
-    private String MAX_POOL_SIZE = "max-pool-size";
-    private String FROM_WORKER_POOLS = "from-worker-pools";
 
     @BeforeClass
     public static void beforeClass() throws Exception {

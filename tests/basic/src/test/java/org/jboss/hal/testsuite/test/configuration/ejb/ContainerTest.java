@@ -31,13 +31,14 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_DISTINCT_NAME;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT;
+
 @RunWith(Arquillian.class)
 public class ContainerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static String DEFAULT_DISTINCT_NAME = "default-distinct-name";
-    private static String DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT = "default-singleton-bean-access-timeout";
 
     @AfterClass
     public static void tearDown() throws Exception {
@@ -89,5 +90,4 @@ public class ContainerTest {
         new ResourceVerifier(EJBFixtures.SUBSYSTEM_ADDRESS, client)
                 .verifyAttribute(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, val);
     }
-
 }

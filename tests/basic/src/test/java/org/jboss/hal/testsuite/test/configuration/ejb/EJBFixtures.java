@@ -27,6 +27,9 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ container / thread pool
 
+    String DEFAULT_DISTINCT_NAME = "default-distinct-name";
+    String DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT = "default-singleton-bean-access-timeout";
+
     String TP_CREATE = Ids.build("tp", "create", Random.name());
     String TP_READ = Ids.build("tp", "read", Random.name());
     String TP_UPDATE = Ids.build("tp", "update", Random.name());
@@ -49,6 +52,9 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ bean pool
 
+    String DERIVE_SIZE = "derive-size";
+    String FROM_WORKER_POOLS = "from-worker-pools";
+
     String BP_CREATE = Ids.build("bp", "create", Random.name());
     String BP_READ = Ids.build("bp", "read", Random.name());
     String BP_UPDATE = Ids.build("bp", "update", Random.name());
@@ -70,6 +76,4 @@ public interface EJBFixtures {
     static Address cacheAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("cache", name);
     }
-
-
 }

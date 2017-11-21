@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration.io;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
@@ -32,7 +31,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
@@ -63,7 +61,6 @@ public class WorkerTest {
         operations.removeIfExists(workerAddress(WORKER_DELETE));
     }
 
-    @Drone private WebDriver browser;
     @Page private IOPage page;
     @Inject private Console console;
     private TableFragment table;
@@ -100,6 +97,16 @@ public class WorkerTest {
     }
 
     @Test
+    public void reset() throws Exception {
+        table.select(WORKER_UPDATE);
+        form.reset();
+
+        console.verifySuccess();
+        new ResourceVerifier(workerAddress(WORKER_UPDATE), client)
+                .verifyReset();
+    }
+
+    @Test
     public void update() throws Exception {
         int maxThreads = Random.number();
 
@@ -111,16 +118,6 @@ public class WorkerTest {
         console.verifySuccess();
         new ResourceVerifier(workerAddress(WORKER_UPDATE), client)
                 .verifyAttribute(IO_THREADS, maxThreads);
-    }
-
-    @Test
-    public void reset() throws Exception {
-        table.select(WORKER_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(workerAddress(WORKER_UPDATE), client)
-                .verifyReset();
     }
 
     @Test
