@@ -66,7 +66,7 @@ public class StateManagementCacheTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb-state-item", "ejb-cache-item");
+        console.verticalNavigation().selectSecondary("ejb3-state-item", "ejb3-cache-item");
 
         table = page.getCacheTable();
         form = page.getCacheForm();

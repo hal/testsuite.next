@@ -15,92 +15,86 @@
  */
 package org.jboss.hal.testsuite.test.configuration.ejb;
 
+import java.util.List;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.CLUSTER;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.THREAD_POOL_NAME;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.TP_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.threadPoolAddress;
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class ContainerRemotingProfileTest {
+public class ServiceRemoteTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static String cluster;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(remotingProfileAddress(RP_READ), Values.of(MAX_THREADS, 22));
-        operations.add(remotingProfileAddress(RP_UPDATE), Values.of(MAX_THREADS, 33));
-        operations.add(remotingProfileAddress(RP_DELETE), Values.of(MAX_THREADS, 44));
+        operations.add(threadPoolAddress(TP_CREATE));
+        ModelNodeResult result = operations.readChildrenNames(SUBSYSTEM_ADDRESS, CACHE_CONTAINER);
+        List<String> clusters = result.stringListValue();
+        cluster = clusters.get(clusters.size() - 1);
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(remotingProfileAddress(RP_CREATE));
-        operations.removeIfExists(remotingProfileAddress(RP_READ));
-        operations.removeIfExists(remotingProfileAddress(RP_UPDATE));
-        operations.removeIfExists(remotingProfileAddress(RP_DELETE));
+        operations.writeAttribute(EJBFixtures.SERVICE_REMOTE_ADDRESS, THREAD_POOL_NAME, DEFAULT);
+        operations.undefineAttribute(EJBFixtures.SERVICE_REMOTE_ADDRESS, CLUSTER);
+        operations.removeIfExists(threadPoolAddress(TP_CREATE));
     }
 
     @Page private EJBConfigurationPage page;
     @Inject private Console console;
     private FormFragment form;
-    private TableFragment table;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-remoting-profile-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-remote-item");
 
-        table = page.getRemotingProfileTable();
-        form = page.getRemotingProfileForm();
-        table.bind(form);
+        form = page.getServiceRemoteForm();
     }
 
     @Test
-    public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, RP_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_CREATE), client).verifyExists();
-    }
-
-    @Test
-    public void update() throws Exception {
-        table.select(RP_UPDATE);
+    public void updateThreadPool() throws Exception {
         form.edit();
-        form.flip("local-receiver-pass-by-value", true);
+        form.text(THREAD_POOL_NAME, TP_CREATE);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_UPDATE), client)
-                .verifyAttribute("local-receiver-pass-by-value", true);
+        new ResourceVerifier(EJBFixtures.SERVICE_REMOTE_ADDRESS, client)
+                .verifyAttribute(THREAD_POOL_NAME, TP_CREATE);
     }
 
     @Test
-    public void delete() throws Exception {
-        table.remove(RP_DELETE);
+    public void updateCluster() throws Exception {
+        form.edit();
+        form.text(CLUSTER, cluster);
+        form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(EJBFixtures.SERVICE_REMOTE_ADDRESS, client)
+                .verifyAttribute(CLUSTER, cluster);
     }
 }

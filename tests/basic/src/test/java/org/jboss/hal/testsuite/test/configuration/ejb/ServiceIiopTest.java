@@ -19,7 +19,6 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
@@ -31,21 +30,18 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_DISTINCT_NAME;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.USE_QUALIFIED_NAME;
 
 @RunWith(Arquillian.class)
-public class ContainerTest {
+public class ServiceIiopTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.undefineAttribute(EJBFixtures.SUBSYSTEM_ADDRESS, DEFAULT_DISTINCT_NAME);
-        operations.writeAttribute(EJBFixtures.SUBSYSTEM_ADDRESS, DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 5000);
+        operations.writeAttribute(EJBFixtures.SERVICE_IIOP_ADDRESS, USE_QUALIFIED_NAME, false);
     }
-
 
     @Page private EJBConfigurationPage page;
     @Inject private Console console;
@@ -54,40 +50,19 @@ public class ContainerTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-configuration-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-iiop-item");
 
-        form = page.getConfigurationForm();
+        form = page.getServiceIiopForm();
     }
 
     @Test
-    public void testInvalidDefaultSingletonBeanAccessTimeout() {
+    public void update() throws Exception {
         form.edit();
-        form.number(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 0);
-        form.trySave();
-        form.expectError(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT);
-    }
-
-    @Test
-    public void updateDefaultDistinctName() throws Exception {
-        String defaultDistinctName = Random.name();
-        form.edit();
-        form.text(DEFAULT_DISTINCT_NAME, defaultDistinctName);
+        form.flip(USE_QUALIFIED_NAME, true);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(DEFAULT_DISTINCT_NAME, defaultDistinctName);
-    }
-
-    @Test
-    public void updateDefaultSingletonBeanAccessTimeout() throws Exception {
-        long val = 6123L;
-        form.edit();
-        form.number(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, val);
+        new ResourceVerifier(EJBFixtures.SERVICE_IIOP_ADDRESS, client)
+                .verifyAttribute(USE_QUALIFIED_NAME, true);
     }
 }

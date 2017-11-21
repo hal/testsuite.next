@@ -15,92 +15,96 @@
  */
 package org.jboss.hal.testsuite.test.configuration.ejb;
 
+import java.util.List;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.ELYTRON_ADDRESS;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.OUTFLOW_SECURITY_DOMAINS;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SERVICE_IDENTITY_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class ContainerRemotingProfileTest {
+@FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
+public class ServiceIdentityTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static String securityDomain;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(remotingProfileAddress(RP_READ), Values.of(MAX_THREADS, 22));
-        operations.add(remotingProfileAddress(RP_UPDATE), Values.of(MAX_THREADS, 33));
-        operations.add(remotingProfileAddress(RP_DELETE), Values.of(MAX_THREADS, 44));
+        ModelNodeResult result = operations.readChildrenNames(ELYTRON_ADDRESS, SECURITY_DOMAIN);
+        List<String> secDomains = result.stringListValue();
+        if (secDomains.size() > 1) {
+            securityDomain = secDomains.get(0);
+        }
     }
+
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(remotingProfileAddress(RP_CREATE));
-        operations.removeIfExists(remotingProfileAddress(RP_READ));
-        operations.removeIfExists(remotingProfileAddress(RP_UPDATE));
-        operations.removeIfExists(remotingProfileAddress(RP_DELETE));
+        operations.removeIfExists(SERVICE_IDENTITY_ADDRESS);
     }
 
     @Page private EJBConfigurationPage page;
     @Inject private Console console;
     private FormFragment form;
-    private TableFragment table;
+    private EmptyState emptyState;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-remoting-profile-item");
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-identity-item");
 
-        table = page.getRemotingProfileTable();
-        form = page.getRemotingProfileForm();
-        table.bind(form);
+        form = page.getServiceIdentityForm();
+        emptyState = page.getServiceIdentityEmptyState();
     }
 
     @Test
-    public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, RP_CREATE);
-        dialog.add();
+    public void add() throws Exception {
+        emptyState.mainAction();
 
         console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_CREATE), client).verifyExists();
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyExists();
     }
 
     @Test
-    public void update() throws Exception {
-        table.select(RP_UPDATE);
+    public void addOutflow() throws Exception {
         form.edit();
-        form.flip("local-receiver-pass-by-value", true);
+        form.list(OUTFLOW_SECURITY_DOMAINS).add(securityDomain);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_UPDATE), client)
-                .verifyAttribute("local-receiver-pass-by-value", true);
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyListAttributeContainsValue(OUTFLOW_SECURITY_DOMAINS, securityDomain);
     }
 
     @Test
-    public void delete() throws Exception {
-        table.remove(RP_DELETE);
+    public void remove() throws Exception {
+        form.remove();
 
         console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
+                .verifyDoesNotExist();
     }
 }

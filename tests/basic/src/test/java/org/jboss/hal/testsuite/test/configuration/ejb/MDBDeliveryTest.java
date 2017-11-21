@@ -32,31 +32,30 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ACTIVE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
 @RunWith(Arquillian.class)
-public class ContainerThreadPoolTest {
+public class MDBDeliveryTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(threadPoolAddress(TP_READ), Values.of(MAX_THREADS, 22));
-        operations.add(threadPoolAddress(TP_UPDATE), Values.of(MAX_THREADS, 33));
-        operations.add(threadPoolAddress(TP_DELETE), Values.of(MAX_THREADS, 44));
+        operations.add(mdbDeliveryAddress(MDB_READ));
+        operations.add(mdbDeliveryAddress(MDB_UPDATE));
+        operations.add(mdbDeliveryAddress(MDB_DELETE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(threadPoolAddress(TP_CREATE));
-        operations.removeIfExists(threadPoolAddress(TP_READ));
-        operations.removeIfExists(threadPoolAddress(TP_UPDATE));
-        operations.removeIfExists(threadPoolAddress(TP_DELETE));
+        operations.removeIfExists(mdbDeliveryAddress(MDB_CREATE));
+        operations.removeIfExists(mdbDeliveryAddress(MDB_READ));
+        operations.removeIfExists(mdbDeliveryAddress(MDB_UPDATE));
+        operations.removeIfExists(mdbDeliveryAddress(MDB_DELETE));
     }
 
     @Page private EJBConfigurationPage page;
@@ -67,59 +66,40 @@ public class ContainerThreadPoolTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-thread-pool-item");
+        console.verticalNavigation().selectPrimary("ejb3-mdb-delivery-group-item");
 
-        table = page.getThreadPoolTable();
-        form = page.getThreadPoolForm();
+        table = page.getMdbDeliveryTable();
+        form = page.getMdbDeliveryForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, TP_CREATE);
-        dialog.getForm().number(MAX_THREADS, 11);
+        dialog.getForm().text(NAME, MDB_CREATE);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(TP_CREATE), client).verifyExists();
-    }
-
-    @Test
-    public void createInvalidMaxThreads() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, TP_CREATE);
-        dialog.getForm().number(MAX_THREADS, -1);
-        dialog.getPrimaryButton().click();
-        dialog.getForm().expectError(MAX_THREADS);
+        new ResourceVerifier(mdbDeliveryAddress(MDB_CREATE), client).verifyExists();
     }
 
     @Test
     public void update() throws Exception {
-        table.select(TP_UPDATE);
+        table.select(MDB_UPDATE);
         form.edit();
-        form.number(MAX_THREADS, 331);
+        form.flip(ACTIVE, false);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(TP_UPDATE), client)
-                .verifyAttribute(MAX_THREADS, 331);
-    }
-
-    @Test
-    public void updateInvalidMaxThreads() throws Exception {
-        table.select(TP_UPDATE);
-        form.edit();
-        form.number(MAX_THREADS, -1);
-        form.trySave();
-        form.expectError(MAX_THREADS);
+        new ResourceVerifier(mdbDeliveryAddress(MDB_UPDATE), client)
+                .verifyAttribute(ACTIVE, false);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(TP_DELETE);
+        table.remove(MDB_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(TP_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(mdbDeliveryAddress(MDB_DELETE), client).verifyDoesNotExist();
     }
 }

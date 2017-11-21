@@ -67,7 +67,7 @@ public class BeanPoolTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary("ejb-bean-pool-item");
+        console.verticalNavigation().selectPrimary("ejb3-bean-pool-item");
 
         table = page.getBeanPoolTable();
         form = page.getBeanPoolForm();
