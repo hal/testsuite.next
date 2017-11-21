@@ -23,6 +23,8 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INTERFACE;
 
 public interface InterfaceFixtures {
 
+    String LOCALHOST = "127.0.0.1";
+
     String CREATE = Ids.build("ifc", "create", Random.name());
     String READ = Ids.build("ifc", "read", Random.name());
     String UPDATE = Ids.build("ifc", "update", Random.name());

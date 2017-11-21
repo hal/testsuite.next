@@ -38,6 +38,8 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_INTERFACE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.PRIVATE;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.PUBLIC;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.socketBindingGroupAddress;
 import static org.junit.Assert.assertEquals;
@@ -46,8 +48,6 @@ import static org.junit.Assert.assertEquals;
 @Category(Domain.class)
 public class SocketBindingConfigurationTest {
 
-    private static final String PUBLIC = "public";
-    private static final String PRIVATE = "private";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 

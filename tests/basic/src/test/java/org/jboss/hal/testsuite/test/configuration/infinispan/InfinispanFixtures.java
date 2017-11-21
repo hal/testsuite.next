@@ -24,6 +24,15 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 
 public interface InfinispanFixtures {
 
+    String ACQUIRE_TIMEOUT = "acquire-timeout";
+    String CONCURRENCY_LEVEL = "concurrency-level";
+    String INTERVAL = "interval";
+    String ISOLATION = "isolation";
+    String LIFESPAN = "lifespan";
+    String MAX_ENTRIES = "max-entries";
+    String MAX_IDLE = "max-idle";
+    String STRATEGY = "strategy";
+
     Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
 
     // ------------------------------------------------------ cache container

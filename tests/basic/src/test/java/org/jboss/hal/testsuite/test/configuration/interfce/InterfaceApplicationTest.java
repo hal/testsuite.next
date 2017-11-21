@@ -35,6 +35,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.LOCALHOST;
 import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.interfaceAddress;
 import static org.junit.Assert.assertEquals;
@@ -42,7 +43,6 @@ import static org.junit.Assert.assertEquals;
 @RunWith(Arquillian.class)
 public class InterfaceApplicationTest {
 
-    private static final String LOCALHOST = "127.0.0.1";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 

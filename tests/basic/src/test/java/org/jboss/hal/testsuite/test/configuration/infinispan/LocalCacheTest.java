@@ -43,15 +43,6 @@ import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFi
 @RunWith(Arquillian.class)
 public class LocalCacheTest {
 
-    private static final String ACQUIRE_TIMEOUT = "acquire-timeout";
-    private static final String CONCURRENCY_LEVEL = "concurrency-level";
-    private static final String INTERVAL = "interval";
-    private static final String ISOLATION = "isolation";
-    private static final String LIFESPAN = "lifespan";
-    private static final String MAX_ENTRIES = "max-entries";
-    private static final String MAX_IDLE = "max-idle";
-    private static final String STRATEGY = "strategy";
-
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 

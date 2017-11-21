@@ -24,6 +24,9 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
 
 public interface SocketBindingFixtures {
 
+    String PRIVATE = "private";
+    String PUBLIC = "public";
+
     String STANDARD_SOCKETS = "standard-sockets";
 
     // ------------------------------------------------------ socket binding group
