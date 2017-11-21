@@ -25,7 +25,7 @@ public class Random {
     private static final RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z')
             .build();
 
-    /** Returns a random name useable for resource names. */
+    /** Returns a random name for resource names. */
     public static String name() {
         return GENERATOR.generate(LENGTH);
     }

@@ -32,10 +32,11 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RESTART_JOBS_ON_RESUME;
+
 @RunWith(Arquillian.class)
 public class BatchConfigurationTest {
 
-    private static final String RESTART_JOBS_ON_RESUME = "restart-jobs-on-resume";
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
 

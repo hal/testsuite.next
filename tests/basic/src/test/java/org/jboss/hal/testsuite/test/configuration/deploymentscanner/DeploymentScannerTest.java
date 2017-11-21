@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.batch;
+package org.jboss.hal.testsuite.test.configuration.deploymentscanner;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -25,7 +25,7 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.configuration.BatchPage;
+import org.jboss.hal.testsuite.page.configuration.DeploymentScannerPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,34 +33,36 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PRIORITY;
-import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RELATIVE_TO;
+import static org.jboss.hal.testsuite.test.configuration.deploymentscanner.DeploymentScannerFixtures.*;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class ThreadFactoryTest {
+public class DeploymentScannerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(threadFactoryAddress(THREAD_FACTORY_READ));
-        operations.add(threadFactoryAddress(THREAD_FACTORY_UPDATE));
-        operations.add(threadFactoryAddress(THREAD_FACTORY_DELETE));
+        operations.add(deploymentScannerAddress(DS_READ), Values.of(PATH, path(DS_READ)));
+        operations.add(deploymentScannerAddress(DS_UPDATE), Values.of(PATH, path(DS_UPDATE)));
+        operations.add(deploymentScannerAddress(DS_DELETE), Values.of(PATH, path(DS_DELETE)));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(threadFactoryAddress(THREAD_FACTORY_CREATE));
-        operations.removeIfExists(threadFactoryAddress(THREAD_FACTORY_READ));
-        operations.removeIfExists(threadFactoryAddress(THREAD_FACTORY_UPDATE));
-        operations.removeIfExists(threadFactoryAddress(THREAD_FACTORY_DELETE));
+        operations.removeIfExists(deploymentScannerAddress(DS_CREATE));
+        operations.removeIfExists(deploymentScannerAddress(DS_READ));
+        operations.removeIfExists(deploymentScannerAddress(DS_UPDATE));
+        operations.removeIfExists(deploymentScannerAddress(DS_DELETE));
     }
 
-    @Page private BatchPage page;
+    @Page private DeploymentScannerPage page;
     @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
@@ -68,74 +70,72 @@ public class ThreadFactoryTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary("batch-thread-factory-item");
-
-        form = page.getThreadFactoryForm();
-        table = page.getThreadFactoryTable();
+        form = page.getForm();
+        table = page.getTable();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
+        dialog.getForm().text(NAME, DS_CREATE);
+        dialog.getForm().text(PATH, path(DS_CREATE));
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_CREATE), client).verifyExists();
+        new ResourceVerifier(deploymentScannerAddress(DS_CREATE), client)
+                .verifyExists()
+                .verifyAttribute(PATH, path(DS_CREATE));
     }
 
     @Test
     public void read() throws Exception {
-        table.select(THREAD_FACTORY_READ);
-        assertEquals(THREAD_FACTORY_READ, form.value(NAME));
+        table.select(DS_READ);
+        assertEquals(path(DS_READ), form.value(PATH));
     }
 
     @Test
     public void update() throws Exception {
-        String groupName = Random.name();
-        int priority = Random.number(1, 10);
-        String pattern = Random.name();
+        String path = Random.name() + "/" + Random.name();
 
-        table.select(THREAD_FACTORY_UPDATE);
+        table.select(DS_UPDATE);
         form.edit();
-        form.text(GROUP_NAME, groupName);
-        form.number(PRIORITY, priority);
-        form.text(THREAD_NAME_PATTERN, pattern);
+        form.text(PATH, path);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyAttribute(GROUP_NAME, groupName)
-                .verifyAttribute(PRIORITY, priority)
-                .verifyAttribute(THREAD_NAME_PATTERN, pattern);
+        new ResourceVerifier(deploymentScannerAddress(DS_UPDATE), client)
+                .verifyAttribute(PATH, path);
     }
 
     @Test
-    public void updateInvalidPriority() throws Exception {
-        int priority = 42;
-        table.select(THREAD_FACTORY_UPDATE);
+    public void updateInvalidRelativeTo() throws Exception {
+        table.select(DS_UPDATE);
         form.edit();
-        form.number(PRIORITY, priority);
-        form.trySave();
-        form.expectError(PRIORITY);
+        form.text(RELATIVE_TO, "invalid");
+        form.save();
+
+        console.verifyError();
+        new ResourceVerifier(deploymentScannerAddress(DS_UPDATE), client)
+                .verifyAttributeIsUndefined(RELATIVE_TO);
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(THREAD_FACTORY_UPDATE);
+        table.select(DS_UPDATE);
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
+        new ResourceVerifier(deploymentScannerAddress(DS_UPDATE), client)
                 .verifyReset();
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(THREAD_FACTORY_DELETE);
+        table.remove(DS_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_DELETE), client).verifyDoesNotExist();
+        new ResourceVerifier(deploymentScannerAddress(DS_DELETE), client)
+                .verifyDoesNotExist();
     }
 }

@@ -45,10 +45,7 @@ import org.openqa.selenium.WebElement;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
-import static org.jboss.hal.resources.CSS.alertSuccess;
-import static org.jboss.hal.resources.CSS.navPfVerticalHal;
-import static org.jboss.hal.resources.CSS.navbar;
-import static org.jboss.hal.resources.CSS.toastNotificationsListPf;
+import static org.jboss.hal.resources.CSS.*;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -111,8 +108,17 @@ public class Console {
 
     /** Verifies that a success notification is visible */
     public void verifySuccess() {
+        verifyNotification(alertSuccess);
+    }
+
+    /** Verifies that an error notification is visible */
+    public void verifyError() {
+        verifyNotification(alertDanger);
+    }
+
+    private void verifyNotification(String css) {
         waitModel().until() // use waitModel() since it might take some time until the notification is visible
-                .element(By.cssSelector("." + toastNotificationsListPf + " ." + alertSuccess))
+                .element(By.cssSelector("." + toastNotificationsListPf + " ." + css))
                 .is().visible();
     }
 

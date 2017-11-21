@@ -25,6 +25,8 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.THREAD_POOL;
 
 public interface BatchFixtures {
 
+    String GROUP_NAME = "group-name";
+    String THREAD_NAME_PATTERN = "thread-name-pattern";
     Address SUBSYSTEM_ADDRESS = Address.subsystem(BATCH_JBERET);
 
     // ------------------------------------------------------ in memory repository
