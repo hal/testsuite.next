@@ -28,6 +28,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.*;
 
@@ -47,6 +48,13 @@ public class FormFragment {
     @FindBy(css = DOT + editing) private WebElement editingSection;
     @FindBy(css = DOT + blankSlatePf) private WebElement blankSlate;
 
+
+    // ------------------------------------------------------ empty mode
+
+    public EmptyState emptyState() {
+        String emptyId = Ids.build(rootId(), Ids.EMPTY);
+        return createPageFragment(EmptyState.class, root.findElement(By.id(emptyId)));
+    }
 
     // ------------------------------------------------------ read-only mode
 
@@ -126,19 +134,19 @@ public class FormFragment {
 
     /** Returns a list input fragment for the specified form item. */
     public TagsInputFragment list(String name) {
-        return Graphene.createPageFragment(TagsInputFragment.class, formGroup(name));
+        return createPageFragment(TagsInputFragment.class, formGroup(name));
     }
 
     /** Returns a properties input fragment for the specified form item. */
     public TagsInputFragment properties(String name) {
-        return Graphene.createPageFragment(TagsInputFragment.class, formGroup(name));
+        return createPageFragment(TagsInputFragment.class, formGroup(name));
     }
 
     /** Changes the specified bootstrap select element. */
     public void select(String name, String value) {
         WebElement formGroup = formGroup(name);
         WebElement selectElement = formGroup.findElement(By.cssSelector(DOT + bootstrapSelect + DOT + formControl));
-        SelectFragment select = Graphene.createPageFragment(SelectFragment.class, selectElement);
+        SelectFragment select = createPageFragment(SelectFragment.class, selectElement);
         select.select(value);
     }
 
@@ -208,12 +216,14 @@ public class FormFragment {
     // ------------------------------------------------------ helper methods
 
     private String editingId(String name) {
-        String id = root.getAttribute("id");
-        return Ids.build(id, name, "editing");
+        return Ids.build(rootId(), name, "editing");
     }
 
     private String readOnlyId(String name) {
-        String id = root.getAttribute("id");
-        return Ids.build(id, name, "readonly");
+        return Ids.build(rootId(), name, "readonly");
+    }
+
+    private String rootId() {
+        return root.getAttribute("id");
     }
 }

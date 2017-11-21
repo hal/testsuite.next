@@ -17,6 +17,7 @@ package org.jboss.hal.testsuite.test.configuration.infinispan;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
@@ -33,6 +34,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -63,7 +65,6 @@ public class CacheContainerFinderTest {
         operations.removeIfExists(cacheContainerAddress(CC_READ));
         operations.removeIfExists(cacheContainerAddress(CC_DELETE));
     }
-
 
     @Inject private Console console;
     private ColumnFragment column;

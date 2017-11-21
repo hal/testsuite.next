@@ -78,6 +78,11 @@ public class Console {
 
     // ------------------------------------------------------ navigation
 
+    public void reload() {
+        browser.navigate().refresh();
+        waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
+    }
+
     /** Returns an absolute URL for the specified place request. */
     public String absoluteUrl(PlaceRequest placeRequest) {
         return absoluteUrl(fragment(placeRequest));

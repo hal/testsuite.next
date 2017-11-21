@@ -25,6 +25,7 @@ public interface JcaFixtures {
     String ARCHIVE_VALIDATION = "archive-validation";
     String CACHED_CONNECTION_MANAGER = "cached-connection-manager";
     String DEBUG = "debug";
+    String TRACER = "tracer";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(JCA);
 
@@ -34,4 +35,8 @@ public interface JcaFixtures {
             CACHED_CONNECTION_MANAGER);
     Address ARCHIVE_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(ARCHIVE_VALIDATION, ARCHIVE_VALIDATION);
     Address BEAN_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(BEAN_VALIDATION, BEAN_VALIDATION);
+
+    // ------------------------------------------------------ tracer
+
+    Address TRACER_ADDRESS = SUBSYSTEM_ADDRESS.and(TRACER, TRACER);
 }
