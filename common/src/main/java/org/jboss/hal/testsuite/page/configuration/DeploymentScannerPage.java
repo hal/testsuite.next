@@ -16,17 +16,18 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
-import org.jboss.hal.testsuite.Selectors;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.testsuite.Selectors.WRAPPER;
+
 @Place(NameTokens.DEPLOYMENT_SCANNERS)
 public class DeploymentScannerPage extends BasePage {
 
-    @FindBy(id = "deployment-scanner-table" + Selectors.WRAPPER) private TableFragment table;
+    @FindBy(id = "deployment-scanner-table" + WRAPPER) private TableFragment table;
     @FindBy(id = "deployment-scanner-form") private FormFragment form;
 
     public TableFragment getTable() {
