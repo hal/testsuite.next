@@ -79,6 +79,8 @@ public class ServiceIdentityTest {
         emptyState = page.getServiceIdentityEmptyState();
     }
 
+    // order is important: add, addOutflow, remove
+
     @Test
     public void add() throws Exception {
         emptyState.mainAction();
