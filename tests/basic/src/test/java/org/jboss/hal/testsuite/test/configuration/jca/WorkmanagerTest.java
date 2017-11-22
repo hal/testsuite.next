@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.ee;
+package org.jboss.hal.testsuite.test.configuration.jca;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -22,10 +22,9 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.configuration.EEPage;
+import org.jboss.hal.testsuite.page.configuration.JcaPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -33,63 +32,62 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.GLOBAL_MODULES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.GLOBAL_MODULES_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.GLOBAL_MODULES_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.SUBSYSTEM_ADDRESS;
-import static org.jboss.hal.testsuite.test.configuration.ee.EEFixtures.globalModule;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.WM_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.WM_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.WM_UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.workmanagerAddress;
 
 @RunWith(Arquillian.class)
-public class GlobalModulesTest {
+public class WorkmanagerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static BackupAndRestoreAttributes backup;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.writeListAttribute(SUBSYSTEM_ADDRESS, GLOBAL_MODULES,
-                globalModule(GLOBAL_MODULES_DELETE));
-        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
-        client.apply(backup.backup());
+        operations.add(workmanagerAddress(WM_UPDATE), Values.of(NAME, WM_UPDATE));
+        operations.add(workmanagerAddress(WM_DELETE), Values.of(NAME, WM_DELETE));
     }
 
     @AfterClass
-    public static void afterClass() throws Exception {
-        client.apply(backup.restore());
+    public static void tearDown() throws Exception {
+        operations.removeIfExists(workmanagerAddress(WM_CREATE));
+        operations.removeIfExists(workmanagerAddress(WM_UPDATE));
+        operations.removeIfExists(workmanagerAddress(WM_DELETE));
     }
 
-    @Page private EEPage page;
+    @Page private JcaPage page;
     @Inject private Console console;
     private TableFragment table;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary(Ids.EE_GLOBAL_MODULES_ITEM);
-        table = page.getGlobalModulesTable();
+        console.verticalNavigation().selectPrimary(Ids.JCA_WORKMANAGER_ITEM);
+
+        table = page.getWmTable();
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, GLOBAL_MODULES_CREATE);
+        dialog.getForm().text(NAME, WM_CREATE);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeContainsValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_CREATE));
-
+        new ResourceVerifier(workmanagerAddress(WM_CREATE), client)
+                .verifyExists();
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(GLOBAL_MODULES_DELETE);
+        table.remove(WM_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeDoesNotContainValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_DELETE));
+        new ResourceVerifier(workmanagerAddress(WM_DELETE), client)
+                .verifyDoesNotExist();
     }
 }

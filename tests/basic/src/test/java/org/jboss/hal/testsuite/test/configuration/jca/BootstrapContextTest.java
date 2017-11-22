@@ -22,74 +22,88 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JcaPage;
+import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ENABLED;
-import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.TRACER_ADDRESS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.WORKMANAGER;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class TracerTest {
+public class BootstrapContextTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
     private static final Administration administration = new Administration(client);
 
+    @BeforeClass
+    public static void beforeClass() throws Exception {
+        operations.add(bootstrapContextAddress(BC_READ), Values.of(NAME, BC_READ).and(WORKMANAGER, DEFAULT));
+        operations.add(bootstrapContextAddress(BC_DELETE), Values.of(NAME, BC_DELETE).and(WORKMANAGER, DEFAULT));
+        administration.reload();
+    }
+
+    @AfterClass
+    public static void tearDown() throws Exception {
+        operations.removeIfExists(bootstrapContextAddress(BC_CREATE));
+        operations.removeIfExists(bootstrapContextAddress(BC_READ));
+        operations.removeIfExists(bootstrapContextAddress(BC_DELETE));
+        administration.reload();
+    }
+
     @Page private JcaPage page;
     @Inject private Console console;
+    private TableFragment table;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
-        if (!operations.exists(TRACER_ADDRESS)) {
-            operations.add(TRACER_ADDRESS);
-        }
         page.navigate();
-        console.verticalNavigation().selectPrimary(Ids.JCA_TRACER_ITEM);
-        form = page.getTracerForm();
+        console.verticalNavigation().selectPrimary(Ids.JCA_BOOTSTRAP_CONTEXT_ITEM);
+
+        form = page.getBootstrapContextForm();
+        table = page.getBootstrapContextTable();
+        table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        operations.removeIfExists(TRACER_ADDRESS);
-        administration.reloadIfRequired();
-        console.reload();
-
-        console.verticalNavigation().selectPrimary(Ids.JCA_TRACER_ITEM);
-        form.emptyState().mainAction();
+        AddResourceDialogFragment dialog = table.add();
+        dialog.getForm().text(NAME, BC_CREATE);
+        dialog.getForm().text(WORKMANAGER, DEFAULT);
+        dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
+        new ResourceVerifier(bootstrapContextAddress(BC_CREATE), client)
                 .verifyExists();
     }
 
     @Test
-    @SuppressWarnings("Duplicates")
-    public void update() throws Exception {
-        form.edit();
-        form.flip(ENABLED, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyAttribute(ENABLED, true);
-    }
-
-    @Test
-    public void reset() throws Exception {
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyReset();
+    public void read() throws Exception {
+        table.select(BC_READ);
+        assertEquals(BC_READ, form.value(NAME));
+        assertEquals(DEFAULT, form.value(WORKMANAGER));
     }
 
     @Test
     public void delete() throws Exception {
+        table.remove(BC_DELETE);
+
+        console.verifySuccess();
+        new ResourceVerifier(bootstrapContextAddress(BC_DELETE), client)
+                .verifyDoesNotExist();
     }
 }
