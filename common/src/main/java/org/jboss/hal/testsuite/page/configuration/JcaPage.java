@@ -37,16 +37,10 @@ public class JcaPage extends BasePage {
     @FindBy(id = Ids.JCA_BOOTSTRAP_CONTEXT_TABLE + WRAPPER) private TableFragment bootstrapContextTable;
     @FindBy(id = Ids.JCA_BOOTSTRAP_CONTEXT_FORM) private FormFragment bootstrapContextForm;
     @FindBy(id = Ids.JCA_WORKMANAGER_TABLE + WRAPPER) private TableFragment wmTable;
-    @FindBy(id = Ids.JCA_WORKMANAGER + Ids.JCA_THREAD_POOL_TABLE + WRAPPER) private TableFragment wmThreadPoolTable;
-    @FindBy(id = Ids.JCA_WORKMANAGER + Ids.JCA_THREAD_POOL_TAB_CONTAINER) private TabsFragment wmThreadPoolTabs;
-    @FindBy(id = Ids.JCA_WORKMANAGER + Ids.JCA_THREAD_POOL_ATTRIBUTES_FORM) private FormFragment wmThreadPoolAttributesForm;
-    @FindBy(id = Ids.JCA_WORKMANAGER + Ids.JCA_THREAD_POOL_SIZING_FORM) private FormFragment wmThreadPoolSizingForm;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER_TABLE + WRAPPER) private TableFragment dwmTable;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER_FORM) private FormFragment dwmForm;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER + Ids.JCA_THREAD_POOL_TABLE + WRAPPER) private TableFragment dwmThreadPoolTable;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER + Ids.JCA_THREAD_POOL_TAB_CONTAINER) private TabsFragment dwmThreadPoolTabs;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER + Ids.JCA_THREAD_POOL_ATTRIBUTES_FORM) private FormFragment dwmThreadPoolAttributesForm;
-    @FindBy(id = Ids.JCA_DISTRIBUTED_WORKMANAGER + Ids.JCA_THREAD_POOL_SIZING_FORM) private FormFragment dwmThreadPoolSizingForm;
+    @FindBy(id = Ids.JCA_WORKMANAGER + "-" + Ids.JCA_THREAD_POOL_TABLE + WRAPPER) private TableFragment wmThreadPoolTable;
+    @FindBy(id = Ids.JCA_WORKMANAGER + "-" + Ids.JCA_THREAD_POOL_TAB_CONTAINER) private TabsFragment wmThreadPoolTabs;
+    @FindBy(id = Ids.JCA_WORKMANAGER + "-" + Ids.JCA_THREAD_POOL_ATTRIBUTES_FORM) private FormFragment wmThreadPoolAttributesForm;
+    @FindBy(id = Ids.JCA_WORKMANAGER + "-" + Ids.JCA_THREAD_POOL_SIZING_FORM) private FormFragment wmThreadPoolSizingForm;
 
     public TabsFragment getConfigurationTabs() {
         return configurationTabs;
@@ -94,29 +88,5 @@ public class JcaPage extends BasePage {
 
     public FormFragment getWmThreadPoolSizingForm() {
         return wmThreadPoolSizingForm;
-    }
-
-    public TableFragment getDwmTable() {
-        return dwmTable;
-    }
-
-    public FormFragment getDwmForm() {
-        return dwmForm;
-    }
-
-    public TableFragment getDwmThreadPoolTable() {
-        return dwmThreadPoolTable;
-    }
-
-    public TabsFragment getDwmThreadPoolTabs() {
-        return dwmThreadPoolTabs;
-    }
-
-    public FormFragment getDwmThreadPoolAttributesForm() {
-        return dwmThreadPoolAttributesForm;
-    }
-
-    public FormFragment getDwmThreadPoolSizingForm() {
-        return dwmThreadPoolSizingForm;
     }
 }

@@ -25,6 +25,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.WORKMANAGER;
 
 public interface JcaFixtures {
 
+    String ALLOW_CORE_TIMEOUT = "allow-core-timeout";
     String ARCHIVE_VALIDATION = "archive-validation";
     String BOOTSTRAP_CONTEXT = "bootstrap-context";
     String CACHED_CONNECTION_MANAGER = "cached-connection-manager";
@@ -62,5 +63,27 @@ public interface JcaFixtures {
 
     static Address workmanagerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(WORKMANAGER, name);
+    }
+
+    // ------------------------------------------------------ wm thread pool
+
+    String LRT = "lrt";
+    String SRT = "srt";
+
+    String WM_THREAD_POOL_CREATE = Ids.build("wm-tp", "create", Random.name());
+    String WM_THREAD_POOL_READ = Ids.build("wm-tp", "read", Random.name());
+    String WM_THREAD_POOL_UPDATE = Ids.build("wm-tp", "update", Random.name());
+    String WM_THREAD_POOL_DELETE = Ids.build("wm-tp", "delete", Random.name());
+
+    static Address longRunningAddress(String workmanager, String threadPool) {
+        return workmanagerAddress(workmanager).and("long-running-threads", threadPool);
+    }
+
+    static Address shortRunningAddress(String workmanager, String threadPool) {
+        return workmanagerAddress(workmanager).and("short-running-threads", threadPool);
+    }
+
+    static String threadPoolName(String workmanager, String threadPool) {
+        return Ids.build(workmanager, threadPool);
     }
 }

@@ -79,9 +79,9 @@ public class TableFragment {
         }
     }
 
-    /** Clicks on the &lt;text&gt column action in the row which contains "&lt;value&gt;". */
-    public void action(String value, String text) {
-        By selector = ByJQuery.selector("td" + contains(value) + " + td > a." + columnAction + contains(text));
+    /** Clicks on the &lt;action&gt; column in the row which contains "&lt;value&gt;". */
+    public void action(String value, String action) {
+        By selector = ByJQuery.selector("td" + contains(value) + " ~ td > a." + columnAction + contains(action));
         root.findElement(selector).click();
     }
 
@@ -99,5 +99,9 @@ public class TableFragment {
      */
     public void bind(FormFragment form) {
         this.forms.add(form);
+    }
+
+    public WebElement getRoot() {
+        return root;
     }
 }
