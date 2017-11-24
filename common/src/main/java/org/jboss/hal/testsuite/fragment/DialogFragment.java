@@ -39,4 +39,8 @@ public class DialogFragment {
     public WebElement getPrimaryButton() {
         return root.findElement(By.cssSelector("." + modalFooter + " ." + btnPrimary));
     }
+
+    public WebElement getRoot() {
+        return root;
+    }
 }

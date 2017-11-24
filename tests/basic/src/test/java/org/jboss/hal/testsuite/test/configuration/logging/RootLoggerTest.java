@@ -31,18 +31,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ADD_LOGGING_API_DEPENDENCIES;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ROOT_LOGGER_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class LoggingConfigurationTest {
+public class RootLoggerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(ROOT_LOGGER_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -61,27 +61,27 @@ public class LoggingConfigurationTest {
     }
 
     @Test
-    public void updateConfiguration() throws Exception {
-        console.verticalNavigation().selectPrimary("logging-config-item");
-        form = page.getConfigurationForm();
+    public void updateRootLogger() throws Exception {
+        console.verticalNavigation().selectPrimary("logging-root-logger-item");
+        form = page.getRootLoggerForm();
 
         form.edit();
-        form.flip(ADD_LOGGING_API_DEPENDENCIES, false);
+        form.select(LEVEL, "ERROR");
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(ADD_LOGGING_API_DEPENDENCIES, false);
+        new ResourceVerifier(ROOT_LOGGER_ADDRESS, client)
+                .verifyAttribute(LEVEL, "ERROR");
     }
 
     @Test
-    public void resetConfiguration() throws Exception {
-        console.verticalNavigation().selectPrimary("logging-config-item");
-        form = page.getConfigurationForm();
+    public void resetRootLogger() throws Exception {
+        console.verticalNavigation().selectPrimary("logging-root-logger-item");
+        form = page.getRootLoggerForm();
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
+        new ResourceVerifier(ROOT_LOGGER_ADDRESS, client)
                 .verifyReset();
     }
 }

@@ -64,8 +64,8 @@ public class BootstrapContextTest {
         administration.reload();
     }
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Page private JcaPage page;
     private TableFragment table;
     private FormFragment form;
 
