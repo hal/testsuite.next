@@ -45,7 +45,7 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class FileHandlerTest {
+public class PeriodicSizeHandlerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
@@ -54,17 +54,20 @@ public class FileHandlerTest {
     public static void beforeClass() throws Exception {
         ModelNode file = new ModelNode();
         file.get(PATH).set(PATH_VALUE);
-        operations.add(fileHandlerAddress(FILE_HANDLER_READ), Values.of(FILE, file.clone()));
-        operations.add(fileHandlerAddress(FILE_HANDLER_UPDATE), Values.of(FILE, file.clone()));
-        operations.add(fileHandlerAddress(FILE_HANDLER_DELETE), Values.of(FILE, file.clone()));
+        operations.add(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_READ),
+                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE));
+        operations.add(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE),
+                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE));
+        operations.add(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_DELETE),
+                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_CREATE));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_READ));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_UPDATE));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_DELETE));
+        operations.removeIfExists(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_CREATE));
+        operations.removeIfExists(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_READ));
+        operations.removeIfExists(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE));
+        operations.removeIfExists(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_DELETE));
     }
 
     @Inject private Console console;
@@ -76,62 +79,63 @@ public class FileHandlerTest {
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-file-item");
-        table = page.getFileHandlerTable();
-        form = page.getFileHandlerForm();
+                "logging-handler-periodic-size-rotating-file-item");
+        table = page.getPeriodicSizeHandlerTable();
+        form = page.getPeriodicSizeHandlerForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, FILE_HANDLER_CREATE);
+        dialog.getForm().text(NAME, PERIODIC_SIZE_HANDLER_CREATE);
+        dialog.getForm().text(SUFFIX, SUFFIX_VALUE);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
-                dialog.getRoot().findElement(By.id("logging-handler-file-table-add-file-editing")));
+                dialog.getRoot().findElement(By.id("logging-handler-periodic-size-rotating-file-table-add-file-editing")));
         fileInput.setPath(PATH_VALUE);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_CREATE), client)
+        new ResourceVerifier(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_CREATE), client)
                 .verifyExists();
     }
 
     @Test
     public void read() throws Exception {
-        table.select(FILE_HANDLER_READ);
+        table.select(PERIODIC_SIZE_HANDLER_READ);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
-                form.getRoot().findElement(By.id("logging-handler-file-form-file-readonly")));
+                form.getRoot().findElement(By.id("logging-handler-periodic-size-rotating-file-form-file-readonly")));
         assertEquals(PATH_VALUE, fileInput.getPath());
     }
 
     @Test
     public void update() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
+        table.select(PERIODIC_SIZE_HANDLER_UPDATE);
         form.edit();
         form.select(LEVEL, "CONFIG");
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_UPDATE), client)
+        new ResourceVerifier(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE), client)
                 .verifyAttribute(LEVEL, "CONFIG");
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
+        table.select(PERIODIC_SIZE_HANDLER_UPDATE);
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_UPDATE), client)
+        new ResourceVerifier(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE), client)
                 .verifyReset();
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(FILE_HANDLER_DELETE);
+        table.remove(PERIODIC_SIZE_HANDLER_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_DELETE), client)
+        new ResourceVerifier(periodicSizeHandlerAddress(PERIODIC_SIZE_HANDLER_DELETE), client)
                 .verifyDoesNotExist();
     }
 }

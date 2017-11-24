@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test.configuration.logging;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -31,40 +30,32 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.By;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.QUEUE_LENGTH;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
-public class FileHandlerTest {
+public class AsyncHandlerTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        ModelNode file = new ModelNode();
-        file.get(PATH).set(PATH_VALUE);
-        operations.add(fileHandlerAddress(FILE_HANDLER_READ), Values.of(FILE, file.clone()));
-        operations.add(fileHandlerAddress(FILE_HANDLER_UPDATE), Values.of(FILE, file.clone()));
-        operations.add(fileHandlerAddress(FILE_HANDLER_DELETE), Values.of(FILE, file.clone()));
+        operations.add(asyncHandlerAddress(ASYNC_HANDLER_UPDATE), Values.of(QUEUE_LENGTH, 10));
+        operations.add(asyncHandlerAddress(ASYNC_HANDLER_DELETE), Values.of(QUEUE_LENGTH, 10));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_CREATE));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_READ));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_UPDATE));
-        operations.removeIfExists(fileHandlerAddress(FILE_HANDLER_DELETE));
+        operations.removeIfExists(asyncHandlerAddress(ASYNC_HANDLER_CREATE));
+        operations.removeIfExists(asyncHandlerAddress(ASYNC_HANDLER_UPDATE));
+        operations.removeIfExists(asyncHandlerAddress(ASYNC_HANDLER_DELETE));
     }
 
     @Inject private Console console;
@@ -76,62 +67,52 @@ public class FileHandlerTest {
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-file-item");
-        table = page.getFileHandlerTable();
-        form = page.getFileHandlerForm();
+                "logging-handler-async-item");
+        table = page.getAsyncHandlerTable();
+        form = page.getAsyncHandlerForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, FILE_HANDLER_CREATE);
-        FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
-                dialog.getRoot().findElement(By.id("logging-handler-file-table-add-file-editing")));
-        fileInput.setPath(PATH_VALUE);
+        dialog.getForm().text(NAME, ASYNC_HANDLER_CREATE);
+        dialog.getForm().number(QUEUE_LENGTH, 10);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_CREATE), client)
+        new ResourceVerifier(asyncHandlerAddress(ASYNC_HANDLER_CREATE), client)
                 .verifyExists();
     }
 
     @Test
-    public void read() throws Exception {
-        table.select(FILE_HANDLER_READ);
-        FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
-                form.getRoot().findElement(By.id("logging-handler-file-form-file-readonly")));
-        assertEquals(PATH_VALUE, fileInput.getPath());
-    }
-
-    @Test
     public void update() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
+        table.select(ASYNC_HANDLER_UPDATE);
         form.edit();
         form.select(LEVEL, "CONFIG");
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_UPDATE), client)
+        new ResourceVerifier(asyncHandlerAddress(ASYNC_HANDLER_UPDATE), client)
                 .verifyAttribute(LEVEL, "CONFIG");
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
+        table.select(ASYNC_HANDLER_UPDATE);
         form.reset();
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_UPDATE), client)
+        new ResourceVerifier(asyncHandlerAddress(ASYNC_HANDLER_UPDATE), client)
                 .verifyReset();
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(FILE_HANDLER_DELETE);
+        table.remove(ASYNC_HANDLER_DELETE);
 
         console.verifySuccess();
-        new ResourceVerifier(fileHandlerAddress(FILE_HANDLER_DELETE), client)
+        new ResourceVerifier(asyncHandlerAddress(ASYNC_HANDLER_DELETE), client)
                 .verifyDoesNotExist();
     }
 }

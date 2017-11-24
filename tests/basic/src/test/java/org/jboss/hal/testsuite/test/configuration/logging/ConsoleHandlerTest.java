@@ -64,7 +64,7 @@ public class ConsoleHandlerTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectSecondary("logging-handler-item",
+        console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
                 "logging-handler-console-item");
         table = page.getConsoleHandlerTable();
         form = page.getConsoleHandlerForm();

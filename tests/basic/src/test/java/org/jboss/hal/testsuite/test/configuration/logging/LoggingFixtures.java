@@ -25,7 +25,12 @@ public interface LoggingFixtures {
 
     String ADD_LOGGING_API_DEPENDENCIES = "add-logging-api-dependencies";
     String CATEGORY = "category";
+    String CLASS_VALUE = "org.jboss.as.logging.logmanager.Log4jAppenderHandler";
+    String LOGGING_HANDLER_ITEM = "logging-handler-item";
+    String MODULE_VALUE = "org.jboss.as.logging";
     String PATH_VALUE = "pa/th";
+    String SUFFIX = "suffix";
+    String SUFFIX_VALUE = "yyyy-MM-dd-HH-mm";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(LOGGING);
     Address ROOT_LOGGER_ADDRESS = Address.subsystem(LOGGING).and("root-logger", "ROOT");
@@ -98,7 +103,6 @@ public interface LoggingFixtures {
     // ------------------------------------------------------ async handler
 
     String ASYNC_HANDLER_CREATE = Ids.build("ah", "create", Random.name());
-    String ASYNC_HANDLER_READ = Ids.build("ah", "read", Random.name());
     String ASYNC_HANDLER_UPDATE = Ids.build("ah", "update", Random.name());
     String ASYNC_HANDLER_DELETE = Ids.build("ah", "delete", Random.name());
 
@@ -120,7 +124,6 @@ public interface LoggingFixtures {
     // ------------------------------------------------------ syslog handler
 
     String SYSLOG_HANDLER_CREATE = Ids.build("sh", "create", Random.name());
-    String SYSLOG_HANDLER_READ = Ids.build("sh", "read", Random.name());
     String SYSLOG_HANDLER_UPDATE = Ids.build("sh", "update", Random.name());
     String SYSLOG_HANDLER_DELETE = Ids.build("sh", "delete", Random.name());
 
