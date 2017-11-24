@@ -138,18 +138,6 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void updateEvictionInvalidMaxEntries() throws Exception {
-        table.select(LC_UPDATE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        FormFragment form = page.getEvictionForm();
-
-        form.edit();
-        form.clear(MAX_ENTRIES);
-        form.trySave();
-        form.expectError(MAX_ENTRIES);
-    }
-
-    @Test
     public void resetEviction() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
