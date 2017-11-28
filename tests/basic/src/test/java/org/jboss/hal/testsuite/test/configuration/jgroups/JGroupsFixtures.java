@@ -19,7 +19,7 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 
 public interface JGroupsFixtures {
 
@@ -27,37 +27,88 @@ public interface JGroupsFixtures {
     String TCP = "tcp";
     String JGROUPS_TCP = "jgroups-tcp";
     String CLUSTER = "cluster";
+    String SITE = "site";
+    String KEEPALIVE_TIME = "keepalive-time";
+    String REMOTE_SITE = "remote-site";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(JGROUPS);
 
     // ------------------------------------------------------ stack
 
-    String STACK_CREATE = Ids.build("stack", "create", Random.name());
-    String STACK_UPDATE = Ids.build("stack", "update", Random.name());
-    String STACK_DELETE = Ids.build("stack", "delete", Random.name());
+    String STACK_CREATE = Ids.build(STACK, "create", Random.name());
+    String STACK_UPDATE = Ids.build(STACK, "update", Random.name());
+    String STACK_DELETE = Ids.build(STACK, "delete", Random.name());
 
     static Address stackAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("stack", name);
+        return SUBSYSTEM_ADDRESS.and(STACK, name);
+    }
+
+    // ------------------------------------------------------ stack / relay
+
+    static Address relayAddress(String stack) {
+        return stackAddress(stack).and(RELAY, RELAY.toUpperCase());
+    }
+
+    // ------------------------------------------------------ stack / remote site
+
+    String REMOTESITE_CREATE = Ids.build(REMOTE_SITE, "create", Random.name());
+    String REMOTESITE_UPDATE = Ids.build(REMOTE_SITE, "update", Random.name());
+    String REMOTESITE_DELETE = Ids.build(REMOTE_SITE, "delete", Random.name());
+
+    static Address relayRemoteSiteAddress(String stack, String remoteSite) {
+        return relayAddress(stack).and(REMOTE_SITE, remoteSite);
+    }
+
+    // ------------------------------------------------------ stack / protocol
+
+    String PROTOCOL_CREATE = Ids.build(PROTOCOL, "create", Random.name());
+    String PROTOCOL_UPDATE = Ids.build(PROTOCOL, "update", Random.name());
+    String PROTOCOL_DELETE = Ids.build(PROTOCOL, "delete", Random.name());
+
+    static Address protocolAddress(String stack, String protocol) {
+        return stackAddress(stack).and(PROTOCOL, protocol);
     }
 
     // ------------------------------------------------------ stack / transport
 
-    String TRANSPORT_CREATE = Ids.build("transport", "create", Random.name());
-    String TRANSPORT_UPDATE = Ids.build("transport", "update", Random.name());
-    String TRANSPORT_DELETE = Ids.build("transport", "delete", Random.name());
+    String TRANSPORT_CREATE = Ids.build(TRANSPORT, "create", Random.name());
 
     static Address transportAddress(String stack, String name) {
-        return stackAddress(stack).and("transport", name);
+        return stackAddress(stack).and(TRANSPORT, name);
+    }
+
+    static Address transportThreadPoolAddress(String stack, String transport, String threadPool) {
+        return transportAddress(stack, transport).and(THREAD_POOL, threadPool);
     }
 
     // ------------------------------------------------------ channel
 
-    String CHANNEL_CREATE = Ids.build("channel", "create", Random.name());
-    String CHANNEL_UPDATE = Ids.build("channel", "update", Random.name());
-    String CHANNEL_DELETE = Ids.build("channel", "delete", Random.name());
+    String CHANNEL_CREATE = Ids.build(CHANNEL, "create", Random.name());
+    String CHANNEL_UPDATE = Ids.build(CHANNEL, "update", Random.name());
+    String CHANNEL_DELETE = Ids.build(CHANNEL, "delete", Random.name());
 
     static Address channelAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("channel", name);
+        return SUBSYSTEM_ADDRESS.and(CHANNEL, name);
+    }
+
+    // ------------------------------------------------------ channel / fork
+
+    String FORK_CREATE = Ids.build(FORK, "create", Random.name());
+    String FORK_DELETE = Ids.build(FORK, "delete", Random.name());
+
+    static Address forkAddress(String channel, String name) {
+        return channelAddress(channel).and(FORK, name);
+    }
+
+    // ------------------------------------------------------ channel / fork / protocol
+
+    // protocol names are specific to jgroups domain
+    String FORK_PROTOCOL_CREATE = "COUNTER";
+    String FORK_PROTOCOL_UPDATE = "CENTRAL_LOCK";
+    String FORK_PROTOCOL_DELETE = "S3_PING";
+
+    static Address forkProtocolAddress(String channel, String fork, String protocol) {
+        return forkAddress(channel, fork).and(PROTOCOL, protocol);
     }
 
 }
