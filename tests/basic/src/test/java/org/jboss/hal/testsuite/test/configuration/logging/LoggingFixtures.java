@@ -26,6 +26,9 @@ public interface LoggingFixtures {
     String ADD_LOGGING_API_DEPENDENCIES = "add-logging-api-dependencies";
     String CATEGORY = "category";
     String CLASS_VALUE = "org.jboss.as.logging.logmanager.Log4jAppenderHandler";
+    String COLOR_MAP = "color-map";
+    String COLOR_MAP_VALUE = "error:red";
+    String LOGGING_FORMATTER_ITEM = "logging-formatter-item";
     String LOGGING_HANDLER_ITEM = "logging-handler-item";
     String MODULE_VALUE = "org.jboss.as.logging";
     String PATH_VALUE = "pa/th";
@@ -129,5 +132,25 @@ public interface LoggingFixtures {
 
     static Address syslogHandlerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SYSLOG_HANDLER, name);
+    }
+
+    // ------------------------------------------------------ pattern formatter
+
+    String PATTERN_FORMATTER_CREATE = Ids.build("pf", "create", Random.name());
+    String PATTERN_FORMATTER_UPDATE = Ids.build("pf", "update", Random.name());
+    String PATTERN_FORMATTER_DELETE = Ids.build("pf", "delete", Random.name());
+
+    static Address patternFormatterAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(PATTERN_FORMATTER, name);
+    }
+
+    // ------------------------------------------------------ profiles
+
+    String PROFILE_CREATE = Ids.build("lp", "create", Random.name());
+    String PROFILE_READ = Ids.build("lp", "read", Random.name());
+    String PROFILE_DELETE = Ids.build("lp", "delete", Random.name());
+
+    static Address profileAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, name);
     }
 }

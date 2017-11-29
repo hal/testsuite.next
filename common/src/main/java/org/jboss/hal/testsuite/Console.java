@@ -98,7 +98,7 @@ public class Console {
         }
     }
 
-    public void assertPlace(PlaceRequest placeRequest) {
+    public void verifyPlace(PlaceRequest placeRequest) {
         String expected = fragment(placeRequest);
         String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
         assertEquals(expected, actual);

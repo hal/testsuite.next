@@ -97,10 +97,10 @@ public class InterfaceFinderTest {
     @Test
     public void select() throws Exception {
         column.selectItem(READ);
-        PlaceRequest placeRequest = Places.finderPlace(Ids.CONFIGURATION, new FinderPath()
+        PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.INTERFACES))
                 .append(Ids.INTERFACE, READ));
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test
@@ -110,7 +110,7 @@ public class InterfaceFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.INTERFACE)
                 .with(NAME, READ)
                 .build();
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test

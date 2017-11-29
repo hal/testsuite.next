@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.infinispan;
+package org.jboss.hal.testsuite.test.configuration.logging;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -36,33 +36,33 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_READ;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_READ;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.profileAddress;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class CacheContainerFinderTest {
+public class ProfileFinderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(cacheContainerAddress(CC_READ));
-        operations.add(cacheContainerAddress(CC_DELETE));
+        operations.add(profileAddress(PROFILE_READ));
+        operations.add(profileAddress(PROFILE_DELETE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(cacheContainerAddress(CC_CREATE));
-        operations.removeIfExists(cacheContainerAddress(CC_READ));
-        operations.removeIfExists(cacheContainerAddress(CC_DELETE));
+        operations.removeIfExists(profileAddress(PROFILE_CREATE));
+        operations.removeIfExists(profileAddress(PROFILE_READ));
+        operations.removeIfExists(profileAddress(PROFILE_DELETE));
     }
+
 
     @Inject private Console console;
     private ColumnFragment column;
@@ -70,55 +70,53 @@ public class CacheContainerFinderTest {
     @Before
     public void setUp() throws Exception {
         column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath()
-                        .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, INFINISPAN))
-                .column(Ids.CACHE_CONTAINER);
+                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
+                        .append(Ids.CONFIGURATION_SUBSYSTEM, LOGGING)
+                        .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES)))
+                .column(Ids.LOGGING_PROFILE);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
-        dialog.getForm().text(NAME, CC_CREATE);
+        dialog.getForm().text(NAME, PROFILE_CREATE);
         dialog.add();
 
         console.verifySuccess();
-        assertTrue(column.containsItem(Ids.cacheContainer(CC_CREATE)));
-        new ResourceVerifier(cacheContainerAddress(CC_CREATE), client).verifyExists();
-    }
-
-    @Test
-    public void read() throws Exception {
-        assertTrue(column.containsItem(Ids.cacheContainer(CC_READ)));
+        new ResourceVerifier(profileAddress(PROFILE_CREATE), client)
+                .verifyExists();
     }
 
     @Test
     public void select() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_READ));
-        PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
+        column.selectItem(Ids.loggingProfile(PROFILE_READ));
+        PlaceRequest place = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                .append(Ids.CONFIGURATION_SUBSYSTEM, INFINISPAN)
-                .append(Ids.CACHE_CONTAINER, Ids.cacheContainer(CC_READ)));
-        console.verifyPlace(placeRequest);
+                .append(Ids.CONFIGURATION_SUBSYSTEM, LOGGING)
+                .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES))
+                .append(Ids.LOGGING_PROFILE, Ids.loggingProfile(PROFILE_READ)));
+        console.verifyPlace(place);
     }
 
     @Test
     public void view() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_READ)).view();
-
-        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.CACHE_CONTAINER)
-                .with(NAME, CC_READ)
+        column.selectItem(Ids.loggingProfile(PROFILE_READ)).view();
+        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.LOGGING_PROFILE)
+                .with(NAME, PROFILE_READ)
                 .build();
         console.verifyPlace(placeRequest);
     }
 
     @Test
     public void delete() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_DELETE)).dropdown().click("Remove");
+        column.selectItem(Ids.loggingProfile(PROFILE_DELETE))
+                .dropdown()
+                .click("Remove");
         console.confirmationDialog().confirm();
 
         console.verifySuccess();
-        assertFalse(column.containsItem(Ids.cacheContainer(CC_DELETE)));
-        new ResourceVerifier(cacheContainerAddress(CC_DELETE), client).verifyDoesNotExist();
+        assertFalse(column.containsItem(Ids.loggingProfile(PROFILE_DELETE)));
+        new ResourceVerifier(profileAddress(PROFILE_DELETE), client)
+                .verifyDoesNotExist();
     }
 }

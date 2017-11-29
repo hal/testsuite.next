@@ -110,12 +110,12 @@ public class DataSourceFinderTest {
     @Test
     public void select() throws Exception {
         column.selectItem(Ids.dataSourceConfiguration(DATA_SOURCE_READ, false));
-        PlaceRequest placeRequest = Places.finderPlace(Ids.CONFIGURATION,
+        PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
                 new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
                         .append(Ids.CONFIGURATION_SUBSYSTEM, DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES))
                         .append(Ids.DATA_SOURCE_CONFIGURATION, Ids.dataSourceConfiguration(DATA_SOURCE_READ, false)));
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test
@@ -126,7 +126,7 @@ public class DataSourceFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.DATA_SOURCE_CONFIGURATION)
                 .with(NAME, DATA_SOURCE_READ)
                 .build();
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test

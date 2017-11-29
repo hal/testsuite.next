@@ -47,6 +47,8 @@ public class LoggingConfigurationPage extends BasePage {
     @FindBy(id = "logging-handler-custom-form") private FormFragment customHandlerForm;
     @FindBy(id = "logging-handler-syslog-table" + WRAPPER) private TableFragment syslogHandlerTable;
     @FindBy(id = "logging-handler-syslog-form") private FormFragment syslogHandlerForm;
+    @FindBy(id = "logging-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
+    @FindBy(id = "logging-formatter-pattern-form") private FormFragment patternFormatterForm;
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
@@ -126,5 +128,13 @@ public class LoggingConfigurationPage extends BasePage {
 
     public FormFragment getSyslogHandlerForm() {
         return syslogHandlerForm;
+    }
+
+    public TableFragment getPatternFormatterTable() {
+        return patternFormatterTable;
+    }
+
+    public FormFragment getPatternFormatterForm() {
+        return patternFormatterForm;
     }
 }

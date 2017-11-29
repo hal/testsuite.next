@@ -101,10 +101,10 @@ public class SocketBindingFinderTest {
     @Test
     public void select() throws Exception {
         column.selectItem(SBG_READ);
-        PlaceRequest placeRequest = Places.finderPlace(Ids.CONFIGURATION, new FinderPath()
+        PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.SOCKET_BINDINGS))
                 .append(Ids.SOCKET_BINDING_GROUP, SBG_READ));
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test
@@ -114,7 +114,7 @@ public class SocketBindingFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.SOCKET_BINDING_GROUP)
                 .with(NAME, SBG_READ)
                 .build();
-        console.assertPlace(placeRequest);
+        console.verifyPlace(placeRequest);
     }
 
     @Test
