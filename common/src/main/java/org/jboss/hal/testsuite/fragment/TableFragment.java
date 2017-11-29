@@ -58,7 +58,7 @@ public class TableFragment {
         console.confirmationDialog().confirm();
     }
 
-    private WebElement button(String text) {
+    public WebElement button(String text) {
         By selector = ByJQuery.selector(contains(text));
         return buttons.findElement(selector);
     }

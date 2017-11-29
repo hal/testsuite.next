@@ -26,7 +26,6 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
-import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.page.Places;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -40,6 +39,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DATASOURCES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ENABLED;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -96,8 +96,7 @@ public class DataSourceFinderTest {
     @Before
     public void setUp() throws Exception {
         column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, DATASOURCES)
+                .select(configurationSubsystemPath(DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
                 .column(Ids.DATA_SOURCE_CONFIGURATION);
     }
@@ -111,8 +110,7 @@ public class DataSourceFinderTest {
     public void select() throws Exception {
         column.selectItem(Ids.dataSourceConfiguration(DATA_SOURCE_READ, false));
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
-                new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, DATASOURCES)
+                configurationSubsystemPath(DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES))
                         .append(Ids.DATA_SOURCE_CONFIGURATION, Ids.dataSourceConfiguration(DATA_SOURCE_READ, false)));
         console.verifyPlace(placeRequest);

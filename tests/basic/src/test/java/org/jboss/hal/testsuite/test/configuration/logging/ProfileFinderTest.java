@@ -26,7 +26,6 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
-import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.page.Places;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -38,6 +37,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PROFILE_READ;
@@ -70,8 +70,7 @@ public class ProfileFinderTest {
     @Before
     public void setUp() throws Exception {
         column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, LOGGING)
+                .select(configurationSubsystemPath(LOGGING)
                         .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES)))
                 .column(Ids.LOGGING_PROFILE);
     }
@@ -90,11 +89,10 @@ public class ProfileFinderTest {
     @Test
     public void select() throws Exception {
         column.selectItem(Ids.loggingProfile(PROFILE_READ));
-        PlaceRequest place = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
-                .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                .append(Ids.CONFIGURATION_SUBSYSTEM, LOGGING)
-                .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES))
-                .append(Ids.LOGGING_PROFILE, Ids.loggingProfile(PROFILE_READ)));
+        PlaceRequest place = Places.finderPlace(NameTokens.CONFIGURATION,
+                configurationSubsystemPath(LOGGING)
+                        .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES))
+                        .append(Ids.LOGGING_PROFILE, Ids.loggingProfile(PROFILE_READ)));
         console.verifyPlace(place);
     }
 

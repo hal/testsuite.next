@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
-import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -43,6 +42,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -82,8 +82,7 @@ public class DataSourceCreateTest {
     @Before
     public void setUp() throws Exception {
         column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, DATASOURCES)
+                .select(configurationSubsystemPath(DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
                 .column(Ids.DATA_SOURCE_CONFIGURATION);
         column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);

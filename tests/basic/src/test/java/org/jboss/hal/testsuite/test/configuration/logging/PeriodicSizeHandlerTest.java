@@ -91,7 +91,8 @@ public class PeriodicSizeHandlerTest {
         dialog.getForm().text(NAME, PERIODIC_SIZE_HANDLER_CREATE);
         dialog.getForm().text(SUFFIX, SUFFIX_VALUE);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
-                dialog.getRoot().findElement(By.id("logging-handler-periodic-size-rotating-file-table-add-file-editing")));
+                dialog.getRoot()
+                        .findElement(By.id("logging-handler-periodic-size-rotating-file-table-add-file-editing")));
         fileInput.setPath(PATH_VALUE);
         dialog.add();
 

@@ -41,11 +41,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_INTERFACE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.PUBLIC;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.SBG_READ;
-import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.socketBindingGroupAddress;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 

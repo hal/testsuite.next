@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.infinispan;
+package org.jboss.hal.testsuite.test.configuration.mail;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -21,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -33,34 +34,35 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JNDI_NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MAIL;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CC_READ;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_READ;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.sessionAddress;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class CacheContainerFinderTest {
+public class MailSessionFinderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(cacheContainerAddress(CC_READ));
-        operations.add(cacheContainerAddress(CC_DELETE));
+        operations.add(sessionAddress(SESSION_READ), Values.of(JNDI_NAME, Random.jndiName(SESSION_READ)));
+        operations.add(sessionAddress(SESSION_DELETE), Values.of(JNDI_NAME, Random.jndiName(SESSION_DELETE)));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(cacheContainerAddress(CC_CREATE));
-        operations.removeIfExists(cacheContainerAddress(CC_READ));
-        operations.removeIfExists(cacheContainerAddress(CC_DELETE));
+        operations.removeIfExists(sessionAddress(SESSION_CREATE));
+        operations.removeIfExists(sessionAddress(SESSION_READ));
+        operations.removeIfExists(sessionAddress(SESSION_DELETE));
     }
 
     @Inject private Console console;
@@ -69,52 +71,49 @@ public class CacheContainerFinderTest {
     @Before
     public void setUp() throws Exception {
         column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(INFINISPAN))
-                .column(Ids.CACHE_CONTAINER);
+                .select(configurationSubsystemPath(MAIL))
+                .column(Ids.MAIL_SESSION);
     }
 
     @Test
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
-        dialog.getForm().text(NAME, CC_CREATE);
+        dialog.getForm().text(NAME, SESSION_CREATE);
+        dialog.getForm().text(JNDI_NAME, Random.jndiName(SESSION_CREATE));
         dialog.add();
 
         console.verifySuccess();
-        assertTrue(column.containsItem(Ids.cacheContainer(CC_CREATE)));
-        new ResourceVerifier(cacheContainerAddress(CC_CREATE), client).verifyExists();
-    }
-
-    @Test
-    public void read() throws Exception {
-        assertTrue(column.containsItem(Ids.cacheContainer(CC_READ)));
+        new ResourceVerifier(sessionAddress(SESSION_CREATE), client)
+                .verifyExists();
     }
 
     @Test
     public void select() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_READ));
-        PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
-                configurationSubsystemPath(INFINISPAN)
-                        .append(Ids.CACHE_CONTAINER, Ids.cacheContainer(CC_READ)));
-        console.verifyPlace(placeRequest);
+        column.selectItem(Ids.mailSession(SESSION_READ));
+        PlaceRequest place = Places.finderPlace(NameTokens.CONFIGURATION,
+                configurationSubsystemPath(MAIL).append(Ids.MAIL_SESSION, Ids.mailSession(SESSION_READ)));
+        console.verifyPlace(place);
     }
 
     @Test
     public void view() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_READ)).view();
-
-        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.CACHE_CONTAINER)
-                .with(NAME, CC_READ)
+        column.selectItem(Ids.mailSession(SESSION_READ)).view();
+        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.MAIL_SESSION)
+                .with(NAME, SESSION_READ)
                 .build();
         console.verifyPlace(placeRequest);
     }
 
     @Test
     public void delete() throws Exception {
-        column.selectItem(Ids.cacheContainer(CC_DELETE)).dropdown().click("Remove");
+        column.selectItem(Ids.mailSession(SESSION_DELETE))
+                .dropdown()
+                .click("Remove");
         console.confirmationDialog().confirm();
 
         console.verifySuccess();
-        assertFalse(column.containsItem(Ids.cacheContainer(CC_DELETE)));
-        new ResourceVerifier(cacheContainerAddress(CC_DELETE), client).verifyDoesNotExist();
+        assertFalse(column.containsItem(Ids.mailSession(SESSION_DELETE)));
+        new ResourceVerifier(sessionAddress(SESSION_DELETE), client)
+                .verifyDoesNotExist();
     }
 }

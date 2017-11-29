@@ -15,12 +15,16 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.text.CharacterIterator;
+import java.text.StringCharacterIterator;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
@@ -118,6 +122,23 @@ public class FormFragment {
         inputElement.clear();
         waitGui().until().element(inputElement).value().equalTo("");
         inputElement.sendKeys(value);
+        waitGui().until().element(inputElement).value().equalTo(value);
+    }
+
+    /**
+     * Changes the specified text input element. Use this method over {@link #text(String, String)} if the input field
+     * has a suggestion handler associated and you want to make sure {@link WebElement#sendKeys(CharSequence...)} does
+     * not interfere with the suggestion popup.
+     */
+    public void suggestion(String name, String value) {
+        WebElement inputElement = inputElement(name);
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+        StringCharacterIterator iterator = new StringCharacterIterator(value);
+        for (char c = iterator.first(); c != CharacterIterator.DONE; c = iterator.next()) {
+            inputElement.sendKeys(String.valueOf(c));
+            Library.letsSleep(111);
+        }
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 

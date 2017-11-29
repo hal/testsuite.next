@@ -39,7 +39,10 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.WORKMANAGER;
-import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.BC_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.BC_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.BC_READ;
+import static org.jboss.hal.testsuite.test.configuration.jca.JcaFixtures.bootstrapContextAddress;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)

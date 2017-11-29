@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.fragment.finder;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -29,6 +30,14 @@ import static org.jboss.hal.testsuite.Console.DEFAULT_LOAD_TIMEOUT;
 
 /** Fragment for the finder. Use {@link Console#finder(String)} to get an instance. */
 public class FinderFragment {
+
+    // ------------------------------------------------------ finder path helper methods
+
+    public static FinderPath configurationSubsystemPath(String subsystem) {
+        return new FinderPath()
+                .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
+                .append(Ids.CONFIGURATION_SUBSYSTEM, subsystem);
+    }
 
     @Drone private WebDriver browser;
     @Inject private Console console;

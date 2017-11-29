@@ -39,11 +39,7 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INET_ADDRESS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.CREATE;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.DELETE;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.LOCALHOST;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.READ;
-import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.interfaceAddress;
+import static org.jboss.hal.testsuite.test.configuration.interfce.InterfaceFixtures.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
