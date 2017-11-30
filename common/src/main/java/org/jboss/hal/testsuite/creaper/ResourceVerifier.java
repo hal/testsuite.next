@@ -21,7 +21,6 @@ import java.util.List;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
-import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.dmr.ModelNodeUtils;
 import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.jboss.hal.testsuite.util.Library;
@@ -109,12 +108,7 @@ public class ResourceVerifier {
 
     // ------------------------------------------------------ attributes
 
-    /**
-     * Verifies the value of attribute in model.
-     *
-     * @param expectedValue      - to create this parameter value you can use {@link ModelNodeGenerator}
-     * @param errorMessageSuffix is intended to be used for e.g. passing related tracked issue.
-     */
+    /** Verifies the value of attribute in model. */
     public ResourceVerifier verifyAttribute(String attributeName, ModelNode expectedValue,
             String errorMessageSuffix) throws Exception {
         waitFor(() -> {
@@ -130,11 +124,7 @@ public class ResourceVerifier {
         return this;
     }
 
-    /**
-     * Verifies the value of attribute in model.
-     *
-     * @param expectedValue - to create this parameter value you can use {@link ModelNodeGenerator}
-     */
+    /** Verifies the value of attribute in model. */
     public ResourceVerifier verifyAttribute(String attributeName, ModelNode expectedValue) throws Exception {
         return verifyAttribute(attributeName, expectedValue, "");
     }

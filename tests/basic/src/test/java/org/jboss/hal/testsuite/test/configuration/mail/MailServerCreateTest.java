@@ -35,13 +35,9 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.MAIL_SMTP;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_READ;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.serverAddress;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.sessionAddress;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.*;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
@@ -50,16 +46,15 @@ public class MailServerCreateTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static final Administration administration = new Administration(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(sessionAddress(SESSION_READ), Values.of(JNDI_NAME, Random.jndiName(SESSION_READ)));
+        operations.add(sessionAddress(SESSION_CREATE), Values.of(JNDI_NAME, Random.jndiName(SESSION_CREATE)));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(sessionAddress(SESSION_READ));
+        operations.removeIfExists(sessionAddress(SESSION_CREATE));
     }
 
     @Inject private Console console;
@@ -68,8 +63,7 @@ public class MailServerCreateTest {
 
     @Before
     public void setUp() throws Exception {
-        // administration.reloadIfRequired();
-        page.navigate(NAME, SESSION_READ);
+        page.navigate(NAME, SESSION_CREATE);
         console.verticalNavigation().selectPrimary(Ids.MAIL_SERVER_ITEM);
         table = page.getMailServerTable();
     }
@@ -95,7 +89,7 @@ public class MailServerCreateTest {
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_READ, type), client)
+        new ResourceVerifier(serverAddress(SESSION_CREATE, type), client)
                 .verifyExists();
     }
 }

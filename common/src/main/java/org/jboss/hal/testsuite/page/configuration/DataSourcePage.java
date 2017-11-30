@@ -32,7 +32,7 @@ public class DataSourcePage extends BasePage {
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-pool-form") private FormFragment poolForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-connection-form") private FormFragment connectionForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-security-form") private FormFragment securityForm;
-    @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-credential-reference-credential-reference-form") private FormFragment credentialReferenceForm;
+    @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-credential-reference-form") private FormFragment credentialReferenceForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-validation-form") private FormFragment validationForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-timeouts-form") private FormFragment timeoutsForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-statements-tracking-form") private FormFragment statementsTrackingForm;

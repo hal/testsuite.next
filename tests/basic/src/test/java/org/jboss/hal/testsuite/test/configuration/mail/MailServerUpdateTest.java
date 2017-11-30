@@ -23,6 +23,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.MailPage;
@@ -36,11 +37,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.MAIL_SMTP;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SECRET;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_READ;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.serverAddress;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.sessionAddress;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.*;
 
 @RunWith(Arquillian.class)
 public class MailServerUpdateTest {
@@ -50,13 +47,15 @@ public class MailServerUpdateTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(sessionAddress(SESSION_READ), Values.of(JNDI_NAME, Random.jndiName(SESSION_READ)));
-        operations.add(serverAddress(SESSION_READ, SMTP), Values.of(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP));
+        operations.add(sessionAddress(SESSION_UPDATE), Values.of(JNDI_NAME, Random.jndiName(SESSION_UPDATE)));
+        operations.add(serverAddress(SESSION_UPDATE, SMTP), Values.of(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP));
+        operations.writeAttribute(serverAddress(SESSION_UPDATE, SMTP),
+                CREDENTIAL_REFERENCE, CredentialReference.storeAlias());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(sessionAddress(SESSION_READ));
+        operations.removeIfExists(sessionAddress(SESSION_UPDATE));
     }
 
     @Inject private Console console;
@@ -66,7 +65,7 @@ public class MailServerUpdateTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, SESSION_READ);
+        page.navigate(NAME, SESSION_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.MAIL_SERVER_ITEM);
         table = page.getMailServerTable();
         form = page.getMailServerAttributesForm();
@@ -78,7 +77,7 @@ public class MailServerUpdateTest {
         table.select(SMTP.toUpperCase());
         form.reset();
         console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_READ, SMTP), client)
+        new ResourceVerifier(serverAddress(SESSION_UPDATE, SMTP), client)
                 .verifyReset();
     }
 
@@ -87,12 +86,19 @@ public class MailServerUpdateTest {
         table.select(SMTP.toUpperCase());
         form.edit();
         form.text(USERNAME, SECRET);
-        form.text(PASSWORD, SECRET);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_READ, SMTP), client)
-                .verifyAttribute(USERNAME, SECRET)
-                .verifyAttribute(PASSWORD, SECRET);
+        new ResourceVerifier(serverAddress(SESSION_UPDATE, SMTP), client)
+                .verifyAttribute(USERNAME, SECRET);
+    }
+
+    @Test
+    public void updateConflictWithCredRef() throws Exception {
+        table.select(SMTP.toUpperCase());
+        form.edit();
+        form.text(PASSWORD, SECRET);
+        form.trySave();
+        form.expectError(PASSWORD);
     }
 }
