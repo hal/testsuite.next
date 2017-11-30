@@ -19,6 +19,7 @@ import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
@@ -31,6 +32,7 @@ public class MailPage extends BasePage {
 
     @FindBy(id = Ids.MAIL_SESSION_FORM) private FormFragment mailSessionForm;
     @FindBy(id = Ids.MAIL_SERVER_TABLE + WRAPPER) private TableFragment mailServerTable;
+    @FindBy(id = Ids.MAIL_SERVER_TAB_CONTAINER) private TabsFragment mailServerTabs;
     @FindBy(id = Ids.MAIL_SERVER_FORM) private FormFragment mailServerAttributesForm;
     @FindBy(id = Ids.MAIL_SERVER + "-" + CREDENTIAL_REFERENCE + "-" + Ids.FORM) private FormFragment mailServerCrForm;
 
@@ -40,6 +42,10 @@ public class MailPage extends BasePage {
 
     public TableFragment getMailServerTable() {
         return mailServerTable;
+    }
+
+    public TabsFragment getMailServerTabs() {
+        return mailServerTabs;
     }
 
     public FormFragment getMailServerAttributesForm() {
