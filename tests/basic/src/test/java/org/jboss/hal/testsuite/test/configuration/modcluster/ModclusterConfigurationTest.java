@@ -73,8 +73,7 @@ public class ModclusterConfigurationTest {
     public void updateSessions() throws Exception {
         page.getTabs().select("sessions-tab");
         form = page.getSessionsForm();
-        crud.update(CONFIG_ADDRESS, form, f -> f.flip(STICKY_SESSION, false),
-                resourceVerifier -> resourceVerifier.verifyAttribute(STICKY_SESSION, false));
+        crud.update(CONFIG_ADDRESS, form, STICKY_SESSION, false);
     }
 
     @Test

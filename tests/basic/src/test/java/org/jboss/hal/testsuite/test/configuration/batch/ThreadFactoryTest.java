@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
@@ -61,6 +60,7 @@ public class ThreadFactoryTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private BatchPage page;
     private TableFragment table;
     private FormFragment form;
@@ -77,16 +77,11 @@ public class ThreadFactoryTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_CREATE), client).verifyExists();
+        crud.create(threadFactoryAddress(THREAD_FACTORY_CREATE), table, THREAD_FACTORY_CREATE);
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(THREAD_FACTORY_READ);
         assertEquals(THREAD_FACTORY_READ, form.value(NAME));
     }
@@ -98,44 +93,32 @@ public class ThreadFactoryTest {
         String pattern = Random.name();
 
         table.select(THREAD_FACTORY_UPDATE);
-        form.edit();
-        form.text(GROUP_NAME, groupName);
-        form.number(PRIORITY, priority);
-        form.text(THREAD_NAME_PATTERN, pattern);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyAttribute(GROUP_NAME, groupName)
-                .verifyAttribute(PRIORITY, priority)
-                .verifyAttribute(THREAD_NAME_PATTERN, pattern);
+        crud.update(threadFactoryAddress(THREAD_FACTORY_UPDATE), form,
+                f -> {
+                    f.text(GROUP_NAME, groupName);
+                    f.number(PRIORITY, priority);
+                    f.text(THREAD_NAME_PATTERN, pattern);
+                }, resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(GROUP_NAME, groupName);
+                    resourceVerifier.verifyAttribute(PRIORITY, priority);
+                    resourceVerifier.verifyAttribute(THREAD_NAME_PATTERN, pattern);
+                });
     }
 
     @Test
-    public void updateInvalidPriority() throws Exception {
-        int priority = 42;
+    public void updateInvalidPriority() {
         table.select(THREAD_FACTORY_UPDATE);
-        form.edit();
-        form.number(PRIORITY, priority);
-        form.trySave();
-        form.expectError(PRIORITY);
+        crud.updateWithError(form, PRIORITY, 42);
     }
 
     @Test
     public void reset() throws Exception {
         table.select(THREAD_FACTORY_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyReset();
+        crud.reset(threadFactoryAddress(THREAD_FACTORY_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(THREAD_FACTORY_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_DELETE), client).verifyDoesNotExist();
+        crud.delete(threadFactoryAddress(THREAD_FACTORY_DELETE), table, THREAD_FACTORY_DELETE);
     }
 }

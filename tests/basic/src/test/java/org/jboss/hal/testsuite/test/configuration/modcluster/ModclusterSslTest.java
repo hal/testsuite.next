@@ -19,7 +19,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
@@ -55,6 +55,7 @@ public class ModclusterSslTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private ModclusterPage page;
     private FormFragment form;
 
@@ -76,29 +77,16 @@ public class ModclusterSslTest {
 
     @Test
     public void update() throws Exception {
-        String alias = Random.name();
-        form.edit();
-        form.text(KEY_ALIAS, alias);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SSL_ADDRESS, client)
-                .verifyAttribute(KEY_ALIAS, alias);
+        crud.update(SSL_ADDRESS, form, KEY_ALIAS);
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(SSL_ADDRESS, client)
-                .verifyReset();
+        crud.reset(SSL_ADDRESS, form);
     }
 
     @Test
     public void zzzDelete() throws Exception {
-        form.remove();
-        console.verifySuccess();
-        new ResourceVerifier(SSL_ADDRESS, client)
-                .verifyDoesNotExist();
+        crud.deleteSingleton(SSL_ADDRESS, form);
     }
 }

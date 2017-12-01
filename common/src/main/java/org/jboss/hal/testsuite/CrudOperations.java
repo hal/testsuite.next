@@ -20,20 +20,71 @@ import java.util.function.Consumer;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+
+/** Methods useful to test CRUD operations in applications (does not work for finder related operations). */
 public class CrudOperations {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     @Inject private Console console;
 
 
+    // ------------------------------------------------------ create
+
+    public void create(Address address, TableFragment table, String name) throws Exception {
+        create(address, table, form -> form.text(NAME, name));
+    }
+
+    public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues)
+            throws Exception {
+        AddResourceDialogFragment dialog = table.add();
+        initialValues.accept(dialog.getForm());
+        dialog.add();
+
+        console.verifySuccess();
+        new ResourceVerifier(address, client).verifyExists();
+    }
+
+
+    // ------------------------------------------------------ create and expect error
+
+    public void createWithError(TableFragment table, String name, String expectError) {
+        createWithError(table, form -> form.text(NAME, name), expectError);
+    }
+
+    public void createWithError(TableFragment table, Consumer<FormFragment> initialValues,
+            String expectError) {
+        AddResourceDialogFragment dialog = table.add();
+        FormFragment form = dialog.getForm();
+        initialValues.accept(form);
+        dialog.getPrimaryButton().click();
+        form.expectError(expectError);
+    }
+
+
+    // ------------------------------------------------------ reset
+
+    public void reset(Address address, FormFragment form) throws Exception {
+        form.reset();
+        console.verifySuccess();
+        new ResourceVerifier(address, client).verifyReset();
+    }
+
+
     // ------------------------------------------------------ update
 
     public void update(Address address, FormFragment form, String attribute) throws Exception {
         update(address, form, attribute, Random.name());
+    }
+
+    public void update(Address address, FormFragment form, String attribute, boolean value) throws Exception {
+        update(address, form, f -> f.flip(attribute, value), verifier -> verifier.verifyAttribute(attribute, value));
     }
 
     public void update(Address address, FormFragment form, String attribute, int value) throws Exception {
@@ -56,6 +107,35 @@ public class CrudOperations {
 
         console.verifySuccess();
         verifyChanges.verify(new ResourceVerifier(address, client));
+    }
+
+
+    // ------------------------------------------------------ update and expect error
+
+    public void updateWithError(FormFragment form, String attribute, int value) {
+        updateWithError(form, f -> f.number(attribute, value), attribute);
+    }
+
+    public void updateWithError(FormFragment form, Consumer<FormFragment> modifyFields, String expectError) {
+        form.edit();
+        modifyFields.accept(form);
+        form.trySave();
+        form.expectError(expectError);
+    }
+
+
+    // ------------------------------------------------------ delete
+
+    public void delete(Address address, TableFragment table, String name) throws Exception {
+        table.remove(name);
+        console.verifySuccess();
+        new ResourceVerifier(address, client).verifyDoesNotExist();
+    }
+
+    public void deleteSingleton(Address address, FormFragment form) throws Exception {
+        form.remove();
+        console.verifySuccess();
+        new ResourceVerifier(address, client).verifyDoesNotExist();
     }
 
 

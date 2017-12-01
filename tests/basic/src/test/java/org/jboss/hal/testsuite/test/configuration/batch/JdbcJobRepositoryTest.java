@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
@@ -71,8 +70,9 @@ public class JdbcJobRepositoryTest {
                 Address.subsystem("datasources").and(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE));
     }
 
-    @Page private BatchPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private BatchPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -88,26 +88,20 @@ public class JdbcJobRepositoryTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, JDBC_CREATE);
-        dialog.getForm().text(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(jdbcAddress(JDBC_CREATE), client).verifyExists();
+        crud.create(jdbcAddress(JDBC_CREATE), table, form -> {
+            form.text(NAME, JDBC_CREATE);
+            form.text(ModelDescriptionConstants.DATA_SOURCE, DATA_SOURCE);
+        });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(JDBC_READ);
         assertEquals(DATA_SOURCE, form.value(ModelDescriptionConstants.DATA_SOURCE));
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(JDBC_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(jdbcAddress(JDBC_DELETE), client).verifyDoesNotExist();
+        crud.delete(jdbcAddress(JDBC_DELETE), table, JDBC_DELETE);
     }
 }

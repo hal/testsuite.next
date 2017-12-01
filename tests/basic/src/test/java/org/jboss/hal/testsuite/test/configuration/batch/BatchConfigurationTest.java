@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
@@ -33,6 +33,7 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.RESTART_JOBS_ON_RESUME;
+import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class BatchConfigurationTest {
@@ -42,7 +43,7 @@ public class BatchConfigurationTest {
 
     @BeforeClass
     public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(BatchFixtures.SUBSYSTEM_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -52,6 +53,7 @@ public class BatchConfigurationTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private BatchPage page;
     private FormFragment form;
 
@@ -64,21 +66,11 @@ public class BatchConfigurationTest {
 
     @Test
     public void update() throws Exception {
-        form.edit();
-        form.flip(RESTART_JOBS_ON_RESUME, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
+        crud.update(SUBSYSTEM_ADDRESS, form, RESTART_JOBS_ON_RESUME, false);
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyReset();
+        crud.reset(SUBSYSTEM_ADDRESS, form);
     }
 }

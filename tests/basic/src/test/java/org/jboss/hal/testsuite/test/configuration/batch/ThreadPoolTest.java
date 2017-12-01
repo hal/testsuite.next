@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.BatchPage;
@@ -61,8 +60,9 @@ public class ThreadPoolTest {
         operations.removeIfExists(threadPoolAddress(THREAD_POOL_DELETE));
     }
 
-    @Page private BatchPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private BatchPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -78,34 +78,27 @@ public class ThreadPoolTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
-        dialog.getForm().number(MAX_THREADS, MAX_THREADS_VALUE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(THREAD_POOL_CREATE), client).verifyExists();
+        crud.create(threadPoolAddress(THREAD_POOL_CREATE), table, form -> {
+            form.text(NAME, THREAD_POOL_CREATE);
+            form.number(MAX_THREADS, MAX_THREADS_VALUE);
+        });
     }
 
     @Test
-    public void createNoMaxThreads() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
-        dialog.getPrimaryButton().click();
-        dialog.getForm().expectError(MAX_THREADS);
+    public void createNoMaxThreads() {
+        crud.createWithError(table, THREAD_POOL_CREATE, MAX_THREADS);
     }
 
     @Test
-    public void createInvalidMaxThreads() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_POOL_CREATE);
-        dialog.getForm().number(MAX_THREADS, -1);
-        dialog.getPrimaryButton().click();
-        dialog.getForm().expectError(MAX_THREADS);
+    public void createInvalidMaxThreads() {
+        crud.createWithError(table, form -> {
+            form.text(NAME, THREAD_POOL_CREATE);
+            form.number(MAX_THREADS, -1);
+        }, MAX_THREADS);
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(THREAD_POOL_READ);
         assertEquals(THREAD_POOL_READ, form.value(NAME));
         assertEquals(MAX_THREADS_VALUE, form.intValue(MAX_THREADS));
@@ -116,48 +109,29 @@ public class ThreadPoolTest {
         int maxThreads = Random.number();
 
         table.select(THREAD_POOL_UPDATE);
-        form.edit();
-        form.number(MAX_THREADS, maxThreads);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
-                .verifyAttribute(MAX_THREADS, maxThreads);
+        crud.update(threadPoolAddress(THREAD_POOL_UPDATE), form, MAX_THREADS, maxThreads);
     }
 
     @Test
-    public void updateNoMaxThreads() throws Exception {
+    public void updateNoMaxThreads() {
         table.select(THREAD_POOL_UPDATE);
-        form.edit();
-        form.clear(MAX_THREADS);
-        form.trySave();
-        form.expectError(MAX_THREADS);
+        crud.updateWithError(form, f -> f.clear(MAX_THREADS), MAX_THREADS);
     }
 
     @Test
     public void reset() throws Exception {
         table.select(THREAD_POOL_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(THREAD_POOL_UPDATE), client)
-                .verifyReset();
+        crud.reset(threadPoolAddress(THREAD_POOL_UPDATE), form);
     }
 
     @Test
-    public void updateInvalidMaxThreads() throws Exception {
+    public void updateInvalidMaxThreads() {
         table.select(THREAD_POOL_UPDATE);
-        form.edit();
-        form.number(MAX_THREADS, -1);
-        form.trySave();
-        form.expectError(MAX_THREADS);
+        crud.updateWithError(form, MAX_THREADS, -1);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(THREAD_POOL_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(threadPoolAddress(THREAD_POOL_DELETE), client).verifyDoesNotExist();
+        crud.delete(threadPoolAddress(THREAD_POOL_DELETE), table, THREAD_POOL_DELETE);
     }
 }

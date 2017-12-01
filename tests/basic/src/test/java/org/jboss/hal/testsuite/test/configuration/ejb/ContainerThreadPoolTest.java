@@ -86,7 +86,7 @@ public class ContainerThreadPoolTest {
     }
 
     @Test
-    public void createInvalidMaxThreads() throws Exception {
+    public void createInvalidMaxThreads() {
         AddResourceDialogFragment dialog = table.add();
         dialog.getForm().text(NAME, TP_CREATE);
         dialog.getForm().number(MAX_THREADS, -1);
@@ -107,7 +107,7 @@ public class ContainerThreadPoolTest {
     }
 
     @Test
-    public void updateInvalidMaxThreads() throws Exception {
+    public void updateInvalidMaxThreads() {
         table.select(TP_UPDATE);
         form.edit();
         form.number(MAX_THREADS, -1);
