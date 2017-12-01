@@ -42,7 +42,7 @@ public abstract class CredentialReferenceTest {
     protected abstract ResourceVerifier resourceVerifier();
 
     @Test
-    public void updateAliasWithoutStore() throws Exception {
+    public void updateAliasWithoutStore() {
         form().edit();
         form().clear(STORE);
         form().text(ALIAS, Random.name());
@@ -53,7 +53,7 @@ public abstract class CredentialReferenceTest {
     }
 
     @Test
-    public void updateStoreWithoutAlias() throws Exception {
+    public void updateStoreWithoutAlias() {
         form().edit();
         form().text(STORE, Random.name());
         form().clear(ALIAS);
@@ -64,7 +64,7 @@ public abstract class CredentialReferenceTest {
     }
 
     @Test
-    public void updateStoreAndClearText() throws Exception {
+    public void updateStoreAndClearText() {
         form().edit();
         form().text(STORE, Random.name());
         form().text(ALIAS, Random.name());
@@ -86,7 +86,9 @@ public abstract class CredentialReferenceTest {
 
         form().save();
         console.verifySuccess();
-        resourceVerifier().verifyAttribute(CREDENTIAL_REFERENCE, CredentialReference.storeAlias(store, alias));
+        resourceVerifier()
+                .verifyAttribute(CredentialReference.fqName(STORE), store)
+                .verifyAttribute(CredentialReference.fqName(ALIAS), alias);
     }
 
     @Test
@@ -100,7 +102,7 @@ public abstract class CredentialReferenceTest {
 
         form().save();
         console.verifySuccess();
-        resourceVerifier().verifyAttribute(CREDENTIAL_REFERENCE, CredentialReference.clearText(clearText));
+        resourceVerifier().verifyAttribute(CredentialReference.fqName(CLEAR_TEXT), clearText);
     }
 
     @Test

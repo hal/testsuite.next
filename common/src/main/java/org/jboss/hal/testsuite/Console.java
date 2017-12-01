@@ -28,6 +28,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.location.exception.LocationException;
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.resources.UIConstants;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.ConfirmationDialogFragment;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
@@ -111,6 +112,11 @@ public class Console {
 
     // ------------------------------------------------------ notifications
 
+    /** Waits until all notifications are gone. */
+    public void waitNoNotification() {
+        waitModel().until().element(By.cssSelector("." + toastNotificationsListPf + ":empty")).is().present();
+    }
+
     /** Verifies that a success notification is visible */
     public void verifySuccess() {
         verifyNotification(alertSuccess);
@@ -146,6 +152,7 @@ public class Console {
     }
 
     private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
+        Library.letsSleep(UIConstants.MEDIUM_TIMEOUT);
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
         waitGui().until().element(dialogElement).is().visible();
         return createPageFragment(dialogClass, dialogElement);
@@ -174,7 +181,7 @@ public class Console {
     }
 
     public WizardFragment wizard() {
-        Library.letsSleep(500); // // don't know why, but seems to be necessary
+        Library.letsSleep(UIConstants.MEDIUM_TIMEOUT);
         WebElement wizardElement = browser.findElement(By.id(Ids.HAL_WIZARD));
         waitGui().until().element(wizardElement).is().visible();
         return createPageFragment(WizardFragment.class, wizardElement);

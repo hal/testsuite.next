@@ -125,16 +125,13 @@ public class DataSourceConfigurationTest {
         form = page.getSecurityForm();
 
         String username = Random.name();
-        String password = Random.name();
         form.edit();
         form.text(USER_NAME, username);
-        form.text(PASSWORD, password);
         form.save();
 
         console.verifySuccess();
         new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute(USER_NAME, username)
-                .verifyAttribute(PASSWORD, password);
+                .verifyAttribute(USER_NAME, username);
 
     }
 
@@ -144,16 +141,14 @@ public class DataSourceConfigurationTest {
         form = page.getCredentialReferenceForm();
         form.emptyState().mainAction();
 
-        String store = Random.name();
-        String alias = Random.name();
+        String clearText = Random.name();
         AddResourceDialogFragment dialog = console.addResourceDialog();
-        dialog.getForm().text(STORE, store);
-        dialog.getForm().text(ALIAS, alias);
+        dialog.getForm().text(CLEAR_TEXT, clearText);
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute(CREDENTIAL_REFERENCE, CredentialReference.storeAlias(store, alias));
+        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), DataSourceConfigurationTest.client)
+                .verifyAttribute(CredentialReference.fqName(CLEAR_TEXT), clearText);
     }
 
     @Test

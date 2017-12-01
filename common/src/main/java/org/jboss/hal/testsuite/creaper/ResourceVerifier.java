@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.creaper;
 import java.io.IOException;
 import java.util.List;
 
+import com.google.common.base.Splitter;
 import org.jboss.dmr.ModelNode;
 import org.jboss.dmr.ModelType;
 import org.jboss.dmr.Property;
@@ -111,16 +112,29 @@ public class ResourceVerifier {
     /** Verifies the value of attribute in model. */
     public ResourceVerifier verifyAttribute(String attributeName, ModelNode expectedValue,
             String errorMessageSuffix) throws Exception {
+        boolean nested = attributeName.contains(".");
+        String baseAttributeName = nested
+                ? attributeName.substring(0, attributeName.indexOf('.'))
+                : attributeName;
         waitFor(() -> {
-            ModelNodeResult actualResult = ops.readAttribute(address, attributeName);
+            ModelNodeResult actualResult = ops.readAttribute(address, baseAttributeName);
             return actualResult.isSuccess() && actualResult.hasDefinedValue()
                     && expectedValue.equals(actualResult.value());
         });
 
-        ModelNodeResult actualResult = ops.readAttribute(address, attributeName);
+        ModelNodeResult actualResult = ops.readAttribute(address, baseAttributeName);
         actualResult.assertDefinedValue(errorMessageSuffix);
+        ModelNode actualNode = actualResult.value();
+
+        if (nested) {
+            String path = attributeName.substring(attributeName.indexOf('.') + 1);
+            for (String name : Splitter.on('.').omitEmptyStrings().split(path)) {
+                assertTrue(actualNode.hasDefined(name));
+                actualNode = actualNode.get(name);
+            }
+        }
         assertEquals("Attribute value is different in model! " + errorMessageSuffix,
-                expectedValue, actualResult.value());
+                expectedValue, actualNode);
         return this;
     }
 

@@ -85,7 +85,7 @@ public class MailServerCreateTest {
 
     private void createServer(String type) throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().suggestion(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP);
+        dialog.getForm().text(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP);
         dialog.add();
 
         console.verifySuccess();

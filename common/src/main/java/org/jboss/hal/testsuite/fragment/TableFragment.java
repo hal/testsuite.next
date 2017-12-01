@@ -22,7 +22,6 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -47,8 +46,6 @@ public class TableFragment {
     /** Clicks on the add button and returns an {@link AddResourceDialogFragment}. */
     public AddResourceDialogFragment add() {
         button("Add").click();
-        // some resources as ChannelForkTest needs an additional time to locate the hal-modal dialog.
-        Library.letsSleep(300);
         return console.addResourceDialog();
     }
 

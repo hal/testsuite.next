@@ -94,7 +94,7 @@ public class MailServerUpdateTest {
     }
 
     @Test
-    public void updateConflictWithCredRef() throws Exception {
+    public void updateConflictWithCredRef() {
         table.select(SMTP.toUpperCase());
         form.edit();
         form.text(PASSWORD, SECRET);

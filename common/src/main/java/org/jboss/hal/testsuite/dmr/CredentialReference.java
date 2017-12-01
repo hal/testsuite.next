@@ -21,12 +21,18 @@ import org.jboss.hal.testsuite.Random;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ALIAS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
 
 /**
  * Factory methods to create a credential reference model node which can be used in {@code :write-attribute} operations.
  */
 public final class CredentialReference {
+
+    /** Returns a fully qualified attribute name starting with {@code credential-reference.} */
+    public static String fqName(String attribute) {
+        return CREDENTIAL_REFERENCE + "." + attribute;
+    }
 
     /** Create a new credential reference model node with random store and alias names. */
     public static ModelNode storeAlias() {
@@ -38,7 +44,6 @@ public final class CredentialReference {
         ModelNode modelNode = new ModelNode();
         modelNode.get(STORE).set(store);
         modelNode.get(ALIAS).set(alias);
-        modelNode.get(CLEAR_TEXT).set(new ModelNode());
         return modelNode;
     }
 
@@ -50,8 +55,6 @@ public final class CredentialReference {
     /** Create a new credential reference model node with the specified clear text. */
     public static ModelNode clearText(String clearText) {
         ModelNode modelNode = new ModelNode();
-        modelNode.get(STORE).set(new ModelNode());
-        modelNode.get(ALIAS).set(new ModelNode());
         modelNode.get(CLEAR_TEXT).set(clearText);
         return modelNode;
     }

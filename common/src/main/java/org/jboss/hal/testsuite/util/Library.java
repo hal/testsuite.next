@@ -25,6 +25,15 @@ public class Library {
      *
      * @param timeout time to sleep in ms
      */
+    public static void letsSleep(double timeout) {
+        letsSleep((long) timeout);
+    }
+
+    /**
+     * Sleep for the specified timeout in ms
+     *
+     * @param timeout time to sleep in ms
+     */
     public static void letsSleep(long timeout) {
         try {
             Thread.sleep(timeout);
