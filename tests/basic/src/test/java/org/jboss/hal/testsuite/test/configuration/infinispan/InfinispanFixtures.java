@@ -40,7 +40,7 @@ public interface InfinispanFixtures {
     String CC_CREATE = Ids.build("cc", "create", Random.name());
     String CC_READ = Ids.build("cc", "read", Random.name());
     String CC_UPDATE = Ids.build("cc", "update", Random.name());
-    String CC_DELETE = Ids.build("cc", "update", Random.name());
+    String CC_DELETE = Ids.build("cc", "delete", Random.name());
 
     static Address cacheContainerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CACHE_CONTAINER, name);
