@@ -21,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -38,9 +39,9 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.DATA_SOURCE_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.dataSourceAddress;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.h2ConnectionUrl;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BACKGROUND_VALIDATION;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.VALID_CONNECTION_CHECKER_CLASS_NAME;
 
 @RunWith(Arquillian.class)
 public class DataSourceConfigurationTest {
@@ -63,6 +64,7 @@ public class DataSourceConfigurationTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private DataSourcePage page;
     private FormFragment form;
 
@@ -77,13 +79,7 @@ public class DataSourceConfigurationTest {
         form = page.getAttributesForm();
 
         String jndiName = Random.jndiName();
-        form.edit();
-        form.text(JNDI_NAME, jndiName);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form, JNDI_NAME, jndiName);
     }
 
     @Test
@@ -92,13 +88,7 @@ public class DataSourceConfigurationTest {
         form = page.getConnectionForm();
 
         String urlDelimiter = Random.name();
-        form.edit();
-        form.text("url-delimiter", urlDelimiter);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute("url-delimiter", urlDelimiter);
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form, URL_DELIMITER, urlDelimiter);
     }
 
     @Test
@@ -108,15 +98,16 @@ public class DataSourceConfigurationTest {
 
         int minPoolSize = Random.number(1, 10);
         int maxPoolSize = Random.number(10, 100);
-        form.edit();
-        form.number(MIN_POOL_SIZE, minPoolSize);
-        form.number(MAX_POOL_SIZE, maxPoolSize);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute(MIN_POOL_SIZE, minPoolSize)
-                .verifyAttribute(MAX_POOL_SIZE, maxPoolSize);
+        //noinspection Duplicates
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form,
+                f -> {
+                    f.number(MIN_POOL_SIZE, minPoolSize);
+                    f.number(MAX_POOL_SIZE, maxPoolSize);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(MIN_POOL_SIZE, minPoolSize);
+                    resourceVerifier.verifyAttribute(MAX_POOL_SIZE, maxPoolSize);
+                });
     }
 
     @Test
@@ -125,13 +116,7 @@ public class DataSourceConfigurationTest {
         form = page.getSecurityForm();
 
         String username = Random.name();
-        form.edit();
-        form.text(USER_NAME, username);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute(USER_NAME, username);
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form, USER_NAME, username);
 
     }
 
@@ -162,19 +147,19 @@ public class DataSourceConfigurationTest {
         modelNode.get("c").set("d");
         long millis = Random.number(1000L, 2000L);
 
-        form.edit();
-        form.text("valid-connection-checker-class-name", className);
-        form.properties("valid-connection-checker-properties").add(modelNode);
-        form.flip("background-validation", true);
-        form.number("background-validation-millis", millis);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute("valid-connection-checker-class-name", className)
-                .verifyAttribute("valid-connection-checker-properties", modelNode)
-                .verifyAttribute("background-validation", true)
-                .verifyAttribute("background-validation-millis", millis);
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form,
+                f -> {
+                    f.text(VALID_CONNECTION_CHECKER_CLASS_NAME, className);
+                    f.properties(VALID_CONNECTION_CHECKER_PROPERTIES).add(modelNode);
+                    f.flip(BACKGROUND_VALIDATION, true);
+                    f.number(BACKGROUND_VALIDATION_MILLIS, millis);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(VALID_CONNECTION_CHECKER_CLASS_NAME, className);
+                    resourceVerifier.verifyAttribute(VALID_CONNECTION_CHECKER_PROPERTIES, modelNode);
+                    resourceVerifier.verifyAttribute(BACKGROUND_VALIDATION, true);
+                    resourceVerifier.verifyAttribute(BACKGROUND_VALIDATION_MILLIS, millis);
+                });
     }
 
     @Test
@@ -184,15 +169,16 @@ public class DataSourceConfigurationTest {
 
         long locks = Random.number(10L, 20L);
         long millis = Random.number(1000L, 2000L);
-        form.edit();
-        form.number("use-try-lock", locks);
-        form.number("blocking-timeout-wait-millis", millis);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute("use-try-lock", locks)
-                .verifyAttribute("blocking-timeout-wait-millis", millis);
+        //noinspection Duplicates
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form,
+                f -> {
+                    f.number(USE_TRY_LOCK, locks);
+                    f.number(BLOCKING_TIMEOUT_WAIT_MILLIS, millis);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(USE_TRY_LOCK, locks);
+                    resourceVerifier.verifyAttribute(BLOCKING_TIMEOUT_WAIT_MILLIS, millis);
+                });
     }
 
     @Test
@@ -200,14 +186,14 @@ public class DataSourceConfigurationTest {
         page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "statements-tracking", Ids.TAB));
         form = page.getStatementsTrackingForm();
 
-        form.edit();
-        form.flip("spy", true);
-        form.flip("tracking", true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
-                .verifyAttribute("spy", true)
-                .verifyAttribute("tracking", true);
+        crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form,
+                f -> {
+                    f.flip(SPY, true);
+                    f.flip(TRACKING, true);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(SPY, true);
+                    resourceVerifier.verifyAttribute(TRACKING, true);
+                });
     }
 }

@@ -102,12 +102,12 @@ public class DataSourceFinderTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertTrue(column.containsItem(Ids.dataSourceConfiguration(DATA_SOURCE_READ, false)));
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(Ids.dataSourceConfiguration(DATA_SOURCE_READ, false));
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
                 configurationSubsystemPath(DATASOURCES)
@@ -117,7 +117,7 @@ public class DataSourceFinderTest {
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(Ids.dataSourceConfiguration(DATA_SOURCE_READ, false))
                 .view();
 
@@ -150,7 +150,7 @@ public class DataSourceFinderTest {
     }
 
     @Test
-    public void testConnection() throws Exception {
+    public void testConnection() {
         column.selectItem(Ids.dataSourceConfiguration(DATA_SOURCE_TEST, false))
                 .dropdown()
                 .click("Test Connection");

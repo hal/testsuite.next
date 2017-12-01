@@ -24,8 +24,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.DATA_SOURCE;
 
 public interface DataSourceFixtures {
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(DATASOURCES);
-
     String H2_NAME = "H2DS";
     String H2_JNDI_NAME = "java:/H2DS";
     String H2_DRIVER = "h2";
@@ -45,6 +43,18 @@ public interface DataSourceFixtures {
     String DATA_SOURCE_READ = Ids.build("ds", "read", Random.name());
     String DATA_SOURCE_TEST = Ids.build("ds", "test", Random.name());
     String DATA_SOURCE_UPDATE = Ids.build("ds", "update", Random.name());
+
+    String URL_DELIMITER = "url-delimiter";
+
+    Address SUBSYSTEM_ADDRESS = Address.subsystem(DATASOURCES);
+    String VALID_CONNECTION_CHECKER_CLASS_NAME = "valid-connection-checker-class-name";
+    String VALID_CONNECTION_CHECKER_PROPERTIES = "valid-connection-checker-properties";
+    String BACKGROUND_VALIDATION = "background-validation";
+    String BACKGROUND_VALIDATION_MILLIS = "background-validation-millis";
+    String USE_TRY_LOCK = "use-try-lock";
+    String BLOCKING_TIMEOUT_WAIT_MILLIS = "blocking-timeout-wait-millis";
+    String SPY = "spy";
+    String TRACKING = "tracking";
 
     static Address dataSourceAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(DATA_SOURCE, name);

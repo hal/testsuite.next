@@ -91,7 +91,7 @@ public class DataSourceCreateTest {
 
     /** Create a data source that already exists */
     @Test
-    public void createExisting() throws Exception {
+    public void createExisting() {
         wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
