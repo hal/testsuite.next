@@ -53,6 +53,14 @@ public class ColumnFragment {
         return console.addResourceDialog();
     }
 
+    /**
+     * Shortcut for {@code action("<columnId>-refresh").click()}.
+     */
+    public void refresh() {
+        assertColumnId();
+        action(Ids.build(columnId, Ids.REFRESH)).click();
+    }
+
     /** Opens the action dropdown and clicks on the specified action */
     public void dropdownAction(String dropdownId, String actionId) {
         root.findElement(By.id(dropdownId)).click();
