@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EEPage;
@@ -61,8 +60,9 @@ public class ThreadFactoryTest {
         operations.removeIfExists(threadFactoryAddress(THREAD_FACTORY_DELETE));
     }
 
-    @Page private EEPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EEPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -78,47 +78,26 @@ public class ThreadFactoryTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, THREAD_FACTORY_CREATE);
-        String jndiName = Random.jndiName();
-        dialog.getForm().text(JNDI_NAME, jndiName);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_CREATE), client)
-                .verifyExists()
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.create(threadFactoryAddress(THREAD_FACTORY_CREATE), table, form -> {
+            form.text(NAME, THREAD_FACTORY_CREATE);
+            form.text(JNDI_NAME, Random.jndiName());
+        });
     }
 
     @Test
     public void update() throws Exception {
-        String jndiName = Random.jndiName();
-
         table.select(THREAD_FACTORY_UPDATE);
-        form.edit();
-        form.text(JNDI_NAME, jndiName);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.update(threadFactoryAddress(THREAD_FACTORY_UPDATE), form, JNDI_NAME, Random.jndiName());
     }
 
     @Test
     public void reset() throws Exception {
         table.select(THREAD_FACTORY_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_UPDATE), client)
-                .verifyReset();
+        crud.reset(threadFactoryAddress(THREAD_FACTORY_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(THREAD_FACTORY_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(threadFactoryAddress(THREAD_FACTORY_DELETE), client).verifyDoesNotExist();
+        crud.delete(threadFactoryAddress(THREAD_FACTORY_DELETE), table, THREAD_FACTORY_DELETE);
     }
 }

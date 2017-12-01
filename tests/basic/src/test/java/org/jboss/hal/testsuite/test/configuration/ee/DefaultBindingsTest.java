@@ -20,9 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EEPage;
@@ -54,8 +53,9 @@ public class DefaultBindingsTest {
         client.apply(backup.restore());
     }
 
-    @Page private EEPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EEPage page;
     private FormFragment form;
 
     @Before
@@ -67,22 +67,11 @@ public class DefaultBindingsTest {
 
     @Test
     public void update() throws Exception {
-        String contextService = Random.name();
-        form.edit();
-        form.text(CONTEXT_SERVICE, contextService);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(DEFAULT_BINDINGS_ADDRESS, client)
-                .verifyAttribute(CONTEXT_SERVICE, contextService);
+        crud.update(DEFAULT_BINDINGS_ADDRESS, form, CONTEXT_SERVICE);
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(DEFAULT_BINDINGS_ADDRESS, client)
-                .verifyReset();
+        crud.reset(DEFAULT_BINDINGS_ADDRESS, form);
     }
 }

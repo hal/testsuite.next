@@ -19,10 +19,10 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.DeploymentScannerPage;
@@ -63,6 +63,7 @@ public class DeploymentScannerTest {
     }
 
     @Page private DeploymentScannerPage page;
+    @Inject private CrudOperations crud;
     @Inject private Console console;
     private TableFragment table;
     private FormFragment form;
@@ -77,35 +78,22 @@ public class DeploymentScannerTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, DS_CREATE);
-        dialog.getForm().text(PATH, path(DS_CREATE));
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(deploymentScannerAddress(DS_CREATE), client)
-                .verifyExists()
-                .verifyAttribute(PATH, path(DS_CREATE));
+        crud.create(deploymentScannerAddress(DS_CREATE), table, form -> {
+            form.text(NAME, DS_CREATE);
+            form.text(PATH, path(DS_CREATE));
+        });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(DS_READ);
         assertEquals(path(DS_READ), form.value(PATH));
     }
 
     @Test
     public void update() throws Exception {
-        String path = Random.name() + "/" + Random.name();
-
         table.select(DS_UPDATE);
-        form.edit();
-        form.text(PATH, path);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(deploymentScannerAddress(DS_UPDATE), client)
-                .verifyAttribute(PATH, path);
+        crud.update(deploymentScannerAddress(DS_UPDATE), form, PATH, Random.name() + "/" + Random.name());
     }
 
     @Test
@@ -123,19 +111,11 @@ public class DeploymentScannerTest {
     @Test
     public void reset() throws Exception {
         table.select(DS_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(deploymentScannerAddress(DS_UPDATE), client)
-                .verifyReset();
+        crud.reset(deploymentScannerAddress(DS_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(DS_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(deploymentScannerAddress(DS_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(deploymentScannerAddress(DS_DELETE), table, DS_DELETE);
     }
 }

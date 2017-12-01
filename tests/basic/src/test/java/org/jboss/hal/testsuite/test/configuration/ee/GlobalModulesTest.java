@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EEPage;
 import org.junit.AfterClass;
@@ -61,8 +60,9 @@ public class GlobalModulesTest {
         client.apply(backup.restore());
     }
 
-    @Page private EEPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EEPage page;
     private TableFragment table;
 
     @Before
@@ -74,22 +74,16 @@ public class GlobalModulesTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, GLOBAL_MODULES_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeContainsValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_CREATE));
-
+        crud.create(SUBSYSTEM_ADDRESS, table,
+                form -> form.text(NAME, GLOBAL_MODULES_CREATE),
+                resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(GLOBAL_MODULES,
+                        globalModule(GLOBAL_MODULES_CREATE)));
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(GLOBAL_MODULES_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyListAttributeDoesNotContainValue(GLOBAL_MODULES, globalModule(GLOBAL_MODULES_DELETE));
+        crud.delete(SUBSYSTEM_ADDRESS, table, GLOBAL_MODULES_DELETE,
+                resourceVerifier -> resourceVerifier.verifyListAttributeDoesNotContainValue(GLOBAL_MODULES,
+                        globalModule(GLOBAL_MODULES_DELETE)));
     }
 }

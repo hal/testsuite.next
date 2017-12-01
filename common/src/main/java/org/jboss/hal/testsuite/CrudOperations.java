@@ -43,12 +43,17 @@ public class CrudOperations {
 
     public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues)
             throws Exception {
+        create(address, table, initialValues, ResourceVerifier::verifyExists);
+    }
+
+    public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues,
+            VerifyChanges verifyChanges) throws Exception {
         AddResourceDialogFragment dialog = table.add();
         initialValues.accept(dialog.getForm());
         dialog.add();
 
         console.verifySuccess();
-        new ResourceVerifier(address, client).verifyExists();
+        verifyChanges.verify(new ResourceVerifier(address, client));
     }
 
 
@@ -116,6 +121,10 @@ public class CrudOperations {
         updateWithError(form, f -> f.number(attribute, value), attribute);
     }
 
+    public void updateWithError(FormFragment form, String attribute, String value) {
+        updateWithError(form, f -> f.text(attribute, value), attribute);
+    }
+
     public void updateWithError(FormFragment form, Consumer<FormFragment> modifyFields, String expectError) {
         form.edit();
         modifyFields.accept(form);
@@ -127,9 +136,14 @@ public class CrudOperations {
     // ------------------------------------------------------ delete
 
     public void delete(Address address, TableFragment table, String name) throws Exception {
+        delete(address, table, name, ResourceVerifier::verifyDoesNotExist);
+    }
+
+    public void delete(Address address, TableFragment table, String name, VerifyChanges verifyChanges)
+            throws Exception {
         table.remove(name);
         console.verifySuccess();
-        new ResourceVerifier(address, client).verifyDoesNotExist();
+        verifyChanges.verify(new ResourceVerifier(address, client));
     }
 
     public void deleteSingleton(Address address, FormFragment form) throws Exception {

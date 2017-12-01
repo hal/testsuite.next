@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EEPage;
@@ -61,8 +60,9 @@ public class ContextServiceTest {
         operations.removeIfExists(contextServiceAddress(CONTEXT_SERVICE_DELETE));
     }
 
-    @Page private EEPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EEPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -78,47 +78,26 @@ public class ContextServiceTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CONTEXT_SERVICE_CREATE);
-        String jndiName = Random.jndiName();
-        dialog.getForm().text(JNDI_NAME, jndiName);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(contextServiceAddress(CONTEXT_SERVICE_CREATE), client)
-                .verifyExists()
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.create(contextServiceAddress(CONTEXT_SERVICE_CREATE), table, form -> {
+            form.text(NAME, CONTEXT_SERVICE_CREATE);
+            form.text(JNDI_NAME, Random.jndiName());
+        });
     }
 
     @Test
     public void update() throws Exception {
-        String jndiName = Random.jndiName();
-
         table.select(CONTEXT_SERVICE_UPDATE);
-        form.edit();
-        form.text(JNDI_NAME, jndiName);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(contextServiceAddress(CONTEXT_SERVICE_UPDATE), client)
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.update(contextServiceAddress(CONTEXT_SERVICE_UPDATE), form, JNDI_NAME, Random.jndiName());
     }
 
     @Test
     public void reset() throws Exception {
         table.select(CONTEXT_SERVICE_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(contextServiceAddress(CONTEXT_SERVICE_UPDATE), client)
-                .verifyReset();
+        crud.reset(contextServiceAddress(CONTEXT_SERVICE_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(CONTEXT_SERVICE_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(contextServiceAddress(CONTEXT_SERVICE_DELETE), client).verifyDoesNotExist();
+        crud.delete(contextServiceAddress(CONTEXT_SERVICE_DELETE), table, CONTEXT_SERVICE_DELETE);
     }
 }

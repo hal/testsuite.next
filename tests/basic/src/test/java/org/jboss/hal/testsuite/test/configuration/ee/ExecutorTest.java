@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EEPage;
@@ -61,8 +60,9 @@ public class ExecutorTest {
         operations.removeIfExists(executorAddress(EXECUTOR_DELETE));
     }
 
-    @Page private EEPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EEPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -78,47 +78,26 @@ public class ExecutorTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, EXECUTOR_CREATE);
-        String jndiName = Random.jndiName();
-        dialog.getForm().text(JNDI_NAME, jndiName);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(executorAddress(EXECUTOR_CREATE), client)
-                .verifyExists()
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.create(executorAddress(EXECUTOR_CREATE), table, form -> {
+            form.text(NAME, EXECUTOR_CREATE);
+            form.text(JNDI_NAME, Random.jndiName());
+        });
     }
 
     @Test
     public void update() throws Exception {
-        String jndiName = Random.jndiName();
-
         table.select(EXECUTOR_UPDATE);
-        form.edit();
-        form.text(JNDI_NAME, jndiName);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(executorAddress(EXECUTOR_UPDATE), client)
-                .verifyAttribute(JNDI_NAME, jndiName);
+        crud.update(executorAddress(EXECUTOR_UPDATE), form, JNDI_NAME, Random.jndiName());
     }
 
     @Test
     public void reset() throws Exception {
         table.select(EXECUTOR_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(executorAddress(EXECUTOR_UPDATE), client)
-                .verifyReset();
+        crud.reset(executorAddress(EXECUTOR_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(EXECUTOR_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(executorAddress(EXECUTOR_DELETE), client).verifyDoesNotExist();
+        crud.delete(executorAddress(EXECUTOR_DELETE), table, EXECUTOR_DELETE);
     }
 }
