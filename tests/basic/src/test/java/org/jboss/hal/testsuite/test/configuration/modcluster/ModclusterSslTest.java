@@ -13,72 +13,92 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.batch;
+package org.jboss.hal.testsuite.test.configuration.modcluster;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.page.configuration.BatchPage;
+import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.RESTART_JOBS_ON_RESUME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_ALIAS;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.SSL_ADDRESS;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-public class BatchConfigurationTest {
+@FixMethodOrder(NAME_ASCENDING)
+public class ModclusterSslTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static BackupAndRestoreAttributes backup;
+    private static final Operations operations = new Operations(client);
 
     @BeforeClass
-    public static void beforeClass() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(BatchFixtures.SUBSYSTEM_ADDRESS).build();
-        client.apply(backup.backup());
+    public static void beforeClass() throws Exception {
+        operations.removeIfExists(SSL_ADDRESS);
     }
 
     @AfterClass
-    public static void afterClass() throws CommandFailedException {
-        client.apply(backup.restore());
+    public static void afterClass() throws Exception {
+        operations.removeIfExists(SSL_ADDRESS);
     }
 
     @Inject private Console console;
-    @Page private BatchPage page;
+    @Page private ModclusterPage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary("batch-configuration-item");
-        form = page.getConfigurationForm();
+        console.verticalNavigation().selectPrimary("modcluster-ssl-item");
+        form = page.getSslForm();
+    }
+
+    @Test
+    public void create() throws Exception {
+        form.emptyState().mainAction();
+        console.verifySuccess();
+        new ResourceVerifier(SSL_ADDRESS, client)
+                .verifyExists();
+
     }
 
     @Test
     public void update() throws Exception {
+        String alias = Random.name();
         form.edit();
-        form.flip(RESTART_JOBS_ON_RESUME, false);
+        form.text(KEY_ALIAS, alias);
         form.save();
 
         console.verifySuccess();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(RESTART_JOBS_ON_RESUME, false);
+        new ResourceVerifier(SSL_ADDRESS, client)
+                .verifyAttribute(KEY_ALIAS, alias);
     }
 
     @Test
     public void reset() throws Exception {
         form.reset();
-
         console.verifySuccess();
-        new ResourceVerifier(BatchFixtures.SUBSYSTEM_ADDRESS, client)
+        new ResourceVerifier(SSL_ADDRESS, client)
                 .verifyReset();
+    }
+
+    @Test
+    public void zzzDelete() throws Exception {
+        form.remove();
+        console.verifySuccess();
+        new ResourceVerifier(SSL_ADDRESS, client)
+                .verifyDoesNotExist();
     }
 }
