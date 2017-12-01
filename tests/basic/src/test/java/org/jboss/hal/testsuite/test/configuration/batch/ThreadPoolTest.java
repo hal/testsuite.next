@@ -115,7 +115,7 @@ public class ThreadPoolTest {
     @Test
     public void updateNoMaxThreads() {
         table.select(THREAD_POOL_UPDATE);
-        crud.updateWithError(form, f -> f.clear(MAX_THREADS), MAX_THREADS);
+        crud.updateWithError(form, form -> form.clear(MAX_THREADS), MAX_THREADS);
     }
 
     @Test
