@@ -23,6 +23,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.enricher.AbstractSearchContextEnricher;
 import org.jboss.arquillian.graphene.enricher.ReflectionHelper;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.openqa.selenium.SearchContext;
 
 /** Injects an instance of {@link Console} into test classes, pages or page fragments. */
@@ -36,6 +37,11 @@ public class ConsoleEnricher extends AbstractSearchContextEnricher {
                 Console console = new Console();
                 enrichRecursively(searchContext, console);
                 setValue(field, target, console);
+            }
+            if (field.getType().isAssignableFrom(CrudOperations.class)) {
+                CrudOperations crud = new CrudOperations();
+                enrichRecursively(searchContext, crud);
+                setValue(field, target, crud);
             }
         }
     }

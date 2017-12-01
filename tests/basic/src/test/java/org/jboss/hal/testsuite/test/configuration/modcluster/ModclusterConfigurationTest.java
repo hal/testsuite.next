@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
@@ -53,6 +52,7 @@ public class ModclusterConfigurationTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private ModclusterPage page;
     private FormFragment form;
 
@@ -66,71 +66,35 @@ public class ModclusterConfigurationTest {
     public void updateAdvertising() throws Exception {
         page.getTabs().select("advertising-tab");
         form = page.getAdvertisingForm();
-
-        form.edit();
-        form.text(CONNECTOR, "https");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CONFIG_ADDRESS, client)
-                .verifyAttribute(CONNECTOR, "https");
+        crud.update(CONFIG_ADDRESS, form, CONNECTOR, "https");
     }
 
     @Test
     public void updateSessions() throws Exception {
         page.getTabs().select("sessions-tab");
         form = page.getSessionsForm();
-
-        form.edit();
-        form.flip(STICKY_SESSION, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CONFIG_ADDRESS, client)
-                .verifyAttribute(STICKY_SESSION, false);
+        crud.update(CONFIG_ADDRESS, form, f -> f.flip(STICKY_SESSION, false),
+                resourceVerifier -> resourceVerifier.verifyAttribute(STICKY_SESSION, false));
     }
 
     @Test
     public void updateWebContexts() throws Exception {
         page.getTabs().select("web-contexts-tab");
         form = page.getWebContextsForm();
-
-        String excluded = Random.name();
-        form.edit();
-        form.text(EXCLUDED_CONTEXTS, excluded);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CONFIG_ADDRESS, client)
-                .verifyAttribute(EXCLUDED_CONTEXTS, excluded);
+        crud.update(CONFIG_ADDRESS, form, EXCLUDED_CONTEXTS);
     }
 
     @Test
     public void updateProxies() throws Exception {
         page.getTabs().select("proxies-tab");
         form = page.getProxiesForm();
-
-        String proxyUrl = Random.name();
-        form.edit();
-        form.text(PROXY_URL, proxyUrl);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CONFIG_ADDRESS, client)
-                .verifyAttribute(PROXY_URL, proxyUrl);
+        crud.update(CONFIG_ADDRESS, form, PROXY_URL);
     }
 
     @Test
     public void updateNetworking() throws Exception {
         page.getTabs().select("networking-tab");
         form = page.getNetworkingForm();
-
-        form.edit();
-        form.number(NODE_TIMEOUT, 123);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CONFIG_ADDRESS, client)
-                .verifyAttribute(NODE_TIMEOUT, 123);
+        crud.update(CONFIG_ADDRESS, form, NODE_TIMEOUT, 123);
     }
 }
