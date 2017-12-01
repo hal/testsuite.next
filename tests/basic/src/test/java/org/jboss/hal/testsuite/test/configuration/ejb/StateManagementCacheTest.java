@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -34,7 +33,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -58,8 +56,9 @@ public class StateManagementCacheTest {
         operations.removeIfExists(cacheAddress(CACHE_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -75,32 +74,20 @@ public class StateManagementCacheTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CACHE_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(cacheAddress(CACHE_CREATE), client).verifyExists();
+        crud.create(cacheAddress(CACHE_CREATE), table, CACHE_CREATE);
     }
 
     @Test
     public void update() throws Exception {
         String alias = Random.name();
         table.select(CACHE_UPDATE);
-        form.edit();
-        form.list(ALIASES).add(alias);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(cacheAddress(CACHE_UPDATE), client)
-                .verifyListAttributeContainsValue(ALIASES, alias);
+        crud.update(cacheAddress(CACHE_UPDATE), form,
+                f -> f.list(ALIASES).add(alias),
+                resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(ALIASES, alias));
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(CACHE_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(cacheAddress(CACHE_DELETE), client).verifyDoesNotExist();
+        crud.delete(cacheAddress(CACHE_DELETE), table, CACHE_DELETE);
     }
 }

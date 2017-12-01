@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -35,7 +34,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -59,8 +57,9 @@ public class ContainerRemotingProfileTest {
         operations.removeIfExists(remotingProfileAddress(RP_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -76,31 +75,17 @@ public class ContainerRemotingProfileTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, RP_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_CREATE), client).verifyExists();
+        crud.create(remotingProfileAddress(RP_CREATE), table, RP_CREATE);
     }
 
     @Test
     public void update() throws Exception {
         table.select(RP_UPDATE);
-        form.edit();
-        form.flip("local-receiver-pass-by-value", true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_UPDATE), client)
-                .verifyAttribute("local-receiver-pass-by-value", true);
+        crud.update(remotingProfileAddress(RP_UPDATE), form, LOCAL_RECEIVER_PASS_BY_VALUE, true);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(RP_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(remotingProfileAddress(RP_DELETE), client).verifyDoesNotExist();
+        crud.delete(remotingProfileAddress(RP_DELETE), table, RP_DELETE);
     }
 }

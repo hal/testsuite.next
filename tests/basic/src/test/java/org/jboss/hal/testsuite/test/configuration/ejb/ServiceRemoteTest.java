@@ -21,8 +21,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
@@ -36,10 +36,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.CLUSTER;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.THREAD_POOL_NAME;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.TP_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.threadPoolAddress;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
@@ -64,37 +61,25 @@ public class ServiceRemoteTest {
         operations.removeIfExists(threadPoolAddress(TP_CREATE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-remote-item");
-
         form = page.getServiceRemoteForm();
     }
 
     @Test
     public void updateThreadPool() throws Exception {
-        form.edit();
-        form.text(THREAD_POOL_NAME, TP_CREATE);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_REMOTE_ADDRESS, client)
-                .verifyAttribute(THREAD_POOL_NAME, TP_CREATE);
+        crud.update(SERVICE_REMOTE_ADDRESS, form, THREAD_POOL_NAME, TP_CREATE);
     }
 
     @Test
     public void updateCluster() throws Exception {
-        form.edit();
-        form.text(CLUSTER, cluster);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_REMOTE_ADDRESS, client)
-                .verifyAttribute(CLUSTER, cluster);
+        crud.update(SERVICE_REMOTE_ADDRESS, form, CLUSTER);
     }
 }

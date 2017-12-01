@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -34,7 +33,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ACTIVE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -58,8 +56,9 @@ public class MDBDeliveryTest {
         operations.removeIfExists(mdbDeliveryAddress(MDB_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -75,31 +74,17 @@ public class MDBDeliveryTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, MDB_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(mdbDeliveryAddress(MDB_CREATE), client).verifyExists();
+        crud.create(mdbDeliveryAddress(MDB_CREATE), table, MDB_CREATE);
     }
 
     @Test
     public void update() throws Exception {
         table.select(MDB_UPDATE);
-        form.edit();
-        form.flip(ACTIVE, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(mdbDeliveryAddress(MDB_UPDATE), client)
-                .verifyAttribute(ACTIVE, false);
+        crud.update(mdbDeliveryAddress(MDB_UPDATE), form, ACTIVE, false);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(MDB_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(mdbDeliveryAddress(MDB_DELETE), client).verifyDoesNotExist();
+        crud.delete(mdbDeliveryAddress(MDB_DELETE), table, MDB_DELETE);
     }
 }

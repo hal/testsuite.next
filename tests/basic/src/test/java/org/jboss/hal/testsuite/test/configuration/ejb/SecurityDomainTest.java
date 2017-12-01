@@ -21,9 +21,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -51,7 +50,6 @@ public class SecurityDomainTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-
         ModelNodeResult result = operations.readChildrenNames(ELYTRON_ADDRESS, SECURITY_DOMAIN);
         List<String> secDomains = result.stringListValue();
         if (secDomains.size() > 1) {
@@ -69,8 +67,9 @@ public class SecurityDomainTest {
         operations.removeIfExists(applicationSecurityDomainAddress(ASD_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -86,41 +85,26 @@ public class SecurityDomainTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, ASD_CREATE);
-        dialog.getForm().text(SECURITY_DOMAIN, securityDomain);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(applicationSecurityDomainAddress(ASD_CREATE), client).verifyExists();
+        crud.create(applicationSecurityDomainAddress(ASD_CREATE), table, form -> {
+            form.text(NAME, ASD_CREATE);
+            form.text(SECURITY_DOMAIN, securityDomain);
+        });
     }
 
     @Test
     public void update() throws Exception {
         table.select(ASD_UPDATE);
-        form.edit();
-        form.text(SECURITY_DOMAIN, otherSecurityDomain);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(applicationSecurityDomainAddress(ASD_UPDATE), client)
-                .verifyAttribute(SECURITY_DOMAIN, otherSecurityDomain);
+        crud.update(applicationSecurityDomainAddress(ASD_UPDATE), form, SECURITY_DOMAIN, otherSecurityDomain);
     }
 
     @Test
-    public void updateEmptySecurityDomain() throws Exception {
+    public void updateEmptySecurityDomain() {
         table.select(ASD_UPDATE);
-        form.edit();
-        form.clear(SECURITY_DOMAIN);
-        form.trySave();
-        form.expectError(SECURITY_DOMAIN);
+        crud.updateWithError(form, f -> f.clear(SECURITY_DOMAIN), SECURITY_DOMAIN);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(ASD_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(applicationSecurityDomainAddress(ASD_DELETE), client).verifyDoesNotExist();
+        crud.delete(applicationSecurityDomainAddress(ASD_DELETE), table, ASD_DELETE);
     }
 }

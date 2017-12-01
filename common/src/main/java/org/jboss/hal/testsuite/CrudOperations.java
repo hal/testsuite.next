@@ -140,11 +140,15 @@ public class CrudOperations {
     }
 
     /** Tries to update the specified form and expects client side errors. */
-    public void updateWithError(FormFragment form, Consumer<FormFragment> modifyFields, String expectError) {
+    public void updateWithError(FormFragment form, Consumer<FormFragment> modifyFields, String... expectError) {
         form.edit();
         modifyFields.accept(form);
         form.trySave();
-        form.expectError(expectError);
+        if (expectError != null) {
+            for (String field : expectError) {
+                form.expectError(field);
+            }
+        }
     }
 
 

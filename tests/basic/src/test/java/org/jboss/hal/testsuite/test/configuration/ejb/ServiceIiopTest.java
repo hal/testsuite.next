@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
@@ -30,6 +30,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SERVICE_IIOP_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.USE_QUALIFIED_NAME;
 
 @RunWith(Arquillian.class)
@@ -43,26 +44,20 @@ public class ServiceIiopTest {
         operations.writeAttribute(EJBFixtures.SERVICE_IIOP_ADDRESS, USE_QUALIFIED_NAME, false);
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-iiop-item");
-
         form = page.getServiceIiopForm();
     }
 
     @Test
     public void update() throws Exception {
-        form.edit();
-        form.flip(USE_QUALIFIED_NAME, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_IIOP_ADDRESS, client)
-                .verifyAttribute(USE_QUALIFIED_NAME, true);
+        crud.update(SERVICE_IIOP_ADDRESS, form, USE_QUALIFIED_NAME, true);
     }
 }

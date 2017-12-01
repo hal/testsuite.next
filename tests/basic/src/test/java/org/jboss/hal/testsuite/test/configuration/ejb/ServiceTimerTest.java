@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
@@ -32,6 +32,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SERVICE_TIMER_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.THREAD_POOL_NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.TP_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.threadPoolAddress;
@@ -53,26 +54,20 @@ public class ServiceTimerTest {
         operations.removeIfExists(threadPoolAddress(TP_CREATE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-timer-item");
-
         form = page.getServiceTimerForm();
     }
 
     @Test
     public void updateThreadPool() throws Exception {
-        form.edit();
-        form.text(THREAD_POOL_NAME, TP_CREATE);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_TIMER_ADDRESS, client)
-                .verifyAttribute(THREAD_POOL_NAME, TP_CREATE);
+        crud.update(SERVICE_TIMER_ADDRESS, form, THREAD_POOL_NAME, TP_CREATE);
     }
 }

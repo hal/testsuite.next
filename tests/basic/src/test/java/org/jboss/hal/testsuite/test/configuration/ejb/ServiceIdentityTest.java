@@ -21,6 +21,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.EmptyState;
@@ -32,7 +33,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -41,9 +41,10 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.ELYTRON_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.OUTFLOW_SECURITY_DOMAINS;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SERVICE_IDENTITY_ADDRESS;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-@FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(NAME_ASCENDING)
 public class ServiceIdentityTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -59,14 +60,14 @@ public class ServiceIdentityTest {
         }
     }
 
-
     @AfterClass
     public static void tearDown() throws Exception {
         operations.removeIfExists(SERVICE_IDENTITY_ADDRESS);
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private EmptyState emptyState;
 
@@ -92,21 +93,14 @@ public class ServiceIdentityTest {
 
     @Test
     public void addOutflow() throws Exception {
-        form.edit();
-        form.list(OUTFLOW_SECURITY_DOMAINS).add(securityDomain);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
-                .verifyListAttributeContainsValue(OUTFLOW_SECURITY_DOMAINS, securityDomain);
+        crud.update(SERVICE_IDENTITY_ADDRESS, form,
+                f -> f.list(OUTFLOW_SECURITY_DOMAINS).add(securityDomain),
+                resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(OUTFLOW_SECURITY_DOMAINS,
+                        securityDomain));
     }
 
     @Test
     public void remove() throws Exception {
-        form.remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SERVICE_IDENTITY_ADDRESS, client)
-                .verifyDoesNotExist();
+        crud.deleteSingleton(SERVICE_IDENTITY_ADDRESS, form);
     }
 }

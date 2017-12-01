@@ -31,6 +31,7 @@ public interface EJBFixtures {
     String DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT = "default-singleton-bean-access-timeout";
     String DERIVE_SIZE = "derive-size";
     String FROM_WORKER_POOLS = "from-worker-pools";
+    String LOCAL_RECEIVER_PASS_BY_VALUE = "local-receiver-pass-by-value";
     String MAX_SIZE = "max-size";
     String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
     String THREAD_POOL_NAME = "thread-pool-name";
@@ -113,7 +114,6 @@ public interface EJBFixtures {
     // ------------------------------------------------------ application security domain
 
     String ASD_CREATE = Ids.build("asd", "create", Random.name());
-    String ASD_READ = Ids.build("asd", "read", Random.name());
     String ASD_UPDATE = Ids.build("asd", "update", Random.name());
     String ASD_DELETE = Ids.build("asd", "delete", Random.name());
 

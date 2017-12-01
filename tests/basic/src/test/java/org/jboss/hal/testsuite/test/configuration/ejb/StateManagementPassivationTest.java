@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -33,7 +32,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -57,8 +55,9 @@ public class StateManagementPassivationTest {
         operations.removeIfExists(passivationAddress(PS_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -74,42 +73,23 @@ public class StateManagementPassivationTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, PS_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(passivationAddress(PS_CREATE), client).verifyExists();
+        crud.create(passivationAddress(PS_CREATE), table, PS_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        int val = 123;
         table.select(PS_UPDATE);
-        form.edit();
-        form.number(MAX_SIZE, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(passivationAddress(PS_UPDATE), client)
-                .verifyAttribute(MAX_SIZE, val);
+        crud.update(passivationAddress(PS_UPDATE), form, MAX_SIZE, 123);
     }
 
     @Test
-    public void updateInvalidMaxSize() throws Exception {
-        int val = -1;
+    public void updateInvalidMaxSize() {
         table.select(PS_UPDATE);
-        form.edit();
-        form.number(MAX_SIZE, val);
-        form.trySave();
-        form.expectError(MAX_SIZE);
+        crud.updateWithError(form, MAX_SIZE, -1);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(PS_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(passivationAddress(PS_DELETE), client).verifyDoesNotExist();
+        crud.delete(passivationAddress(PS_DELETE), table, PS_DELETE);
     }
 }

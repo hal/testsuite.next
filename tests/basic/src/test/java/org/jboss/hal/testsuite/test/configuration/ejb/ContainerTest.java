@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
@@ -33,6 +32,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_DISTINCT_NAME;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT;
+import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class ContainerTest {
@@ -47,47 +47,30 @@ public class ContainerTest {
     }
 
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate();
         console.verticalNavigation().selectSecondary("ejb3-container-item", "ejb3-configuration-item");
-
         form = page.getConfigurationForm();
     }
 
     @Test
     public void testInvalidDefaultSingletonBeanAccessTimeout() {
-        form.edit();
-        form.number(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 0);
-        form.trySave();
-        form.expectError(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT);
+        crud.updateWithError(form, DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 0);
     }
 
     @Test
     public void updateDefaultDistinctName() throws Exception {
-        String defaultDistinctName = Random.name();
-        form.edit();
-        form.text(DEFAULT_DISTINCT_NAME, defaultDistinctName);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(DEFAULT_DISTINCT_NAME, defaultDistinctName);
+        crud.update(SUBSYSTEM_ADDRESS, form, DEFAULT_DISTINCT_NAME);
     }
 
     @Test
     public void updateDefaultSingletonBeanAccessTimeout() throws Exception {
-        long val = 6123L;
-        form.edit();
-        form.number(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(EJBFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, val);
+        crud.update(SUBSYSTEM_ADDRESS, form, DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 6123L);
     }
 }

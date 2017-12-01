@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
@@ -34,7 +33,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_POOL_SIZE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TIMEOUT;
 import static org.jboss.hal.testsuite.test.configuration.ejb.EJBFixtures.*;
 
@@ -59,8 +57,9 @@ public class BeanPoolTest {
         operations.removeIfExists(beanPoolAddress(BP_DELETE));
     }
 
-    @Page private EJBConfigurationPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private EJBConfigurationPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -76,65 +75,38 @@ public class BeanPoolTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, BP_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(beanPoolAddress(BP_CREATE), client).verifyExists();
+        crud.create(beanPoolAddress(BP_CREATE), table, BP_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        int val = 123;
         table.select(BP_UPDATE);
-        form.edit();
-        form.number(MAX_POOL_SIZE, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(beanPoolAddress(BP_UPDATE), client)
-                .verifyAttribute(MAX_POOL_SIZE, val);
+        crud.update(beanPoolAddress(BP_UPDATE), form, MAX_POOL_SIZE, 123);
     }
 
     @Test
-    public void updateInvalidAlternatives() throws Exception {
+    public void updateInvalidAlternatives() {
         table.select(BP_UPDATE);
-        form.edit();
-        form.number(MAX_POOL_SIZE, 234);
-        form.select(DERIVE_SIZE, FROM_WORKER_POOLS);
-        form.trySave();
-        form.expectError(MAX_POOL_SIZE);
-        form.expectError(DERIVE_SIZE);
+        crud.updateWithError(form, f -> {
+            f.number(MAX_POOL_SIZE, 234);
+            f.select(DERIVE_SIZE, FROM_WORKER_POOLS);
+        }, MAX_POOL_SIZE, DERIVE_SIZE);
     }
 
     @Test
-    public void updateInvalidTimeout() throws Exception {
+    public void updateInvalidTimeout() {
         table.select(BP_UPDATE);
-        form.edit();
-        form.number(TIMEOUT, 0);
-        form.trySave();
-        form.expectError(TIMEOUT);
+        crud.updateWithError(form, TIMEOUT, 0);
     }
 
     @Test
     public void updateTimeout() throws Exception {
-        long val = 11;
         table.select(BP_UPDATE);
-        form.edit();
-        form.number(TIMEOUT, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(beanPoolAddress(BP_UPDATE), client)
-                .verifyAttribute(TIMEOUT, val);
+        crud.update(beanPoolAddress(BP_UPDATE), form, TIMEOUT, 11L);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(BP_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(beanPoolAddress(BP_DELETE), client).verifyDoesNotExist();
+        crud.delete(beanPoolAddress(BP_DELETE), table, BP_DELETE);
     }
 }
