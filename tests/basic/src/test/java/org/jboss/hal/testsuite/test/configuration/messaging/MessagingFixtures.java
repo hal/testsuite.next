@@ -24,7 +24,14 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
 
 public interface MessagingFixtures {
 
-    String GLOBAL_MAX_SIZE = "global-client-scheduled-thread-pool-max-size" ;
+    String GLOBAL_MAX_SIZE = "global-client-scheduled-thread-pool-max-size";
+    String CONNECTION_TTL_OVERRIDE = "connection-ttl-override";
+    String PERSISTENCE_ENABLED = "persistence-enabled";
+    String JMX_DOMAIN = "jmx-domain";
+    String ELYTRON_DOMAIN = "elytron-domain";
+    String APPLICATION_DOMAIN = "ApplicationDomain";
+    String JOURNAL_BINDING_TABLE = "journal-bindings-table";
+    String CLUSTER_CREDENTIAL_REFERENCE = "cluster-credential-reference";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 

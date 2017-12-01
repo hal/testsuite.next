@@ -15,6 +15,7 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import com.google.common.base.Strings;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
@@ -30,6 +31,7 @@ import org.openqa.selenium.support.FindBy;
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.*;
+import static org.jboss.hal.resources.UIConstants.MASK_CHARACTER;
 
 /** Page fragment for a form using read-only and editing states. */
 public class FormFragment {
@@ -74,6 +76,13 @@ public class FormFragment {
     public void showSensitive(String name) {
         root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye")).click();
         waitGui().until().element(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye-slash")).is().present();
+    }
+
+    /** Verifies if the value of the specified field in read-only mode is show as masked value */
+    public boolean isMasked(String name) {
+        String value = value(name);
+        String expected = Strings.repeat(MASK_CHARACTER, value.length());
+        return value.equals(expected);
     }
 
     public int intValue(String name) {

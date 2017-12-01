@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.page.Places;
-import org.jboss.hal.testsuite.util.Library;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -98,7 +97,7 @@ public class ServerFinderTest {
     @Test
     public void refresh() throws Exception {
         operations.add(serverAddress(SRV_CREATE2));
-        Library.letsSleep(2000);
+        console.waitNoNotification();
         column.refresh();
         assertTrue(column.containsItem(Ids.messagingServer(SRV_CREATE2)));
     }

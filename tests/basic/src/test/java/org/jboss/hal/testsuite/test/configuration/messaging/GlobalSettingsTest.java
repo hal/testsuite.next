@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.MessagingPage;
 import org.junit.AfterClass;
@@ -31,6 +31,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.GLOBAL_MAX_SIZE;
+import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class GlobalSettingsTest {
@@ -40,11 +41,12 @@ public class GlobalSettingsTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.undefineAttribute(MessagingFixtures.SUBSYSTEM_ADDRESS, GLOBAL_MAX_SIZE);
+        operations.undefineAttribute(SUBSYSTEM_ADDRESS, GLOBAL_MAX_SIZE);
     }
 
     @Page private MessagingPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crudOperations;
     private FormFragment form;
 
     @Before
@@ -55,13 +57,6 @@ public class GlobalSettingsTest {
 
     @Test
     public void update() throws Exception {
-        int max = 123;
-        form.edit();
-        form.number(GLOBAL_MAX_SIZE, max);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(MessagingFixtures.SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(GLOBAL_MAX_SIZE, max);
+        crudOperations.update(SUBSYSTEM_ADDRESS, form, GLOBAL_MAX_SIZE, 123);
     }
 }

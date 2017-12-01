@@ -17,28 +17,20 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.hal.resources.Ids.TABLE;
-import static org.jboss.hal.testsuite.Selectors.WRAPPER;
+import static org.jboss.hal.resources.Ids.FORM;
+import static org.jboss.hal.resources.Ids.MESSAGING_GLOBAL_SETTINGS;
 
 @Place(NameTokens.MESSAGING)
 public class MessagingPage extends BasePage {
 
-    @FindBy(id = Ids.MESSAGING_GLOBAL_SETTINGS + "-" + Ids.FORM) private FormFragment configurationForm;
-
-    // ----------- stack
-    @FindBy(id = Ids.JGROUPS_STACK_CONFIG + "-" + TABLE + WRAPPER) private TableFragment stackTable;
-    @FindBy(id = Ids.JGROUPS_STACK_CONFIG + "-" + Ids.FORM) private FormFragment stackForm;
+    @FindBy(id = MESSAGING_GLOBAL_SETTINGS + "-" + FORM) private FormFragment configurationForm;
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
     }
-
-
 }
