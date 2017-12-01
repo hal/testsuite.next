@@ -28,6 +28,7 @@ import org.jboss.hal.testsuite.test.configuration.CredentialReferenceTest;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -39,6 +40,7 @@ import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFi
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.dataSourceAddress;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.h2ConnectionUrl;
 
+@Ignore // TODO Setup Elytron resources to be used by the credential reference
 @RunWith(Arquillian.class)
 public class DataSourceCredRefTest extends CredentialReferenceTest {
 
