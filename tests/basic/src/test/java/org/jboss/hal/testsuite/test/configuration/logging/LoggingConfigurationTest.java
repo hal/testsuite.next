@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
@@ -52,6 +52,7 @@ public class LoggingConfigurationTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private LoggingConfigurationPage page;
     private FormFragment form;
 
@@ -64,24 +65,13 @@ public class LoggingConfigurationTest {
     public void updateConfiguration() throws Exception {
         console.verticalNavigation().selectPrimary("logging-config-item");
         form = page.getConfigurationForm();
-
-        form.edit();
-        form.flip(ADD_LOGGING_API_DEPENDENCIES, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(ADD_LOGGING_API_DEPENDENCIES, false);
+        crud.update(SUBSYSTEM_ADDRESS, form, ADD_LOGGING_API_DEPENDENCIES, false);
     }
 
     @Test
     public void resetConfiguration() throws Exception {
         console.verticalNavigation().selectPrimary("logging-config-item");
         form = page.getConfigurationForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyReset();
+        crud.reset(SUBSYSTEM_ADDRESS, form);
     }
 }

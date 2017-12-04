@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
@@ -34,7 +33,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 import static org.junit.Assert.assertEquals;
 
@@ -60,6 +58,7 @@ public class CategoryTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private LoggingConfigurationPage page;
     private TableFragment table;
     private FormFragment form;
@@ -75,17 +74,11 @@ public class CategoryTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CATEGORY_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(categoryAddress(CATEGORY_CREATE), client)
-                .verifyExists();
+        crud.create(categoryAddress(CATEGORY_CREATE), table, CATEGORY_CREATE);
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(CATEGORY_READ);
         assertEquals(CATEGORY_READ, form.value(CATEGORY));
     }
@@ -93,31 +86,19 @@ public class CategoryTest {
     @Test
     public void update() throws Exception {
         table.select(CATEGORY_UPDATE);
-        form.edit();
-        form.select(LEVEL, "CONFIG");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(categoryAddress(CATEGORY_UPDATE), client)
-                .verifyAttribute(LEVEL, "CONFIG");
+        crud.update(categoryAddress(CATEGORY_UPDATE), form,
+                f -> f.select(LEVEL, "CONFIG"),
+                resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
         table.select(CATEGORY_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(categoryAddress(CATEGORY_UPDATE), client)
-                .verifyReset();
+        crud.reset(categoryAddress(CATEGORY_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(CATEGORY_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(categoryAddress(CATEGORY_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(categoryAddress(CATEGORY_DELETE), table, CATEGORY_DELETE);
     }
 }

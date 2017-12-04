@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
@@ -33,7 +32,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -56,6 +54,7 @@ public class PatternFormatterTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private LoggingConfigurationPage page;
     private TableFragment table;
     private FormFragment form;
@@ -72,43 +71,23 @@ public class PatternFormatterTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, PATTERN_FORMATTER_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(patternFormatterAddress(PATTERN_FORMATTER_CREATE), client)
-                .verifyExists();
+        crud.create(patternFormatterAddress(PATTERN_FORMATTER_CREATE), table, PATTERN_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
         table.select(PATTERN_FORMATTER_UPDATE);
-        form.edit();
-        form.text(COLOR_MAP, COLOR_MAP_VALUE);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(patternFormatterAddress(PATTERN_FORMATTER_UPDATE), client)
-                .verifyAttribute(COLOR_MAP, COLOR_MAP_VALUE);
+        crud.update(patternFormatterAddress(PATTERN_FORMATTER_UPDATE), form, COLOR_MAP, COLOR_MAP_VALUE);
     }
 
     @Test
     public void reset() throws Exception {
         table.select(PATTERN_FORMATTER_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(patternFormatterAddress(PATTERN_FORMATTER_UPDATE), client)
-                .verifyReset();
+        crud.reset(patternFormatterAddress(PATTERN_FORMATTER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(PATTERN_FORMATTER_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(patternFormatterAddress(PATTERN_FORMATTER_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(patternFormatterAddress(PATTERN_FORMATTER_DELETE), table, PATTERN_FORMATTER_DELETE);
     }
 }

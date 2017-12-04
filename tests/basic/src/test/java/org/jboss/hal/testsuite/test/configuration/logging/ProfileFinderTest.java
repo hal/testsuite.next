@@ -63,7 +63,6 @@ public class ProfileFinderTest {
         operations.removeIfExists(profileAddress(PROFILE_DELETE));
     }
 
-
     @Inject private Console console;
     private ColumnFragment column;
 

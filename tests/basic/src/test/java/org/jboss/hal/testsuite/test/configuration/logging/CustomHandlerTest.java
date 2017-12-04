@@ -19,9 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
@@ -66,6 +65,7 @@ public class CustomHandlerTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private LoggingConfigurationPage page;
     private TableFragment table;
     private FormFragment form;
@@ -82,19 +82,15 @@ public class CustomHandlerTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CUSTOM_HANDLER_CREATE);
-        dialog.getForm().text(MODULE, MODULE_VALUE);
-        dialog.getForm().text(CLASS, CLASS_VALUE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(customHandlerAddress(CUSTOM_HANDLER_CREATE), client)
-                .verifyExists();
+        crud.create(customHandlerAddress(CUSTOM_HANDLER_CREATE), table, form -> {
+        form.text(NAME, CUSTOM_HANDLER_CREATE);
+        form.text(MODULE, MODULE_VALUE);
+        form.text(CLASS, CLASS_VALUE);
+        });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(CUSTOM_HANDLER_READ);
         assertEquals(MODULE_VALUE, form.value(MODULE));
         assertEquals(CLASS_VALUE, form.value(CLASS));
@@ -103,31 +99,19 @@ public class CustomHandlerTest {
     @Test
     public void update() throws Exception {
         table.select(CUSTOM_HANDLER_UPDATE);
-        form.edit();
-        form.select(LEVEL, "CONFIG");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(customHandlerAddress(CUSTOM_HANDLER_UPDATE), client)
-                .verifyAttribute(LEVEL, "CONFIG");
+        crud.update(customHandlerAddress(CUSTOM_HANDLER_UPDATE), form,
+                f -> f.select(LEVEL, "CONFIG"),
+                resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
         table.select(CUSTOM_HANDLER_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(customHandlerAddress(CUSTOM_HANDLER_UPDATE), client)
-                .verifyReset();
+        crud.reset(customHandlerAddress(CUSTOM_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(CUSTOM_HANDLER_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(customHandlerAddress(CUSTOM_HANDLER_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(customHandlerAddress(CUSTOM_HANDLER_DELETE), table, CUSTOM_HANDLER_DELETE);
     }
 }

@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
@@ -52,6 +52,7 @@ public class RootLoggerTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private LoggingConfigurationPage page;
     private FormFragment form;
 
@@ -64,24 +65,15 @@ public class RootLoggerTest {
     public void updateRootLogger() throws Exception {
         console.verticalNavigation().selectPrimary("logging-root-logger-item");
         form = page.getRootLoggerForm();
-
-        form.edit();
-        form.select(LEVEL, "ERROR");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(ROOT_LOGGER_ADDRESS, client)
-                .verifyAttribute(LEVEL, "ERROR");
+        crud.update(ROOT_LOGGER_ADDRESS, form,
+                f -> f.select(LEVEL, "ERROR"),
+                resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "ERROR"));
     }
 
     @Test
     public void resetRootLogger() throws Exception {
         console.verticalNavigation().selectPrimary("logging-root-logger-item");
         form = page.getRootLoggerForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(ROOT_LOGGER_ADDRESS, client)
-                .verifyReset();
+        crud.reset(ROOT_LOGGER_ADDRESS, form);
     }
 }
