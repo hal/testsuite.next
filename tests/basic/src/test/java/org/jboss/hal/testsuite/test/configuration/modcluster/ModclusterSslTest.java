@@ -21,7 +21,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
@@ -68,11 +67,7 @@ public class ModclusterSslTest {
 
     @Test
     public void create() throws Exception {
-        form.emptyState().mainAction();
-        console.verifySuccess();
-        new ResourceVerifier(SSL_ADDRESS, client)
-                .verifyExists();
-
+        crud.createSingleton(SSL_ADDRESS, form);
     }
 
     @Test

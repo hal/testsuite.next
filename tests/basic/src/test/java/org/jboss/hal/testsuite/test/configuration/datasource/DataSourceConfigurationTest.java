@@ -20,7 +20,6 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -61,7 +60,6 @@ public class DataSourceConfigurationTest {
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_UPDATE));
     }
 
-    @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private DataSourcePage page;
     private FormFragment form;
@@ -115,7 +113,6 @@ public class DataSourceConfigurationTest {
 
         String username = Random.name();
         crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form, USER_NAME, username);
-
     }
 
     @Test
