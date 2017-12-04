@@ -19,8 +19,8 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.page.configuration.InterfacePage;
@@ -58,6 +58,7 @@ public class InterfaceApplicationTest {
 
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private InterfacePage page;
     private FormFragment form;
 
@@ -68,19 +69,13 @@ public class InterfaceApplicationTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertEquals(HeaderBreadcrumbFragment.abbreviate(UPDATE), console.header().breadcrumb().lastValue());
         assertEquals(UPDATE, form.value(NAME));
     }
 
     @Test
     public void update() throws Exception {
-        form.edit();
-        form.text(INET_ADDRESS, "127.0.0.2");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(interfaceAddress(UPDATE), client)
-                .verifyAttribute(INET_ADDRESS, "127.0.0.2");
+        crud.update(interfaceAddress(UPDATE), form, INET_ADDRESS, "127.0.0.2");
     }
 }
