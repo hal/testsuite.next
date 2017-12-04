@@ -20,9 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
 import org.junit.AfterClass;
@@ -35,7 +34,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STACK;
 import static org.jboss.hal.testsuite.test.configuration.jgroups.JGroupsFixtures.*;
 
@@ -56,8 +54,9 @@ public class ChannelForkTest {
         operations.removeIfExists(channelAddress(CHANNEL_CREATE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private TableFragment channelTable;
     private TableFragment forkTable;
 
@@ -75,25 +74,13 @@ public class ChannelForkTest {
         channelTable.action(CHANNEL_CREATE, Names.FORK);
         waitGui().until().element(forkTable.getRoot()).is().visible();
 
-        AddResourceDialogFragment dialog = forkTable.add();
-        dialog.getForm().text(NAME, FORK_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(forkAddress(CHANNEL_CREATE, FORK_CREATE), client)
-                .verifyExists();
+        crud.create(forkAddress(CHANNEL_CREATE, FORK_CREATE), forkTable, FORK_CREATE);
     }
 
     @Test
     public void remove() throws Exception {
         channelTable.action(CHANNEL_CREATE, Names.FORK);
         waitGui().until().element(forkTable.getRoot()).is().visible();
-
-        forkTable.remove(FORK_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(forkAddress(CHANNEL_CREATE, FORK_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(forkAddress(CHANNEL_CREATE, FORK_DELETE), forkTable, FORK_DELETE);
     }
-
 }

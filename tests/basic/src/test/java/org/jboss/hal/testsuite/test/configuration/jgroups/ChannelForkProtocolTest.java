@@ -21,9 +21,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -37,7 +36,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PROPERTIES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STACK;
 import static org.jboss.hal.testsuite.test.configuration.jgroups.JGroupsFixtures.*;
@@ -61,8 +59,9 @@ public class ChannelForkProtocolTest {
         operations.removeIfExists(channelAddress(CHANNEL_CREATE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private TableFragment channelTable;
     private TableFragment forkTable;
     private TableFragment forkProtocolTable;
@@ -88,13 +87,8 @@ public class ChannelForkProtocolTest {
         forkTable.action(FORK_CREATE, Names.PROTOCOL);
         waitGui().until().element(forkProtocolTable.getRoot()).is().visible();
 
-        AddResourceDialogFragment dialog = forkProtocolTable.add();
-        dialog.getForm().text(NAME, FORK_PROTOCOL_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_CREATE), client)
-                .verifyExists();
+        crud.create(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_CREATE), forkProtocolTable,
+                FORK_PROTOCOL_CREATE);
     }
 
     @Test
@@ -111,13 +105,8 @@ public class ChannelForkProtocolTest {
         props.get("c").set("d");
 
         forkProtocolTable.select(FORK_PROTOCOL_UPDATE);
-        forkProtocolForm.edit();
-        forkProtocolForm.properties(PROPERTIES).add(props);
-        forkProtocolForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_UPDATE), client)
-                .verifyAttribute(PROPERTIES, props);
+        crud.update(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_UPDATE), forkProtocolForm,
+                PROPERTIES, props);
     }
 
     @Test
@@ -129,11 +118,7 @@ public class ChannelForkProtocolTest {
         forkTable.action(FORK_CREATE, Names.PROTOCOL);
         waitGui().until().element(forkProtocolTable.getRoot()).is().visible();
 
-        forkProtocolTable.remove(FORK_PROTOCOL_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_DELETE), forkProtocolTable,
+                FORK_PROTOCOL_DELETE);
     }
-
 }

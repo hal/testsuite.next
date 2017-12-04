@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -59,6 +58,7 @@ public class ChannelTest {
     }
 
     @Page private JGroupsPage page;
+    @Inject private CrudOperations crud;
     @Inject private Console console;
     private FormFragment form;
     private TableFragment table;
@@ -75,52 +75,32 @@ public class ChannelTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CHANNEL_CREATE);
-        dialog.getForm().text(STACK, TCP);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(channelAddress(CHANNEL_CREATE), client)
-                .verifyExists();
+        crud.create(channelAddress(CHANNEL_CREATE), table, form -> {
+        form.text(NAME, CHANNEL_CREATE);
+        form.text(STACK, TCP);
+        });
     }
 
     @Test
     public void update() throws Exception {
-        String cluster = Random.name();
         table.select(CHANNEL_UPDATE);
-        form.edit();
-        form.text(CLUSTER, cluster);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(channelAddress(CHANNEL_UPDATE), client)
-                .verifyAttribute(CLUSTER, cluster);
+        crud.update(channelAddress(CHANNEL_UPDATE), form, CLUSTER, Random.name());
     }
 
     @Test
-    public void updateEmptyStack() throws Exception {
+    public void updateEmptyStack() {
         table.select(CHANNEL_UPDATE);
-        form.edit();
-        form.clear(STACK);
-        form.trySave();
-        form.expectError(STACK);
+        crud.updateWithError(form, f -> f.clear(STACK), STACK);
     }
 
     @Test
     public void reset() throws Exception {
         table.select(CHANNEL_UPDATE);
-        form.edit();
-        form.clear(STACK);
-        form.trySave();
-        form.expectError(STACK);
+        crud.reset(channelAddress(CHANNEL_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(CHANNEL_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(channelAddress(CHANNEL_DELETE), client).verifyDoesNotExist();
+        crud.delete(channelAddress(CHANNEL_DELETE), table, CHANNEL_DELETE);
     }
 }

@@ -21,9 +21,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
@@ -70,6 +70,7 @@ public class StackTransportTest {
     }
 
     @Page private JGroupsPage page;
+    @Inject private CrudOperations crud;
     @Inject private Console console;
     private TableFragment stackTable;
     private TableFragment transportTable;
@@ -97,15 +98,8 @@ public class StackTransportTest {
         stackTable.action(STACK_CREATE, Names.TRANSPORT);
         waitGui().until().element(transportTable.getRoot()).is().visible();
 
-        String site = Random.name();
         transportTable.select(TRANSPORT_CREATE);
-        transportAttributesForm.edit();
-        transportAttributesForm.text(SITE, site);
-        transportAttributesForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(transportAddress(STACK_CREATE, TRANSPORT_CREATE), client)
-                .verifyAttribute(SITE, site);
+        crud.update(transportAddress(STACK_CREATE, TRANSPORT_CREATE), transportAttributesForm, SITE, Random.name());
     }
 
     @Test()
@@ -115,13 +109,8 @@ public class StackTransportTest {
 
         transportTable.select(TRANSPORT_CREATE);
         threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_DEFAULT_TAB));
-        transportTPDefaultForm.edit();
-        transportTPDefaultForm.number(MAX_THREADS, 123);
-        transportTPDefaultForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), client)
-                .verifyAttribute(MAX_THREADS, 123);
+        crud.update(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), transportTPDefaultForm,
+                MAX_THREADS, 123);
     }
 
     @Test()
@@ -131,11 +120,7 @@ public class StackTransportTest {
 
         transportTable.select(TRANSPORT_CREATE);
         threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_DEFAULT_TAB));
-        transportTPDefaultForm.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), client)
-                .verifyReset();
+        crud.reset(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), transportTPDefaultForm);
     }
 
     @Test()
@@ -145,14 +130,8 @@ public class StackTransportTest {
 
         transportTable.select(TRANSPORT_CREATE);
         threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_INTERNAL_TAB));
-        transportTPInternalForm.edit();
-        long val = 5123;
-        transportTPInternalForm.number(KEEPALIVE_TIME, val);
-        transportTPInternalForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), client)
-                .verifyAttribute(KEEPALIVE_TIME, val);
+        crud.update(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), transportTPInternalForm,
+                KEEPALIVE_TIME, 5123L);
     }
 
     @Test()
@@ -162,12 +141,6 @@ public class StackTransportTest {
 
         transportTable.select(TRANSPORT_CREATE);
         threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_INTERNAL_TAB));
-        transportTPInternalForm.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), client)
-                .verifyReset();
+        crud.reset(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), transportTPInternalForm);
     }
-
-
 }

@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -33,7 +32,6 @@ import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -44,9 +42,10 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.RELAY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STATISTICS_ENABLED;
 import static org.jboss.hal.testsuite.test.configuration.jgroups.JGroupsFixtures.*;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-@FixMethodOrder(value = MethodSorters.NAME_ASCENDING)
+@FixMethodOrder(NAME_ASCENDING)
 public class StackRelayTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -66,8 +65,9 @@ public class StackRelayTest {
         operations.removeIfExists(stackAddress(STACK_CREATE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private FormFragment relayForm;
     private TableFragment stackTable;
     private TableFragment relayTable;
@@ -91,38 +91,23 @@ public class StackRelayTest {
         waitGui().until().element(relayTable.getRoot()).is().visible();
 
         String site = Random.name();
-        AddResourceDialogFragment dialog = relayTable.add();
-        dialog.getForm().text(SITE, site);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(relayAddress(STACK_CREATE), client)
-                .verifyAttribute(SITE, site);
+        crud.create(relayAddress(STACK_CREATE), relayTable, form -> form.text(SITE, site),
+                resourceVerifier -> resourceVerifier.verifyAttribute(SITE, site));
     }
 
     @Test()
-    public void relayUpdate() throws Exception {
+    public void update() throws Exception {
         stackTable.action(STACK_CREATE, Names.RELAY);
         waitGui().until().element(relayTable.getRoot()).is().visible();
 
         relayTable.select(RELAY.toUpperCase());
-        relayForm.edit();
-        relayForm.flip(STATISTICS_ENABLED, true);
-        relayForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(relayAddress(STACK_CREATE), client)
-                .verifyAttribute(STATISTICS_ENABLED, true);
+        crud.update(relayAddress(STACK_CREATE), relayForm, STATISTICS_ENABLED, true);
     }
 
     @Test
-    public void remove() throws Exception {
+    public void zzzDelete() throws Exception {
         stackTable.action(STACK_CREATE, Names.RELAY);
         waitGui().until().element(relayTable.getRoot()).is().visible();
-        relayTable.remove(RELAY.toUpperCase());
-
-        console.verifySuccess();
-        new ResourceVerifier(relayAddress(STACK_CREATE), client).verifyDoesNotExist();
+        crud.delete(relayAddress(STACK_CREATE), relayTable, RELAY.toUpperCase());
     }
-
 }

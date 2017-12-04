@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -67,8 +66,9 @@ public class StackTest {
         operations.removeIfExists(stackAddress(STACK_DELETE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private FormFragment form;
     private TableFragment table;
 
@@ -84,35 +84,21 @@ public class StackTest {
 
     @Test
     public void create() throws Exception {
-        String transportName = Random.name();
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, STACK_CREATE);
-        dialog.getForm().text(TRANSPORT, transportName);
-        dialog.getForm().text(SOCKET_BINDING, JGROUPS_TCP);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(stackAddress(STACK_CREATE), client)
-                .verifyExists();
+        crud.create(stackAddress(STACK_CREATE), table, form -> {
+        form.text(NAME, STACK_CREATE);
+        form.text(TRANSPORT, Random.name());
+        form.text(SOCKET_BINDING, JGROUPS_TCP);
+        });
     }
 
     @Test
     public void update() throws Exception {
         table.select(STACK_UPDATE);
-        form.edit();
-        form.flip(STATISTICS_ENABLED, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(stackAddress(STACK_UPDATE), client)
-                .verifyAttribute(STATISTICS_ENABLED, true);
+        crud.update(stackAddress(STACK_UPDATE), form, STATISTICS_ENABLED, true);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(STACK_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(stackAddress(STACK_DELETE), client).verifyDoesNotExist();
+        crud.delete(stackAddress(STACK_DELETE), table, STACK_DELETE);
     }
 }

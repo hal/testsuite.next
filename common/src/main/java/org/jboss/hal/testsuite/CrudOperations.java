@@ -53,7 +53,7 @@ public class CrudOperations {
     public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues,
             VerifyChanges verifyChanges) throws Exception {
         AddResourceDialogFragment dialog = table.add();
-        initialValues.accept(dialog.getForm());
+        initialValues.accept(dialog.getForm()); // use the form of add resource dialog!
         dialog.add();
 
         console.verifySuccess();

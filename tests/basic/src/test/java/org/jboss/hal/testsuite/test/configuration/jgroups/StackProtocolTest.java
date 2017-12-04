@@ -21,9 +21,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -40,7 +39,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PROPERTIES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.testsuite.test.configuration.jgroups.JGroupsFixtures.*;
@@ -67,8 +65,9 @@ public class StackProtocolTest {
         operations.removeIfExists(stackAddress(STACK_CREATE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private FormFragment protocolForm;
     private TableFragment stackTable;
     private TableFragment protocolTable;
@@ -90,18 +89,11 @@ public class StackProtocolTest {
     public void create() throws Exception {
         stackTable.action(STACK_CREATE, Names.PROTOCOL);
         waitGui().until().element(protocolTable.getRoot()).is().visible();
-
-        AddResourceDialogFragment dialog = protocolTable.add();
-        dialog.getForm().text(NAME, PROTOCOL_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(protocolAddress(STACK_CREATE, PROTOCOL_CREATE), client)
-                .verifyExists();
+        crud.create(protocolAddress(STACK_CREATE, PROTOCOL_CREATE), protocolTable, PROTOCOL_CREATE);
     }
 
     @Test()
-    public void relayUpdate() throws Exception {
+    public void update() throws Exception {
         stackTable.action(STACK_CREATE, Names.PROTOCOL);
         waitGui().until().element(protocolTable.getRoot()).is().visible();
 
@@ -110,23 +102,13 @@ public class StackProtocolTest {
         props.get("c").set("d");
 
         protocolTable.select(PROTOCOL_UPDATE);
-        protocolForm.edit();
-        protocolForm.properties(PROPERTIES).add(props);
-        protocolForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE), client)
-                .verifyAttribute(PROPERTIES, props);
+        crud.update(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE), protocolForm, PROPERTIES, props);
     }
 
     @Test
-    public void remove() throws Exception {
+    public void zzzDelete() throws Exception {
         stackTable.action(STACK_CREATE, Names.PROTOCOL);
         waitGui().until().element(protocolTable.getRoot()).is().visible();
-        protocolTable.remove(PROTOCOL_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(protocolAddress(STACK_CREATE, PROTOCOL_DELETE), client).verifyDoesNotExist();
+        crud.delete(protocolAddress(STACK_CREATE, PROTOCOL_DELETE), protocolTable, PROTOCOL_DELETE);
     }
-
 }

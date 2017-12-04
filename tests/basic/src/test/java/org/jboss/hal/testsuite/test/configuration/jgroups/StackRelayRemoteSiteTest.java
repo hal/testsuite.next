@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.JGroupsPage;
@@ -69,8 +68,9 @@ public class StackRelayRemoteSiteTest {
         operations.remove(channelAddress(CHANNEL_CREATE));
     }
 
-    @Page private JGroupsPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JGroupsPage page;
     private TableFragment stackTable;
     private TableFragment relayTable;
     private TableFragment remoteSiteTable;
@@ -97,14 +97,12 @@ public class StackRelayRemoteSiteTest {
         relayTable.action(RELAY.toUpperCase(), Names.REMOTE_SITE);
         waitGui().until().element(remoteSiteTable.getRoot()).is().visible();
 
-        AddResourceDialogFragment dialog = remoteSiteTable.add();
-        dialog.getForm().text(NAME, REMOTESITE_CREATE);
-        dialog.getForm().text(CHANNEL, EE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_CREATE), client)
-                .verifyAttribute(CHANNEL, EE);
+        crud.create(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_CREATE), remoteSiteTable,
+                form -> {
+                    form.text(NAME, REMOTESITE_CREATE);
+                    form.text(CHANNEL, EE);
+                },
+                resourceVerifier -> resourceVerifier.verifyAttribute(CHANNEL, EE));
     }
 
     @Test()
@@ -117,17 +115,11 @@ public class StackRelayRemoteSiteTest {
         waitGui().until().element(remoteSiteTable.getRoot()).is().visible();
 
         remoteSiteTable.select(REMOTESITE_UPDATE);
-        remoteSiteForm.edit();
-        remoteSiteForm.text(CHANNEL, CHANNEL_CREATE);
-        remoteSiteForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_UPDATE), client)
-                .verifyAttribute(CHANNEL, CHANNEL_CREATE);
+        crud.update(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_UPDATE), remoteSiteForm, CHANNEL, CHANNEL_CREATE);
     }
 
     @Test()
-    public void updateEmptyEE() throws Exception {
+    public void updateEmptyEE() {
         stackTable.action(STACK_CREATE, Names.RELAY);
         waitGui().until().element(relayTable.getRoot()).is().visible();
 
@@ -136,10 +128,7 @@ public class StackRelayRemoteSiteTest {
         waitGui().until().element(remoteSiteTable.getRoot()).is().visible();
 
         remoteSiteTable.select(REMOTESITE_UPDATE);
-        remoteSiteForm.edit();
-        remoteSiteForm.clear(CHANNEL);
-        remoteSiteForm.trySave();
-        remoteSiteForm.expectError(CHANNEL);
+        crud.updateWithError(remoteSiteForm, form -> form.clear(CHANNEL), CHANNEL);
     }
 
     @Test
@@ -151,11 +140,6 @@ public class StackRelayRemoteSiteTest {
         relayTable.action(RELAY.toUpperCase(), Names.REMOTE_SITE);
         waitGui().until().element(remoteSiteTable.getRoot()).is().visible();
 
-        remoteSiteTable.remove(REMOTESITE_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_DELETE), remoteSiteTable, REMOTESITE_DELETE);
     }
-
 }
