@@ -25,10 +25,7 @@ import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.hal.resources.Ids.ATTRIBUTES;
-import static org.jboss.hal.resources.Ids.EMPTY;
-import static org.jboss.hal.resources.Ids.FORM;
-import static org.jboss.hal.resources.Ids.MESSAGING_SERVER;
+import static org.jboss.hal.resources.Ids.*;
 
 @Place(NameTokens.MESSAGING_SERVER)
 public class MessagingServerPage extends BasePage {
@@ -42,6 +39,11 @@ public class MessagingServerPage extends BasePage {
     @FindBy(id = MESSAGING_SERVER + "-group-cluster-" + FORM) private FormFragment clusterForm;
     @FindBy(id = MESSAGING_SERVER + "-cluster-credential-reference-" + FORM) private FormFragment clusterCredentialReferenceForm;
     @FindBy(id = MESSAGING_SERVER + "-cluster-credential-reference-" + FORM + "-" + EMPTY) private EmptyState clusterCredentialReferenceEmptyState;
+
+    @FindBy(id = MESSAGING_SERVER_BINDING_DIRECTORY_FORM) private FormFragment bindingDirectoryForm;
+    @FindBy(id = MESSAGING_SERVER_JOURNAL_DIRECTORY_FORM) private FormFragment journalDirectoryForm;
+    @FindBy(id = MESSAGING_SERVER_LARGE_MESSAGES_DIRECTORY_FORM) private FormFragment largeMessagesDirectoryForm;
+    @FindBy(id = MESSAGING_SERVER_PAGING_DIRECTORY_FORM) private FormFragment pagingDirectoryForm;
 
     public TabsFragment getTab() {
         return tab;
@@ -73,5 +75,21 @@ public class MessagingServerPage extends BasePage {
 
     public EmptyState getClusterCredentialReferenceEmptyState() {
         return clusterCredentialReferenceEmptyState;
+    }
+
+    public FormFragment getBindingDirectoryForm() {
+        return bindingDirectoryForm;
+    }
+
+    public FormFragment getJournalDirectoryForm() {
+        return journalDirectoryForm;
+    }
+
+    public FormFragment getLargeMessagesDirectoryForm() {
+        return largeMessagesDirectoryForm;
+    }
+
+    public FormFragment getPagingDirectoryForm() {
+        return pagingDirectoryForm;
     }
 }

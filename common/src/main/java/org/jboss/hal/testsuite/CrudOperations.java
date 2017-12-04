@@ -121,7 +121,7 @@ public class CrudOperations {
 
     // ------------------------------------------------------ update
 
-    /** Updates the specified form and verifies the changes. */
+    /** Updates the specified attribue of the form with a random value and verifies the changes. */
     public void update(Address address, FormFragment form, String attribute) throws Exception {
         update(address, form, attribute, Random.name());
     }

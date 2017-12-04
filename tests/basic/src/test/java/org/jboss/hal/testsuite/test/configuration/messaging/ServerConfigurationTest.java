@@ -39,9 +39,11 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.resources.Ids.ITEM;
-import static org.jboss.hal.resources.Ids.MESSAGING_SERVER;
-import static org.jboss.hal.resources.Ids.TAB;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.GROUP;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MANAGEMENT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.resources.Ids.*;
 import static org.jboss.hal.testsuite.Message.valueMustBeMasked;
 import static org.jboss.hal.testsuite.Message.valueMustBeUnmasked;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
@@ -73,13 +75,13 @@ public class ServerConfigurationTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(SERVER, SRV_UPDATE);
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
     }
 
     // --------------- attributes tab
 
     @Test
     public void attributesConnectionTTLOverride() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, ATTRIBUTES, TAB));
         FormFragment form = page.getAttributesForm();
 
@@ -88,6 +90,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void attributesPersistenceEnabled() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, ATTRIBUTES, TAB));
         FormFragment form = page.getAttributesForm();
 
@@ -97,6 +100,7 @@ public class ServerConfigurationTest {
     // --------------- management tab
     @Test
     public void managementMaskJmxDomain() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
         String message = valueMustBeMasked(JMX_DOMAIN, form.value(JMX_DOMAIN));
@@ -105,6 +109,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void managementUnmaskJmxDomain() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
         form.showSensitive(JMX_DOMAIN);
@@ -115,6 +120,7 @@ public class ServerConfigurationTest {
     // --------------- security tab
     @Test
     public void securityUpdateElytronDomain() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, SECURITY, TAB));
         FormFragment form = page.getSecurityForm();
 
@@ -124,6 +130,7 @@ public class ServerConfigurationTest {
     // --------------- journal tab
     @Test
     public void updateJournal() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
         FormFragment form = page.getJournalForm();
         String table = Random.name();
@@ -134,6 +141,7 @@ public class ServerConfigurationTest {
     // --------------- cluster tab
     @Test
     public void clusterPassword() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "cluster", TAB));
         FormFragment form = page.getClusterForm();
         String passwd = Random.name();
@@ -144,6 +152,7 @@ public class ServerConfigurationTest {
     // --------------- cluster credential reference tab
     @Test
     public void clusterCredentialReferenceAddInvalid() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
@@ -158,6 +167,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void clusterCredentialReferenceAddSuccess() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
@@ -175,14 +185,191 @@ public class ServerConfigurationTest {
     }
 
     @Test
-    public void clusterCredentialReferenceRemove() throws Exception {
+    public void clusterCredentialReferenceEditInvalid() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();
-        form.remove();
+        crudOperations.updateWithError(form, f ->
+                        f.text(ALIAS, Random.name())
+                , STORE);
+    }
 
-        console.verifySuccess();
-        new ResourceVerifier(serverAddress(SRV_UPDATE), client)
-                .verifyAttributeIsUndefined(CLUSTER_CREDENTIAL_REFERENCE);
+    @Test
+    public void clusterCredentialReferenceRemove() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
+        FormFragment form = page.getClusterCredentialReferenceForm();
+        crudOperations.deleteSingleton(serverAddress(SRV_UPDATE), form,
+                resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CLUSTER_CREDENTIAL_REFERENCE));
+    }
+
+    // --------------- directory / Binding
+
+    @Test
+    public void bindingDirectory1Update() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_BINDING_DIRECTORY, ITEM));
+
+        FormFragment form = page.getBindingDirectoryForm();
+        crudOperations.update(serverPathAddress(SRV_UPDATE, BINDINGS_DIRECTORY), form, PATH);
+    }
+
+    @Test
+    public void bindingDirectory2Reset() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_BINDING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getBindingDirectoryForm();
+        crudOperations.reset(serverPathAddress(SRV_UPDATE, BINDINGS_DIRECTORY), form);
+    }
+
+    @Test
+    public void bindingDirectory3Remove() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_BINDING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getBindingDirectoryForm();
+        crudOperations.deleteSingleton(serverPathAddress(SRV_UPDATE, BINDINGS_DIRECTORY), form);
+    }
+
+    @Test
+    public void bindingDirectory4Add() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_BINDING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getBindingDirectoryForm();
+        crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, BINDINGS_DIRECTORY), form);
+    }
+
+    // --------------- directory / Journal
+
+    @Test
+    public void journalDirectory1Update() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_JOURNAL_DIRECTORY, ITEM));
+
+        FormFragment form = page.getJournalDirectoryForm();
+        crudOperations.update(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), form, PATH);
+    }
+
+    @Test
+    public void journalDirectory2Reset() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_JOURNAL_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getJournalDirectoryForm();
+        crudOperations.reset(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), form);
+    }
+
+    @Test
+    public void journalDirectory3Remove() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_JOURNAL_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getJournalDirectoryForm();
+        crudOperations.deleteSingleton(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), form);
+    }
+
+    @Test
+    public void journalDirectory4Add() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_JOURNAL_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getJournalDirectoryForm();
+        crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), form);
+    }
+
+
+    // --------------- directory / Large Messages
+
+    @Test
+    public void largeMessagesDirectory1Update() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_LARGE_MESSAGES_DIRECTORY, ITEM));
+
+        FormFragment form = page.getLargeMessagesDirectoryForm();
+        crudOperations.update(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), form, PATH);
+    }
+
+    @Test
+    public void largeMessagesDirectory2Reset() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_LARGE_MESSAGES_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getLargeMessagesDirectoryForm();
+        crudOperations.reset(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), form);
+    }
+
+    @Test
+    public void largeMessagesDirectory3Remove() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_LARGE_MESSAGES_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getLargeMessagesDirectoryForm();
+        crudOperations.deleteSingleton(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), form);
+    }
+
+    @Test
+    public void largeMessagesDirectory4Add() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_LARGE_MESSAGES_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getLargeMessagesDirectoryForm();
+        crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), form);
+    }
+
+    // --------------- directory / Paging
+
+    @Test
+    public void pagingDirectory1Update() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_PAGING_DIRECTORY, ITEM));
+
+        FormFragment form = page.getPagingDirectoryForm();
+        crudOperations.update(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), form, PATH);
+    }
+
+    @Test
+    public void pagingDirectory2Reset() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_PAGING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getPagingDirectoryForm();
+        crudOperations.reset(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), form);
+    }
+
+    @Test
+    public void pagingDirectory3Remove() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_PAGING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getPagingDirectoryForm();
+        crudOperations.deleteSingleton(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), form);
+    }
+
+    @Test
+    public void pagingDirectory4Add() throws Exception {
+        console.verticalNavigation()
+                .selectSecondary(MESSAGING_SERVER_DIRECTORY_ITEM,
+                        Ids.build(MESSAGING_SERVER_PAGING_DIRECTORY, Ids.ITEM));
+
+        FormFragment form = page.getPagingDirectoryForm();
+        crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), form);
     }
 
 
