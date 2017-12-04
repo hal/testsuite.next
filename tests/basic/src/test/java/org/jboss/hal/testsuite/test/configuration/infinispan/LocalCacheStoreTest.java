@@ -98,7 +98,7 @@ public class LocalCacheStoreTest {
     }
 
     @Test
-    public void readFileStore() throws Exception {
+    public void readFileStore() {
         PagesFragment pages = page.getLocalCachePages();
 
         table.action(LC_FILE_STORE, Names.STORE);

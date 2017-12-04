@@ -20,9 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
@@ -58,6 +58,7 @@ public class CacheContainerConfigurationTest {
 
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private CacheContainerPage page;
     private FormFragment form;
 
@@ -69,28 +70,20 @@ public class CacheContainerConfigurationTest {
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         assertEquals(HeaderBreadcrumbFragment.abbreviate(CC_UPDATE), console.header().breadcrumb().lastValue());
     }
 
     @Test
     public void update() throws Exception {
         String aliases = Random.name();
-        form.edit();
-        form.list(ALIASES).add(aliases);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
-                .verifyListAttributeContainsValue(ALIASES, aliases);
+        crud.update(cacheContainerAddress(CC_UPDATE), form,
+                f -> f.list(ALIASES).add(aliases),
+                resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(ALIASES, aliases));
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(cacheContainerAddress(CC_UPDATE), client)
-                .verifyReset();
+        crud.reset(cacheContainerAddress(CC_UPDATE), form);
     }
 }

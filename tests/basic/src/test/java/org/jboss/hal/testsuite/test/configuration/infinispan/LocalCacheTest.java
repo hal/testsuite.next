@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
@@ -63,6 +62,7 @@ public class LocalCacheTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private CacheContainerPage page;
     private TableFragment table;
     private TabsFragment tabs;
@@ -79,12 +79,7 @@ public class LocalCacheTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, LC_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(localCacheAddress(CC_UPDATE, LC_CREATE), client).verifyExists();
+        crud.create(localCacheAddress(CC_UPDATE, LC_CREATE), table, LC_CREATE);
     }
 
     // ------------------------------------------------------ attributes
@@ -96,26 +91,24 @@ public class LocalCacheTest {
         FormFragment form = page.getLocalCacheForm();
 
         String jndiName = Random.jndiName();
-        form.edit();
-        form.text(JNDI_NAME, jndiName);
-        form.flip(STATISTICS_ENABLED, true);
-        form.save();
+        crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE), form,
+                f -> {
+                    f.text(JNDI_NAME, jndiName);
+                    f.flip(STATISTICS_ENABLED, true);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(JNDI_NAME, jndiName);
+                    resourceVerifier.verifyAttribute(STATISTICS_ENABLED, true);
 
-        console.verifySuccess();
-        new ResourceVerifier(localCacheAddress(CC_UPDATE, LC_UPDATE), client)
-                .verifyAttribute(JNDI_NAME, jndiName)
-                .verifyAttribute(STATISTICS_ENABLED, true);
+                });
     }
 
     @Test
     public void resetAttributes() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
-        page.getLocalCacheForm().reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(localCacheAddress(CC_UPDATE, LC_RESET), client)
-                .verifyReset();
+        FormFragment form = page.getLocalCacheForm();
+        crud.reset(localCacheAddress(CC_UPDATE, LC_RESET), form);
     }
 
     // ------------------------------------------------------ eviction
@@ -126,37 +119,31 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
         FormFragment form = page.getEvictionForm();
 
-        form.edit();
-        form.number(MAX_ENTRIES, 23);
-        form.select(STRATEGY, "LRU");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), client)
-                .verifyAttribute(MAX_ENTRIES, 23L)
-                .verifyAttribute(STRATEGY, "LRU");
+        crud.update(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), form,
+                f -> {
+                    f.number(MAX_ENTRIES, 23);
+                    f.select(STRATEGY, "LRU");
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(MAX_ENTRIES, 23L);
+                    resourceVerifier.verifyAttribute(STRATEGY, "LRU");
+                });
     }
 
     @Test
     public void resetEviction() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        page.getEvictionForm().reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_RESET, EVICTION), client)
-                .verifyReset();
+        FormFragment form = page.getEvictionForm();
+        crud.reset(componentAddress(CC_UPDATE, LC_RESET, EVICTION), form);
     }
 
     @Test
     public void removeEviction() throws Exception {
         table.select(LC_REMOVE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        page.getEvictionForm().remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_REMOVE, EVICTION), client)
-                .verifyDoesNotExist();
+        FormFragment form = page.getEvictionForm();
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, EVICTION), form);
     }
 
     // ------------------------------------------------------ expiration
@@ -167,39 +154,33 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
         FormFragment form = page.getExpirationForm();
 
-        form.edit();
-        form.number(INTERVAL, 1);
-        form.number(LIFESPAN, 2);
-        form.number(MAX_IDLE, 3);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), client)
-                .verifyAttribute(INTERVAL, 1L)
-                .verifyAttribute(LIFESPAN, 2L)
-                .verifyAttribute(MAX_IDLE, 3L);
+        crud.update(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), form,
+                f -> {
+                    f.number(INTERVAL, 1);
+                    f.number(LIFESPAN, 2);
+                    f.number(MAX_IDLE, 3);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(INTERVAL, 1L);
+                    resourceVerifier.verifyAttribute(LIFESPAN, 2L);
+                    resourceVerifier.verifyAttribute(MAX_IDLE, 3L);
+                });
     }
 
     @Test
     public void resetExpiration() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
-        page.getExpirationForm().reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_RESET, EXPIRATION), client)
-                .verifyReset();
+        FormFragment form = page.getExpirationForm();
+        crud.reset(componentAddress(CC_UPDATE, LC_RESET, EXPIRATION), form);
     }
 
     @Test
     public void removeExpiration() throws Exception {
         table.select(LC_REMOVE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
-        page.getExpirationForm().remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_REMOVE, EXPIRATION), client)
-                .verifyDoesNotExist();
+        FormFragment form = page.getExpirationForm();
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, EXPIRATION), form);
     }
 
     // ------------------------------------------------------ locking
@@ -210,39 +191,33 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
         FormFragment form = page.getLockingForm();
 
-        form.edit();
-        form.number(ACQUIRE_TIMEOUT, 1);
-        form.number(CONCURRENCY_LEVEL, 100);
-        form.select(ISOLATION, "NONE");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), client)
-                .verifyAttribute(ACQUIRE_TIMEOUT, 1L)
-                .verifyAttribute(CONCURRENCY_LEVEL, 100)
-                .verifyAttribute(ISOLATION, "NONE");
+        crud.update(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), form,
+                f -> {
+                    f.number(ACQUIRE_TIMEOUT, 1);
+                    f.number(CONCURRENCY_LEVEL, 100);
+                    f.select(ISOLATION, "NONE");
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(ACQUIRE_TIMEOUT, 1L);
+                    resourceVerifier.verifyAttribute(CONCURRENCY_LEVEL, 100);
+                    resourceVerifier.verifyAttribute(ISOLATION, "NONE");
+                });
     }
 
     @Test
     public void resetLocking() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
-        page.getLockingForm().reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_RESET, LOCKING), client)
-                .verifyReset();
+        FormFragment form = page.getLockingForm();
+        crud.reset(componentAddress(CC_UPDATE, LC_RESET, LOCKING), form);
     }
 
     @Test
     public void removeLocking() throws Exception {
         table.select(LC_REMOVE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
-        page.getLockingForm().remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_REMOVE, LOCKING), client)
-                .verifyDoesNotExist();
+        FormFragment form = page.getLockingForm();
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, LOCKING), form);
     }
 
     // ------------------------------------------------------ transaction
@@ -253,36 +228,30 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
         FormFragment form = page.getTransactionForm();
 
-        form.edit();
-        form.select(LOCKING, "OPTIMISTIC");
-        form.select(MODE, "BATCH");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), client)
-                .verifyAttribute(LOCKING, "OPTIMISTIC")
-                .verifyAttribute(MODE, "BATCH");
+        crud.update(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), form,
+                f -> {
+                    f.select(LOCKING, "OPTIMISTIC");
+                    f.select(MODE, "BATCH");
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(LOCKING, "OPTIMISTIC");
+                    resourceVerifier.verifyAttribute(MODE, "BATCH");
+                });
     }
 
     @Test
     public void resetTransaction() throws Exception {
         table.select(LC_RESET);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
-        page.getTransactionForm().reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_RESET, TRANSACTION), client)
-                .verifyReset();
+        FormFragment form = page.getTransactionForm();
+        crud.reset(componentAddress(CC_UPDATE, LC_RESET, TRANSACTION), form);
     }
 
     @Test
     public void removeTransaction() throws Exception {
         table.select(LC_REMOVE);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
-        page.getTransactionForm().remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(componentAddress(CC_UPDATE, LC_REMOVE, TRANSACTION), client)
-                .verifyDoesNotExist();
+        FormFragment form = page.getTransactionForm();
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, TRANSACTION), form);
     }
 }

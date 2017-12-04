@@ -85,12 +85,12 @@ public class CacheContainerFinderTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertTrue(column.containsItem(Ids.cacheContainer(CC_READ)));
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(Ids.cacheContainer(CC_READ));
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
                 configurationSubsystemPath(INFINISPAN)
@@ -99,7 +99,7 @@ public class CacheContainerFinderTest {
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(Ids.cacheContainer(CC_READ)).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.CACHE_CONTAINER)
