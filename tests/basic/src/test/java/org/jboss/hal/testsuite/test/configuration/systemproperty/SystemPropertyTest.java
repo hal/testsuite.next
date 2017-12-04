@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SystemPropertyPage;
@@ -61,8 +60,9 @@ public class SystemPropertyTest {
         operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
     }
 
-    @Page private SystemPropertyPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private SystemPropertyPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -77,41 +77,26 @@ public class SystemPropertyTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, CREATE_NAME);
-        dialog.getForm().text(VALUE, CREATE_VALUE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(systemPropertyAddress(CREATE_NAME), client)
-                .verifyExists();
+        crud.create(systemPropertyAddress(CREATE_NAME), table, form -> {
+            form.text(NAME, CREATE_NAME);
+            form.text(VALUE, CREATE_VALUE);
+            });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(READ_NAME);
         assertEquals(READ_VALUE, form.value(VALUE));
     }
 
     @Test
     public void update() throws Exception {
-        String value = Random.name();
         table.select(UPDATE_NAME);
-        form.edit();
-        form.text(VALUE, value);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(systemPropertyAddress(UPDATE_NAME), client)
-                .verifyAttribute(VALUE, value);
-
+        crud.update(systemPropertyAddress(UPDATE_NAME), form, VALUE, Random.name());
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(DELETE_NAME);
-
-        console.verifySuccess();
-        new ResourceVerifier(systemPropertyAddress(DELETE_NAME), client).verifyDoesNotExist();
+        crud.delete(systemPropertyAddress(DELETE_NAME), table, DELETE_NAME);
     }
 }
