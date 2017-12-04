@@ -24,9 +24,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.DataSourcePage;
 import org.junit.AfterClass;
@@ -124,16 +122,12 @@ public class DataSourceConfigurationTest {
     public void credentialReference() throws Exception {
         page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "credential-reference", Ids.TAB));
         form = page.getCredentialReferenceForm();
-        form.emptyState().mainAction();
-
         String clearText = Random.name();
-        AddResourceDialogFragment dialog = console.addResourceDialog();
-        dialog.getForm().text(CLEAR_TEXT, clearText);
-        dialog.add();
 
-        console.verifySuccess();
-        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), DataSourceConfigurationTest.client)
-                .verifyAttribute(CredentialReference.fqName(CLEAR_TEXT), clearText);
+        crud.createSingleton(dataSourceAddress(DATA_SOURCE_UPDATE), form,
+                f -> f.text(CLEAR_TEXT, clearText),
+                resourceVerifier -> resourceVerifier.verifyAttribute(CredentialReference.fqName(CLEAR_TEXT),
+                        clearText));
     }
 
     @Test

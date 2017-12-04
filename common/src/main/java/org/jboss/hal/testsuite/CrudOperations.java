@@ -38,23 +38,48 @@ public class CrudOperations {
 
     // ------------------------------------------------------ create
 
-    /** Adds a resource using the 'Add' button of the specified table */
+    /** Adds a resource using the 'Add' button of the specified table. */
     public void create(Address address, TableFragment table, String name) throws Exception {
         create(address, table, form -> form.text(NAME, name));
     }
 
-    /** Adds a resource using the 'Add' button of the specified table */
+    /** Adds a resource using the 'Add' button of the specified table. */
     public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues)
             throws Exception {
         create(address, table, initialValues, ResourceVerifier::verifyExists);
     }
 
-    /** Adds a resource using the 'Add' button of the specified table */
+    /** Adds a resource using the 'Add' button of the specified table. */
     public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues,
             VerifyChanges verifyChanges) throws Exception {
         AddResourceDialogFragment dialog = table.add();
         initialValues.accept(dialog.getForm());
         dialog.add();
+
+        console.verifySuccess();
+        verifyChanges.verify(new ResourceVerifier(address, client));
+    }
+
+    /** Adds a singleton resource using the main action of an empty state. */
+    public void createSingleton(Address address, FormFragment form) throws Exception {
+        createSingleton(address, form, null);
+    }
+
+    /** Adds a singleton resource using the main action of an empty state and the specified initial form values. */
+    public void createSingleton(Address address, FormFragment form, Consumer<FormFragment> initialValues)
+            throws Exception {
+        createSingleton(address, form, initialValues, ResourceVerifier::verifyExists);
+    }
+
+    /** Adds a singleton resource using the main action of an empty state and the specified initial form values. */
+    public void createSingleton(Address address, FormFragment form, Consumer<FormFragment> initialValues,
+            VerifyChanges verifyChanges) throws Exception {
+        form.emptyState().mainAction();
+        if (initialValues != null) {
+            AddResourceDialogFragment dialog = console.addResourceDialog();
+            initialValues.accept(dialog.getForm()); // use the form of add resource dialog!
+            dialog.add();
+        }
 
         console.verifySuccess();
         verifyChanges.verify(new ResourceVerifier(address, client));

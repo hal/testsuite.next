@@ -20,8 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JcaPage;
 import org.junit.Before;
@@ -40,8 +40,9 @@ public class ModifyTracerTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JcaPage page;
     private FormFragment form;
 
     @BeforeClass
@@ -61,20 +62,11 @@ public class ModifyTracerTest {
     @Test
     @SuppressWarnings("Duplicates")
     public void update() throws Exception {
-        form.edit();
-        form.flip(ENABLED, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyAttribute(ENABLED, true);
+        crud.update(TRACER_ADDRESS, form, ENABLED, true);
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyReset();
+        crud.reset(TRACER_ADDRESS, form);
     }
 }

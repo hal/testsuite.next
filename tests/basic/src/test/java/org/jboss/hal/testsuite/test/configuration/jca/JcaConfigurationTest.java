@@ -20,8 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JcaPage;
@@ -56,8 +56,9 @@ public class JcaConfigurationTest {
         client.apply(backup.restore());
     }
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JcaPage page;
     private FormFragment form;
 
     @Before
@@ -70,71 +71,41 @@ public class JcaConfigurationTest {
     public void updateCachedConnectionManager() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_CCM_TAB);
         form = page.getCachedConnectionManagerForm();
-        form.edit();
-        form.flip(DEBUG, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(CACHED_CONNECTION_MANAGER_ADDRESS, client)
-                .verifyAttribute(DEBUG, true);
+        crud.update(CACHED_CONNECTION_MANAGER_ADDRESS, form, DEBUG, true);
     }
 
     @Test
     public void resetCachedConnectionManager() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_CCM_TAB);
         form = page.getCachedConnectionManagerForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(CACHED_CONNECTION_MANAGER_ADDRESS, client)
-                .verifyReset();
+        crud.reset(CACHED_CONNECTION_MANAGER_ADDRESS, form);
     }
 
     @Test
     public void updateArchiveValidation() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_ARCHIVE_VALIDATION_TAB);
         form = page.getArchiveValidationForm();
-        form.edit();
-        form.flip(ENABLED, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(ARCHIVE_VALIDATION_ADDRESS, client)
-                .verifyAttribute(ENABLED, false);
+        crud.update(ARCHIVE_VALIDATION_ADDRESS, form, ENABLED, false);
     }
 
     @Test
     public void resetArchiveValidation() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_ARCHIVE_VALIDATION_TAB);
         form = page.getArchiveValidationForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(ARCHIVE_VALIDATION_ADDRESS, client)
-                .verifyReset();
+        crud.reset(ARCHIVE_VALIDATION_ADDRESS, form);
     }
 
     @Test
     public void updateBeanValidation() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_BEAN_VALIDATION_TAB);
         form = page.getBeanValidationForm();
-        form.edit();
-        form.flip(ENABLED, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(BEAN_VALIDATION_ADDRESS, client)
-                .verifyAttribute(ENABLED, false);
+        crud.update(BEAN_VALIDATION_ADDRESS, form, ENABLED, false);
     }
 
     @Test
     public void resetBeanValidation() throws Exception {
         page.getConfigurationTabs().select(Ids.JCA_BEAN_VALIDATION_TAB);
         form = page.getBeanValidationForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(BEAN_VALIDATION_ADDRESS, client)
-                .verifyReset();
+        crud.reset(BEAN_VALIDATION_ADDRESS, form);
     }
 }

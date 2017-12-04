@@ -20,8 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JcaPage;
 import org.junit.Before;
@@ -41,8 +41,9 @@ public class CreateTracerTest {
     private static final Operations operations = new Operations(client);
     private static final Administration administration = new Administration(client);
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JcaPage page;
     private FormFragment form;
 
     @BeforeClass
@@ -61,10 +62,6 @@ public class CreateTracerTest {
     @Test
     public void create() throws Exception {
         console.verticalNavigation().selectPrimary(Ids.JCA_TRACER_ITEM);
-        form.emptyState().mainAction();
-
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyExists();
+        crud.createSingleton(TRACER_ADDRESS, form);
     }
 }

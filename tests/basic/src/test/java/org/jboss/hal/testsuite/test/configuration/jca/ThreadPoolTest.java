@@ -21,9 +21,8 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
@@ -77,8 +76,9 @@ public class ThreadPoolTest {
         operations.removeIfExists(workmanagerAddress(WM_THREAD_POOL_DELETE));
     }
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JcaPage page;
     private TableFragment wmTable;
     private TableFragment tpTable;
     private TabsFragment tpTabs;
@@ -103,30 +103,24 @@ public class ThreadPoolTest {
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
         String lrtName = threadPoolName(WM_THREAD_POOL_CREATE, LRT);
-        AddResourceDialogFragment dialog = tpTable.add();
-        dialog.getForm().text(NAME, lrtName);
-        dialog.getForm().number(MAX_THREADS, 10);
-        dialog.getForm().number(QUEUE_LENGTH, 5);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(longRunningAddress(WM_THREAD_POOL_CREATE, lrtName), client)
-                .verifyExists();
+        crud.create(longRunningAddress(WM_THREAD_POOL_CREATE, lrtName), tpTable,
+                form -> {
+                    form.text(NAME, lrtName);
+                    form.number(MAX_THREADS, 10);
+                    form.number(QUEUE_LENGTH, 5);
+                });
 
         String srtName = threadPoolName(WM_THREAD_POOL_CREATE, SRT);
-        dialog = tpTable.add();
-        dialog.getForm().text(NAME, srtName);
-        dialog.getForm().number(MAX_THREADS, 10);
-        dialog.getForm().number(QUEUE_LENGTH, 5);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(shortRunningAddress(WM_THREAD_POOL_CREATE, srtName), client)
-                .verifyExists();
+        crud.create(shortRunningAddress(WM_THREAD_POOL_CREATE, srtName), tpTable,
+                form -> {
+                    form.text(NAME, srtName);
+                    form.number(MAX_THREADS, 10);
+                    form.number(QUEUE_LENGTH, 5);
+                });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         wmTable.action(WM_THREAD_POOL_READ, Names.THREAD_POOLS);
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
@@ -149,24 +143,12 @@ public class ThreadPoolTest {
         String lrtName = threadPoolName(WM_THREAD_POOL_UPDATE, LRT);
         tpTable.select(lrtName);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_ATTRIBUTES_TAB));
-        tpAttributesForm.edit();
-        tpAttributesForm.flip(ALLOW_CORE_TIMEOUT, true);
-        tpAttributesForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(longRunningAddress(WM_THREAD_POOL_UPDATE, lrtName), client)
-                .verifyAttribute(ALLOW_CORE_TIMEOUT, true);
+        crud.update(longRunningAddress(WM_THREAD_POOL_UPDATE, lrtName), tpAttributesForm, ALLOW_CORE_TIMEOUT, true);
 
         String srtName = threadPoolName(WM_THREAD_POOL_UPDATE, SRT);
         tpTable.select(srtName);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_SIZING_TAB));
-        tpSizingForm.edit();
-        tpSizingForm.number(MAX_THREADS, 111);
-        tpSizingForm.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(shortRunningAddress(WM_THREAD_POOL_UPDATE, srtName), client)
-                .verifyAttribute(MAX_THREADS, 111);
+        crud.update(shortRunningAddress(WM_THREAD_POOL_UPDATE, srtName), tpSizingForm, MAX_THREADS, 111);
     }
 
     @Test
@@ -175,15 +157,9 @@ public class ThreadPoolTest {
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
         String lrtName = threadPoolName(WM_THREAD_POOL_DELETE, LRT);
-        tpTable.remove(lrtName);
-        console.verifySuccess();
-        new ResourceVerifier(longRunningAddress(WM_THREAD_POOL_DELETE, lrtName), client)
-                .verifyDoesNotExist();
+        crud.delete(longRunningAddress(WM_THREAD_POOL_DELETE, lrtName), tpTable, lrtName);
 
         String srtName = threadPoolName(WM_THREAD_POOL_DELETE, SRT);
-        tpTable.remove(srtName);
-        console.verifySuccess();
-        new ResourceVerifier(shortRunningAddress(WM_THREAD_POOL_DELETE, srtName), client)
-                .verifyDoesNotExist();
+        crud.delete(shortRunningAddress(WM_THREAD_POOL_DELETE, srtName), tpTable, srtName);
     }
 }

@@ -20,8 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JcaPage;
 import org.junit.Before;
@@ -39,8 +39,9 @@ public class RemoveTracerTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    @Page private JcaPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private JcaPage page;
     private FormFragment form;
 
     @BeforeClass
@@ -59,9 +60,6 @@ public class RemoveTracerTest {
 
     @Test
     public void delete() throws Exception {
-        form.remove();
-        console.verifySuccess();
-        new ResourceVerifier(TRACER_ADDRESS, client)
-                .verifyDoesNotExist();
+        crud.deleteSingleton(TRACER_ADDRESS, form);
     }
 }
