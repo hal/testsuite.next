@@ -20,8 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JmxPage;
@@ -56,6 +56,7 @@ public class JmxTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private JmxPage page;
     private FormFragment form;
 
@@ -70,24 +71,14 @@ public class JmxTest {
     public void updateConfiguration() throws Exception {
         console.verticalNavigation().selectPrimary(Ids.JMX_CONFIGURATION_ITEM);
         form = page.getConfigurationForm();
-        form.edit();
-        form.flip(NON_CORE_MBEAN_SENSITIVITY, true);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(NON_CORE_MBEAN_SENSITIVITY, true);
+        crud.update(SUBSYSTEM_ADDRESS, form, NON_CORE_MBEAN_SENSITIVITY, true);
     }
 
     @Test
     public void resetConfiguration() throws Exception {
         console.verticalNavigation().selectPrimary(Ids.JMX_CONFIGURATION_ITEM);
         form = page.getConfigurationForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyReset();
+        crud.reset(SUBSYSTEM_ADDRESS, form);
     }
 
     // ------------------------------------------------------ audit log
@@ -100,11 +91,7 @@ public class JmxTest {
 
         console.verticalNavigation().selectPrimary(Ids.JMX_AUDIT_LOG_ITEM);
         form = page.getAuditForm();
-        form.emptyState().mainAction();
-
-        console.verifySuccess();
-        new ResourceVerifier(AUDIT_LOG_ADDRESS, client)
-                .verifyExists();
+        crud.createSingleton(AUDIT_LOG_ADDRESS, form);
     }
 
     @Test
@@ -115,13 +102,7 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_AUDIT_LOG_ITEM);
         form = page.getAuditForm();
-        form.edit();
-        form.flip(ENABLED, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(AUDIT_LOG_ADDRESS, client)
-                .verifyAttribute(ENABLED, false);
+        crud.update(AUDIT_LOG_ADDRESS, form, ENABLED, false);
     }
 
     @Test
@@ -132,11 +113,7 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_AUDIT_LOG_ITEM);
         form = page.getAuditForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(AUDIT_LOG_ADDRESS, client)
-                .verifyReset();
+        crud.reset(AUDIT_LOG_ADDRESS, form);
     }
 
     @Test
@@ -147,11 +124,7 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_AUDIT_LOG_ITEM);
         form = page.getAuditForm();
-        form.remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(AUDIT_LOG_ADDRESS, client)
-                .verifyDoesNotExist();
+        crud.deleteSingleton(AUDIT_LOG_ADDRESS, form);
     }
 
     // ------------------------------------------------------ remoting connector
@@ -164,11 +137,7 @@ public class JmxTest {
 
         console.verticalNavigation().selectPrimary(Ids.JMX_REMOTING_CONNECTOR_ITEM);
         form = page.getRemotingConnectorForm();
-        form.emptyState().mainAction();
-
-        console.verifySuccess();
-        new ResourceVerifier(REMOTING_CONNECTOR_ADDRESS, client)
-                .verifyExists();
+        crud.createSingleton(REMOTING_CONNECTOR_ADDRESS, form);
     }
 
     @Test
@@ -179,13 +148,7 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_REMOTING_CONNECTOR_ITEM);
         form = page.getRemotingConnectorForm();
-        form.edit();
-        form.flip(USE_MANAGEMENT_ENDPOINT, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(REMOTING_CONNECTOR_ADDRESS, client)
-                .verifyAttribute(USE_MANAGEMENT_ENDPOINT, false);
+        crud.update(REMOTING_CONNECTOR_ADDRESS, form, USE_MANAGEMENT_ENDPOINT, false);
     }
 
     @Test
@@ -196,11 +159,7 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_REMOTING_CONNECTOR_ITEM);
         form = page.getRemotingConnectorForm();
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(REMOTING_CONNECTOR_ADDRESS, client)
-                .verifyReset();
+        crud.reset(REMOTING_CONNECTOR_ADDRESS, form);
     }
 
     @Test
@@ -211,10 +170,6 @@ public class JmxTest {
         }
         console.verticalNavigation().selectPrimary(Ids.JMX_REMOTING_CONNECTOR_ITEM);
         form = page.getRemotingConnectorForm();
-        form.remove();
-
-        console.verifySuccess();
-        new ResourceVerifier(REMOTING_CONNECTOR_ADDRESS, client)
-                .verifyDoesNotExist();
+        crud.deleteSingleton(REMOTING_CONNECTOR_ADDRESS, form);
     }
 }
