@@ -18,9 +18,8 @@ package org.jboss.hal.testsuite.test.configuration.jpa;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.JpaPage;
@@ -53,7 +52,7 @@ public class JpaTest {
         client.apply(backup.restore());
     }
 
-    @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private JpaPage page;
     private FormFragment form;
 
@@ -65,20 +64,14 @@ public class JpaTest {
 
     @Test
     public void update() throws Exception {
-        form.edit();
-        form.select(DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE, SHALLOW);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE, SHALLOW);
+        crud.update(SUBSYSTEM_ADDRESS, form,
+                f -> f.select(DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE, SHALLOW),
+                resourceVerifier -> resourceVerifier.verifyAttribute(DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE,
+                        SHALLOW));
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyReset();
+        crud.reset(SUBSYSTEM_ADDRESS, form);
     }
 }
