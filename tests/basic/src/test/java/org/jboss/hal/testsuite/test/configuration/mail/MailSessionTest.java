@@ -20,9 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.MailPage;
 import org.junit.AfterClass;
@@ -57,6 +57,7 @@ public class MailSessionTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private MailPage page;
     private FormFragment form;
 
@@ -69,20 +70,11 @@ public class MailSessionTest {
 
     @Test
     public void edit() throws Exception {
-        form.edit();
-        form.text(FROM, "foo@bar.com");
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(sessionAddress(SESSION_UPDATE), client)
-                .verifyAttribute(FROM, "foo@bar.com");
+        crud.update(sessionAddress(SESSION_UPDATE), form, FROM, "foo@bar.com");
     }
 
     @Test
     public void reset() throws Exception {
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(sessionAddress(SESSION_UPDATE), client)
-                .verifyReset();
+        crud.reset(sessionAddress(SESSION_UPDATE), form);
     }
 }

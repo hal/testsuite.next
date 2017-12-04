@@ -22,7 +22,6 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.MailPage;
@@ -32,6 +31,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
@@ -81,7 +81,7 @@ public class MailServerCredRefTest extends CredentialReferenceTest {
     }
 
     @Override
-    protected ResourceVerifier resourceVerifier() {
-        return new ResourceVerifier(serverAddress(SESSION_UPDATE, SMTP), client);
+    protected Address address() {
+        return serverAddress(SESSION_UPDATE, SMTP);
     }
 }

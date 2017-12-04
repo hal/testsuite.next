@@ -17,13 +17,13 @@ package org.jboss.hal.testsuite.test.configuration;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ALIAS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
@@ -35,43 +35,37 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 @FixMethodOrder(NAME_ASCENDING)
 public abstract class CredentialReferenceTest {
 
-    @Inject private Console console;
+    @Inject private CrudOperations crud;
 
     protected abstract FormFragment form();
 
-    protected abstract ResourceVerifier resourceVerifier();
+    protected abstract Address address();
 
     @Test
     public void updateAliasWithoutStore() {
-        form().edit();
-        form().clear(STORE);
-        form().text(ALIAS, Random.name());
-        form().clear(CLEAR_TEXT);
-
-        form().trySave();
-        form().expectError(STORE);
+        crud.updateWithError(form(), f -> {
+            f.clear(STORE);
+            f.text(ALIAS, Random.name());
+            f.clear(CLEAR_TEXT);
+        }, STORE);
     }
 
     @Test
     public void updateStoreWithoutAlias() {
-        form().edit();
-        form().text(STORE, Random.name());
-        form().clear(ALIAS);
-        form().clear(CLEAR_TEXT);
-
-        form().trySave();
-        form().expectError(ALIAS);
+        crud.updateWithError(form(), f -> {
+            f.text(STORE, Random.name());
+            f.clear(ALIAS);
+            f.clear(CLEAR_TEXT);
+        }, ALIAS);
     }
 
     @Test
     public void updateStoreAndClearText() {
-        form().edit();
-        form().text(STORE, Random.name());
-        form().text(ALIAS, Random.name());
-        form().text(CLEAR_TEXT, Random.name());
-        form().trySave();
-        form().expectError(STORE);
-        form().expectError(CLEAR_TEXT);
+        crud.updateWithError(form(), f -> {
+            f.text(STORE, Random.name());
+            f.text(ALIAS, Random.name());
+            f.text(CLEAR_TEXT, Random.name());
+        }, STORE, CLEAR_TEXT);
     }
 
     @Test
@@ -79,36 +73,35 @@ public abstract class CredentialReferenceTest {
         String store = Ids.build(STORE, Random.name());
         String alias = Ids.build(ALIAS, Random.name());
 
-        form().edit();
-        form().text(STORE, store);
-        form().text(ALIAS, alias);
-        form().clear(CLEAR_TEXT);
-
-        form().save();
-        console.verifySuccess();
-        resourceVerifier()
-                .verifyAttribute(CredentialReference.fqName(STORE), store)
-                .verifyAttribute(CredentialReference.fqName(ALIAS), alias);
+        crud.update(address(), form(),
+                f -> {
+                    f.text(STORE, store);
+                    f.text(ALIAS, alias);
+                    f.clear(CLEAR_TEXT);
+                },
+                resourceVerifier -> {
+                    resourceVerifier.verifyAttribute(CredentialReference.fqName(STORE), store);
+                    resourceVerifier.verifyAttribute(CredentialReference.fqName(ALIAS), alias);
+                });
     }
 
     @Test
     public void updateClearText() throws Exception {
         String clearText = Ids.build(CLEAR_TEXT, Random.name());
 
-        form().edit();
-        form().clear(STORE);
-        form().clear(ALIAS);
-        form().text(CLEAR_TEXT, clearText);
-
-        form().save();
-        console.verifySuccess();
-        resourceVerifier().verifyAttribute(CredentialReference.fqName(CLEAR_TEXT), clearText);
+        crud.update(address(), form(),
+                f -> {
+                    f.clear(STORE);
+                    f.clear(ALIAS);
+                    f.text(CLEAR_TEXT, clearText);
+                },
+                resourceVerifier -> resourceVerifier.verifyAttribute(CredentialReference.fqName(CLEAR_TEXT),
+                        clearText));
     }
 
     @Test
     public void zzzDelete() throws Exception {
-        form().remove();
-        console.verifySuccess();
-        resourceVerifier().verifyAttributeIsUndefined(CREDENTIAL_REFERENCE);
+        crud.deleteSingleton(address(), form(),
+                resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
     }
 }

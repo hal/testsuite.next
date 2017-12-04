@@ -206,9 +206,14 @@ public class CrudOperations {
 
     /** Removes a singleton resource and verifies that the resource no longer exists. */
     public void deleteSingleton(Address address, FormFragment form) throws Exception {
+        deleteSingleton(address, form, ResourceVerifier::verifyDoesNotExist);
+    }
+
+    /** Removes a singleton resource and verifies that the resource no longer exists. */
+    public void deleteSingleton(Address address, FormFragment form, VerifyChanges verifyChanges) throws Exception {
         form.remove();
         console.verifySuccess();
-        new ResourceVerifier(address, client).verifyDoesNotExist();
+        verifyChanges.verify(new ResourceVerifier(address, client));
     }
 
 

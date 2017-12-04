@@ -20,7 +20,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.DataSourcePage;
@@ -32,6 +31,7 @@ import org.junit.Ignore;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
@@ -79,7 +79,7 @@ public class DataSourceCredRefTest extends CredentialReferenceTest {
     }
 
     @Override
-    protected ResourceVerifier resourceVerifier() {
-        return new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client);
+    protected Address address() {
+        return dataSourceAddress(DATA_SOURCE_UPDATE);
     }
 }

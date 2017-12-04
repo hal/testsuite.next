@@ -20,9 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -59,6 +59,7 @@ public class MailServerUpdateTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private MailPage page;
     private TableFragment table;
     private FormFragment form;
@@ -75,30 +76,17 @@ public class MailServerUpdateTest {
     @Test
     public void reset() throws Exception {
         table.select(SMTP.toUpperCase());
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_UPDATE, SMTP), client)
-                .verifyReset();
     }
 
     @Test
     public void update() throws Exception {
         table.select(SMTP.toUpperCase());
-        form.edit();
-        form.text(USERNAME, SECRET);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_UPDATE, SMTP), client)
-                .verifyAttribute(USERNAME, SECRET);
+        crud.update(serverAddress(SESSION_UPDATE, SMTP), form, USERNAME, SECRET);
     }
 
     @Test
     public void updateConflictWithCredRef() {
         table.select(SMTP.toUpperCase());
-        form.edit();
-        form.text(PASSWORD, SECRET);
-        form.trySave();
-        form.expectError(PASSWORD);
+        crud.updateWithError(form, PASSWORD, SECRET);
     }
 }

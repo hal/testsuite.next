@@ -20,10 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.MailPage;
 import org.junit.AfterClass;
@@ -37,7 +36,10 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.MAIL_SMTP;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.SESSION_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.serverAddress;
+import static org.jboss.hal.testsuite.test.configuration.mail.MailFixtures.sessionAddress;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
@@ -58,6 +60,7 @@ public class MailServerCreateTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private MailPage page;
     private TableFragment table;
 
@@ -84,12 +87,7 @@ public class MailServerCreateTest {
     }
 
     private void createServer(String type) throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(serverAddress(SESSION_CREATE, type), client)
-                .verifyExists();
+        crud.create(serverAddress(SESSION_CREATE, type), table,
+                form -> form.text(OUTBOUND_SOCKET_BINDING_REF, MAIL_SMTP));
     }
 }
