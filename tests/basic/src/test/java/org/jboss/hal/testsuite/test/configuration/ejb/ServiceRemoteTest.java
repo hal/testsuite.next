@@ -80,6 +80,6 @@ public class ServiceRemoteTest {
 
     @Test
     public void updateCluster() throws Exception {
-        crud.update(SERVICE_REMOTE_ADDRESS, form, CLUSTER);
+        crud.update(SERVICE_REMOTE_ADDRESS, form, CLUSTER, cluster);
     }
 }

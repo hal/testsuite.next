@@ -20,15 +20,12 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.IIOPPage;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -37,17 +34,13 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.page.configuration.IIOPPage.IIOP_PREFIX;
 import static org.jboss.hal.testsuite.test.configuration.iiop.IIOPFixtures.*;
+import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
 public class IIOPTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-
-    }
 
     @AfterClass
     public static void afterClass() throws Exception {
@@ -65,7 +58,7 @@ public class IIOPTest {
         operations.undefineAttribute(SUBSYSTEM_ADDRESS, SECURITY_DOMAIN);
     }
 
-    @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private IIOPPage page;
     private FormFragment form;
 
@@ -78,163 +71,112 @@ public class IIOPTest {
     public void updateOrbPersistentId() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "orb", Ids.TAB));
         form = page.getOrbForm();
-
-        String persistentServerId = "23";
-        form.edit();
-        form.text(PERSISTENT_SERVER_ID, persistentServerId);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(PERSISTENT_SERVER_ID, persistentServerId);
+        crud.update(SUBSYSTEM_ADDRESS, form, PERSISTENT_SERVER_ID, "23");
     }
 
     @Test
-    public void showOrbSocketBindingSensitive() throws Exception {
+    public void showOrbSocketBindingSensitive() {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "orb", Ids.TAB));
         form = page.getOrbForm();
-
         form.showSensitive(SOCKET_BINDING);
-        String val = form.value(SOCKET_BINDING);
 
-        Assert.assertEquals(val, IIOP);
+        String val = form.value(SOCKET_BINDING);
+        assertEquals(val, IIOP);
     }
 
     @Test
     public void updateNaming() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, NAMING, Ids.TAB));
         form = page.getNamingForm();
-
-        form.edit();
-        form.flip(EXPORT_CORBALOC, false);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(EXPORT_CORBALOC, false);
+        crud.update(SUBSYSTEM_ADDRESS, form, EXPORT_CORBALOC, false);
     }
 
     @Test
     public void resetNaming() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, NAMING, Ids.TAB));
         form = page.getNamingForm();
-
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(EXPORT_CORBALOC, true)
-                .verifyAttribute(ROOT_CONTEXT, DEFAULT_ROOT_CONTEXT);
+        crud.reset(SUBSYSTEM_ADDRESS, form, resourceVerifier -> {
+            resourceVerifier.verifyAttribute(EXPORT_CORBALOC, true);
+            resourceVerifier.verifyAttribute(ROOT_CONTEXT, DEFAULT_ROOT_CONTEXT);
+        });
     }
 
     @Test
     public void updateInitializers() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "initializers", Ids.TAB));
         form = page.getInitializersForm();
-
-        form.edit();
-        form.select(SECURITY, ELYTRON);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(SECURITY, ELYTRON);
+        crud.update(SUBSYSTEM_ADDRESS, form,
+                f -> f.select(SECURITY, ELYTRON),
+                resourceVerifier -> resourceVerifier.verifyAttribute(SECURITY, ELYTRON));
     }
 
     @Test
     public void resetInitializers() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "initializers", Ids.TAB));
         form = page.getInitializersForm();
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(SECURITY, NONE)
-                .verifyAttribute(TRANSACTIONS, NONE);
+        crud.reset(SUBSYSTEM_ADDRESS, form, resourceVerifier -> {
+            resourceVerifier.verifyAttribute(SECURITY, NONE);
+            resourceVerifier.verifyAttribute(TRANSACTIONS, NONE);
+        });
     }
 
     @Test
     public void updateAsContext() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "as-context", Ids.TAB));
         form = page.getAsContextForm();
-
-        form.edit();
-        form.select(AUTH_METHOD, NONE);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(AUTH_METHOD, NONE);
+        crud.update(SUBSYSTEM_ADDRESS, form,
+                f -> f.select(AUTH_METHOD, NONE),
+                resourceVerifier -> resourceVerifier.verifyAttribute(AUTH_METHOD, NONE));
     }
 
     @Test
     public void resetAsContext() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "as-context", Ids.TAB));
         form = page.getAsContextForm();
-        form.reset();
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(AUTH_METHOD, USERNAME_PASSWORD);
+        crud.reset(SUBSYSTEM_ADDRESS, form,
+                resourceVerifier -> resourceVerifier.verifyAttribute(AUTH_METHOD, USERNAME_PASSWORD));
     }
 
     @Test
     public void updateSasContext() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "sas-context", Ids.TAB));
         form = page.getSasContextForm();
-        form.edit();
-        form.select(CALLER_PROPAGATION, SUPPORTED);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(CALLER_PROPAGATION, SUPPORTED);
+        crud.update(SUBSYSTEM_ADDRESS, form,
+                f -> f.select(CALLER_PROPAGATION, SUPPORTED),
+                resourceVerifier -> resourceVerifier.verifyAttribute(CALLER_PROPAGATION, SUPPORTED));
     }
 
     @Test
     public void updateSecurity() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, SECURITY, Ids.TAB));
         form = page.getSecurityForm();
-        form.edit();
-        form.text(SECURITY_DOMAIN, "bar");
-        form.save();
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(SECURITY_DOMAIN, "bar");
+        crud.update(SUBSYSTEM_ADDRESS, form, SECURITY_DOMAIN, "bar");
     }
 
     @Test
-    public void updateSecurityInvalidSSLSettings() throws Exception {
+    public void updateSecurityInvalidSSLSettings() {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, SECURITY, Ids.TAB));
         form = page.getSecurityForm();
-        form.edit();
-        form.text(CLIENT_SSL_CONTEXT, "foo");
-        form.text(SECURITY_DOMAIN, "bar");
-        form.trySave();
-        form.expectError(CLIENT_SSL_CONTEXT);
-        form.expectError(SECURITY_DOMAIN);
+        crud.updateWithError(form,
+                f -> {
+                    f.text(CLIENT_SSL_CONTEXT, "foo");
+                    f.text(SECURITY_DOMAIN, "bar");
+                },
+                CLIENT_SSL_CONTEXT, SECURITY_DOMAIN);
     }
 
     @Test
-    public void updateSecurityServerRequireClientSslContext() throws Exception {
+    public void updateSecurityServerRequireClientSslContext() {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, SECURITY, Ids.TAB));
         form = page.getSecurityForm();
-        form.edit();
-        form.text(CLIENT_SSL_CONTEXT, "foo");
-        form.trySave();
-        form.expectError(SERVER_SSL_CONTEXT);
+        crud.updateWithError(form, f -> f.text(CLIENT_SSL_CONTEXT, "foo"), SERVER_SSL_CONTEXT);
     }
 
     @Test
     public void updateTcp() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "tcp", Ids.TAB));
         form = page.getTcpForm();
-        int val = 11;
-        form.edit();
-        form.number(HIGH_WATER_MARK, val);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(HIGH_WATER_MARK, val);
+        crud.update(SUBSYSTEM_ADDRESS, form, HIGH_WATER_MARK, 11);
     }
 
     @Test
@@ -245,25 +187,14 @@ public class IIOPTest {
         ModelNode props = new ModelNode();
         props.get("a").set("b");
         props.get("c").set("d");
-
-        form.edit();
-        form.properties(PROPERTIES).add(props);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttribute(PROPERTIES, props);
+        crud.update(SUBSYSTEM_ADDRESS, form, PROPERTIES, props);
     }
 
     @Test
     public void resetProperties() throws Exception {
         page.getTabs().select(Ids.build(IIOP_OPENJDK, PROPERTIES, Ids.TAB));
         form = page.getPropertiesForm();
-
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(SUBSYSTEM_ADDRESS, client)
-                .verifyAttributeIsUndefined(PROPERTIES);
+        crud.reset(SUBSYSTEM_ADDRESS, form,
+                resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(PROPERTIES));
     }
 }

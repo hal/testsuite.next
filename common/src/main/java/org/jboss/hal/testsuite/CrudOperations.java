@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite;
 import java.util.function.Consumer;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -82,9 +83,14 @@ public class CrudOperations {
 
     /** Resets the specified form and verifies the related resource. */
     public void reset(Address address, FormFragment form) throws Exception {
+        reset(address, form, ResourceVerifier::verifyReset);
+    }
+
+    /** Resets the specified form and verifies the related resource. */
+    public void reset(Address address, FormFragment form, VerifyChanges verifyChanges) throws Exception {
         form.reset();
         console.verifySuccess();
-        new ResourceVerifier(address, client).verifyReset();
+        verifyChanges.verify(new ResourceVerifier(address, client));
     }
 
 
@@ -113,6 +119,12 @@ public class CrudOperations {
     /** Updates the specified form and verifies the changes. */
     public void update(Address address, FormFragment form, String attribute, String value) throws Exception {
         update(address, form, f -> f.text(attribute, value), verifier -> verifier.verifyAttribute(attribute, value));
+    }
+
+    /** Updates the specified form and verifies the changes. */
+    public void update(Address address, FormFragment form, String attribute, ModelNode value) throws Exception {
+        update(address, form, f -> f.properties(attribute).add(value),
+                verifier -> verifier.verifyAttribute(attribute, value));
     }
 
     /** Updates the specified form and verifies the changes. */
