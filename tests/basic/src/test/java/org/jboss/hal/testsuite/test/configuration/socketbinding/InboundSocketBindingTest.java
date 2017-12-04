@@ -20,9 +20,8 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SocketBindingPage;
@@ -58,6 +57,7 @@ public class InboundSocketBindingTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private SocketBindingPage page;
     private TableFragment table;
     private FormFragment form;
@@ -74,56 +74,29 @@ public class InboundSocketBindingTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, INBOUND_CREATE);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE), client)
-                .verifyExists();
+        crud.create(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE), table, INBOUND_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        int port = 1234;
-
         table.select(INBOUND_UPDATE);
-        form.edit();
-        form.number(PORT, port);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
-                .verifyAttribute(PORT, port);
+        crud.update(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), form, PORT, 1234);
     }
 
     @Test
-    public void updateInvalidPort() throws Exception {
-        int port = -1;
-
+    public void updateInvalidPort() {
         table.select(INBOUND_UPDATE);
-        form.edit();
-        form.number(PORT, port);
-        form.trySave();
-        form.expectError(PORT);
+        crud.updateWithError(form, PORT, -1);
     }
 
     @Test
     public void reset() throws Exception {
         table.select(INBOUND_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), client)
-                .verifyReset();
+        crud.reset(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(INBOUND_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE), client)
-                .verifyDoesNotExist();
+        crud.delete(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE), table, INBOUND_DELETE);
     }
 }

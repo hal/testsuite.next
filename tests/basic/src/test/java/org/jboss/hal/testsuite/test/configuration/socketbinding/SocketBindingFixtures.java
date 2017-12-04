@@ -40,7 +40,6 @@ public interface SocketBindingFixtures {
         return Address.of(SOCKET_BINDING_GROUP, name);
     }
 
-
     // ------------------------------------------------------ inbound / socket binding
 
     String INBOUND_CREATE = Ids.build("inbound", "create", Random.name());

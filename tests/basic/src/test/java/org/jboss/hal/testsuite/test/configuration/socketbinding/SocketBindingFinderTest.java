@@ -65,7 +65,6 @@ public class SocketBindingFinderTest {
         operations.removeIfExists(socketBindingGroupAddress(SBG_DELETE));
     }
 
-
     @Inject private Console console;
     private ColumnFragment column;
 

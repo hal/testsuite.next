@@ -20,9 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.category.Domain;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.page.configuration.SocketBindingPage;
@@ -62,6 +62,7 @@ public class SocketBindingConfigurationTest {
     }
 
     @Inject private Console console;
+    @Inject private CrudOperations crud;
     @Page private SocketBindingPage page;
     private FormFragment form;
 
@@ -73,18 +74,12 @@ public class SocketBindingConfigurationTest {
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         assertEquals(HeaderBreadcrumbFragment.abbreviate(SBG_UPDATE), console.header().breadcrumb().lastValue());
     }
 
     @Test
     public void update() throws Exception {
-        form.edit();
-        form.text(DEFAULT_INTERFACE, PRIVATE);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(socketBindingGroupAddress(SBG_UPDATE), client)
-                .verifyAttribute(DEFAULT_INTERFACE, PRIVATE);
+        crud.update(socketBindingGroupAddress(SBG_UPDATE), form, DEFAULT_INTERFACE, PRIVATE);
     }
 }
