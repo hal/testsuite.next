@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test.configuration.systemproperty;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -60,7 +59,6 @@ public class SystemPropertyTest {
         operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
     }
 
-    @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private SystemPropertyPage page;
     private TableFragment table;

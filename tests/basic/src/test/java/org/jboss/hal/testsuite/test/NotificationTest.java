@@ -52,8 +52,8 @@ public class NotificationTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    @Page private SystemPropertyPage page;
     @Inject private Console console;
+    @Page private SystemPropertyPage page;
     private HeaderFragment header;
     private HashSet<String> properties;
 
@@ -89,19 +89,19 @@ public class NotificationTest {
     }
 
     @Test
-    public void badge() throws Exception {
+    public void badge() {
         assertTrue(header.getBadgeIcon().isDisplayed());
     }
 
     @Test
-    public void close() throws Exception {
+    public void close() {
         NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
         notificationDrawer.getClose().click();
         waitGui().until().element(notificationDrawer.getRoot()).is().not().visible();
     }
 
     @Test
-    public void unreadNotifications() throws Exception {
+    public void unreadNotifications() {
         NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
         assertEquals(COUNT, notificationDrawer.getNotifications().size());
         assertTrue(notificationDrawer.getMarkAllRead().isDisplayed());
@@ -109,14 +109,14 @@ public class NotificationTest {
     }
 
     @Test
-    public void markAllRead() throws Exception {
+    public void markAllRead() {
         NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
         notificationDrawer.getMarkAllRead().click();
         waitGui().until().element(notificationDrawer.getMarkAllRead()).is().not().visible();
     }
 
     @Test
-    public void clearAll() throws Exception {
+    public void clearAll() {
         NotificationDrawerFragment notificationDrawer = header.openNotificationDrawer();
         notificationDrawer.clearAll();
         waitGui().until().element(notificationDrawer.getMarkAllRead()).is().not().visible();
