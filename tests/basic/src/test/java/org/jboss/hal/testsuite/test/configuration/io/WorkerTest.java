@@ -19,10 +19,9 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.creaper.ResourceVerifier;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.IOPage;
@@ -61,8 +60,9 @@ public class WorkerTest {
         operations.removeIfExists(workerAddress(WORKER_DELETE));
     }
 
-    @Page private IOPage page;
     @Inject private Console console;
+    @Inject private CrudOperations crud;
+    @Page private IOPage page;
     private TableFragment table;
     private FormFragment form;
 
@@ -78,20 +78,18 @@ public class WorkerTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = table.add();
-        dialog.getForm().text(NAME, WORKER_CREATE);
-        dialog.getForm().number(IO_THREADS, 12);
-        dialog.getForm().number("stack-size", 1024);
-        dialog.getForm().number("task-keepalive", 2233);
-        dialog.getForm().number("task-max-threads", 12345);
-        dialog.add();
-
-        console.verifySuccess();
-        new ResourceVerifier(workerAddress(WORKER_CREATE), client).verifyExists();
+        crud.create(workerAddress(WORKER_CREATE), table,
+                form -> {
+                    form.text(NAME, WORKER_CREATE);
+                    form.number(IO_THREADS, 12);
+                    form.number("stack-size", 1024);
+                    form.number("task-keepalive", 2233);
+                    form.number("task-max-threads", 12345);
+                });
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         table.select(WORKER_READ);
         assertEquals(11, form.intValue(IO_THREADS));
     }
@@ -99,41 +97,23 @@ public class WorkerTest {
     @Test
     public void reset() throws Exception {
         table.select(WORKER_UPDATE);
-        form.reset();
-
-        console.verifySuccess();
-        new ResourceVerifier(workerAddress(WORKER_UPDATE), client)
-                .verifyReset();
+        crud.reset(workerAddress(WORKER_UPDATE), form);
     }
 
     @Test
     public void update() throws Exception {
-        int maxThreads = Random.number();
-
         table.select(WORKER_UPDATE);
-        form.edit();
-        form.number(IO_THREADS, maxThreads);
-        form.save();
-
-        console.verifySuccess();
-        new ResourceVerifier(workerAddress(WORKER_UPDATE), client)
-                .verifyAttribute(IO_THREADS, maxThreads);
+        crud.update(workerAddress(WORKER_UPDATE), form, IO_THREADS, Random.number());
     }
 
     @Test
-    public void updateInvalidMaxThreads() throws Exception {
+    public void updateInvalidMaxThreads() {
         table.select(WORKER_UPDATE);
-        form.edit();
-        form.number(IO_THREADS, -1);
-        form.trySave();
-        form.expectError(IO_THREADS);
+        crud.updateWithError(form, IO_THREADS, -1);
     }
 
     @Test
     public void delete() throws Exception {
-        table.remove(WORKER_DELETE);
-
-        console.verifySuccess();
-        new ResourceVerifier(workerAddress(WORKER_DELETE), client).verifyDoesNotExist();
+        crud.delete(workerAddress(WORKER_DELETE), table, WORKER_DELETE);
     }
 }

@@ -48,7 +48,7 @@ public interface IOFixtures {
     String BP_UPDATE = Ids.build("bp", "update", Random.name());
     String BP_DELETE = Ids.build("bp", "delete", Random.name());
 
-    static Address bufferPool(String name) {
+    static Address bufferPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("buffer-pool", name);
     }
 }
