@@ -35,6 +35,9 @@ public interface MessagingFixtures {
     String JOURNAL_DIRECTORY = "journal-directory";
     String LARGE_MESSAGES_DIRECTORY = "large-messages-directory";
     String PAGING_DIRECTORY = "paging-directory";
+    String CONSUME = "consume";
+    String DIVERT_ADDRESS = "divert-address";
+    String FORWARDING_ADDRESS = "forwarding-address";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
@@ -93,6 +96,12 @@ public interface MessagingFixtures {
 
     static Address securitySettingAddress(String server, String secsetting) {
         return serverAddress(server).and(SECURITY_SETTING, secsetting);
+    }
+
+    String ROLE_CREATE = Ids.build("role", "create", Random.name());
+
+    static Address securitySettingRoleAddress(String server, String secsetting, String role) {
+        return securitySettingAddress(server, secsetting).and(ROLE, role);
     }
 
     // ------------------------------------------------------ server / destinations / address setting
