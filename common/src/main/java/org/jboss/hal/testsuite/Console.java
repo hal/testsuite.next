@@ -66,8 +66,6 @@ import static org.junit.Assert.assertEquals;
  */
 public class Console {
 
-    public static final long DEFAULT_LOAD_TIMEOUT = 30;
-
     @Drone private WebDriver browser;
     @ArquillianResource private URL url;
     private TokenFormatter tokenFormatter;

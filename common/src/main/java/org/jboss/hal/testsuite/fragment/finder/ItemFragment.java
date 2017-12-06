@@ -25,13 +25,11 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
-import static java.util.concurrent.TimeUnit.SECONDS;
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.btnFinder;
 import static org.jboss.hal.resources.CSS.btnGroup;
 import static org.jboss.hal.resources.CSS.dropdownMenu;
 import static org.jboss.hal.resources.CSS.dropdownToggle;
-import static org.jboss.hal.testsuite.Console.DEFAULT_LOAD_TIMEOUT;
 import static org.jboss.hal.testsuite.Selectors.contains;
 
 /** Fragment for a finder item. Use {@link ColumnFragment#selectItem(String)} to get an instance. */
@@ -46,8 +44,7 @@ public class ItemFragment {
     public String view() {
         By selector = ByJQuery.selector("." + btnGroup + " a." + btnFinder + contains("View"));
         root.findElement(selector).click();
-        waitGui().withTimeout(DEFAULT_LOAD_TIMEOUT, SECONDS)
-                .until().element(By.id(Ids.FINDER)).is().not().present();
+        waitModel().until().element(By.id(Ids.FINDER)).is().not().present();
         return browser.getCurrentUrl();
     }
 

@@ -19,6 +19,7 @@ import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
+import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 
 /** Fragment for the vertical navigation. Provides methods to select primary and secondary items. */
@@ -38,6 +39,6 @@ public class VerticalNavigationFragment {
 
     private void selectItem(String id) {
         root.findElement(By.cssSelector("#" + id + " > a")).click();
-        waitGui().until().element(By.cssSelector("[data-vn-item-for=" + id + "]")).is().visible();
+        waitAjax().until().element(By.cssSelector("[data-vn-item-for=" + id + "]")).is().visible();
     }
 }
