@@ -37,6 +37,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
@@ -48,10 +49,12 @@ public class StackRelayRemoteSiteTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-
+    private static final Administration administration = new Administration(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        administration.reloadIfRequired();
+
         Batch stackCreate = new Batch();
         stackCreate.add(stackAddress(STACK_CREATE));
         stackCreate.add(transportAddress(STACK_CREATE, TRANSPORT_CREATE), Values.of(SOCKET_BINDING, JGROUPS_TCP));

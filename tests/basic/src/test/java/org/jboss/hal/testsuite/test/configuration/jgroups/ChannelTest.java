@@ -33,6 +33,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STACK;
@@ -43,9 +44,12 @@ public class ChannelTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final Administration administration = new Administration(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        administration.reloadIfRequired();
+
         operations.add(channelAddress(CHANNEL_UPDATE), Values.of(STACK, TCP));
         operations.add(channelAddress(CHANNEL_DELETE), Values.of(STACK, TCP));
     }

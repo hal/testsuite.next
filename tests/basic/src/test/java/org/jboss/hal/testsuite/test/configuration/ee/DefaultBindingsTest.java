@@ -30,7 +30,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONTEXT_SERVICE;
@@ -43,13 +42,13 @@ public class DefaultBindingsTest {
     private static BackupAndRestoreAttributes backup;
 
     @BeforeClass
-    public static void beforeClass() throws CommandFailedException {
+    public static void beforeClass() throws Exception {
         backup = new BackupAndRestoreAttributes.Builder(DEFAULT_BINDINGS_ADDRESS).build();
         client.apply(backup.backup());
     }
 
     @AfterClass
-    public static void afterClass() throws CommandFailedException {
+    public static void afterClass() throws Exception {
         client.apply(backup.restore());
     }
 
