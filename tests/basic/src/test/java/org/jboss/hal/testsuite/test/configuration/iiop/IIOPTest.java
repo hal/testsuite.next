@@ -150,7 +150,7 @@ public class IIOPTest {
     public void updateSecurity() throws Exception {
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, SECURITY, Ids.TAB));
         form = page.getSecurityForm();
-        crud.update(SUBSYSTEM_ADDRESS, form, SECURITY_DOMAIN, "bar");
+        crud.update(SUBSYSTEM_ADDRESS, form, SECURITY_DOMAIN, "other");
     }
 
     @Test

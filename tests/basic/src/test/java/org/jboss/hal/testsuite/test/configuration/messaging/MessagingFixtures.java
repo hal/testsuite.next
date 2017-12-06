@@ -19,8 +19,7 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MESSAGING_ACTIVEMQ;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 
 public interface MessagingFixtures {
 
@@ -32,6 +31,13 @@ public interface MessagingFixtures {
     String APPLICATION_DOMAIN = "ApplicationDomain";
     String JOURNAL_BINDING_TABLE = "journal-bindings-table";
     String CLUSTER_CREDENTIAL_REFERENCE = "cluster-credential-reference";
+    String BINDINGS_DIRECTORY = "bindings-directory";
+    String JOURNAL_DIRECTORY = "journal-directory";
+    String LARGE_MESSAGES_DIRECTORY = "large-messages-directory";
+    String PAGING_DIRECTORY = "paging-directory";
+    String CONSUME = "consume";
+    String DIVERT_ADDRESS = "divert-address";
+    String FORWARDING_ADDRESS = "forwarding-address";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
@@ -47,6 +53,76 @@ public interface MessagingFixtures {
         return SUBSYSTEM_ADDRESS.and(SERVER, name);
     }
 
+    // ------------------------------------------------------ server / path
+
+    static Address serverPathAddress(String server, String path) {
+        return serverAddress(server).and(PATH, path);
+    }
+
+    // ------------------------------------------------------ server / destinations / core-queue
+
+    String COREQUEUE_CREATE = Ids.build("core", "create", Random.name());
+    String COREQUEUE_DELETE = Ids.build("core", "delete", Random.name());
+
+    static Address coreQueueAddress(String server, String queue) {
+        return serverAddress(server).and(QUEUE, queue);
+    }
+
+    // ------------------------------------------------------ server / destinations / jms-queue
+
+    String JMSQUEUE_CREATE = Ids.build("jmsqueue", "create", Random.name());
+    String JMSQUEUE_UPDATE = Ids.build("jmsqueue", "update", Random.name());
+    String JMSQUEUE_DELETE = Ids.build("jmsqueue", "delete", Random.name());
+
+    static Address jmsQueueAddress(String server, String queue) {
+        return serverAddress(server).and(JMS_QUEUE, queue);
+    }
+
+    // ------------------------------------------------------ server / destinations / jms-topic
+
+    String JMSTOPIC_CREATE = Ids.build("topic", "create", Random.name());
+    String JMSTOPIC_UPDATE = Ids.build("topic", "update", Random.name());
+    String JMSTOPIC_DELETE = Ids.build("topic", "delete", Random.name());
+
+    static Address jmsTopicAddress(String server, String topic) {
+        return serverAddress(server).and(JMS_TOPIC, topic);
+    }
+
+    // ------------------------------------------------------ server / destinations / security setting
+
+    String SECSET_CREATE = Ids.build("sec-set", "create", Random.name());
+    String SECSET_UPDATE = Ids.build("sec-set", "update", Random.name());
+    String SECSET_DELETE = Ids.build("sec-set", "delete", Random.name());
+
+    static Address securitySettingAddress(String server, String secsetting) {
+        return serverAddress(server).and(SECURITY_SETTING, secsetting);
+    }
+
+    String ROLE_CREATE = Ids.build("role", "create", Random.name());
+
+    static Address securitySettingRoleAddress(String server, String secsetting, String role) {
+        return securitySettingAddress(server, secsetting).and(ROLE, role);
+    }
+
+    // ------------------------------------------------------ server / destinations / address setting
+
+    String AS_CREATE = Ids.build("as", "create", Random.name());
+    String AS_UPDATE = Ids.build("as", "update", Random.name());
+    String AS_DELETE = Ids.build("as", "delete", Random.name());
+
+    static Address addressSettingAddress(String server, String name) {
+        return serverAddress(server).and(ADDRESS_SETTING, name);
+    }
+
+    // ------------------------------------------------------ server / destinations / divert
+
+    String DIVERT_CREATE = Ids.build("divert", "create", Random.name());
+    String DIVERT_UPDATE = Ids.build("divert", "update", Random.name());
+    String DIVERT_DELETE = Ids.build("divert", "delete", Random.name());
+
+    static Address divertAddress(String server, String name) {
+        return serverAddress(server).and(DIVERT, name);
+    }
 
 
 }
