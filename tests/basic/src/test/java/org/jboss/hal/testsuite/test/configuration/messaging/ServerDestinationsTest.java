@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.page.configuration.MessagingServerDestinationsPag
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -93,7 +92,7 @@ public class ServerDestinationsTest {
     // --------------- core queue
     // there is no update tests as the core queue's attributes are read-only
 
-    @Ignore
+    @Test
     public void coreQueueCreate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + "-" + ITEM);
         TableFragment table = page.getCoreQueueTable();
@@ -108,7 +107,7 @@ public class ServerDestinationsTest {
         );
     }
 
-    @Ignore
+    @Test
     public void coreQueueRemove() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + "-" + ITEM);
         TableFragment table = page.getCoreQueueTable();
@@ -120,7 +119,7 @@ public class ServerDestinationsTest {
 
     // --------------- jms queue
 
-    @Ignore
+    @Test
     public void jmsQueueCreate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
         TableFragment table = page.getJmsQueueTable();
@@ -135,7 +134,7 @@ public class ServerDestinationsTest {
         );
     }
 
-    @Ignore
+    @Test
     public void jmsQueueUpdate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
         TableFragment table = page.getJmsQueueTable();
@@ -149,7 +148,7 @@ public class ServerDestinationsTest {
                 resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(ENTRIES, val));
     }
 
-    @Ignore
+    @Test
     public void jmsQueueRemove() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
         TableFragment table = page.getJmsQueueTable();
@@ -161,7 +160,7 @@ public class ServerDestinationsTest {
 
     // --------------- jms topic
 
-    @Ignore
+    @Test
     public void jmsTopicCreate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
         TableFragment table = page.getJmsTopicTable();
@@ -176,7 +175,7 @@ public class ServerDestinationsTest {
         );
     }
 
-    @Ignore
+    @Test
     public void jmsTopicUpdate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
         TableFragment table = page.getJmsTopicTable();
@@ -190,7 +189,7 @@ public class ServerDestinationsTest {
                 resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(ENTRIES, val));
     }
 
-    @Ignore
+    @Test
     public void jmsTopicRemove() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
         TableFragment table = page.getJmsTopicTable();
@@ -202,7 +201,7 @@ public class ServerDestinationsTest {
 
     // --------------- security setting
 
-    @Ignore
+    @Test
     public void securitySettingCreate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
         TableFragment table = page.getSecuritySettingTable();
@@ -217,7 +216,7 @@ public class ServerDestinationsTest {
         );
     }
 
-    @Ignore
+    @Test
     public void securitySettingUpdate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
         TableFragment table = page.getSecuritySettingTable();
@@ -228,7 +227,7 @@ public class ServerDestinationsTest {
         crudOperations.update(securitySettingRoleAddress(SRV_UPDATE, SECSET_UPDATE, ROLE_CREATE), form, CONSUME, true);
     }
 
-    @Ignore
+    @Test
     public void securitySettingRemove() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
         TableFragment table = page.getSecuritySettingTable();
@@ -240,7 +239,7 @@ public class ServerDestinationsTest {
 
     // --------------- address setting
 
-    @Ignore
+    @Test
     public void addressSettingCreate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + "-" + ITEM);
         TableFragment table = page.getAddressSettingTable();
@@ -250,7 +249,7 @@ public class ServerDestinationsTest {
         crudOperations.create(addressSettingAddress(SRV_UPDATE, AS_CREATE), table, AS_CREATE);
     }
 
-    @Ignore
+    @Test
     public void addressSettingUpdate() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + "-" + ITEM);
         TableFragment table = page.getAddressSettingTable();

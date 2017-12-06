@@ -38,6 +38,11 @@ public interface MessagingFixtures {
     String CONSUME = "consume";
     String DIVERT_ADDRESS = "divert-address";
     String FORWARDING_ADDRESS = "forwarding-address";
+    String FACTORY_CLASS = "factory-class";
+    String SERVER_ID = "server-id";
+    String UPGRADE_LEGACY = "upgrade-legacy";
+    String SERVER_NAME = "server-name";
+    String CALL_TIMEOUT = "call-timeout";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
@@ -123,6 +128,117 @@ public interface MessagingFixtures {
     static Address divertAddress(String server, String name) {
         return serverAddress(server).and(DIVERT, name);
     }
+
+    // ------------------------------------------------------ server / connections / acceptor - generic
+
+    String ACCP_GEN_CREATE = Ids.build("acceptor-gen", "create", Random.name());
+    String ACCP_GEN_UPDATE = Ids.build("acceptor-gen", "update", Random.name());
+    String ACCP_GEN_DELETE = Ids.build("acceptor-gen", "delete", Random.name());
+
+    static Address acceptorGenericAddress(String server, String name) {
+        return serverAddress(server).and(ACCEPTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / acceptor - in-vm
+
+    String ACCP_INVM_CREATE = Ids.build("acceptor-invm", "create", Random.name());
+    String ACCP_INVM_UPDATE = Ids.build("acceptor-invm", "update", Random.name());
+    String ACCP_INVM_DELETE = Ids.build("acceptor-invm", "delete", Random.name());
+
+    static Address acceptorInVMAddress(String server, String name) {
+        return serverAddress(server).and(IN_VM_ACCEPTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / acceptor - http
+
+    String ACCP_HTTP_CREATE = Ids.build("acceptor-http", "create", Random.name());
+    String ACCP_HTTP_UPDATE = Ids.build("acceptor-http", "update", Random.name());
+    String ACCP_HTTP_DELETE = Ids.build("acceptor-http", "delete", Random.name());
+
+    static Address acceptorHttpAddress(String server, String name) {
+        return serverAddress(server).and(HTTP_ACCEPTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / acceptor - remote
+
+    String ACCP_REM_CREATE = Ids.build("acceptor-rem", "create", Random.name());
+    String ACCP_REM_UPDATE = Ids.build("acceptor-rem", "update", Random.name());
+    String ACCP_REM_DELETE = Ids.build("acceptor-rem", "delete", Random.name());
+
+    static Address acceptorRemoteAddress(String server, String name) {
+        return serverAddress(server).and(REMOTE_ACCEPTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector - generic
+
+    String CONN_GEN_CREATE = Ids.build("connector-gen", "create", Random.name());
+    String CONN_GEN_UPDATE = Ids.build("connector-gen", "update", Random.name());
+    String CONN_GEN_DELETE = Ids.build("connector-gen", "delete", Random.name());
+
+    static Address connectorGenericAddress(String server, String name) {
+        return serverAddress(server).and(CONNECTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector - in-vm
+
+    String CONN_INVM_CREATE = Ids.build("connector-invm", "create", Random.name());
+    String CONN_INVM_UPDATE = Ids.build("connector-invm", "update", Random.name());
+    String CONN_INVM_DELETE = Ids.build("connector-invm", "delete", Random.name());
+
+    static Address connectorInVMAddress(String server, String name) {
+        return serverAddress(server).and(IN_VM_CONNECTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector - http
+
+    String CONN_HTTP_CREATE = Ids.build("connector-http", "create", Random.name());
+    String CONN_HTTP_UPDATE = Ids.build("connector-http", "update", Random.name());
+    String CONN_HTTP_DELETE = Ids.build("connector-http", "delete", Random.name());
+
+    static Address connectorHttpAddress(String server, String name) {
+        return serverAddress(server).and(HTTP_CONNECTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector - remote
+
+    String CONN_REM_CREATE = Ids.build("connector-rem", "create", Random.name());
+    String CONN_REM_UPDATE = Ids.build("connector-rem", "update", Random.name());
+    String CONN_REM_DELETE = Ids.build("connector-rem", "delete", Random.name());
+
+    static Address connectorRemoteAddress(String server, String name) {
+        return serverAddress(server).and(REMOTE_CONNECTOR, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector service
+
+    String CONN_SVC_CREATE = Ids.build("connector-svc", "create", Random.name());
+    String CONN_SVC_UPDATE = Ids.build("connector-svc", "update", Random.name());
+    String CONN_SVC_DELETE = Ids.build("connector-svc", "delete", Random.name());
+
+    static Address connectorServiceAddress(String server, String name) {
+        return serverAddress(server).and(CONNECTOR_SERVICE, name);
+    }
+
+    // ------------------------------------------------------ server / connections / connector factory
+
+    String CONN_FAC_CREATE = Ids.build("connector-fac", "create", Random.name());
+    String CONN_FAC_UPDATE = Ids.build("connector-fac", "update", Random.name());
+    String CONN_FAC_DELETE = Ids.build("connector-fac", "delete", Random.name());
+
+    static Address connectionFactoryAddress(String server, String name) {
+        return serverAddress(server).and(CONNECTION_FACTORY, name);
+    }
+
+    // ------------------------------------------------------ server / connections / pooled connection factory
+
+    String POOL_CONN_CREATE = Ids.build("pcf", "create", Random.name());
+    String POOL_CONN_UPDATE = Ids.build("pcf", "update", Random.name());
+    String POOL_CONN_DELETE = Ids.build("pcf", "delete", Random.name());
+
+    static Address pooledConnectionFactoryAddress(String server, String name) {
+        return serverAddress(server).and(POOLED_CONNECTION_FACTORY, name);
+    }
+
 
 
 }

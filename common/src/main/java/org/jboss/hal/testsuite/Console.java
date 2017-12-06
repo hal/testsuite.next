@@ -150,7 +150,7 @@ public class Console {
     }
 
     private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
-        Library.letsSleep(UIConstants.MEDIUM_TIMEOUT);
+        waitNoNotification();
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
         waitGui().until().element(dialogElement).is().visible();
         return createPageFragment(dialogClass, dialogElement);
