@@ -32,28 +32,33 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SOURCE_PORT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.HOST;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PORT;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.*;
 
 @RunWith(Arquillian.class)
-public class InboundSocketBindingTest {
+public class OutboundRemoteTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
-        operations.add(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
+        operations.add(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_UPDATE),
+                Values.of(HOST, LOCALHOST).and(PORT, OUTBOUND_REMOTE_PORT));
+        operations.add(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_DELETE),
+                Values.of(HOST, LOCALHOST).and(PORT, OUTBOUND_REMOTE_PORT + 1));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE));
-        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE));
-        operations.removeIfExists(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE));
+        operations.removeIfExists(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_CREATE));
+        operations.removeIfExists(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_UPDATE));
+        operations.removeIfExists(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_DELETE));
     }
 
     @Inject private Console console;
@@ -65,38 +70,36 @@ public class InboundSocketBindingTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, STANDARD_SOCKETS);
-        console.verticalNavigation().selectPrimary(Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.ITEM);
+        console.verticalNavigation().selectPrimary(Ids.SOCKET_BINDING_GROUP_OUTBOUND_REMOTE + "-" + Ids.ITEM);
 
-        table = page.getInboundTable();
-        form = page.getInboundForm();
+        table = page.getOutboundRemoteTable();
+        form = page.getOutboundRemoteForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        crud.create(socketBindingAddress(STANDARD_SOCKETS, INBOUND_CREATE), table, INBOUND_CREATE);
+        crud.create(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_CREATE), table, form -> {
+            form.text(NAME, OUTBOUND_REMOTE_CREATE);
+            form.text(HOST, LOCALHOST);
+            form.number(PORT, OUTBOUND_REMOTE_PORT - 1);
+        });
     }
 
     @Test
     public void update() throws Exception {
-        table.select(INBOUND_UPDATE);
-        crud.update(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), form, PORT, 1234);
+        table.select(OUTBOUND_REMOTE_UPDATE);
+        crud.update(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_UPDATE), form, PORT, 1234);
     }
 
     @Test
     public void updateInvalidPort() {
-        table.select(INBOUND_UPDATE);
-        crud.updateWithError(form, PORT, -1);
-    }
-
-    @Test
-    public void reset() throws Exception {
-        table.select(INBOUND_UPDATE);
-        crud.reset(socketBindingAddress(STANDARD_SOCKETS, INBOUND_UPDATE), form);
+        table.select(OUTBOUND_REMOTE_UPDATE);
+        crud.updateWithError(form, SOURCE_PORT, -1);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(socketBindingAddress(STANDARD_SOCKETS, INBOUND_DELETE), table, INBOUND_DELETE);
+        crud.delete(outboundRemoteAddress(STANDARD_SOCKETS, OUTBOUND_REMOTE_DELETE), table, OUTBOUND_REMOTE_DELETE);
     }
 }

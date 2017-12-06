@@ -74,7 +74,8 @@ public class FormFragment {
 
     /** Shows the sensitive value of the specified field in read-only mode */
     public void showSensitive(String name) {
-        root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye")).click();
+        WebElement element = root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye"));
+        console.scrollIntoView(element).click();
         waitGui().until().element(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye-slash")).is().present();
     }
 

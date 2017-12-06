@@ -15,6 +15,7 @@
  */
 package org.jboss.hal.testsuite;
 
+import java.util.List;
 import java.util.function.Consumer;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -144,6 +145,15 @@ public class CrudOperations {
     /** Updates the specified form and verifies the changes. */
     public void update(Address address, FormFragment form, String attribute, String value) throws Exception {
         update(address, form, f -> f.text(attribute, value), verifier -> verifier.verifyAttribute(attribute, value));
+    }
+
+    /** Updates the specified form and verifies the changes. */
+    public void update(Address address, FormFragment form, String attribute, List<String> values) throws Exception {
+        update(address, form, f -> f.list(attribute).add(values), verifier -> {
+            for (String value : values) {
+                verifier.verifyListAttributeContainsValue(attribute, value);
+            }
+        });
     }
 
     /** Updates the specified form and verifies the changes. */

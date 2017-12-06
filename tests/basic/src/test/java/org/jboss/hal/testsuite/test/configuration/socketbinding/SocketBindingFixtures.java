@@ -19,14 +19,17 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCAL_DESTINATION_OUTBOUND_SOCKET_BINDING;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
 
 public interface SocketBindingFixtures {
 
+    int OUTBOUND_REMOTE_PORT = 60000;
+    String LOCALHOST = "localhost";
     String PRIVATE = "private";
     String PUBLIC = "public";
-
     String STANDARD_SOCKETS = "standard-sockets";
 
     // ------------------------------------------------------ socket binding group
@@ -40,13 +43,37 @@ public interface SocketBindingFixtures {
         return Address.of(SOCKET_BINDING_GROUP, name);
     }
 
-    // ------------------------------------------------------ inbound / socket binding
+    // ------------------------------------------------------ inbound
 
-    String INBOUND_CREATE = Ids.build("inbound", "create", Random.name());
-    String INBOUND_UPDATE = Ids.build("inbound", "update", Random.name());
-    String INBOUND_DELETE = Ids.build("inbound", "delete", Random.name());
+    // prefix with "a", so the resources are on the first table page
+    String INBOUND_CREATE = Ids.build("a", "inbound", "create", Random.name());
+    String INBOUND_READ = Ids.build("a", "inbound", "read", Random.name());
+    String INBOUND_UPDATE = Ids.build("a", "inbound", "update", Random.name());
+    String INBOUND_DELETE = Ids.build("a", "inbound", "delete", Random.name());
 
-    static Address socketBindingAddress(String sbg, String name) {
+    static Address inboundAddress(String sbg, String name) {
         return socketBindingGroupAddress(sbg).and(SOCKET_BINDING, name);
+    }
+
+    // ------------------------------------------------------ outbound local
+
+    String OUTBOUND_LOCAL_CREATE = Ids.build("outbound", "local", "create", Random.name());
+    String OUTBOUND_LOCAL_READ = Ids.build("outbound", "local", "read", Random.name());
+    String OUTBOUND_LOCAL_UPDATE = Ids.build("outbound", "local", "update", Random.name());
+    String OUTBOUND_LOCAL_DELETE = Ids.build("outbound", "local", "delete", Random.name());
+
+    static Address outboundLocalAddress(String sbg, String name) {
+        return socketBindingGroupAddress(sbg).and(LOCAL_DESTINATION_OUTBOUND_SOCKET_BINDING, name);
+    }
+
+    // ------------------------------------------------------ outbound local
+
+    String OUTBOUND_REMOTE_CREATE = Ids.build("outbound", "remote", "create", Random.name());
+    String OUTBOUND_REMOTE_READ = Ids.build("outbound", "remote", "read", Random.name());
+    String OUTBOUND_REMOTE_UPDATE = Ids.build("outbound", "remote", "update", Random.name());
+    String OUTBOUND_REMOTE_DELETE = Ids.build("outbound", "remote", "delete", Random.name());
+
+    static Address outboundRemoteAddress(String sbg, String name) {
+        return socketBindingGroupAddress(sbg).and(REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING, name);
     }
 }

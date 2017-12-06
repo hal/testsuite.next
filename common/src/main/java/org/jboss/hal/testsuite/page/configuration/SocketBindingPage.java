@@ -31,6 +31,10 @@ public class SocketBindingPage extends BasePage {
     @FindBy(id = Ids.SOCKET_BINDING_GROUP + "-" + Ids.CONFIGURATION + "-" + Ids.FORM) private FormFragment configurationForm;
     @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.TABLE + WRAPPER) private TableFragment inboundTable;
     @FindBy(id = Ids.SOCKET_BINDING_GROUP_INBOUND + "-" + Ids.FORM) private FormFragment inboundForm;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_OUTBOUND_LOCAL + "-" + Ids.TABLE + WRAPPER) private TableFragment outboundLocalTable;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_OUTBOUND_LOCAL + "-" + Ids.FORM) private FormFragment outboundLocalForm;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_OUTBOUND_REMOTE + "-" + Ids.TABLE + WRAPPER) private TableFragment outboundRemoteTable;
+    @FindBy(id = Ids.SOCKET_BINDING_GROUP_OUTBOUND_REMOTE + "-" + Ids.FORM) private FormFragment outboundRemoteForm;
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
@@ -42,5 +46,21 @@ public class SocketBindingPage extends BasePage {
 
     public FormFragment getInboundForm() {
         return inboundForm;
+    }
+
+    public TableFragment getOutboundLocalTable() {
+        return outboundLocalTable;
+    }
+
+    public FormFragment getOutboundLocalForm() {
+        return outboundLocalForm;
+    }
+
+    public TableFragment getOutboundRemoteTable() {
+        return outboundRemoteTable;
+    }
+
+    public FormFragment getOutboundRemoteForm() {
+        return outboundRemoteForm;
     }
 }
