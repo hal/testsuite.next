@@ -116,7 +116,7 @@ public interface RemotingFixtures {
     String REMOTE_OUTBOUND_UPDATE = Ids.build("rout", "update", Random.name());
     String REMOTE_OUTBOUND_DELETE = Ids.build("rout", "delete", Random.name());
 
-    static Address utboundRemoteAddress(String name) {
+    static Address outboundRemoteAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("remote-outbound-connection", name);
     }
 }
