@@ -90,7 +90,7 @@ public class ServerFinderTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertTrue(column.containsItem(Ids.messagingServer(SRV_READ)));
     }
 
@@ -103,7 +103,7 @@ public class ServerFinderTest {
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(Ids.messagingServer(SRV_READ));
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
@@ -114,7 +114,7 @@ public class ServerFinderTest {
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(Ids.messagingServer(SRV_READ)).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.MESSAGING_SERVER)
