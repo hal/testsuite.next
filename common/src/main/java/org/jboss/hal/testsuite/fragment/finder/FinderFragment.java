@@ -48,6 +48,9 @@ public class FinderFragment {
         if (!path.isEmpty()) {
             assertPlace();
             browser.get(console.absoluteUrl(place + ";path=" + path.toString()));
+            if (path.last().itemId != null) {
+                waitModel().until().element(By.id(path.last().itemId)).is().present();
+            }
         }
         return this;
     }

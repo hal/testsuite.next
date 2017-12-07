@@ -15,9 +15,9 @@
  */
 package org.jboss.hal.testsuite.fragment.finder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -35,14 +35,14 @@ public class FinderPath implements Iterable<FinderSegment> {
     private static final String SEPARATOR = "!";
 
 
-    private final List<FinderSegment> segments;
+    private final LinkedList<FinderSegment> segments;
 
     public FinderPath() {
         this(Collections.emptyList());
     }
 
     public FinderPath(List<FinderSegment> segments) {
-        this.segments = new ArrayList<>();
+        this.segments = new LinkedList<>();
         this.segments.addAll(segments);
     }
 
@@ -62,6 +62,10 @@ public class FinderPath implements Iterable<FinderSegment> {
 
     public int size() {
         return segments.size();
+    }
+
+    public FinderSegment last() {
+        return segments.getLast();
     }
 
     @Override
