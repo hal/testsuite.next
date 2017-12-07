@@ -22,7 +22,6 @@ import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -57,9 +56,9 @@ public class FinderFragment {
 
     /** Returns the specified column. */
     public ColumnFragment column(String columnId) {
-        WebElement element = browser.findElement(By.id(columnId));
-        waitModel().until().element(element).is().visible();
-        ColumnFragment column = createPageFragment(ColumnFragment.class, element);
+        By selector = By.id(columnId);
+        waitModel().until().element(selector).is().visible();
+        ColumnFragment column = createPageFragment(ColumnFragment.class, browser.findElement(selector));
         column.initColumnId(columnId);
         return column;
     }

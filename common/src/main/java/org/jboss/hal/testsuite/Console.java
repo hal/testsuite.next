@@ -159,8 +159,9 @@ public class Console {
     /** Navigates to the specified place, creates and returns the finder fragment */
     public FinderFragment finder(String place) {
         browser.get(absoluteUrl(place));
-        waitModel().until().element(By.id(Ids.FINDER)).is().present();
-        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(By.id(Ids.FINDER)));
+        By selector = By.id(Ids.FINDER);
+        waitModel().until().element(selector).is().present();
+        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(selector));
         finder.initPlace(place);
         return finder;
     }
