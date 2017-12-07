@@ -947,10 +947,10 @@ public class ServerConnectionsTest {
 
     @Test
     public void pooledConnectionFactoryRemoveCredentialReference() throws Exception {
-        operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_DELETE), PASSWORD);
+        operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), PASSWORD);
         ModelNode cr = new ModelNode();
         cr.get(CLEAR_TEXT).set(anyString);
-        operations.writeAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_DELETE), CREDENTIAL_REFERENCE, cr);
+        operations.writeAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
         page.navigate(SERVER, SRV_UPDATE);
 
@@ -960,9 +960,9 @@ public class ServerConnectionsTest {
         TableFragment table = page.getPooledConnectionFactoryTable();
         FormFragment form = page.getPooledConnectionFactoryCRForm();
         table.bind(form);
-        table.select(POOL_CONN_DELETE);
+        table.select(POOL_CONN_UPDATE);
 
-        crudOperations.deleteSingleton(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_DELETE), form,
+        crudOperations.deleteSingleton(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), form,
                 resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
     }
 
