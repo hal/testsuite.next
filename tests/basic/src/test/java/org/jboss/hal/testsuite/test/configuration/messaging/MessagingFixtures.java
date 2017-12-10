@@ -43,6 +43,12 @@ public interface MessagingFixtures {
     String UPGRADE_LEGACY = "upgrade-legacy";
     String SERVER_NAME = "server-name";
     String CALL_TIMEOUT = "call-timeout";
+    String BROADCAST_PERIOD = "broadcast-period";
+    String JGROUPS_CHANNEL = "jgroups-channel";
+    String REFRESH_TIMEOUT = "refresh-timeout";
+    String CLUSTER_CONNECTION_ADDRESS = "cluster-connection-address";
+    String GROUPING_HANDLER_ADDRESS = "grouping-handler-address";
+    String CHECK_PERIOD = "check-period";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
@@ -237,6 +243,56 @@ public interface MessagingFixtures {
 
     static Address pooledConnectionFactoryAddress(String server, String name) {
         return serverAddress(server).and(POOLED_CONNECTION_FACTORY, name);
+    }
+
+    // ------------------------------------------------------ server / broadcast-group
+
+    String BG_CREATE = Ids.build("bg", "create", Random.name());
+    String BG_UPDATE = Ids.build("bg", "update", Random.name());
+    String BG_DELETE = Ids.build("bg", "delete", Random.name());
+
+    static Address broadcastGroupAddress(String server, String name) {
+        return serverAddress(server).and(BROADCAST_GROUP, name);
+    }
+
+    // ------------------------------------------------------ server / discovery-group
+
+    String DG_CREATE = Ids.build("dg", "create", Random.name());
+    String DG_UPDATE = Ids.build("dg", "update", Random.name());
+    String DG_DELETE = Ids.build("dg", "delete", Random.name());
+
+    static Address discoveryGroupAddress(String server, String name) {
+        return serverAddress(server).and(DISCOVERY_GROUP, name);
+    }
+
+    // ------------------------------------------------------ server / cluster-connection
+
+    String CC_CREATE = Ids.build("cc", "create", Random.name());
+    String CC_UPDATE = Ids.build("cc", "update", Random.name());
+    String CC_DELETE = Ids.build("cc", "delete", Random.name());
+
+    static Address clusterConnectionAddress(String server, String name) {
+        return serverAddress(server).and(CLUSTER_CONNECTION, name);
+    }
+
+    // ------------------------------------------------------ server / grouping-handler
+
+    String GH_CREATE = Ids.build("gh", "create", Random.name());
+    String GH_UPDATE = Ids.build("gh", "update", Random.name());
+    String GH_DELETE = Ids.build("gh", "delete", Random.name());
+
+    static Address groupingHandlerAddress(String server, String name) {
+        return serverAddress(server).and(GROUPING_HANDLER, name);
+    }
+
+    // ------------------------------------------------------ server / bridge
+
+    String BRIDGE_CREATE = Ids.build("bridge", "create", Random.name());
+    String BRIDGE_UPDATE = Ids.build("bridge", "update", Random.name());
+    String BRIDGE_DELETE = Ids.build("bridge", "delete", Random.name());
+
+    static Address bridgeAddress(String server, String name) {
+        return serverAddress(server).and(BRIDGE, name);
     }
 
 
