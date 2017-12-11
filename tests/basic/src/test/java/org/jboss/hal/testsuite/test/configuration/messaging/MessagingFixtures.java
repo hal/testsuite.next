@@ -49,6 +49,10 @@ public interface MessagingFixtures {
     String CLUSTER_CONNECTION_ADDRESS = "cluster-connection-address";
     String GROUPING_HANDLER_ADDRESS = "grouping-handler-address";
     String CHECK_PERIOD = "check-period";
+    String SCALE_DOWN_CLUSTER_NAME =  "scale-down-cluster-name";
+    String CLUSTER_NAME =  "cluster-name";
+    String MAX_BACKUPS =  "max-backups";
+    String FAILOVER_ON_SERVER_SHUTDOWN =  "failover-on-server-shutdown";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
@@ -293,6 +297,12 @@ public interface MessagingFixtures {
 
     static Address bridgeAddress(String server, String name) {
         return serverAddress(server).and(BRIDGE, name);
+    }
+
+    // ------------------------------------------------------ server / ha-policy
+
+    static Address haPolicyAddress(String server, String name) {
+        return serverAddress(server).and(HA_POLICY, name);
     }
 
 

@@ -38,21 +38,27 @@ public class ItemFragment {
     @Drone private WebDriver browser;
     @Root private WebElement root;
     private String itemId;
+    private static final String DOT = ".";
 
 
     /** Executes the standard view action on this item and returns the current browser URL. */
     public String view() {
-        By selector = ByJQuery.selector("." + btnGroup + " a." + btnFinder + contains("View"));
+        By selector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder + contains("View"));
         root.findElement(selector).click();
         waitModel().until().element(By.id(Ids.FINDER)).is().not().present();
         return browser.getCurrentUrl();
     }
 
+    public void defaultAction() {
+        By selector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder);
+        root.findElement(selector).click();
+    }
+
     public DropdownFragment dropdown() {
-        By toggleSelector = By.cssSelector("." + btnGroup + " button." + dropdownToggle);
+        By toggleSelector = By.cssSelector(DOT + btnGroup + " button." + dropdownToggle);
         root.findElement(toggleSelector).click();
 
-        By dropdownSelector = By.cssSelector("." + btnGroup + " ul." + dropdownMenu);
+        By dropdownSelector = By.cssSelector(DOT + btnGroup + " ul." + dropdownMenu);
         WebElement dropdownElement = root.findElement(dropdownSelector);
         return Graphene.createPageFragment(DropdownFragment.class, dropdownElement);
     }
