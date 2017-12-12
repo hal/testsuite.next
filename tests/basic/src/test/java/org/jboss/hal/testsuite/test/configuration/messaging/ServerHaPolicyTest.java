@@ -15,7 +15,6 @@
  */
 package org.jboss.hal.testsuite.test.configuration.messaging;
 
-import java.io.IOException;
 import java.util.function.Supplier;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
@@ -42,7 +41,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
-import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
@@ -74,16 +72,6 @@ public class ServerHaPolicyTest {
     private ColumnFragment column;
     private WizardFragment wizard;
 
-
-    private void deleteAllPolicies() throws IOException, OperationException {
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, LIVE_ONLY));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, REPLICATION_COLOCATED));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, REPLICATION_MASTER));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, REPLICATION_SLAVE));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, SHARED_STORE_COLOCATED));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, SHARED_STORE_MASTER));
-        operations.removeIfExists(haPolicyAddress(SRV_UPDATE, SHARED_STORE_SLAVE));
-    }
 
     private void refreshConfigurationColumn() throws Exception {
         // after the previous operations, it is necessary to refresh the "server" column

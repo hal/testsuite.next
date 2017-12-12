@@ -54,6 +54,22 @@ public interface MessagingFixtures {
     String MAX_BACKUPS =  "max-backups";
     String FAILOVER_ON_SERVER_SHUTDOWN =  "failover-on-server-shutdown";
 
+    String QUALITY_OF_SERVICE = "quality-of-service";
+    String AT_MOST_ONCE = "AT_MOST_ONCE";
+    String FAILURE_RETRY_INTERVAL = "failure-retry-interval";
+    String MAX_RETRIES = "max-retries";
+    String MAX_BATCH_SIZE = "max-batch-size";
+    String MAX_BATCH_TIME = "max-batch-time";
+    String TARGET_CONTEXT = "target-context";
+    String SOURCE_CONNECTION_FACTORY = "source-connection-factory";
+    String CONNECTION_FACTORY = "ConnectionFactory";
+    String SOURCE_DESTINATION = "source-destination";
+    String DESTINATION_QUEUE = "jms/queue/DLQ";
+    String TARGET_CONNECTION_FACTORY = "target-connection-factory";
+    String REMOTE_CONNECTION_FACTORY = "jms/RemoteConnectionFactory";
+    String TARGET_DESTINATION = "target-destination";
+
+
     Address SUBSYSTEM_ADDRESS = Address.subsystem(MESSAGING_ACTIVEMQ);
 
     // ------------------------------------------------------ server
@@ -305,6 +321,14 @@ public interface MessagingFixtures {
         return serverAddress(server).and(HA_POLICY, name);
     }
 
+    // ------------------------------------------------------ jms-bridge
 
+    String JMSBRIDGE_CREATE = Ids.build("jmsbridge", "create", Random.name());
+    String JMSBRIDGE_CREATE2 = Ids.build("jmsbridge", "create2", Random.name());
+    String JMSBRIDGE_UPDATE = Ids.build("jmsbridge", "update", Random.name());
+    String JMSBRIDGE_DELETE = Ids.build("jmsbridge", "delete", Random.name());
 
+    static Address jmsBridgeAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(JMS_BRIDGE, name);
+    }
 }

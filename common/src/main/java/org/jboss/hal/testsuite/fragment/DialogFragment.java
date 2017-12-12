@@ -21,6 +21,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.btnDefault;
 import static org.jboss.hal.resources.CSS.btnPrimary;
 import static org.jboss.hal.resources.CSS.modalFooter;
 
@@ -38,6 +39,10 @@ public class DialogFragment {
 
     public WebElement getPrimaryButton() {
         return root.findElement(By.cssSelector("." + modalFooter + " ." + btnPrimary));
+    }
+
+    public WebElement getSecondaryButton() {
+        return root.findElement(By.cssSelector("." + modalFooter + " ." + btnDefault));
     }
 
     public WebElement getRoot() {
