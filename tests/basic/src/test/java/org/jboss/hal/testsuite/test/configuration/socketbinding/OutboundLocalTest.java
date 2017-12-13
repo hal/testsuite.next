@@ -35,7 +35,6 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.socketbindings.AddSocketBinding;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
-import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.SOURCE_PORT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_REF;
 import static org.jboss.hal.testsuite.creaper.command.SocketBindingCommand.refName;
