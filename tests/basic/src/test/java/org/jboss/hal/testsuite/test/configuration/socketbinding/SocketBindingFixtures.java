@@ -31,6 +31,7 @@ public interface SocketBindingFixtures {
     String PRIVATE = "private";
     String PUBLIC = "public";
     String STANDARD_SOCKETS = "standard-sockets";
+    String SOURCE_PORT = "source-port";
 
     // ------------------------------------------------------ socket binding group
 
