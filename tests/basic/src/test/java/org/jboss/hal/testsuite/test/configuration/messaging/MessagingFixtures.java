@@ -62,7 +62,7 @@ public interface MessagingFixtures {
     String MAX_BATCH_TIME = "max-batch-time";
     String TARGET_CONTEXT = "target-context";
     String SOURCE_CONNECTION_FACTORY = "source-connection-factory";
-    String CONNECTION_FACTORY = "ConnectionFactory";
+    String CONNECTION_FACTORY_VALUE = "ConnectionFactory";
     String SOURCE_DESTINATION = "source-destination";
     String DESTINATION_QUEUE = "jms/queue/DLQ";
     String TARGET_CONNECTION_FACTORY = "target-connection-factory";

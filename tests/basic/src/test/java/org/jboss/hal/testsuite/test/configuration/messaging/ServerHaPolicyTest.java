@@ -215,13 +215,11 @@ public class ServerHaPolicyTest {
 
     @Test
     public void viewEmptyHaPolicy() throws Exception {
-        console.waitNoNotification();
         column.selectItem(MESSAGING_SERVER_HA_POLICY).dropdown().click("View");
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.MESSAGING_SERVER_HA_POLICY)
                 .with(SERVER, SRV_UPDATE)
                 .build();
-        console.waitNoNotification();
         console.verifyPlace(placeRequest);
     }
 

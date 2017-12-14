@@ -34,6 +34,7 @@ import static org.jboss.hal.testsuite.Selectors.contains;
 public class TagsInputFragment {
 
     @FindBy(css = "input[type=text]." + tags) private WebElement inputElement;
+    @FindBy(className = "tag-manager-container") private WebElement tagsElement;
 
     /** Adds the values to this list item. */
     public TagsInputFragment add(List<String> values) {
@@ -67,6 +68,15 @@ public class TagsInputFragment {
     /** Adds a name/value pair to this properties item. */
     public TagsInputFragment add(String name, String value) {
         return internalAdd(name + "=" + value);
+    }
+
+    public void removeTags() {
+        List<WebElement> tagRemoves = tagsElement.findElements(ByJQuery.className("tm-tag-remove"));
+        int size = tagRemoves.size();
+        for (int i = size - 1; i >= 0; i--) {
+            // as each tag is removed, it is also removed from the list, so start removing from the end,
+            tagRemoves.get(i).click();
+        }
     }
 
     private TagsInputFragment internalAdd(String value) {
