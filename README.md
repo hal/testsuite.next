@@ -27,7 +27,9 @@ Examples of invalid combinations:
 
 ## Run Tests 
 
-In order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. Use the following commands to remove the security realm from the management interface:
+In order to run tests you need a running WildFly / JBoss EAP server with an insecure management interface. The easiest way is to use the provided scripts `start-wildfly.sh` and `stop-wildfly.sh`. They use the docker image [halconsole/hal-wildfly](https://hub.docker.com/r/halconsole/hal-wildfly/) which is based on [jboss/wildfly:11.0.0.Final](https://hub.docker.com/r/jboss/wildfly/) and includes the latest HAl.next console plus standalone configuration with an insecure management interface.
+
+If you rather want to use a custom WildFly instance, use the following commands to remove the security realm from the management interface:
 
 Standalone
 
