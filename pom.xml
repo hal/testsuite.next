@@ -65,7 +65,7 @@
         <suite.domain.default.profile>full</suite.domain.default.profile>
         <suite.domain.default.server>server-one</suite.domain.default.server>
         <suite.mode/>
-        <suite.url>http://localhost:9990/console/index.html</suite.url>
+        <suite.url>http://localhost:9990/console/ts.html</suite.url>
         <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
         <test.excluded.category/>
         <test.included.category/>
