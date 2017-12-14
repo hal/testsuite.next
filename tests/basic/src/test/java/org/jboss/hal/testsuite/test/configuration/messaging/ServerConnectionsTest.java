@@ -745,9 +745,6 @@ public class ServerConnectionsTest {
     public void connectionFactoryRemove() throws Exception {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getConnectionFactoryTable();
-        FormFragment form = page.getConnectionFactoryForm();
-        table.bind(form);
-
         crudOperations.delete(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_DELETE), table, CONN_FAC_DELETE);
     }
 

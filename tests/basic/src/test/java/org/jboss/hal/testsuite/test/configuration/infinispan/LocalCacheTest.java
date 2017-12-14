@@ -90,14 +90,14 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
         FormFragment form = page.getLocalCacheForm();
 
-        String jndiName = Random.jndiName();
+        String moduleName = Random.name();
         crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE), form,
                 f -> {
-                    f.text(JNDI_NAME, jndiName);
+                    f.text(MODULE, moduleName);
                     f.flip(STATISTICS_ENABLED, true);
                 },
                 resourceVerifier -> {
-                    resourceVerifier.verifyAttribute(JNDI_NAME, jndiName);
+                    resourceVerifier.verifyAttribute(MODULE, moduleName);
                     resourceVerifier.verifyAttribute(STATISTICS_ENABLED, true);
 
                 });

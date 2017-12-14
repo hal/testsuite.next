@@ -41,7 +41,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.resources.Ids.JMS_BRIDGE;
 import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONNECTION_FACTORY;
 
 @RunWith(Arquillian.class)
 public class JmsBridgeViewTest {
@@ -64,7 +63,7 @@ public class JmsBridgeViewTest {
                 .and(MAX_BATCH_SIZE, 1)
                 .and(MAX_BATCH_TIME, 1)
                 .and(TARGET_CONTEXT, TARGET_CONTEXT_MODEL)
-                .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY)
+                .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE)
                 .and(SOURCE_DESTINATION, DESTINATION_QUEUE)
                 .and(TARGET_CONNECTION_FACTORY, REMOTE_CONNECTION_FACTORY)
                 .and(TARGET_DESTINATION, DESTINATION_QUEUE);

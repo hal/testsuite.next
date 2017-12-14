@@ -68,7 +68,7 @@ public class JmsBridgeFinderTest {
                 .and(MAX_BATCH_SIZE, 1)
                 .and(MAX_BATCH_TIME, 1)
                 .and(TARGET_CONTEXT, TARGET_CONTEXT_MODEL)
-                .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY)
+                .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE)
                 .and(SOURCE_DESTINATION, DESTINATION_QUEUE)
                 .and(TARGET_CONNECTION_FACTORY, REMOTE_CONNECTION_FACTORY)
                 .and(TARGET_DESTINATION, DESTINATION_QUEUE);
@@ -110,7 +110,7 @@ public class JmsBridgeFinderTest {
         dialog.getForm().number(MAX_BATCH_TIME, 1);
         dialog.getForm().select(QUALITY_OF_SERVICE, AT_MOST_ONCE);
         dialog.getForm().properties(TARGET_CONTEXT).add(TARGET_CONTEXT_MODEL);
-        dialog.getForm().text(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY);
+        dialog.getForm().text(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE);
         dialog.getForm().text(SOURCE_DESTINATION, DESTINATION_QUEUE);
         dialog.getForm().text(TARGET_CONNECTION_FACTORY, REMOTE_CONNECTION_FACTORY);
         dialog.getForm().text(TARGET_DESTINATION, DESTINATION_QUEUE);
