@@ -47,7 +47,7 @@ public class HomePageTest {
     }
 
     @Test
-    public void topLevelCategories() throws Exception {
+    public void topLevelCategories() {
         HeaderFragment header = console.header();
         List<WebElement> topLevelCategories = header.getTopLevelCategories();
         assertEquals(7, topLevelCategories.size());
@@ -62,7 +62,7 @@ public class HomePageTest {
     }
 
     @Test
-    public void modules() throws Exception {
+    public void modules() {
         assertTrue(containsModule("Deployments"));
         assertTrue(containsModule("Configuration"));
         assertTrue(containsModule("Runtime"));
