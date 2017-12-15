@@ -58,6 +58,7 @@ public class GlobalModulesTest {
     @AfterClass
     public static void afterClass() throws Exception {
         client.apply(backup.restore());
+        operations.undefineAttribute(SUBSYSTEM_ADDRESS, GLOBAL_MODULES);
     }
 
     @Inject private Console console;

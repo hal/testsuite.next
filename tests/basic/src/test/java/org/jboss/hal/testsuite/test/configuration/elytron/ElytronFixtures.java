@@ -33,8 +33,13 @@ public interface ElytronFixtures {
     String HTTP_SERVER_MECH_FACTORY = "http-server-mechanism-factory";
     String HTTP_FACTORIES_ITEM = "http-factories-item";
     String SASL_FACTORIES_ITEM = "sasl-factories-item";
+    String OTHER_FACTORIES_ITEM = "other-factories-item";
+    String TRANSFORMERS_ITEM = "transformers-item";
+    String PRINCIPAL_TRANSFORMERS = "principal-transformers";
     String PROVIDERS = "providers";
-
+    String PRINCIPAL = "principal";
+    String CONSTANT = "constant";
+    String REPLACEMENT = "replacement";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -47,6 +52,13 @@ public interface ElytronFixtures {
     String PROVIDER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_SASL_SERVER_FACTORY, ITEM);
     String SASL_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_SASL_AUTHENTICATION_FACTORY, ITEM);
     String SERVICE_LOADER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY, ITEM);
+    String KERBEROS_SECURITY_FACTORY_ITEM = Ids.build(ELYTRON_KERBEROS_SECURITY_FACTORY, ITEM);
+    String AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_AGGREGATE_PRINCIPAL_TRANSFORMER, ITEM);
+    String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
+    String CONSTANT_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CONSTANT_PRINCIPAL_TRANSFORMER, ITEM);
+    String CUSTOM_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CUSTOM_PRINCIPAL_TRANSFORMER, ITEM);
+    String REGEX_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_PRINCIPAL_TRANSFORMER, ITEM);
+    String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, ITEM);
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(ELYTRON);
 
@@ -152,6 +164,82 @@ public interface ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(SERVICE_LOADER_SASL_SERVER_FACTORY, name);
     }
 
+
+    // -------------- kerberos-security
+
+    String KERB_CREATE = Ids.build("kerb", "create", Random.name());
+    String KERB_UPDATE = Ids.build("kerb", "update", Random.name());
+    String KERB_DELETE = Ids.build("kerb", "delete", Random.name());
+
+    static Address kerberosSecurityFactoryAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(KERBEROS_SECURITY_FACTORY, name);
+    }
+
+    // -------------- aggregate-principal-transformer
+
+    String AGG_PRI_TRANS_CREATE = Ids.build("agg-pri-trans", "create", Random.name());
+    String AGG_PRI_TRANS_UPDATE = Ids.build("agg-pri-trans", "update", Random.name());
+    String AGG_PRI_TRANS_DELETE = Ids.build("agg-pri-trans", "delete", Random.name());
+
+    static Address aggregatePrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_PRINCIPAL_TRANSFORMER, name);
+    }
+
+    // -------------- chained-principal-transformer
+
+    String CHA_PRI_TRANS_CREATE = Ids.build("cha-pri-trans", "create", Random.name());
+    String CHA_PRI_TRANS_UPDATE = Ids.build("cha-pri-trans", "update", Random.name());
+    String CHA_PRI_TRANS_DELETE = Ids.build("cha-pri-trans", "delete", Random.name());
+
+    static Address chainedPrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CHAINED_PRINCIPAL_TRANSFORMER, name);
+    }
+
+    // -------------- constant-principal-transformer
+
+    String CONS_PRI_TRANS_CREATE = Ids.build("cons-pri-trans", "create", Random.name());
+    String CONS_PRI_TRANS_UPDATE = Ids.build("cons-pri-trans", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE2 = Ids.build("cons-pri-trans2", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE3 = Ids.build("cons-pri-trans3", "update", Random.name());
+    String CONS_PRI_TRANS_DELETE = Ids.build("cons-pri-trans", "delete", Random.name());
+
+    static Address constantPrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONSTANT_PRINCIPAL_TRANSFORMER, name);
+    }
+
+    // -------------- custom-principal-transformer
+
+    String CUST_PRI_TRANS_CREATE = Ids.build("cust-pri-trans", "create", Random.name());
+    String CUST_PRI_TRANS_UPDATE = Ids.build("cust-pri-trans", "update", Random.name());
+    String CUST_PRI_TRANS_DELETE = Ids.build("cust-pri-trans", "delete", Random.name());
+
+    static Address customPrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CUSTOM_PRINCIPAL_TRANSFORMER, name);
+    }
+
+    // -------------- regex-principal-transformer
+
+    String REG_PRI_TRANS_CREATE = Ids.build("reg-pri-trans", "create", Random.name());
+    String REG_PRI_TRANS_UPDATE = Ids.build("reg-pri-trans", "update", Random.name());
+    String REG_PRI_TRANS_DELETE = Ids.build("reg-pri-trans", "delete", Random.name());
+
+    static Address regexPrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(REGEX_PRINCIPAL_TRANSFORMER, name);
+    }
+
+    // -------------- regex-validating-principal-transformer
+
+    String REGV_PRI_TRANS_CREATE = Ids.build("regv-pri-trans", "create", Random.name());
+    String REGV_PRI_TRANS_UPDATE = Ids.build("regv-pri-trans", "update", Random.name());
+    String REGV_PRI_TRANS_DELETE = Ids.build("regv-pri-trans", "delete", Random.name());
+
+    static Address regexValidatingPrincipalTransformerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, name);
+    }
+
+
+
+    // ===================================================================================
     // -------------- security-domain
 
     String SEC_DOM_CREATE = Ids.build("sec-dom", "create", Random.name());
