@@ -23,7 +23,6 @@ import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -89,14 +88,12 @@ public class JmsBridgeFinderTest {
     }
 
     @Inject private Console console;
-    @Inject private CrudOperations crudOperations;
     private ColumnFragment column;
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(MESSAGING_ACTIVEMQ)
-                        .append(Ids.MESSAGING_CATEGORY, JMS_BRIDGE_ITEM))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(MESSAGING_ACTIVEMQ)
+                .append(Ids.MESSAGING_CATEGORY, JMS_BRIDGE_ITEM))
                 .column(JMS_BRIDGE);
     }
 
@@ -141,7 +138,7 @@ public class JmsBridgeFinderTest {
                 .append(Ids.CONFIGURATION_SUBSYSTEM, MESSAGING_ACTIVEMQ)
                 .append(Ids.MESSAGING_CATEGORY, JMS_BRIDGE_ITEM)
                 .append(Ids.JMS_BRIDGE, Ids.jmsBridge(JMSBRIDGE_UPDATE)));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -151,7 +148,7 @@ public class JmsBridgeFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.JMS_BRIDGE)
                 .with(NAME, JMSBRIDGE_UPDATE)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

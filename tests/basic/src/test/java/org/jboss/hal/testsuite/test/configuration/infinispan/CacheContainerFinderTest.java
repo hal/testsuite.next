@@ -68,8 +68,7 @@ public class CacheContainerFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(INFINISPAN))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(INFINISPAN))
                 .column(Ids.CACHE_CONTAINER);
     }
 
@@ -95,7 +94,7 @@ public class CacheContainerFinderTest {
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION,
                 configurationSubsystemPath(INFINISPAN)
                         .append(Ids.CACHE_CONTAINER, Ids.cacheContainer(CC_READ)));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -105,7 +104,7 @@ public class CacheContainerFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.CACHE_CONTAINER)
                 .with(NAME, CC_READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

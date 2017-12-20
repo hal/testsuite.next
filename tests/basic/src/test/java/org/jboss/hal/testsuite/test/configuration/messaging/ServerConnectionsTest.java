@@ -126,7 +126,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorGenericTryCreate() throws Exception {
+    public void acceptorGenericTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM), Ids.build(MESSAGING_ACCEPTOR, ITEM));
         TableFragment table = page.getAcceptorGenericTable();
@@ -148,7 +148,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorGenericTryUpdate() throws Exception {
+    public void acceptorGenericTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM), Ids.build(MESSAGING_ACCEPTOR, ITEM));
         TableFragment table = page.getAcceptorGenericTable();
@@ -189,7 +189,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorInVMTryCreate() throws Exception {
+    public void acceptorInVMTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_IN_VM_ACCEPTOR, ITEM));
@@ -213,7 +213,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorInVMTryUpdate() throws Exception {
+    public void acceptorInVMTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_IN_VM_ACCEPTOR, ITEM));
@@ -256,7 +256,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorHttpTryCreate() throws Exception {
+    public void acceptorHttpTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_HTTP_ACCEPTOR, ITEM));
@@ -280,7 +280,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorHttpTryUpdate() throws Exception {
+    public void acceptorHttpTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_HTTP_ACCEPTOR, ITEM));
@@ -324,7 +324,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorRemoteTryCreate() throws Exception {
+    public void acceptorRemoteTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_REMOTE_ACCEPTOR, ITEM));
@@ -348,7 +348,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void acceptorRemoteTryUpdate() throws Exception {
+    public void acceptorRemoteTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_ACCEPTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_REMOTE_ACCEPTOR, ITEM));
@@ -390,7 +390,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorGenericTryCreate() throws Exception {
+    public void connectorGenericTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM), Ids.build(MESSAGING_CONNECTOR, ITEM));
         TableFragment table = page.getConnectorGenericTable();
@@ -412,7 +412,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorGenericTryUpdate() throws Exception {
+    public void connectorGenericTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM), Ids.build(MESSAGING_CONNECTOR, ITEM));
         TableFragment table = page.getConnectorGenericTable();
@@ -453,7 +453,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorInVMTryCreate() throws Exception {
+    public void connectorInVMTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_IN_VM_CONNECTOR, ITEM));
@@ -477,7 +477,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorInVMTryUpdate() throws Exception {
+    public void connectorInVMTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_IN_VM_CONNECTOR, ITEM));
@@ -521,7 +521,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorHttpTryCreate() throws Exception {
+    public void connectorHttpTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_HTTP_CONNECTOR, ITEM));
@@ -545,7 +545,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorHttpTryUpdate() throws Exception {
+    public void connectorHttpTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_HTTP_CONNECTOR, ITEM));
@@ -589,7 +589,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorRemoteTryCreate() throws Exception {
+    public void connectorRemoteTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_REMOTE_CONNECTOR, ITEM));
@@ -613,7 +613,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorRemoteTryUpdate() throws Exception {
+    public void connectorRemoteTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(Ids.build(MESSAGING_CONNECTOR, GROUP, ITEM),
                         Ids.build(MESSAGING_REMOTE_CONNECTOR, ITEM));
@@ -654,7 +654,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorServiceTryCreate() throws Exception {
+    public void connectorServiceTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CONNECTOR_SERVICE, ITEM));
         TableFragment table = page.getConnectorServiceTable();
         FormFragment form = page.getConnectorServiceForm();
@@ -674,7 +674,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectorServiceTryUpdate() throws Exception {
+    public void connectorServiceTryUpdate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CONNECTOR_SERVICE, ITEM));
         TableFragment table = page.getConnectorServiceTable();
         FormFragment form = page.getConnectorServiceForm();
@@ -712,7 +712,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectionFactoryTryCreate() throws Exception {
+    public void connectionFactoryTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getConnectionFactoryTable();
         FormFragment form = page.getConnectionFactoryForm();
@@ -732,7 +732,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void connectionFactoryTryUpdate() throws Exception {
+    public void connectionFactoryTryUpdate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getConnectionFactoryTable();
         FormFragment form = page.getConnectionFactoryForm();
@@ -767,7 +767,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void pooledConnectionFactoryTryCreate() throws Exception {
+    public void pooledConnectionFactoryTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getPooledConnectionFactoryTable();
         FormFragment form = page.getPooledConnectionFactoryForm();
@@ -789,7 +789,7 @@ public class ServerConnectionsTest {
     }
 
     @Test
-    public void pooledConnectionFactoryTryUpdate() throws Exception {
+    public void pooledConnectionFactoryTryUpdate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getPooledConnectionFactoryTable();
         FormFragment form = page.getPooledConnectionFactoryForm();
@@ -962,6 +962,4 @@ public class ServerConnectionsTest {
         crudOperations.deleteSingleton(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), form,
                 resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
     }
-
-
 }

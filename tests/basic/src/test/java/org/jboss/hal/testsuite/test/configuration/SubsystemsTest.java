@@ -56,18 +56,18 @@ public class SubsystemsTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS)))
+        column = console.finder(NameTokens.CONFIGURATION,
+                new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS)))
                 .column(Ids.CONFIGURATION_SUBSYSTEM);
     }
 
     @Test
-    public void numberOfSubsystems() throws Exception {
+    public void numberOfSubsystems() {
         assertEquals(subsystems.size(), column.getItems().size());
     }
 
     @Test
-    public void filter() throws Exception {
+    public void filter() {
         String filter = "io";
         column.filter(filter);
 

@@ -15,7 +15,6 @@
  */
 package org.jboss.hal.testsuite.fragment.finder;
 
-import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
@@ -30,8 +29,6 @@ import static org.jboss.arquillian.graphene.Graphene.waitModel;
 /** Fragment for the finder. Use {@link Console#finder(String)} to get an instance. */
 public class FinderFragment {
 
-    // ------------------------------------------------------ finder path helper methods
-
     public static FinderPath configurationSubsystemPath(String subsystem) {
         return new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
@@ -39,20 +36,6 @@ public class FinderFragment {
     }
 
     @Drone private WebDriver browser;
-    @Inject private Console console;
-    private String place;
-
-    /** Selects the specified finder path and waits until the last column ID in the path is present */
-    public FinderFragment select(FinderPath path) {
-        if (!path.isEmpty()) {
-            assertPlace();
-            browser.get(console.absoluteUrl(place + ";path=" + path.toString()));
-            if (path.last().itemId != null) {
-                waitModel().until().element(By.id(path.last().itemId)).is().present();
-            }
-        }
-        return this;
-    }
 
     /** Returns the specified column. */
     public ColumnFragment column(String columnId) {
@@ -67,17 +50,5 @@ public class FinderFragment {
         By selector = By.id(Ids.PREVIEW_ID);
         waitGui().until().element(selector).is().visible();
         return createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
-    }
-
-    /**
-     * Initializes the finder with its place. Must not be called manually. Instead use {@link
-     * org.jboss.hal.testsuite.Console#finder(String)} which calls this method automatically.
-     */
-    public void initPlace(String place) {
-        this.place = place;
-    }
-
-    private void assertPlace() {
-        assert place != null : "No place available. Did you obtain the finder using Console.finder(String)?";
     }
 }

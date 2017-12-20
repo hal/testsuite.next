@@ -72,12 +72,10 @@ public class ServerHaPolicyTest {
     private ColumnFragment column;
     private WizardFragment wizard;
 
-
     private void refreshConfigurationColumn() throws Exception {
         // after the previous operations, it is necessary to refresh the "server" column
-        console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(MESSAGING_ACTIVEMQ)
-                        .append(Ids.MESSAGING_CATEGORY, SERVER))
+        console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(MESSAGING_ACTIVEMQ)
+                .append(Ids.MESSAGING_CATEGORY, SERVER))
                 .column(MESSAGING_SERVER_CONFIGURATION)
                 .refresh();
 
@@ -87,12 +85,10 @@ public class ServerHaPolicyTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(MESSAGING_ACTIVEMQ)
-                        .append(Ids.MESSAGING_CATEGORY, SERVER)
-                        .append(MESSAGING_SERVER_CONFIGURATION, messagingServer(SRV_UPDATE)))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(MESSAGING_ACTIVEMQ)
+                .append(Ids.MESSAGING_CATEGORY, SERVER)
+                .append(MESSAGING_SERVER_CONFIGURATION, messagingServer(SRV_UPDATE)))
                 .column(MESSAGING_SERVER_SETTINGS);
-
     }
 
     @Test
@@ -214,13 +210,13 @@ public class ServerHaPolicyTest {
     }
 
     @Test
-    public void viewEmptyHaPolicy() throws Exception {
+    public void viewEmptyHaPolicy() {
         column.selectItem(MESSAGING_SERVER_HA_POLICY).dropdown().click("View");
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.MESSAGING_SERVER_HA_POLICY)
                 .with(SERVER, SRV_UPDATE)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -259,7 +255,8 @@ public class ServerHaPolicyTest {
         column.selectItem(MESSAGING_SERVER_HA_POLICY).defaultAction();
         Library.letsSleep(1000);
         FormFragment form = page.getSharedStoreMasterForm();
-        crudOperations.update(haPolicyAddress(SRV_UPDATE, SHARED_STORE_MASTER), form, FAILOVER_ON_SERVER_SHUTDOWN, true);
+        crudOperations.update(haPolicyAddress(SRV_UPDATE, SHARED_STORE_MASTER), form, FAILOVER_ON_SERVER_SHUTDOWN,
+                true);
         operations.removeIfExists(haPolicyAddress(SRV_UPDATE, SHARED_STORE_MASTER));
     }
 
@@ -312,5 +309,4 @@ public class ServerHaPolicyTest {
         crudOperations.update(haPolicyAddress(SRV_UPDATE, haPolicy), form, attribute, anyString);
         operations.removeIfExists(haPolicyAddress(SRV_UPDATE, haPolicy));
     }
-
 }

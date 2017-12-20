@@ -36,6 +36,7 @@ import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.fragment.VerticalNavigationFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -67,7 +68,7 @@ import static org.junit.Assert.assertEquals;
 public class Console {
 
     @Drone private WebDriver browser;
-    @ArquillianResource private URL url;
+    @ArquillianResource private URL baseUrl;
     private TokenFormatter tokenFormatter;
 
     public Console() {
@@ -77,27 +78,28 @@ public class Console {
 
     // ------------------------------------------------------ navigation
 
+    public void navigate(PlaceRequest request) {
+        navigate(request, By.id(Ids.ROOT_CONTAINER));
+    }
+
+    public void navigate(PlaceRequest request, By selector) {
+        String fragment = fragment(request);
+        String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
+        try {
+            URL url = new URL(baseUrl, hashFragment);
+            browser.navigate().to(url);
+            waitModel().until().element(selector).is().present();
+        } catch (MalformedURLException e) {
+            throw new LocationException("Malformed URL: ", e.getCause());
+        }
+    }
+
     public void reload() {
         browser.navigate().refresh();
         waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
     }
 
-    /** Returns an absolute URL for the specified place request. */
-    public String absoluteUrl(PlaceRequest placeRequest) {
-        return absoluteUrl(fragment(placeRequest));
-    }
-
-    /** Returns an absolute URL ending with the specified fragment (w/o '#'). */
-    public String absoluteUrl(String fragment) {
-        String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
-        try {
-            return new URL(url, hashFragment).toExternalForm();
-        } catch (MalformedURLException e) {
-            throw new LocationException("URL to construct is malformed.", e.getCause());
-        }
-    }
-
-    public void verifyPlace(PlaceRequest placeRequest) {
+    public void verify(PlaceRequest placeRequest) {
         String expected = fragment(placeRequest);
         String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
         assertEquals(expected, actual);
@@ -158,12 +160,19 @@ public class Console {
 
     /** Navigates to the specified place, creates and returns the finder fragment */
     public FinderFragment finder(String place) {
-        browser.get(absoluteUrl(place));
+        return finder(place, null);
+    }
+
+    /** Navigates to the specified place, selects the finder path, creates and returns the finder fragment */
+    public FinderFragment finder(String place, FinderPath path) {
+        PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(place);
+        if (path != null) {
+            builder.with("path", path.toString());
+        }
+        Library.letsSleep(1111);
         By selector = By.id(Ids.FINDER);
-        waitModel().until().element(selector).is().present();
-        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(selector));
-        finder.initPlace(place);
-        return finder;
+        navigate(builder.build(), selector);
+        return createPageFragment(FinderFragment.class, browser.findElement(selector));
     }
 
     public FooterFragment footer() {

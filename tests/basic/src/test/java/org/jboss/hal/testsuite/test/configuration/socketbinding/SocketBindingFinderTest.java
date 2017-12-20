@@ -70,8 +70,8 @@ public class SocketBindingFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SOCKET_BINDINGS)))
+        column = console.finder(NameTokens.CONFIGURATION,
+                new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SOCKET_BINDINGS)))
                 .column(Ids.SOCKET_BINDING_GROUP);
     }
 
@@ -89,27 +89,27 @@ public class SocketBindingFinderTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertTrue(column.containsItem(SBG_READ));
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(SBG_READ);
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.SOCKET_BINDINGS))
                 .append(Ids.SOCKET_BINDING_GROUP, SBG_READ));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(SBG_READ).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.SOCKET_BINDING_GROUP)
                 .with(NAME, SBG_READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

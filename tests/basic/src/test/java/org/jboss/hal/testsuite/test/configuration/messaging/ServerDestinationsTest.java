@@ -287,7 +287,7 @@ public class ServerDestinationsTest {
     }
 
     @Test
-    public void divertCreateRequiredField() throws Exception {
+    public void divertCreateRequiredField() {
         console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
@@ -308,7 +308,7 @@ public class ServerDestinationsTest {
     }
 
     @Test
-    public void divertUpdateRequiredField() throws Exception {
+    public void divertUpdateRequiredField() {
         console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
@@ -327,5 +327,4 @@ public class ServerDestinationsTest {
 
         crudOperations.delete(divertAddress(SRV_UPDATE, DIVERT_DELETE), table, DIVERT_DELETE);
     }
-
 }

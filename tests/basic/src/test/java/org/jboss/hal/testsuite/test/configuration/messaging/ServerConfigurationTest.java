@@ -98,8 +98,9 @@ public class ServerConfigurationTest {
     }
 
     // --------------- management tab
+
     @Test
-    public void managementMaskJmxDomain() throws Exception {
+    public void managementMaskJmxDomain() {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
@@ -108,7 +109,7 @@ public class ServerConfigurationTest {
     }
 
     @Test
-    public void managementUnmaskJmxDomain() throws Exception {
+    public void managementUnmaskJmxDomain() {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
@@ -118,6 +119,7 @@ public class ServerConfigurationTest {
     }
 
     // --------------- security tab
+
     @Test
     public void securityUpdateElytronDomain() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
@@ -128,6 +130,7 @@ public class ServerConfigurationTest {
     }
 
     // --------------- journal tab
+
     @Test
     public void updateJournal() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
@@ -151,7 +154,7 @@ public class ServerConfigurationTest {
 
     // --------------- cluster credential reference tab
     @Test
-    public void clusterCredentialReferenceAddInvalid() throws Exception {
+    public void clusterCredentialReferenceAddInvalid() {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
@@ -185,7 +188,7 @@ public class ServerConfigurationTest {
     }
 
     @Test
-    public void clusterCredentialReferenceEditInvalid() throws Exception {
+    public void clusterCredentialReferenceEditInvalid() {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();
@@ -371,6 +374,4 @@ public class ServerConfigurationTest {
         FormFragment form = page.getPagingDirectoryForm();
         crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), form);
     }
-
-
 }

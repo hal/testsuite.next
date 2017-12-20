@@ -17,27 +17,20 @@ package org.jboss.hal.testsuite.page;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.arquillian.graphene.Graphene.waitModel;
-
 public abstract class BasePage {
 
-    @Drone protected WebDriver browser;
-    @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
     @Inject private Console console;
+    @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
 
     /** Navigates to the name token specified in the {@code @Place} annotation. */
     public void navigate() {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
-        browser.get(console.absoluteUrl(placeRequest));
-        waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
+        console.navigate(placeRequest);
     }
 
     /**
@@ -47,8 +40,7 @@ public abstract class BasePage {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
                 .with(name, value)
                 .build();
-        browser.get(console.absoluteUrl(placeRequest));
-        waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
+        console.navigate(placeRequest);
     }
 
     public WebElement getRootContainer() {

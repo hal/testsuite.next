@@ -42,7 +42,7 @@ public class ConfigurationTest {
     }
 
     @Test
-    public void items() throws Exception {
+    public void items() {
         ColumnFragment column = finder.column(Ids.CONFIGURATION);
         assertTrue(column.containsItem(Ids.asId(Names.SUBSYSTEMS)));
         assertTrue(column.containsItem(Ids.asId(Names.INTERFACES)));
