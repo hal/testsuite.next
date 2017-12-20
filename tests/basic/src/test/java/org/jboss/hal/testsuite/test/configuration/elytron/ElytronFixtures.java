@@ -40,6 +40,9 @@ public interface ElytronFixtures {
     String PRINCIPAL = "principal";
     String CONSTANT = "constant";
     String REPLACEMENT = "replacement";
+    String ENABLING = "enabling";
+    String HASH_SHA = "HASH_SHA";
+    String PREDEFINED_FILTER = "predefined-filter";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -82,6 +85,13 @@ public interface ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, name);
     }
 
+    // -------------- configurable-http-server-mechanism-factory / filters - complex attribute
+
+    String FILTERS_CREATE = Ids.build("filt", "create", Random.name());
+    String FILTERS_UPDATE = Ids.build("filt", "update", Random.name());
+    String FILTERS_UPDATE2 = Ids.build("filt2", "update", Random.name());
+    String FILTERS_DELETE = Ids.build("filt", "delete", Random.name());
+
     // -------------- http-authentication-factory
 
     String HTTP_AUTH_CREATE = Ids.build("http-auth", "create", Random.name());
@@ -91,6 +101,20 @@ public interface ElytronFixtures {
     static Address httpAuthenticationFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(HTTP_AUTHENTICATION_FACTORY, name);
     }
+
+    // -------------- http-authentication-factory - mechanism configurations
+
+    String MECH_CONF_CREATE = Ids.build("mech-conf", "create", Random.name());
+    String MECH_CONF_UPDATE = Ids.build("mech-conf", "update", Random.name());
+    String MECH_CONF_UPDATE2 = Ids.build("mech-conf2", "update", Random.name());
+    String MECH_CONF_DELETE = Ids.build("mech-conf", "delete", Random.name());
+
+    // -------------- http-authentication-factory - mechanism configurations - mechanism realm configurations
+
+    String MECH_RE_CONF_CREATE = Ids.build("mech-re-conf", "create", Random.name());
+    String MECH_RE_CONF_UPDATE = Ids.build("mech-re-conf", "update", Random.name());
+    String MECH_RE_CONF_UPDATE2 = Ids.build("mech-re-conf2", "update", Random.name());
+    String MECH_RE_CONF_DELETE = Ids.build("mech-re-conf", "delete", Random.name());
 
     // -------------- provider-http-server-mechanism-factory
 

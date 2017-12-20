@@ -23,6 +23,9 @@ import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.FILTERS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MECHANISM_CONFIGURATIONS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MECHANISM_REALM_CONFIGURATIONS;
 import static org.jboss.hal.resources.Ids.*;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 
@@ -34,8 +37,14 @@ public class ElytronFactoriesTransformersPage extends BasePage {
     @FindBy(id = ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY + "-" + FORM) private FormFragment aggregateHttpServerMechanismForm;
     @FindBy(id = ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment configurableHttpServerMechanismTable;
     @FindBy(id = ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY + "-" + FORM) private FormFragment configurableHttpServerMechanismForm;
+    @FindBy(id = ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY + "-" + FILTERS + "-" + TABLE +  WRAPPER) private TableFragment configurableHttpServerMechanismFiltersTable;
+    @FindBy(id = ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY + "-" + FILTERS + "-" + FORM) private FormFragment configurableHttpServerMechanismFiltersForm;
     @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment httpAuthenticationFactoryTable;
     @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + FORM) private FormFragment httpAuthenticationFactoryForm;
+    @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + MECHANISM_CONFIGURATIONS + "-" + TABLE +  WRAPPER) private TableFragment httpAuthFacMechanismConfigurationsTable;
+    @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + MECHANISM_CONFIGURATIONS + "-" + FORM) private FormFragment httpAuthFacMechanismConfigurationsForm;
+    @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + MECHANISM_REALM_CONFIGURATIONS + "-" + TABLE +  WRAPPER) private TableFragment httpAuthFacMechanismRealmConfigurationsTable;
+    @FindBy(id = ELYTRON_HTTP_AUTHENTICATION_FACTORY + "-" + MECHANISM_REALM_CONFIGURATIONS + "-" + FORM) private FormFragment httpAuthFacMechanismRealmConfigurationsForm;
     @FindBy(id = ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment providerHttpServerMechanismTable;
     @FindBy(id = ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY + "-" + FORM) private FormFragment providerHttpServerMechanismForm;
     @FindBy(id = ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment serviceLoaderHttpServerMechanismTable;
@@ -46,8 +55,12 @@ public class ElytronFactoriesTransformersPage extends BasePage {
     @FindBy(id = ELYTRON_AGGREGATE_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment aggregateSaslServerForm;
     @FindBy(id = ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment configurableSaslServerTable;
     @FindBy(id = ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment configurableSaslServerForm;
+    @FindBy(id = ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY + "-" + FILTERS + "-" + TABLE +  WRAPPER) private TableFragment configurableSaslServerFiltersTable;
+    @FindBy(id = ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY + "-" + FILTERS + "-" + FORM) private FormFragment configurableSaslServerFiltersForm;
     @FindBy(id = ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment mechanismProviderFilteringSaslServerTable;
     @FindBy(id = ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment mechanismProviderFilteringSaslServerForm;
+    @FindBy(id = ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY + "-" + FILTERS + "-" + TABLE +  WRAPPER) private TableFragment mechanismProviderFilteringSaslServerFiltersTable;
+    @FindBy(id = ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY + "-" + FILTERS + "-" + FORM) private FormFragment mechanismProviderFilteringSaslServerFiltersForm;
     @FindBy(id = ELYTRON_PROVIDER_SASL_SERVER_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment providerSaslServerTable;
     @FindBy(id = ELYTRON_PROVIDER_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment providerSaslServerForm;
     @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment saslAuthenticationFactoryTable;
@@ -91,12 +104,36 @@ public class ElytronFactoriesTransformersPage extends BasePage {
         return configurableHttpServerMechanismForm;
     }
 
+    public TableFragment getConfigurableHttpServerMechanismFiltersTable() {
+        return configurableHttpServerMechanismFiltersTable;
+    }
+
+    public FormFragment getConfigurableHttpServerMechanismFiltersForm() {
+        return configurableHttpServerMechanismFiltersForm;
+    }
+
     public TableFragment getHttpAuthenticationFactoryTable() {
         return httpAuthenticationFactoryTable;
     }
 
     public FormFragment getHttpAuthenticationFactoryForm() {
         return httpAuthenticationFactoryForm;
+    }
+
+    public TableFragment getHttpAuthFacMechanismConfigurationsTable() {
+        return httpAuthFacMechanismConfigurationsTable;
+    }
+
+    public FormFragment getHttpAuthFacMechanismConfigurationsForm() {
+        return httpAuthFacMechanismConfigurationsForm;
+    }
+
+    public TableFragment getHttpAuthFacMechanismRealmConfigurationsTable() {
+        return httpAuthFacMechanismRealmConfigurationsTable;
+    }
+
+    public FormFragment getHttpAuthFacMechanismRealmConfigurationsForm() {
+        return httpAuthFacMechanismRealmConfigurationsForm;
     }
 
     public TableFragment getProviderHttpServerMechanismTable() {
@@ -131,12 +168,28 @@ public class ElytronFactoriesTransformersPage extends BasePage {
         return configurableSaslServerForm;
     }
 
+    public TableFragment getConfigurableSaslServerFiltersTable() {
+        return configurableSaslServerFiltersTable;
+    }
+
+    public FormFragment getConfigurableSaslServerFiltersForm() {
+        return configurableSaslServerFiltersForm;
+    }
+
     public TableFragment getMechanismProviderFilteringSaslServerTable() {
         return mechanismProviderFilteringSaslServerTable;
     }
 
     public FormFragment getMechanismProviderFilteringSaslServerForm() {
         return mechanismProviderFilteringSaslServerForm;
+    }
+
+    public TableFragment getMechanismProviderFilteringSaslServerFiltersTable() {
+        return mechanismProviderFilteringSaslServerFiltersTable;
+    }
+
+    public FormFragment getMechanismProviderFilteringSaslServerFiltersForm() {
+        return mechanismProviderFilteringSaslServerFiltersForm;
     }
 
     public TableFragment getProviderSaslServerTable() {
