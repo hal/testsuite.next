@@ -26,7 +26,6 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
-import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.page.Places;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -71,8 +70,8 @@ public class ResourceAdapterFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        FinderFragment finder = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(RESOURCE_ADAPTERS));
-        column = finder.column(Ids.RESOURCE_ADAPTER);
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(RESOURCE_ADAPTERS))
+                .column(Ids.RESOURCE_ADAPTER);
     }
 
     @Test

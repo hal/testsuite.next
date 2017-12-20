@@ -17,13 +17,13 @@ package org.jboss.hal.testsuite.fragment.finder;
 
 
 /** A segment inside a {@link FinderPath}. */
-class FinderSegment {
+public class FinderSegment {
 
     /** Separator is used in URL tokens. Please choose a string which is safe to use in URLs */
     private static final String SEPARATOR = "~";
 
-    final String columnId;
-    final String itemId;
+    private final String columnId;
+    private final String itemId;
 
     FinderSegment(String columnId, String itemId) {
         this.columnId = columnId;
@@ -58,5 +58,13 @@ class FinderSegment {
     public String toString() {
         // Do not change this implementation as the place management relies on it!
         return columnId + SEPARATOR + itemId;
+    }
+
+    public String getColumnId() {
+        return columnId;
+    }
+
+    public String getItemId() {
+        return itemId;
     }
 }

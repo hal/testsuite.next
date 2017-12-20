@@ -37,6 +37,7 @@ import org.jboss.hal.testsuite.fragment.VerticalNavigationFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderPath;
+import org.jboss.hal.testsuite.fragment.finder.FinderSegment;
 import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -165,12 +166,19 @@ public class Console {
 
     /** Navigates to the specified place, selects the finder path, creates and returns the finder fragment */
     public FinderFragment finder(String place, FinderPath path) {
+        By selector = By.id(Ids.FINDER);
         PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(place);
         if (path != null) {
             builder.with("path", path.toString());
+            if (!path.isEmpty()) {
+                FinderSegment segment = path.last();
+                if (segment.getItemId() != null) {
+                    selector = By.id(segment.getItemId());
+                } else if (segment.getColumnId() != null) {
+                    selector = By.id(segment.getColumnId());
+                }
+            }
         }
-        Library.letsSleep(1111);
-        By selector = By.id(Ids.FINDER);
         navigate(builder.build(), selector);
         return createPageFragment(FinderFragment.class, browser.findElement(selector));
     }

@@ -40,7 +40,7 @@ public class FinderFragment {
     /** Returns the specified column. */
     public ColumnFragment column(String columnId) {
         By selector = By.id(columnId);
-        waitModel().until().element(selector).is().visible();
+        waitModel().until().element(selector).is().present();
         ColumnFragment column = createPageFragment(ColumnFragment.class, browser.findElement(selector));
         column.initColumnId(columnId);
         return column;
@@ -48,7 +48,7 @@ public class FinderFragment {
 
     public FinderPreviewFragment preview() {
         By selector = By.id(Ids.PREVIEW_ID);
-        waitGui().until().element(selector).is().visible();
+        waitGui().until().element(selector).is().present();
         return createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
     }
 }
