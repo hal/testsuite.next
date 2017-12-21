@@ -65,6 +65,10 @@ public class ElytronFactoriesTransformersPage extends BasePage {
     @FindBy(id = ELYTRON_PROVIDER_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment providerSaslServerForm;
     @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment saslAuthenticationFactoryTable;
     @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + FORM) private FormFragment saslAuthenticationFactoryForm;
+    @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + MECHANISM_CONFIGURATIONS + "-" + TABLE +  WRAPPER) private TableFragment saslAutFacMechanismConfigurationsTable;
+    @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + MECHANISM_CONFIGURATIONS + "-" + FORM) private FormFragment saslAutFacMechanismConfigurationsForm;
+    @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + MECHANISM_REALM_CONFIGURATIONS + "-" + TABLE +  WRAPPER) private TableFragment saslAuthFacMechanismRealmConfigurationsTable;
+    @FindBy(id = ELYTRON_SASL_AUTHENTICATION_FACTORY + "-" + MECHANISM_REALM_CONFIGURATIONS + "-" + FORM) private FormFragment saslAuthFacMechanismRealmConfigurationsForm;
     @FindBy(id = ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY + "-" + TABLE +  WRAPPER) private TableFragment serviceLoaderSaslServerTable;
     @FindBy(id = ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY + "-" + FORM) private FormFragment serviceLoaderSaslServerForm;
 
@@ -206,6 +210,22 @@ public class ElytronFactoriesTransformersPage extends BasePage {
 
     public FormFragment getSaslAuthenticationFactoryForm() {
         return saslAuthenticationFactoryForm;
+    }
+
+    public TableFragment getSaslAuthFacMechanismConfigurationsTable() {
+        return saslAutFacMechanismConfigurationsTable;
+    }
+
+    public FormFragment getSaslAuthFacMechanismConfigurationsForm() {
+        return saslAutFacMechanismConfigurationsForm;
+    }
+
+    public TableFragment getSaslAuthFacMechanismRealmConfigurationsTable() {
+        return saslAuthFacMechanismRealmConfigurationsTable;
+    }
+
+    public FormFragment getSaslAuthFacMechanismRealmConfigurationsForm() {
+        return saslAuthFacMechanismRealmConfigurationsForm;
     }
 
     public TableFragment getServiceLoaderSaslServerTable() {

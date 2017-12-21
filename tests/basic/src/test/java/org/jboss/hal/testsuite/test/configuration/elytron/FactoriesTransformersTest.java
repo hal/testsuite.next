@@ -40,7 +40,6 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
-import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.MECH_SASL_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.PREDEFINED_FILTER;
 
 @RunWith(Arquillian.class)
@@ -160,6 +159,9 @@ public class FactoriesTransformersTest {
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
         operations.add(saslAuthenticationFactoryAddress(SASL_AUTH_DELETE),
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
+
+        operations.writeListAttribute(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), MECHANISM_CONFIGURATIONS,
+                MECH_CONF_UPDATE_MODEL, MECH_CONF_DELETE_MODEL);
 
         operations.add(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_UPDATE));
         operations.add(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_DELETE));
@@ -617,7 +619,6 @@ public class FactoriesTransformersTest {
                         MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
     }
 
-
     // --------------- provider-http-server-mechanism-factory
 
     @Test
@@ -1044,6 +1045,115 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getSaslAuthenticationFactoryTable();
         crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_DELETE), table, SASL_AUTH_DELETE);
+    }
+
+    @Test
+    public void saslAuthFacMechanismConfigurationsCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
+                f -> f.text(MECHANISM_NAME, MECH_CONF_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                        MECH_CONF_CREATE));
+    }
+
+    @Test
+    public void saslAuthFacMechanismConfigurationsUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        FormFragment form = page.getSaslAuthFacMechanismConfigurationsForm();
+        mechanismConf.bind(form);
+        mechanismConf.select(MECH_CONF_UPDATE);
+
+        crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
+                f -> f.text(PROTOCOL, ANY_STRING),
+                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, PROTOCOL, ANY_STRING));
+    }
+
+    @Test
+    public void saslAuthFacMechanismConfigurationsDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
+                MECH_CONF_DELETE,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                        MECH_CONF_DELETE));
+    }
+
+    @Test
+    public void saslAuthFacMechanismRealmConfigurationsCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        TableFragment mechanismRealmConf = page.getSaslAuthFacMechanismRealmConfigurationsTable();
+        mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
+        waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
+
+        crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
+                f -> f.text(REALM_NAME, MECH_RE_CONF_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_CREATE));
+    }
+
+    @Test
+    public void saslAuthFacMechanismRealmConfigurationsUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        TableFragment mechanismRealmConf = page.getSaslAuthFacMechanismRealmConfigurationsTable();
+        mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
+        waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
+
+        FormFragment form = page.getSaslAuthFacMechanismRealmConfigurationsForm();
+        mechanismRealmConf.bind(form);
+        mechanismRealmConf.select(MECH_RE_CONF_UPDATE);
+
+        crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
+                f -> f.text(REALM_NAME, MECH_RE_CONF_UPDATE2),
+                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_UPDATE2));
+    }
+
+    @Test
+    public void saslAuthFacMechanismRealmConfigurationsDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
+        TableFragment table = page.getSaslAuthenticationFactoryTable();
+
+        TableFragment mechanismConf = page.getSaslAuthFacMechanismConfigurationsTable();
+        table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
+        waitGui().until().element(mechanismConf.getRoot()).is().visible();
+
+        TableFragment mechanismRealmConf = page.getSaslAuthFacMechanismRealmConfigurationsTable();
+        mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
+        waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
+
+        crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
+                MECH_RE_CONF_DELETE,
+                vc -> vc.verifyListAttributeDoesNotContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
     }
 
     // --------------- service-loader-http-server-factory

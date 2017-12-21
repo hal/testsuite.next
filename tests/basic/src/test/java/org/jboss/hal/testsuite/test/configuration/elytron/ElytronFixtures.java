@@ -43,6 +43,33 @@ public interface ElytronFixtures {
     String ENABLING = "enabling";
     String HASH_SHA = "HASH_SHA";
     String PREDEFINED_FILTER = "predefined-filter";
+    String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
+    String PERMISSION_MAPPER_ITEM = "mappers-decoders-permission-mapper-item";
+    String PRINCIPAL_DECODER_ITEM = "mappers-decoders-principal-decoder-item";
+    String ROLE_DECODER_ITEM = "mappers-decoders-role-decoder-item";
+    String ADD_PREFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-prefix-role-mapper-item";
+    String ADD_SUFFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-suffix-role-mapper-item";
+    String AGGREGATE_ROLE_MAPPER_ITEM = "mappers-decoders-aggregate-role-mapper-item";
+    String CONSTANT_ROLE_MAPPER_ITEM = "mappers-decoders-constant-role-mapper-item";
+    String CUSTOM_ROLE_MAPPER_ITEM = "mappers-decoders-custom-role-mapper-item";
+    String LOGICAL_ROLE_MAPPER_ITEM = "mappers-decoders-logical-role-mapper-item";
+    String CUSTOM_PERMISSION_MAPPER_ITEM = "mappers-decoders-custom-permission-mapper-item";
+    String LOGICAL_PERMISSION_MAPPER_ITEM = "mappers-decoders-logical-permission-mapper-item";
+    String CONSTANT_PERMISSION_MAPPER_ITEM = "elytron-constant-permission-mapper-item";
+    String SIMPLE_PERMISSION_MAPPER_ITEM = "elytron-simple-permission-mapper-item";
+    String AGGREGATE_PRINCIPAL_DECODER_ITEM = "mappers-decoders-aggregate-principal-decoder-item";
+    String CONCATENATING_PRINCIPAL_DECODER_ITEM = "mappers-decoders-concatenating-principal-decoder-item";
+    String CONSTANT_PRINCIPAL_DECODER_ITEM = "mappers-decoders-constant-principal-decoder-item";
+    String CUSTOM_PRINCIPAL_DECODER_ITEM = "mappers-decoders-custom-principal-decoder-item";
+    String X500_PRINCIPAL_DECODER_ITEM = "mappers-decoders-x500-attribute-principal-decoder-item";
+    String CUSTOM_ROLE_DECODER_ITEM = "mappers-decoders-custom-role-decoder-item";
+    String SIMPLE_ROLE_DECODER_ITEM = "mappers-decoders-simple-role-decoder-item";
+    String PREFIX = "prefix";
+    String SUFFIX = "suffix";
+    String ROLE_MAPPERS = "role-mappers";
+    String LOGICAL_OPERATION = "logical-operation";
+    String AND = "and";
+    String OR = "or";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -305,5 +332,144 @@ public interface ElytronFixtures {
     static Address providerSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PROVIDER_SASL_SERVER_FACTORY, name);
     }
+
+    // -------------- add-prefix-role-mapper
+
+    String ADD_PRE_CREATE = Ids.build("add-pre", "create", Random.name());
+    String ADD_PRE_UPDATE = Ids.build("add-pre", "update", Random.name());
+    String ADD_PRE_DELETE = Ids.build("add-pre", "delete", Random.name());
+
+    static Address addPrefixRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(ADD_PREFIX_ROLE_MAPPER, name);
+    }
+
+    // -------------- add-suffix-role-mapper
+
+    String ADD_SUF_CREATE = Ids.build("add-suf", "create", Random.name());
+    String ADD_SUF_UPDATE = Ids.build("add-suf", "update", Random.name());
+    String ADD_SUF_DELETE = Ids.build("add-suf", "delete", Random.name());
+
+    static Address addSuffixRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(ADD_SUFFIX_ROLE_MAPPER, name);
+    }
+
+    // -------------- aggregate-role-mapper
+
+    String AGG_ROLE_CREATE = Ids.build("agg-role", "create", Random.name());
+    String AGG_ROLE_UPDATE = Ids.build("agg-role", "update", Random.name());
+    String AGG_ROLE_DELETE = Ids.build("agg-role", "delete", Random.name());
+
+    static Address aggregateRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_ROLE_MAPPER, name);
+    }
+
+    // -------------- constant-role-mapper
+
+    String CON_ROLE_CREATE = Ids.build("con-role", "create", Random.name());
+    String CON_ROLE_UPDATE = Ids.build("con-role", "update", Random.name());
+    String CON_ROLE_DELETE = Ids.build("con-role", "delete", Random.name());
+
+    static Address constantRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONSTANT_ROLE_MAPPER, name);
+    }
+
+    // -------------- logical-role-mapper
+
+    String LOG_ROLE_CREATE = Ids.build("log-role", "create", Random.name());
+    String LOG_ROLE_UPDATE = Ids.build("log-role", "update", Random.name());
+    String LOG_ROLE_DELETE = Ids.build("log-role", "delete", Random.name());
+
+    static Address logicalRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(LOGICAL_ROLE_MAPPER, name);
+    }
+
+    // -------------- logical-permission-mapper
+
+    String LOG_PERM_CREATE = Ids.build("log-perm", "create", Random.name());
+    String LOG_PERM_UPDATE = Ids.build("log-perm", "update", Random.name());
+    String LOG_PERM_DELETE = Ids.build("log-perm", "delete", Random.name());
+
+    static Address logicalPermissionsMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(LOGICAL_PERMISSION_MAPPER, name);
+    }
+
+    // -------------- constant-permission-mapper
+
+    String CON_PERM_CREATE = Ids.build("con-perm", "create", Random.name());
+    String CON_PERM_UPDATE = Ids.build("con-perm", "update", Random.name());
+    String CON_PERM_DELETE = Ids.build("con-perm", "delete", Random.name());
+
+    static Address constantPermissionsMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONSTANT_PERMISSION_MAPPER, name);
+    }
+
+    String PERM_CREATE = Ids.build("perm", "create", Random.name());
+    String PERM_UPDATE = Ids.build("perm", "update", Random.name());
+    String PERM_DELETE = Ids.build("perm", "delete", Random.name());
+
+    // -------------- simple-permission-mapper
+
+    String SIM_PERM_CREATE = Ids.build("sim-perm", "create", Random.name());
+    String SIM_PERM_UPDATE = Ids.build("sim-perm", "update", Random.name());
+    String SIM_PERM_DELETE = Ids.build("sim-perm", "delete", Random.name());
+
+    static Address simplePermissionsMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SIMPLE_PERMISSION_MAPPER, name);
+    }
+
+    String PERM_MAP_CREATE = Ids.build("perm-map", "create", Random.name());
+    String PERM_MAP_UPDATE = Ids.build("perm-map", "update", Random.name());
+    String PERM_MAP_DELETE = Ids.build("perm-map", "delete", Random.name());
+
+    // -------------- aggregate-principal-decoder
+
+    String AGG_PRI_CREATE = Ids.build("agg-pri", "create", Random.name());
+    String AGG_PRI_UPDATE = Ids.build("agg-pri", "update", Random.name());
+    String AGG_PRI_DELETE = Ids.build("agg-pri", "delete", Random.name());
+
+    static Address aggregatePrincipalDecoderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_PRINCIPAL_DECODER, name);
+    }
+
+    // -------------- concatenating-principal-decoder
+
+    String CONC_PRI_CREATE = Ids.build("conc-pri", "create", Random.name());
+    String CONC_PRI_UPDATE = Ids.build("conc-pri", "update", Random.name());
+    String CONC_PRI_DELETE = Ids.build("conc-pri", "delete", Random.name());
+
+    static Address concatenatingPrincipalDecoderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONCATENATING_PRINCIPAL_DECODER, name);
+    }
+
+    // -------------- concatenating-principal-decoder
+
+    String CONS_PRI_CREATE = Ids.build("cons-pri", "create", Random.name());
+    String CONS_PRI_UPDATE = Ids.build("cons-pri", "update", Random.name());
+    String CONS_PRI_DELETE = Ids.build("cons-pri", "delete", Random.name());
+
+    static Address constantPrincipalDecoderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONSTANT_PRINCIPAL_DECODER, name);
+    }
+
+    // -------------- x500-attribute-principal-decoder
+
+    String X500_PRI_CREATE = Ids.build("x500-pri", "create", Random.name());
+    String X500_PRI_UPDATE = Ids.build("x500-pri", "update", Random.name());
+    String X500_PRI_DELETE = Ids.build("x500-pri", "delete", Random.name());
+
+    static Address x500PrincipalDecoderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(X500_ATTRIBUTE_PRINCIPAL_DECODER, name);
+    }
+
+    // -------------- simple-role-decoder
+
+    String SIMP_ROLE_CREATE = Ids.build("simp-role", "create", Random.name());
+    String SIMP_ROLE_UPDATE = Ids.build("simp-role", "update", Random.name());
+    String SIMP_ROLE_DELETE = Ids.build("simp-role", "delete", Random.name());
+
+    static Address simpleRoleDecoderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SIMPLE_ROLE_DECODER, name);
+    }
+
 
 }
