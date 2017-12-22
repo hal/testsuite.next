@@ -77,6 +77,9 @@ public interface ElytronFixtures {
     String JOINER = "joiner";
     String OID = "oid";
     String ATTRIBUTE = "attribute";
+    String JKS = "JKS";
+    String ALIAS_FILTER = "alias-filter";
+    String FILTER_ALIAS = "filter-alias";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -96,6 +99,32 @@ public interface ElytronFixtures {
     String CUSTOM_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CUSTOM_PRINCIPAL_TRANSFORMER, ITEM);
     String REGEX_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_PRINCIPAL_TRANSFORMER, ITEM);
     String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, ITEM);
+
+    String STORES_ITEM = "stores-item";
+    String CREDENTIAL_STORE_ITEM = "elytron-credential-store-item";
+    String FILTERING_KEY_STORE_ITEM = "elytron-filtering-key-store-item";
+    String KEY_STORE_ITEM = "elytron-key-store-item";
+    String LDAP_KEY_STORE_ITEM = "elytron-ldap-key-store";
+    String SSL_ITEM = "ssl-item";
+    String AGGREGATE_PROVIDERS_ITEM = "elytron-aggregate-providers-item";
+    String CLIENT_SSL_CONTEXT_ITEM = "elytron-client-ssl-context-item";
+    String KEY_MANAGER_ITEM = "elytron-key-manager-item";
+    String PROVIDER_LOADER_ITEM = "elytron-provider-loader-item";
+    String SERVER_SSL_CONTEXT_ITEM = "elytron-server-ssl-context-item";
+    String SECURITY_DOMAIN_ITEM = "elytron-security-domain-item";
+    String TRUST_MANAGER_ITEM = "elytron-trust-manager-item";
+    String AUTHENTICATION_ITEM = "authentication-item";
+    String AUTHENTICATION_CONFIGURATION_ITEM = "elytron-authentication-configuration-item";
+    String AUTHENTICATION_CONTEXT_ITEM = "elytron-authentication-context-item";
+    String LOGS_ITEM = "logs-item";
+    String FILE_AUDIT_LOG_ITEM = "elytron-file-audit-log-item";
+    String PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-periodic-rotating-file-audit-log-item";
+    String SIZE_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-size-rotating-file-audit-log-item";
+    String SYSLOG_AUDIT_LOG_ITEM = "elytron-syslog-audit-log-item";
+    String AGGREGATE_SECURITY_EVENT_LISTENER_ITEM = "elytron-aggregate-security-event-listener-item";
+    String OTHER_ITEM = "other-item";
+    String POLICY_ITEM = "elytron-policy";
+    String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(ELYTRON);
 
@@ -298,16 +327,6 @@ public interface ElytronFixtures {
 
 
     // ===================================================================================
-    // -------------- security-domain
-
-    String SEC_DOM_CREATE = Ids.build("sec-dom", "create", Random.name());
-    String SEC_DOM_UPDATE = Ids.build("sec-dom", "update", Random.name());
-    String SEC_DOM_DELETE = Ids.build("sec-dom", "delete", Random.name());
-
-    static Address securityDomainAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SECURITY_DOMAIN, name);
-    }
-
     // -------------- file-system realm
 
     String FILESYS_REALM_CREATE = Ids.build("filesys-realm", "create", Random.name());
@@ -316,16 +335,6 @@ public interface ElytronFixtures {
 
     static Address filesystemRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(FILESYSTEM_REALM, name);
-    }
-
-    // -------------- provider-loader
-
-    String PROV_LOAD_CREATE = Ids.build("prov-load", "create", Random.name());
-    String PROV_LOAD_UPDATE = Ids.build("prov-load", "update", Random.name());
-    String PROV_LOAD_DELETE = Ids.build("prov-load", "delete", Random.name());
-
-    static Address providerLoaderAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PROVIDER_LOADER, name);
     }
 
     // -------------- provider-sasl-server-factory
@@ -481,5 +490,205 @@ public interface ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_ROLE_DECODER, name);
     }
 
+    // -------------- credential-store
+
+    String CRED_ST_CREATE = Ids.build("cred-store", "create", Random.name());
+    String CRED_ST_UPDATE = Ids.build("cred-store", "update", Random.name());
+    String CRED_ST_DELETE = Ids.build("cred-store", "delete", Random.name());
+
+    static Address credentialStoreAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CREDENTIAL_STORE, name);
+    }
+
+    // -------------- filtering-key-store
+
+    String FILT_ST_CREATE = Ids.build("filt-store", "create", Random.name());
+    String FILT_ST_UPDATE = Ids.build("filt-store", "update", Random.name());
+    String FILT_ST_DELETE = Ids.build("filt-store", "delete", Random.name());
+
+    static Address filteringKeyStoreAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(FILTERING_KEY_STORE, name);
+    }
+
+    // -------------- key-store
+
+    String KEY_ST_CREATE = Ids.build("ks", "create", Random.name());
+    String KEY_ST_UPDATE = Ids.build("ks", "update", Random.name());
+    String KEY_ST_DELETE = Ids.build("ks", "delete", Random.name());
+
+    static Address keyStoreAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(KEY_STORE, name);
+    }
+
+    // -------------- ldap-key-store
+
+    String LDAPKEY_ST_CREATE = Ids.build("ldap-ks", "create", Random.name());
+    String LDAPKEY_ST_UPDATE = Ids.build("ldap-ks", "update", Random.name());
+    String LDAPKEY_ST_DELETE = Ids.build("ldap-ks", "delete", Random.name());
+
+    static Address ldapKeyStoreAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(LDAP_KEY_STORE, name);
+    }
+
+    // -------------- aggregate-providers
+
+    String AGG_PRV_CREATE = Ids.build("agg-prv", "create", Random.name());
+    String AGG_PRV_UPDATE = Ids.build("agg-prv", "update", Random.name());
+    String AGG_PRV_DELETE = Ids.build("agg-prv", "delete", Random.name());
+
+    static Address aggregateProvidersAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_PROVIDERS, name);
+    }
+
+    // -------------- client-ssl-context
+
+    String CLI_SSL_CREATE = Ids.build("cli-ssl", "create", Random.name());
+    String CLI_SSL_UPDATE = Ids.build("cli-ssl", "update", Random.name());
+    String CLI_SSL_DELETE = Ids.build("cli-ssl", "delete", Random.name());
+
+    static Address clientSslContextAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CLIENT_SSL_CONTEXT, name);
+    }
+
+    // -------------- key-manager
+
+    String KEY_MAN_CREATE = Ids.build("key-man", "create", Random.name());
+    String KEY_MAN_UPDATE = Ids.build("key-man", "update", Random.name());
+    String KEY_MAN_DELETE = Ids.build("key-man", "delete", Random.name());
+
+    static Address keyManagertAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(KEY_MANAGER, name);
+    }
+
+    // -------------- provider-loader
+
+    String PROV_LOAD_CREATE = Ids.build("prov-load", "create", Random.name());
+    String PROV_LOAD_UPDATE = Ids.build("prov-load", "update", Random.name());
+    String PROV_LOAD_DELETE = Ids.build("prov-load", "delete", Random.name());
+
+    static Address providerLoaderAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(PROVIDER_LOADER, name);
+    }
+
+    // -------------- server-ssl-context
+
+    String SRV_SSL_CREATE = Ids.build("srv-ssl", "create", Random.name());
+    String SRV_SSL_UPDATE = Ids.build("srv-ssl", "update", Random.name());
+    String SRV_SSL_DELETE = Ids.build("srv-ssl", "delete", Random.name());
+
+    static Address serverSslContextAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SERVER_SSL_CONTEXT, name);
+    }
+
+    // -------------- security-domain
+
+    String SEC_DOM_CREATE = Ids.build("sec-dom", "create", Random.name());
+    String SEC_DOM_UPDATE = Ids.build("sec-dom", "update", Random.name());
+    String SEC_DOM_DELETE = Ids.build("sec-dom", "delete", Random.name());
+
+    static Address securityDomainAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SECURITY_DOMAIN, name);
+    }
+
+
+    // -------------- trust-manager
+
+    String TRU_MAN_CREATE = Ids.build("tru-man", "create", Random.name());
+    String TRU_MAN_UPDATE = Ids.build("tru-man", "update", Random.name());
+    String TRU_MAN_DELETE = Ids.build("tru-man", "delete", Random.name());
+
+    static Address trustManagertAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(TRUST_MANAGER, name);
+    }
+
+    // -------------- authentication-configuration
+
+    String AUT_CF_CREATE = Ids.build("auth-conf", "create", Random.name());
+    String AUT_CF_UPDATE = Ids.build("auth-conf", "update", Random.name());
+    String AUT_CF_DELETE = Ids.build("auth-conf", "delete", Random.name());
+
+    static Address authenticationConfigurationAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONFIGURATION, name);
+    }
+
+    // -------------- authentication-context
+
+    String AUT_CT_CREATE = Ids.build("auth-ct", "create", Random.name());
+    String AUT_CT_UPDATE = Ids.build("auth-ct", "update", Random.name());
+    String AUT_CT_DELETE = Ids.build("auth-ct", "delete", Random.name());
+
+    static Address authenticationContextAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONTEXT, name);
+    }
+
+    // -------------- file-audit-log
+
+    String FILE_LOG_CREATE = Ids.build("file-log", "create", Random.name());
+    String FILE_LOG_UPDATE = Ids.build("file-log", "update", Random.name());
+    String FILE_LOG_DELETE = Ids.build("file-log", "delete", Random.name());
+
+    static Address fileAuditLogAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(FILE_AUDIT_LOG, name);
+    }
+
+    // -------------- periodic-rotating-file-audit-log
+
+    String PER_LOG_CREATE = Ids.build("per-log", "create", Random.name());
+    String PER_LOG_UPDATE = Ids.build("per-log", "update", Random.name());
+    String PER_LOG_DELETE = Ids.build("per-log", "delete", Random.name());
+
+    static Address periodicRotatingfileAuditLogAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_AUDIT_LOG, name);
+    }
+
+    // -------------- size-rotating-file-audit-log
+
+    String SIZ_LOG_CREATE = Ids.build("siz-log", "create", Random.name());
+    String SIZ_LOG_UPDATE = Ids.build("siz-log", "update", Random.name());
+    String SIZ_LOG_DELETE = Ids.build("siz-log", "delete", Random.name());
+
+    static Address sizeRotatingfileAuditLogAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_AUDIT_LOG, name);
+    }
+
+    // -------------- syslog-audit-log
+
+    String SYS_LOG_CREATE = Ids.build("sys-log", "create", Random.name());
+    String SYS_LOG_UPDATE = Ids.build("sys-log", "update", Random.name());
+    String SYS_LOG_DELETE = Ids.build("sys-log", "delete", Random.name());
+
+    static Address syslogAuditLogAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SYSLOG_AUDIT_LOG, name);
+    }
+
+    // -------------- aggregate-security-event-listener
+
+    String AGG_SEC_CREATE = Ids.build("agg-sec", "create", Random.name());
+    String AGG_SEC_UPDATE = Ids.build("agg-sec", "update", Random.name());
+    String AGG_SEC_DELETE = Ids.build("agg-sec", "delete", Random.name());
+
+    static Address aggregateSecurityEventListenerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_SECURITY_EVENT_LISTENER, name);
+    }
+
+    // -------------- policy
+
+    String POL_CREATE = Ids.build("pol", "create", Random.name());
+    String POL_UPDATE = Ids.build("pol", "update", Random.name());
+    String POL_DELETE = Ids.build("pol", "delete", Random.name());
+
+    static Address policyAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(POLICY, name);
+    }
+
+    // -------------- dir-context
+
+    String DIR_CREATE = Ids.build("dir", "create", Random.name());
+    String DIR_UPDATE = Ids.build("dir", "update", Random.name());
+    String DIR_DELETE = Ids.build("dir", "delete", Random.name());
+
+    static Address dirContextAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(DIR_CONTEXT, name);
+    }
 
 }
