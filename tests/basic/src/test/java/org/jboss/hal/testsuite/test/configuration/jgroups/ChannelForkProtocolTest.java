@@ -18,10 +18,10 @@ package org.jboss.hal.testsuite.test.configuration.jgroups;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -100,13 +100,9 @@ public class ChannelForkProtocolTest {
         forkTable.action(FORK_CREATE, Names.PROTOCOL);
         waitGui().until().element(forkProtocolTable.getRoot()).is().visible();
 
-        ModelNode props = new ModelNode();
-        props.get("a").set("b");
-        props.get("c").set("d");
-
         forkProtocolTable.select(FORK_PROTOCOL_UPDATE);
         crud.update(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_UPDATE), forkProtocolForm,
-                PROPERTIES, props);
+                PROPERTIES, Random.properties());
     }
 
     @Test

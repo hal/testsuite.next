@@ -15,8 +15,15 @@
  */
 package org.jboss.hal.testsuite;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.commons.lang3.RandomUtils;
 import org.apache.commons.text.RandomStringGenerator;
+import org.jboss.dmr.ModelNode;
+import org.jboss.hal.resources.Ids;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
 
 public class Random {
 
@@ -25,7 +32,7 @@ public class Random {
     private static final RandomStringGenerator GENERATOR = new RandomStringGenerator.Builder().withinRange('a', 'z')
             .build();
 
-    /** Returns a random name for resource names. */
+    /** Returns a random name ('a' - 'z') for resource names or attribute values. */
     public static String name() {
         return GENERATOR.generate(LENGTH);
     }
@@ -57,6 +64,38 @@ public class Random {
 
     public static long number(long startInclusive, long endExclusive) {
         return RandomUtils.nextLong(startInclusive, endExclusive);
+    }
+
+    /** Returns a list with three random values. */
+    public static List<String> list() {
+        return list(3);
+    }
+
+    public static List<String> list(int size) {
+        List<String> list = new ArrayList<>();
+        for (int i = 0; i < size; i++) {
+            list.add(name());
+        }
+        return list;
+    }
+
+    /** Returns a model node with three random key / value pairs */
+    public static ModelNode properties() {
+        return properties(3);
+    }
+
+    public static ModelNode properties(int size) {
+        ModelNode node = new ModelNode();
+        for (int i = 0; i < size; i++) {
+            node.get(Ids.build(VALUE, String.valueOf(i))).set(name());
+        }
+        return node;
+    }
+
+    public static ModelNode properties(String key, String value) {
+        ModelNode node = new ModelNode();
+        node.get(key).set(value);
+        return node;
     }
 
     private Random() {

@@ -72,6 +72,10 @@ public class FormFragment {
         return browser.findElement(By.id(readOnlyId(name))).getText();
     }
 
+    public int intValue(String name) {
+        return Integer.parseInt(value(name));
+    }
+
     /** Shows the sensitive value of the specified field in read-only mode */
     public void showSensitive(String name) {
         WebElement element = root.findElement(By.cssSelector("#" + readOnlyId(name) + " + .fa-eye"));
@@ -84,10 +88,6 @@ public class FormFragment {
         String value = value(name);
         String expected = Strings.repeat(MASK_CHARACTER, value.length());
         return value.equals(expected);
-    }
-
-    public int intValue(String name) {
-        return Integer.parseInt(value(name));
     }
 
 

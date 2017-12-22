@@ -24,6 +24,14 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.RESOURCE_ADAPTERS;
 
 public interface ResourceAdapterFixtures {
 
+    String BEANVALIDATIONGROUPS = "beanvalidationgroups";
+    String BOOTSTRAP_CONTEXT = "bootstrap-context";
+    String LOCAL_TRANSACTION = "LocalTransaction";
+    String WM_SECURITY = "wm-security";
+    String WM_SECURITY_DEFAULT_GROUPS = "wm-security-default-groups";
+    String WM_SECURITY_DEFAULT_PRINCIPAL = "wm-security-default-principal";
+    String WM_SECURITY_MAPPING_REQUIRED = "wm-security-mapping-required";
+
     Address SUBSYSTEM_ADDRESS = Address.subsystem(RESOURCE_ADAPTERS);
 
     // ------------------------------------------------------ resource adapter

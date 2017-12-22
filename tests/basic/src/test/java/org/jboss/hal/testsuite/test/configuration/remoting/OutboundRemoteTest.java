@@ -21,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.AddRemoteSocketBinding;
@@ -108,8 +109,7 @@ public class OutboundRemoteTest {
 
     @Test
     public void update() throws Exception {
-        ModelNode properties = new ModelNode();
-        properties.get("foo").set("bar");
+        ModelNode properties = Random.properties("foo", "bar");
 
         table.select(REMOTE_OUTBOUND_UPDATE);
         crud.update(outboundRemoteAddress(REMOTE_OUTBOUND_UPDATE), form,

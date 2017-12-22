@@ -49,6 +49,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.*;
 import static org.jboss.hal.resources.UIConstants.MEDIUM_TIMEOUT;
+import static org.jboss.hal.testsuite.page.Places.finderPlace;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -79,12 +80,14 @@ public class Console {
 
     // ------------------------------------------------------ navigation
 
+    /** Navigates to the place request and waits until the id {@link Ids#ROOT_CONTAINER} is present. */
     public void navigate(PlaceRequest request) {
         navigate(request, By.id(Ids.ROOT_CONTAINER));
     }
 
+    /** Navigates to the place request and waits until the selector is present. */
     public void navigate(PlaceRequest request, By selector) {
-        String fragment = fragment(request);
+        String fragment = tokenFormatter.toPlaceToken(request);
         String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
         try {
             URL url = new URL(baseUrl, hashFragment);
@@ -101,13 +104,9 @@ public class Console {
     }
 
     public void verify(PlaceRequest placeRequest) {
-        String expected = fragment(placeRequest);
+        String expected = tokenFormatter.toPlaceToken(placeRequest);
         String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
         assertEquals(expected, actual);
-    }
-
-    private String fragment(PlaceRequest placeRequest) {
-        return tokenFormatter.toPlaceToken(placeRequest);
     }
 
 
@@ -159,27 +158,23 @@ public class Console {
         return createPageFragment(dialogClass, dialogElement);
     }
 
-    /** Navigates to the specified place, creates and returns the finder fragment */
-    public FinderFragment finder(String place) {
-        return finder(place, null);
+    /** Navigates to the specified token, creates and returns the finder fragment */
+    public FinderFragment finder(String token) {
+        return finder(token, null);
     }
 
-    /** Navigates to the specified place, selects the finder path, creates and returns the finder fragment */
-    public FinderFragment finder(String place, FinderPath path) {
+    /** Navigates to the specified token, selects the finder path, creates and returns the finder fragment */
+    public FinderFragment finder(String token, FinderPath path) {
         By selector = By.id(Ids.FINDER);
-        PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(place);
-        if (path != null) {
-            builder.with("path", path.toString());
-            if (!path.isEmpty()) {
-                FinderSegment segment = path.last();
-                if (segment.getItemId() != null) {
-                    selector = By.id(segment.getItemId());
-                } else if (segment.getColumnId() != null) {
-                    selector = By.id(segment.getColumnId());
-                }
+        if (path != null && !path.isEmpty()) {
+            FinderSegment segment = path.last();
+            if (segment.getItemId() != null) {
+                selector = By.id(segment.getItemId());
+            } else if (segment.getColumnId() != null) {
+                selector = By.id(segment.getColumnId());
             }
         }
-        navigate(builder.build(), selector);
+        navigate(finderPlace(token, path), selector);
         return createPageFragment(FinderFragment.class, browser.findElement(selector));
     }
 

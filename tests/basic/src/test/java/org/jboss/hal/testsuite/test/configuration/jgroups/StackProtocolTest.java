@@ -18,10 +18,10 @@ package org.jboss.hal.testsuite.test.configuration.jgroups;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -100,13 +100,8 @@ public class StackProtocolTest {
     public void update() throws Exception {
         stackTable.action(STACK_CREATE, Names.PROTOCOL);
         waitGui().until().element(protocolTable.getRoot()).is().visible();
-
-        ModelNode props = new ModelNode();
-        props.get("a").set("b");
-        props.get("c").set("d");
-
         protocolTable.select(PROTOCOL_UPDATE);
-        crud.update(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE), protocolForm, PROPERTIES, props);
+        crud.update(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE), protocolForm, PROPERTIES, Random.properties());
     }
 
     @Test
