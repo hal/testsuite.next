@@ -45,6 +45,7 @@ import static org.junit.Assert.assertTrue;
 public class ResourceVerifier {
 
     private static final String EQ = "=";
+    private static final String END_STR = "' !";
     private static final Logger log = LoggerFactory.getLogger(ResourceVerifier.class);
     private static final int DEFAULT_TIMEOUT = Integer.parseInt(ConfigUtils.get("propagate.to.model.timeout", "500"));
 
@@ -288,7 +289,34 @@ public class ResourceVerifier {
         String attrPair = innerAttribute + "/" + value;
         assertTrue(
                 "Given attribute/value pair '" + attrPair + "' is not present in list attribute '" + listAttributeName
-                        + "' with attribute value '" + modelNodeResult.value() + "' !",
+                        + "' with attribute value '" + modelNodeResult.value() + END_STR,
+                isSingleValuePresentInListAttributeValue(listAttributeName, innerAttribute, value));
+        return this;
+    }
+
+    /**
+     * Verifies that list type attribute contains give value for a specific attribute.
+     *
+     * @param listAttributeName the attribute name of type LIST.
+     * @param innerAttribute The inner attribute name.
+     * @param value The value of the inner attribute.
+     */
+    public ResourceVerifier verifyListAttributeContainsSingleValue(String listAttributeName, String innerAttribute,
+            ModelNode value) throws Exception {
+        waitFor(() -> {
+            ModelNodeResult actualResult = ops.readAttribute(address, listAttributeName);
+            return actualResult.isSuccess() &&
+                    actualResult.hasDefined(RESULT) &&
+                    isSingleValuePresentInListAttributeValue(listAttributeName, innerAttribute, value);
+        });
+
+        ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttributeName);
+        modelNodeResult.assertSuccess();
+
+        String attrPair = innerAttribute + "/" + value;
+        assertTrue(
+                "Given attribute/value pair '" + attrPair + "' is not present in list attribute '" + listAttributeName
+                        + "' with attribute value '" + modelNodeResult.value() + END_STR,
                 isSingleValuePresentInListAttributeValue(listAttributeName, innerAttribute, value));
         return this;
     }
@@ -323,7 +351,7 @@ public class ResourceVerifier {
         String pair = innerObjectAttribute + EQ + innerObjectValue;
         String path = listAttribute + "/" + objectAttribute + EQ + objectValue + "/" + innerListAttribute;
         String msg = "The attribute=value pair '" + pair + "' is not present in path: '" + path + " with attribute value '" + modelNodeResult
-                .value() + "' !";
+                .value() + END_STR;
         assertTrue(msg, isSingleValuePresentInInnerListAttributeValue(listAttribute, objectAttribute, objectValue,
                 innerListAttribute, innerObjectAttribute, innerObjectValue));
         return this;
@@ -428,7 +456,7 @@ public class ResourceVerifier {
         String pair = innerObjectAttribute + EQ + innerObjectValue;
         String path = listAttribute + "/" + objectAttribute + EQ + objectValue + "/" + innerListAttribute;
         String msg = "The attribute=value pair '" + pair + "' is not present in path: '" + path + " with attribute value '" + modelNodeResult
-                .value() + "' !";
+                .value() + END_STR;
         assertFalse(msg, isSingleValuePresentInInnerListAttributeValue(listAttribute, objectAttribute, objectValue,
                 innerListAttribute, innerObjectAttribute, innerObjectValue));
         return this;
@@ -454,12 +482,16 @@ public class ResourceVerifier {
         final ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttributeName);
         return ModelNodeUtils.isValuePresentInModelNodeList(modelNodeResult.value(), innerAttribute, value);
     }
-static java.util.logging.Logger _log = java.util.logging.Logger.getLogger("org.jboss");
+
+    private boolean isSingleValuePresentInListAttributeValue(String listAttributeName, String innerAttribute,
+            ModelNode value) throws IOException {
+        final ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttributeName);
+        return ModelNodeUtils.isValuePresentInModelNodeList(modelNodeResult.value(), innerAttribute, value);
+    }
 
     private boolean isSingleValuePresentInInnerListAttributeValue(String listAttribute, String objectAttribute, String objectValue,
             String innerListAttribute, String innerObjectAttribute, String innerObjectValue) throws IOException {
         final ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttribute);
-        // _log.info(" modelNodeResult  " + modelNodeResult);
         if (modelNodeResult.isSuccess()) {
             ModelNode listInnerNode = modelNodeResult.get(RESULT);
             return ModelNodeUtils.isValuePresentInModelNodeListOfList(listInnerNode, objectAttribute, objectValue,

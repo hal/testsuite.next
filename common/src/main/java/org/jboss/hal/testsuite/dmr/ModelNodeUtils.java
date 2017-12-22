@@ -62,6 +62,25 @@ public class ModelNodeUtils {
     }
 
     /**
+     * Checks whether model node list contains an item member equals to the attribute value
+     *
+     * @param list      List to be checked
+     * @param attribute Attribute name of the inner list
+     * @param value     Value to find
+     *
+     * @return true if value was found, false otherwise
+     */
+    public static boolean isValuePresentInModelNodeList(ModelNode list, String attribute, ModelNode value)
+            throws IOException {
+        return list.asList().stream()
+                .peek(modelNode -> log.debug(
+                        "Searching for attribute '{}' whose value is '{}' is contained in the list member '{}'.",
+                        attribute, value, modelNode.toString()))
+                .filter(modelNode -> modelNode.hasDefined(attribute))
+                .anyMatch(modelNode -> modelNode.get(attribute).equals(value));
+    }
+
+    /**
      * Verifies that if an attribute value exists for a given LIST attribute contained in a top LIST attribute.
      * As an usage example, see /subsystem=elytron/http-authentication-factory=* resource, there is an attribute
      * "mechanism-configurations" of type LIST, it contains "mechanism-realm-configurations" attribute of type LIST

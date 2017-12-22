@@ -70,6 +70,13 @@ public interface ElytronFixtures {
     String LOGICAL_OPERATION = "logical-operation";
     String AND = "and";
     String OR = "or";
+    String LEFT = "left";
+    String RIGHT = "right";
+    String MAPPING_MODE = "mapping-mode";
+    String PRINCIPAL_DECODERS = "principal-decoders";
+    String JOINER = "joiner";
+    String OID = "oid";
+    String ATTRIBUTE = "attribute";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -389,7 +396,7 @@ public interface ElytronFixtures {
     String LOG_PERM_UPDATE = Ids.build("log-perm", "update", Random.name());
     String LOG_PERM_DELETE = Ids.build("log-perm", "delete", Random.name());
 
-    static Address logicalPermissionsMapperAddress(String name) {
+    static Address logicalPermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(LOGICAL_PERMISSION_MAPPER, name);
     }
 
@@ -397,9 +404,10 @@ public interface ElytronFixtures {
 
     String CON_PERM_CREATE = Ids.build("con-perm", "create", Random.name());
     String CON_PERM_UPDATE = Ids.build("con-perm", "update", Random.name());
+    String CON_PERM_UPDATE2 = Ids.build("con-perm2", "update", Random.name());
     String CON_PERM_DELETE = Ids.build("con-perm", "delete", Random.name());
 
-    static Address constantPermissionsMapperAddress(String name) {
+    static Address constantPermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONSTANT_PERMISSION_MAPPER, name);
     }
 
@@ -413,7 +421,7 @@ public interface ElytronFixtures {
     String SIM_PERM_UPDATE = Ids.build("sim-perm", "update", Random.name());
     String SIM_PERM_DELETE = Ids.build("sim-perm", "delete", Random.name());
 
-    static Address simplePermissionsMapperAddress(String name) {
+    static Address simplePermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_PERMISSION_MAPPER, name);
     }
 
@@ -441,10 +449,12 @@ public interface ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(CONCATENATING_PRINCIPAL_DECODER, name);
     }
 
-    // -------------- concatenating-principal-decoder
+    // -------------- constant-principal-decoder
 
     String CONS_PRI_CREATE = Ids.build("cons-pri", "create", Random.name());
     String CONS_PRI_UPDATE = Ids.build("cons-pri", "update", Random.name());
+    String CONS_PRI_UPDATE2 = Ids.build("cons-pri2", "update", Random.name());
+    String CONS_PRI_UPDATE3 = Ids.build("cons-pri3", "update", Random.name());
     String CONS_PRI_DELETE = Ids.build("cons-pri", "delete", Random.name());
 
     static Address constantPrincipalDecoderAddress(String name) {

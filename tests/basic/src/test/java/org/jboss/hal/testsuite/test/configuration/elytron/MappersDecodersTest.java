@@ -19,6 +19,7 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
+import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
@@ -35,9 +36,10 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ROLES;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.PREFIX;
 
 @RunWith(Arquillian.class)
 public class MappersDecodersTest {
@@ -48,6 +50,8 @@ public class MappersDecodersTest {
 
     @BeforeClass
     public static void beforeTests() throws Exception {
+
+        // role mappers
         operations.add(addPrefixRoleMapperAddress(ADD_PRE_UPDATE), Values.of(PREFIX, ANY_STRING));
         operations.add(addPrefixRoleMapperAddress(ADD_PRE_DELETE), Values.of(PREFIX, ANY_STRING));
         operations.add(addSuffixRoleMapperAddress(ADD_SUF_UPDATE), Values.of(SUFFIX, ANY_STRING));
@@ -58,10 +62,45 @@ public class MappersDecodersTest {
         operations.add(constantRoleMapperAddress(CON_ROLE_DELETE), Values.ofList(ROLES, ANY_STRING));
         operations.add(logicalRoleMapperAddress(LOG_ROLE_DELETE), Values.of(LOGICAL_OPERATION, AND));
         operations.add(logicalRoleMapperAddress(LOG_ROLE_UPDATE), Values.of(LOGICAL_OPERATION, AND));
+
+        // permission mappers
+        ModelNode permissionDelete = new ModelNode();
+        permissionDelete.get(CLASS_NAME).set(PERM_DELETE);
+        ModelNode permissionUpdate = new ModelNode();
+        permissionUpdate.get(CLASS_NAME).set(PERM_UPDATE);
+        Values constantParams = Values.ofList(PERMISSIONS, permissionUpdate, permissionDelete);
+        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE), constantParams);
+        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE2));
+        operations.add(constantPermissionMapperAddress(CON_PERM_DELETE));
+        Values logicalParams = Values.of(LEFT, CON_PERM_UPDATE).and(LOGICAL_OPERATION, AND).and(RIGHT, CON_PERM_UPDATE2);
+        operations.add(logicalPermissionMapperAddress(LOG_PERM_UPDATE), logicalParams);
+        operations.add(logicalPermissionMapperAddress(LOG_PERM_DELETE), logicalParams);
+        operations.add(simplePermissionMapperAddress(SIM_PERM_UPDATE));
+        operations.add(simplePermissionMapperAddress(SIM_PERM_DELETE));
+
+        // principal decoder
+        Values consPriDecoderParam = Values.of(CONSTANT, ANY_STRING);
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE), consPriDecoderParam);
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2), consPriDecoderParam);
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3), consPriDecoderParam);
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_DELETE), consPriDecoderParam);
+        Values aggPriDecoderParam = Values.ofList(PRINCIPAL_DECODERS, CONS_PRI_UPDATE, CONS_PRI_UPDATE2);
+        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE), aggPriDecoderParam);
+        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE), aggPriDecoderParam);
+        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE), aggPriDecoderParam);
+        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE), aggPriDecoderParam);
+        operations.add(x500PrincipalDecoderAddress(X500_PRI_UPDATE), Values.of(OID, ANY_STRING));
+        operations.add(x500PrincipalDecoderAddress(X500_PRI_DELETE), Values.of(OID, ANY_STRING));
+
+        // role decoder
+        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE), Values.of(ATTRIBUTE, ANY_STRING));
+        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_DELETE), Values.of(ATTRIBUTE, ANY_STRING));
+
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
+        // role mappers
         operations.remove(aggregateRoleMapperAddress(AGG_ROLE_CREATE));
         operations.remove(aggregateRoleMapperAddress(AGG_ROLE_UPDATE));
         operations.remove(aggregateRoleMapperAddress(AGG_ROLE_DELETE));
@@ -77,6 +116,42 @@ public class MappersDecodersTest {
         operations.remove(logicalRoleMapperAddress(LOG_ROLE_DELETE));
         operations.remove(logicalRoleMapperAddress(LOG_ROLE_UPDATE));
         operations.remove(logicalRoleMapperAddress(LOG_ROLE_CREATE));
+
+        // permission mappers
+        operations.remove(logicalPermissionMapperAddress(LOG_PERM_UPDATE));
+        operations.remove(logicalPermissionMapperAddress(LOG_PERM_DELETE));
+        operations.remove(logicalPermissionMapperAddress(LOG_PERM_CREATE));
+        operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE));
+        operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE2));
+        operations.remove(constantPermissionMapperAddress(CON_PERM_DELETE));
+        operations.remove(constantPermissionMapperAddress(CON_PERM_CREATE));
+        operations.remove(simplePermissionMapperAddress(SIM_PERM_UPDATE));
+        operations.remove(simplePermissionMapperAddress(SIM_PERM_DELETE));
+        operations.remove(simplePermissionMapperAddress(SIM_PERM_CREATE));
+
+        // principal decoder
+        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE));
+        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE));
+        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE));
+        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE));
+        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE));
+        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE));
+
+        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_DELETE));
+        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE));
+        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2));
+        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3));
+        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_CREATE));
+
+        operations.remove(x500PrincipalDecoderAddress(X500_PRI_UPDATE));
+        operations.remove(x500PrincipalDecoderAddress(X500_PRI_DELETE));
+        operations.remove(x500PrincipalDecoderAddress(X500_PRI_CREATE));
+
+        // role decoder
+        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_DELETE));
+        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_CREATE));
+        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE));
+
     }
 
     @Page private ElytronMappersDecodersPage page;
@@ -333,6 +408,379 @@ public class MappersDecodersTest {
 
         crud.delete(logicalRoleMapperAddress(LOG_ROLE_DELETE), table, LOG_ROLE_DELETE);
     }
+
+    // --------------- logical-permission-mapper
+
+    @Test
+    public void logicalPermissionMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getLogicalPermissionMapperTable();
+
+        crud.create(logicalPermissionMapperAddress(LOG_PERM_CREATE), table, f -> {
+            f.text(NAME, LOG_PERM_CREATE);
+            f.text(LEFT, CON_PERM_UPDATE);
+            f.text(RIGHT, CON_PERM_UPDATE2);
+            // f.select(LOGICAL_OPERATION, AND);
+        });
+    }
+
+    @Test
+    public void logicalPermissionMapperTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getLogicalPermissionMapperTable();
+
+        crud.createWithError(table, f -> {
+            f.text(NAME, LOG_PERM_CREATE);
+            f.text(RIGHT, CON_PERM_UPDATE2);
+        }, LEFT);
+    }
+
+    @Test
+    public void logicalPermissionMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getLogicalPermissionMapperTable();
+        FormFragment form = page.getLogicalPermissionMapperForm();
+        table.bind(form);
+        table.select(LOG_PERM_UPDATE);
+
+        crud.update(logicalPermissionMapperAddress(LOG_PERM_UPDATE), form, f -> f.select(LOGICAL_OPERATION, OR),
+                vg -> vg.verifyAttribute(LOGICAL_OPERATION, OR));
+    }
+
+    @Test
+    public void logicalPermissionMapperTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getLogicalPermissionMapperTable();
+        FormFragment form = page.getLogicalPermissionMapperForm();
+        table.bind(form);
+        table.select(LOG_PERM_UPDATE);
+
+        crud.updateWithError(form, f -> f.clear(LEFT), LEFT);
+    }
+
+    @Test
+    public void logicalPermissionMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getLogicalPermissionMapperTable();
+
+        crud.delete(logicalPermissionMapperAddress(LOG_PERM_DELETE), table, LOG_PERM_DELETE);
+    }
+
+    // --------------- constant-permission-mapper
+
+    @Test
+    public void constantPermissionMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, CONSTANT_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getConstantPermissionMapperTable();
+
+        crud.create(constantPermissionMapperAddress(CON_PERM_CREATE), table, CON_PERM_CREATE);
+    }
+
+    @Test
+    public void constantPermissionMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, CONSTANT_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getConstantPermissionMapperTable();
+
+        crud.delete(constantPermissionMapperAddress(CON_PERM_DELETE), table, CON_PERM_DELETE);
+    }
+
+    @Test
+    public void constantPermissionMapperPermissionsCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, CONSTANT_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getConstantPermissionMapperTable();
+        TableFragment permissionsTable = page.getConstantPermissionMapperPermissionsTable();
+
+        table.action(CON_PERM_UPDATE, Names.PERMISSIONS);
+        waitGui().until().element(permissionsTable.getRoot()).is().visible();
+
+        crud.create(constantPermissionMapperAddress(CON_PERM_UPDATE), permissionsTable,
+                f -> f.text(CLASS_NAME, PERM_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(PERMISSIONS, CLASS_NAME, PERM_CREATE));
+    }
+
+    @Test
+    public void constantPermissionMapperPermissionsUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, CONSTANT_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getConstantPermissionMapperTable();
+        TableFragment permissionsTable = page.getConstantPermissionMapperPermissionsTable();
+
+        table.action(CON_PERM_UPDATE, Names.PERMISSIONS);
+        waitGui().until().element(permissionsTable.getRoot()).is().visible();
+
+        FormFragment form = page.getConstantPermissionMapperPermissionsForm();
+        permissionsTable.bind(form);
+        permissionsTable.select(PERM_UPDATE);
+
+        crud.update(constantPermissionMapperAddress(CON_PERM_UPDATE), form,
+                f -> f.text(ACTION, ANY_STRING),
+                vc -> vc.verifyListAttributeContainsSingleValue(PERMISSIONS, ACTION, ANY_STRING));
+    }
+
+    @Test
+    public void constantPermissionMapperPermissionsDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, CONSTANT_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getConstantPermissionMapperTable();
+        TableFragment permissionsTable = page.getConstantPermissionMapperPermissionsTable();
+
+        table.action(CON_PERM_UPDATE, Names.PERMISSIONS);
+        waitGui().until().element(permissionsTable.getRoot()).is().visible();
+
+        crud.delete(constantPermissionMapperAddress(CON_PERM_UPDATE), permissionsTable, PERM_DELETE,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(PERMISSIONS, CLASS_NAME, PERM_DELETE));
+    }
+
+    // --------------- simple-permission-mapper
+
+    @Test
+    public void simplePermissionMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, SIMPLE_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getSimplePermissionMapperTable();
+
+        crud.create(simplePermissionMapperAddress(SIM_PERM_CREATE), table, SIM_PERM_CREATE);
+    }
+
+    @Test
+    public void simplePermissionMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, SIMPLE_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getSimplePermissionMapperTable();
+        FormFragment form = page.getSimplePermissionMapperForm();
+        table.bind(form);
+        table.select(SIM_PERM_UPDATE);
+
+        crud.update(simplePermissionMapperAddress(SIM_PERM_UPDATE), form, f -> f.select(MAPPING_MODE, OR),
+                vg -> vg.verifyAttribute(MAPPING_MODE, OR));
+    }
+
+    @Test
+    public void simplePermissionMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, SIMPLE_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getSimplePermissionMapperTable();
+
+        crud.delete(simplePermissionMapperAddress(SIM_PERM_DELETE), table, SIM_PERM_DELETE);
+    }
+
+    @Test
+    public void simplePermissionMapperPermissionsCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, SIMPLE_PERMISSION_MAPPER_ITEM);
+        TableFragment table = page.getSimplePermissionMapperTable();
+        TableFragment permissionsTable = page.getSimplePMPermissionMappingsTable();
+
+        table.action(SIM_PERM_UPDATE, Names.PERMISSION_MAPPINGS);
+        waitGui().until().element(permissionsTable.getRoot()).is().visible();
+
+        ModelNode principals = new ModelNode();
+        principals.add(PERM_MAP_CREATE);
+        crud.create(simplePermissionMapperAddress(SIM_PERM_UPDATE), permissionsTable,
+                f -> f.list(PRINCIPALS).add(PERM_MAP_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(PERMISSION_MAPPINGS, PRINCIPALS, principals));
+    }
+
+    // --------------- aggregate-principal-decoder
+
+    @Test
+    public void aggregatePrincipalDecoderCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, AGGREGATE_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getAggregatePrincipalDecoderTable();
+
+        crud.create(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE), table,
+                f -> {
+                    f.text(NAME, AGG_PRI_CREATE);
+                    f.list(PRINCIPAL_DECODERS).add(CONS_PRI_UPDATE).add(CONS_PRI_UPDATE2);
+                },
+                vg -> vg.verifyListAttributeContainsValue(PRINCIPAL_DECODERS, CONS_PRI_UPDATE2));
+    }
+
+    @Test
+    public void aggregatePrincipalDecoderUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, AGGREGATE_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getAggregatePrincipalDecoderTable();
+        FormFragment form = page.getAggregatePrincipalDecoderForm();
+        table.bind(form);
+        table.select(AGG_PRI_UPDATE);
+
+        ModelNode principalDecoders = new ModelNode();
+        principalDecoders.add(CONS_PRI_UPDATE);
+        principalDecoders.add(CONS_PRI_UPDATE2);
+        principalDecoders.add(CONS_PRI_UPDATE3);
+        crud.update(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE), form,
+                f -> f.list(PRINCIPAL_DECODERS).add(CONS_PRI_UPDATE3),
+                vg -> vg.verifyAttribute(PRINCIPAL_DECODERS, principalDecoders));
+    }
+
+    @Test
+    public void aggregatePrincipalDecoderDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, AGGREGATE_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getAggregatePrincipalDecoderTable();
+
+        crud.delete(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE), table, AGG_PRI_DELETE);
+    }
+
+    // --------------- concatenating-principal-decoder
+
+    @Test
+    public void concatenatingPrincipalDecoderCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConcatenatingPrincipalDecoderTable();
+
+        crud.create(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE), table,
+                f -> {
+                    f.text(NAME, CONC_PRI_CREATE);
+                    f.list(PRINCIPAL_DECODERS).add(CONS_PRI_UPDATE).add(CONS_PRI_UPDATE2);
+                },
+                vg -> vg.verifyListAttributeContainsValue(PRINCIPAL_DECODERS, CONS_PRI_UPDATE2));
+    }
+
+    @Test
+    public void concatenatingPrincipalDecoderTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConcatenatingPrincipalDecoderTable();
+
+        crud.createWithError(table, f -> f.text(NAME, CONC_PRI_CREATE),PRINCIPAL_DECODERS);
+    }
+
+    @Test
+    public void concatenatingPrincipalDecoderUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConcatenatingPrincipalDecoderTable();
+        FormFragment form = page.getConcatenatingPrincipalDecoderForm();
+        table.bind(form);
+        table.select(CONC_PRI_UPDATE);
+
+        crud.update(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE), form, JOINER);
+    }
+
+    @Test
+    public void concatenatingPrincipalDecoderDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConcatenatingPrincipalDecoderTable();
+
+        crud.delete(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE), table, CONC_PRI_DELETE);
+    }
+
+    // --------------- constant-principal-decoder
+
+    @Test
+    public void constantPrincipalDecoderCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConstantPrincipalDecoderTable();
+
+        crud.create(constantPrincipalDecoderAddress(CONS_PRI_CREATE), table,
+                f -> {
+                    f.text(NAME, CONS_PRI_CREATE);
+                    f.text(CONSTANT, ANY_STRING);
+                });
+    }
+
+    @Test
+    public void constantPrincipalDecoderTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConstantPrincipalDecoderTable();
+
+        crud.createWithError(table, f -> f.text(NAME, CONS_PRI_CREATE), CONSTANT);
+    }
+
+    @Test
+    public void constantPrincipalDecoderUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConstantPrincipalDecoderTable();
+        FormFragment form = page.getConstantPrincipalDecoderForm();
+        table.bind(form);
+        table.select(CONS_PRI_UPDATE);
+
+        crud.update(constantPrincipalDecoderAddress(CONS_PRI_UPDATE), form, CONSTANT);
+    }
+
+    @Test
+    public void constantPrincipalDecoderDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getConstantPrincipalDecoderTable();
+
+        crud.delete(constantPrincipalDecoderAddress(CONS_PRI_DELETE), table, CONS_PRI_DELETE);
+    }
+
+    // --------------- x500-attribute-principal-decoder
+
+    @Test
+    public void x500AttributePrincipalDecoderCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getX500PrincipalDecoderTable();
+
+        crud.create(x500PrincipalDecoderAddress(X500_PRI_CREATE), table,
+                f -> {
+                    f.text(NAME, X500_PRI_CREATE);
+                    f.text(OID, ANY_STRING);
+                });
+    }
+
+    @Test
+    public void x500AttributePrincipalDecoderTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getX500PrincipalDecoderTable();
+
+        crud.createWithError(table, f -> f.text(NAME, X500_PRI_CREATE), OID);
+    }
+
+    @Test
+    public void x500AttributePrincipalDecoderUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getX500PrincipalDecoderTable();
+        FormFragment form = page.getX500PrincipalDecoderForm();
+        table.bind(form);
+        table.select(X500_PRI_UPDATE);
+
+        crud.update(x500PrincipalDecoderAddress(X500_PRI_UPDATE), form, JOINER);
+    }
+
+    @Test
+    public void x500AttributePrincipalDecoderDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
+        TableFragment table = page.getX500PrincipalDecoderTable();
+
+        crud.delete(x500PrincipalDecoderAddress(X500_PRI_DELETE), table, X500_PRI_DELETE);
+    }
+
+    // --------------- simple-role-decoder
+
+    @Test
+    public void simpleRoleDecoderCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
+        TableFragment table = page.getSimpleRoleDecoderTable();
+
+        crud.create(simpleRoleDecoderAddress(SIMP_ROLE_CREATE), table,
+                f -> {
+                    f.text(NAME, SIMP_ROLE_CREATE);
+                    f.text(ATTRIBUTE, ANY_STRING);
+                });
+    }
+
+    @Test
+    public void simpleRoleDecoderTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
+        TableFragment table = page.getSimpleRoleDecoderTable();
+
+        crud.createWithError(table, f -> f.text(NAME, SIMP_ROLE_CREATE), ATTRIBUTE);
+    }
+
+    @Test
+    public void simpleRoleDecoderUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
+        TableFragment table = page.getSimpleRoleDecoderTable();
+        FormFragment form = page.getSimpleRoleDecoderForm();
+        table.bind(form);
+        table.select(SIMP_ROLE_UPDATE);
+
+        crud.update(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE), form, ATTRIBUTE);
+    }
+
+    @Test
+    public void simpleRoleDecoderDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
+        TableFragment table = page.getSimpleRoleDecoderTable();
+
+        crud.delete(simpleRoleDecoderAddress(SIMP_ROLE_DELETE), table, SIMP_ROLE_DELETE);
+    }
+
+
 
 
 }

@@ -24,9 +24,7 @@ import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.resources.Ids.ELYTRON_PERMISSIONS;
-import static org.jboss.hal.resources.Ids.ELYTRON_PERMISSION_MAPPINGS;
-import static org.jboss.hal.resources.Ids.FORM;
+import static org.jboss.hal.resources.Ids.*;
 import static org.jboss.hal.resources.Ids.TABLE;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 
@@ -65,27 +63,26 @@ public class ElytronMappersDecodersPage extends BasePage {
 
     // Logical Permission Mapper
     @FindBy(id = MAPPERS_DECODERS + "-" + LOGICAL_PERMISSION_MAPPER + "-" + TABLE +  WRAPPER) private TableFragment logicalPermissionMapperTable;
-    @FindBy(id = MAPPERS_DECODERS + "-" + LOGICAL_PERMISSION_MAPPER + "-" + FORM) private FormFragment logicalPermissionForm;
+    @FindBy(id = MAPPERS_DECODERS + "-" + LOGICAL_PERMISSION_MAPPER + "-" + FORM) private FormFragment logicalPermissionMapperForm;
 
     // Constant Permission Mapper
-    @FindBy(id = MAPPERS_DECODERS + "-" + CONSTANT_PERMISSION_MAPPER + "-" + TABLE +  WRAPPER) private TableFragment constantPermissionMapperTable;
-    @FindBy(id = MAPPERS_DECODERS + "-" + CONSTANT_PERMISSION_MAPPER + "-" + FORM) private FormFragment constantPermissionMapperForm;
+    @FindBy(id = ELYTRON_CONSTANT_PERMISSION_MAPPER + "-" + TABLE +  WRAPPER) private TableFragment constantPermissionMapperTable;
 
     // Constant Permission Mapper / Permissions
-    @FindBy(id = MAPPERS_DECODERS + "-" + CONSTANT_PERMISSION_MAPPER + "-" + PERMISSIONS + "-" + TABLE +  WRAPPER) private TableFragment constantPermissionMapperPermissionsTable;
-    @FindBy(id = MAPPERS_DECODERS + "-" + CONSTANT_PERMISSION_MAPPER + "-" + PERMISSIONS + "-" + FORM) private FormFragment constantPermissionMapperPermissionsForm;
+    @FindBy(id = ELYTRON_CONSTANT_PERMISSION_MAPPER + "-" + PERMISSIONS + "-" + TABLE +  WRAPPER) private TableFragment constantPermissionMapperPermissionsTable;
+    @FindBy(id = ELYTRON_CONSTANT_PERMISSION_MAPPER + "-" + PERMISSIONS + "-" + FORM) private FormFragment constantPermissionMapperPermissionsForm;
 
     // Simple Permission Mapper
-    @FindBy(id = MAPPERS_DECODERS + "-" + SIMPLE_PERMISSION_MAPPER + "-" + TABLE +  WRAPPER) private TableFragment simplePermissionTable;
-    @FindBy(id = MAPPERS_DECODERS + "-" + SIMPLE_PERMISSION_MAPPER + "-" + FORM) private FormFragment simplePermissionForm;
+    @FindBy(id = ELYTRON_SIMPLE_PERMISSION_MAPPER + "-" + TABLE +  WRAPPER) private TableFragment simplePermissionMapperTable;
+    @FindBy(id = ELYTRON_SIMPLE_PERMISSION_MAPPER + "-" + FORM) private FormFragment simplePermissionMapperForm;
 
     // Simple Permission Mapper / Permission Mappings
-    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + TABLE +  WRAPPER) private TableFragment simplePermissionMappingsTable;
-    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + FORM) private FormFragment simplePermissionMappingsForm;
+    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionMappingsTable;
+    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + FORM) private FormFragment simplePMPermissionMappingsForm;
 
     // Simple Permission Mapper / Permission Mappings / Permissions
-    @FindBy(id = ELYTRON_PERMISSIONS + "-" + TABLE +  WRAPPER) private TableFragment simplePermissionMappingsPermissionsTable;
-    @FindBy(id = ELYTRON_PERMISSIONS + "-" + FORM) private FormFragment simplePermissionMappingsPermissionsForm;
+    @FindBy(id = ELYTRON_PERMISSIONS + "-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionsTable;
+    @FindBy(id = ELYTRON_PERMISSIONS + "-" + FORM) private FormFragment simplePMPermissionsForm;
 
     // Aggregate Principal Decoder
     @FindBy(id = MAPPERS_DECODERS + "-" + AGGREGATE_PRINCIPAL_DECODER + "-" + TABLE +  WRAPPER) private TableFragment aggregatePrincipalDecoderTable;
@@ -175,16 +172,12 @@ public class ElytronMappersDecodersPage extends BasePage {
         return logicalPermissionMapperTable;
     }
 
-    public FormFragment getLogicalPermissionForm() {
-        return logicalPermissionForm;
+    public FormFragment getLogicalPermissionMapperForm() {
+        return logicalPermissionMapperForm;
     }
 
     public TableFragment getConstantPermissionMapperTable() {
         return constantPermissionMapperTable;
-    }
-
-    public FormFragment getConstantPermissionMapperForm() {
-        return constantPermissionMapperForm;
     }
 
     public TableFragment getConstantPermissionMapperPermissionsTable() {
@@ -195,28 +188,28 @@ public class ElytronMappersDecodersPage extends BasePage {
         return constantPermissionMapperPermissionsForm;
     }
 
-    public TableFragment getSimplePermissionTable() {
-        return simplePermissionTable;
+    public TableFragment getSimplePermissionMapperTable() {
+        return simplePermissionMapperTable;
     }
 
-    public FormFragment getSimplePermissionForm() {
-        return simplePermissionForm;
+    public FormFragment getSimplePermissionMapperForm() {
+        return simplePermissionMapperForm;
     }
 
-    public TableFragment getSimplePermissionMappingsTable() {
-        return simplePermissionMappingsTable;
+    public TableFragment getSimplePMPermissionMappingsTable() {
+        return simplePMPermissionMappingsTable;
     }
 
-    public FormFragment getSimplePermissionMappingsForm() {
-        return simplePermissionMappingsForm;
+    public FormFragment getSimplePMPermissionMappingsForm() {
+        return simplePMPermissionMappingsForm;
     }
 
-    public TableFragment getSimplePermissionMappingsPermissionsTable() {
-        return simplePermissionMappingsPermissionsTable;
+    public TableFragment getSimplePMPermissionsTable() {
+        return simplePMPermissionsTable;
     }
 
-    public FormFragment getSimplePermissionMappingsPermissionsForm() {
-        return simplePermissionMappingsPermissionsForm;
+    public FormFragment getSimplePMPermissionsForm() {
+        return simplePMPermissionsForm;
     }
 
     public TableFragment getAggregatePrincipalDecoderTable() {
