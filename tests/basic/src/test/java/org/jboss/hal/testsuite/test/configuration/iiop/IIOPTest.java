@@ -18,9 +18,9 @@ package org.jboss.hal.testsuite.test.configuration.iiop;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.IIOPPage;
@@ -183,11 +183,7 @@ public class IIOPTest {
     public void updateProperties() throws Exception {
         page.getTabs().select(Ids.build(IIOP_OPENJDK, PROPERTIES, Ids.TAB));
         form = page.getPropertiesForm();
-
-        ModelNode props = new ModelNode();
-        props.get("a").set("b");
-        props.get("c").set("d");
-        crud.update(SUBSYSTEM_ADDRESS, form, PROPERTIES, props);
+        crud.update(SUBSYSTEM_ADDRESS, form, PROPERTIES, Random.properties());
     }
 
     @Test

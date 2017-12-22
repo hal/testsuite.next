@@ -133,21 +133,19 @@ public class DataSourceConfigurationTest {
         form = page.getValidationForm();
 
         String className = Random.name();
-        ModelNode modelNode = new ModelNode();
-        modelNode.get("a").set("b");
-        modelNode.get("c").set("d");
+        ModelNode properties = Random.properties();
         long millis = Random.number(1000L, 2000L);
 
         crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form,
                 f -> {
                     f.text(VALID_CONNECTION_CHECKER_CLASS_NAME, className);
-                    f.properties(VALID_CONNECTION_CHECKER_PROPERTIES).add(modelNode);
+                    f.properties(VALID_CONNECTION_CHECKER_PROPERTIES).add(properties);
                     f.flip(BACKGROUND_VALIDATION, true);
                     f.number(BACKGROUND_VALIDATION_MILLIS, millis);
                 },
                 resourceVerifier -> {
                     resourceVerifier.verifyAttribute(VALID_CONNECTION_CHECKER_CLASS_NAME, className);
-                    resourceVerifier.verifyAttribute(VALID_CONNECTION_CHECKER_PROPERTIES, modelNode);
+                    resourceVerifier.verifyAttribute(VALID_CONNECTION_CHECKER_PROPERTIES, properties);
                     resourceVerifier.verifyAttribute(BACKGROUND_VALIDATION, true);
                     resourceVerifier.verifyAttribute(BACKGROUND_VALIDATION_MILLIS, millis);
                 });

@@ -18,7 +18,6 @@ package org.jboss.hal.testsuite.test.configuration.messaging;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
@@ -45,7 +44,6 @@ public class GlobalSettingsTest {
     }
 
     @Page private MessagingPage page;
-    @Inject private Console console;
     @Inject private CrudOperations crudOperations;
     private FormFragment form;
 

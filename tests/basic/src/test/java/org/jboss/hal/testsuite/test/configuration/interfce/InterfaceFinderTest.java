@@ -68,8 +68,8 @@ public class InterfaceFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.INTERFACES)))
+        column = console.finder(NameTokens.CONFIGURATION,
+                new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.INTERFACES)))
                 .column(Ids.INTERFACE);
     }
 
@@ -86,27 +86,27 @@ public class InterfaceFinderTest {
     }
 
     @Test
-    public void read() throws Exception {
+    public void read() {
         assertTrue(column.containsItem(READ));
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(READ);
         PlaceRequest placeRequest = Places.finderPlace(NameTokens.CONFIGURATION, new FinderPath()
                 .append(Ids.CONFIGURATION, Ids.build(Names.INTERFACES))
                 .append(Ids.INTERFACE, READ));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(READ).view();
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.INTERFACE)
                 .with(NAME, READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

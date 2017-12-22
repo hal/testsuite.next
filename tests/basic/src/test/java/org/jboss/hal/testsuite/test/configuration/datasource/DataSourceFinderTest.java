@@ -95,9 +95,8 @@ public class DataSourceFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(DATASOURCES)
-                        .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(DATASOURCES)
+                .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
                 .column(Ids.DATA_SOURCE_CONFIGURATION);
     }
 
@@ -113,7 +112,7 @@ public class DataSourceFinderTest {
                 configurationSubsystemPath(DATASOURCES)
                         .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES))
                         .append(Ids.DATA_SOURCE_CONFIGURATION, Ids.dataSourceConfiguration(DATA_SOURCE_READ, false)));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -124,7 +123,7 @@ public class DataSourceFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.DATA_SOURCE_CONFIGURATION)
                 .with(NAME, DATA_SOURCE_READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

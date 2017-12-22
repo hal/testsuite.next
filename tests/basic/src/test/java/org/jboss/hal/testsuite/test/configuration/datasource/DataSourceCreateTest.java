@@ -81,9 +81,8 @@ public class DataSourceCreateTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(DATASOURCES)
-                        .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(DATASOURCES)
+                .append(Ids.DATA_SOURCE_DRIVER, Ids.asId(Names.DATASOURCES)))
                 .column(Ids.DATA_SOURCE_CONFIGURATION);
         column.dropdownAction(Ids.DATA_SOURCE_ADD_ACTIONS, Ids.DATA_SOURCE_ADD);
         wizard = console.wizard();

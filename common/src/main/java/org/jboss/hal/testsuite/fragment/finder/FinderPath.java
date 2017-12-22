@@ -71,7 +71,7 @@ public class FinderPath implements Iterable<FinderSegment> {
     @Override
     public String toString() {
         return segments.stream()
-                .filter(segment -> segment.itemId != null)
+                .filter(segment -> segment.getItemId() != null)
                 .map(FinderSegment::toString)
                 .collect(Collectors.joining(SEPARATOR));
     }

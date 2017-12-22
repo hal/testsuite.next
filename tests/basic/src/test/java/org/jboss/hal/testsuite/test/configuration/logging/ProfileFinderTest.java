@@ -68,9 +68,8 @@ public class ProfileFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(configurationSubsystemPath(LOGGING)
-                        .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES)))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(LOGGING)
+                .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES)))
                 .column(Ids.LOGGING_PROFILE);
     }
 
@@ -86,22 +85,22 @@ public class ProfileFinderTest {
     }
 
     @Test
-    public void select() throws Exception {
+    public void select() {
         column.selectItem(Ids.loggingProfile(PROFILE_READ));
         PlaceRequest place = Places.finderPlace(NameTokens.CONFIGURATION,
                 configurationSubsystemPath(LOGGING)
                         .append(Ids.LOGGING_CONFIG_AND_PROFILES, Ids.asId(Names.LOGGING_PROFILES))
                         .append(Ids.LOGGING_PROFILE, Ids.loggingProfile(PROFILE_READ)));
-        console.verifyPlace(place);
+        console.verify(place);
     }
 
     @Test
-    public void view() throws Exception {
+    public void view() {
         column.selectItem(Ids.loggingProfile(PROFILE_READ)).view();
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.LOGGING_PROFILE)
                 .with(NAME, PROFILE_READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test

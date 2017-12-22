@@ -39,6 +39,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MESSAGING_ACTIVEMQ;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -70,11 +71,8 @@ public class ServerFinderTest {
 
     @Before
     public void setUp() throws Exception {
-        column = console.finder(NameTokens.CONFIGURATION)
-                .select(new FinderPath()
-                        .append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS))
-                        .append(Ids.CONFIGURATION_SUBSYSTEM, MESSAGING_ACTIVEMQ)
-                        .append(Ids.MESSAGING_CATEGORY, SERVER))
+        column = console.finder(NameTokens.CONFIGURATION, configurationSubsystemPath(MESSAGING_ACTIVEMQ)
+                .append(Ids.MESSAGING_CATEGORY, SERVER))
                 .column(Ids.MESSAGING_SERVER_CONFIGURATION);
     }
 
@@ -110,7 +108,7 @@ public class ServerFinderTest {
                 .append(Ids.CONFIGURATION_SUBSYSTEM, MESSAGING_ACTIVEMQ)
                 .append(Ids.MESSAGING_CATEGORY, SERVER)
                 .append(Ids.MESSAGING_SERVER_CONFIGURATION, Ids.messagingServer(SRV_READ)));
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -120,7 +118,7 @@ public class ServerFinderTest {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.MESSAGING_SERVER)
                 .with(SERVER, SRV_READ)
                 .build();
-        console.verifyPlace(placeRequest);
+        console.verify(placeRequest);
     }
 
     @Test
@@ -132,5 +130,4 @@ public class ServerFinderTest {
         assertFalse(column.containsItem(Ids.messagingServer(SRV_DELETE)));
         new ResourceVerifier(serverAddress(SRV_DELETE), client).verifyDoesNotExist();
     }
-
 }

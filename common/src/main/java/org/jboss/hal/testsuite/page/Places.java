@@ -23,7 +23,11 @@ public class Places {
     private static final String PATH_PARAM = "path";
 
     public static PlaceRequest finderPlace(String token, FinderPath path) {
-        return new PlaceRequest.Builder().nameToken(token).with(PATH_PARAM, path.toString()).build();
+        PlaceRequest.Builder builder = new PlaceRequest.Builder().nameToken(token);
+        if (path != null) {
+            builder.with(PATH_PARAM, path.toString());
+        }
+        return builder.build();
     }
 
     private Places() {

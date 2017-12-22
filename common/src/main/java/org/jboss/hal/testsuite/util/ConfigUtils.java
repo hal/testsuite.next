@@ -20,9 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-/**
- * Created by jcechace on 21/02/14.
- */
+/** Created by jcechace on 21/02/14. */
 public class ConfigUtils {
 
     private static final Properties config = new Properties();

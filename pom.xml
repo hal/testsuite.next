@@ -71,25 +71,24 @@
         <test.included.category/>
 
         <!-- dependency versions -->
-        <arquillian.version>1.1.13.Final</arquillian.version>
-        <arquillian.drone.version>2.4.2</arquillian.drone.version>
+        <arquillian.version>1.1.15.Final</arquillian.version>
+        <arquillian.drone.version>2.5.0</arquillian.drone.version>
         <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
-        <commons.io.version>2.5</commons.io.version>
-        <commons.lang.version>3.6</commons.lang.version>
-        <commons.text.version>1.1</commons.text.version>
+        <commons.io.version>2.6</commons.io.version>
+        <commons.lang.version>3.7</commons.lang.version>
+        <commons.text.version>1.2</commons.text.version>
         <creaper.version>1.6.1</creaper.version>
-        <graphene.version>2.3.1</graphene.version>
-        <guava.version>23.0</guava.version>
+        <graphene.version>2.3.2</graphene.version>
+        <guava.version>23.5-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
         <hal.next.version>0.9.4-SNAPSHOT</hal.next.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.12</junit.version>
-        <selenium.version>3.5.3</selenium.version>
+        <selenium.version>3.8.1</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <wildfly.version>11.0.0.CR1</wildfly.version>
-        <wildfly.cli.version>3.0.6.Final</wildfly.cli.version>
-        <wildfly.core.version>3.0.3.Final</wildfly.core.version>
+        <wildfly.version>11.0.0.Final</wildfly.version>
+        <wildfly.cli.version>3.0.9.Final</wildfly.cli.version>
     </properties>
 
     <modules>

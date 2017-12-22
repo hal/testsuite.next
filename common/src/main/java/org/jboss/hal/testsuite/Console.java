@@ -36,6 +36,8 @@ import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.fragment.VerticalNavigationFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderPath;
+import org.jboss.hal.testsuite.fragment.finder.FinderSegment;
 import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -47,6 +49,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.*;
 import static org.jboss.hal.resources.UIConstants.MEDIUM_TIMEOUT;
+import static org.jboss.hal.testsuite.page.Places.finderPlace;
 import static org.junit.Assert.assertEquals;
 
 /**
@@ -67,7 +70,7 @@ import static org.junit.Assert.assertEquals;
 public class Console {
 
     @Drone private WebDriver browser;
-    @ArquillianResource private URL url;
+    @ArquillianResource private URL baseUrl;
     private TokenFormatter tokenFormatter;
 
     public Console() {
@@ -77,34 +80,33 @@ public class Console {
 
     // ------------------------------------------------------ navigation
 
+    /** Navigates to the place request and waits until the id {@link Ids#ROOT_CONTAINER} is present. */
+    public void navigate(PlaceRequest request) {
+        navigate(request, By.id(Ids.ROOT_CONTAINER));
+    }
+
+    /** Navigates to the place request and waits until the selector is present. */
+    public void navigate(PlaceRequest request, By selector) {
+        String fragment = tokenFormatter.toPlaceToken(request);
+        String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
+        try {
+            URL url = new URL(baseUrl, hashFragment);
+            browser.navigate().to(url);
+            waitModel().until().element(selector).is().present();
+        } catch (MalformedURLException e) {
+            throw new LocationException("Malformed URL: ", e.getCause());
+        }
+    }
+
     public void reload() {
         browser.navigate().refresh();
         waitModel().until().element(By.id(Ids.ROOT_CONTAINER)).is().present();
     }
 
-    /** Returns an absolute URL for the specified place request. */
-    public String absoluteUrl(PlaceRequest placeRequest) {
-        return absoluteUrl(fragment(placeRequest));
-    }
-
-    /** Returns an absolute URL ending with the specified fragment (w/o '#'). */
-    public String absoluteUrl(String fragment) {
-        String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
-        try {
-            return new URL(url, hashFragment).toExternalForm();
-        } catch (MalformedURLException e) {
-            throw new LocationException("URL to construct is malformed.", e.getCause());
-        }
-    }
-
-    public void verifyPlace(PlaceRequest placeRequest) {
-        String expected = fragment(placeRequest);
+    public void verify(PlaceRequest placeRequest) {
+        String expected = tokenFormatter.toPlaceToken(placeRequest);
         String actual = StringUtils.substringAfter(browser.getCurrentUrl(), "#");
         assertEquals(expected, actual);
-    }
-
-    private String fragment(PlaceRequest placeRequest) {
-        return tokenFormatter.toPlaceToken(placeRequest);
     }
 
 
@@ -156,14 +158,24 @@ public class Console {
         return createPageFragment(dialogClass, dialogElement);
     }
 
-    /** Navigates to the specified place, creates and returns the finder fragment */
-    public FinderFragment finder(String place) {
-        browser.get(absoluteUrl(place));
+    /** Navigates to the specified token, creates and returns the finder fragment */
+    public FinderFragment finder(String token) {
+        return finder(token, null);
+    }
+
+    /** Navigates to the specified token, selects the finder path, creates and returns the finder fragment */
+    public FinderFragment finder(String token, FinderPath path) {
         By selector = By.id(Ids.FINDER);
-        waitModel().until().element(selector).is().present();
-        FinderFragment finder = createPageFragment(FinderFragment.class, browser.findElement(selector));
-        finder.initPlace(place);
-        return finder;
+        if (path != null && !path.isEmpty()) {
+            FinderSegment segment = path.last();
+            if (segment.getItemId() != null) {
+                selector = By.id(segment.getItemId());
+            } else if (segment.getColumnId() != null) {
+                selector = By.id(segment.getColumnId());
+            }
+        }
+        navigate(finderPlace(token, path), selector);
+        return createPageFragment(FinderFragment.class, browser.findElement(selector));
     }
 
     public FooterFragment footer() {

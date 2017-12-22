@@ -15,13 +15,8 @@
  */
 package org.jboss.hal.testsuite;
 
-/**
- * General messages, not meant to be translated.
- */
+/** General messages, not meant to be translated. */
 public class Message {
-
-    private Message() {
-    }
 
     public static String valueMustBeMasked(String attribute, String value) {
         return "Attribute \"" + attribute + "\" is sensitive, so the value must be masked: " + value;
@@ -29,5 +24,8 @@ public class Message {
 
     public static String valueMustBeUnmasked(String attribute, String value) {
         return "Attribute \"" + attribute + "\" is sensitive, the unmask action was called to show the clear text, so the value must be unmasked: " + value;
+    }
+
+    private Message() {
     }
 }

@@ -113,7 +113,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void broadcastGroupTryUpdateAlternatives() throws Exception {
+    public void broadcastGroupTryUpdateAlternatives() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_BROADCAST_GROUP, ITEM));
         TableFragment table = page.getBroadcastGroupTable();
         FormFragment form = page.getBroadcastGroupForm();
@@ -158,7 +158,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void discoveryGroupTryUpdateAlternatives() throws Exception {
+    public void discoveryGroupTryUpdateAlternatives() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_DISCOVERY_GROUP, ITEM));
         TableFragment table = page.getDiscoveryGroupTable();
         FormFragment form = page.getDiscoveryGroupForm();
@@ -198,7 +198,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void clusterConnectionTryCreate() throws Exception {
+    public void clusterConnectionTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CLUSTER_CONNECTION, ITEM));
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
@@ -218,7 +218,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void clusterConnectionTryUpdateAlternatives() throws Exception {
+    public void clusterConnectionTryUpdateAlternatives() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CLUSTER_CONNECTION, ITEM));
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
@@ -258,7 +258,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void groupingHandlerTryCreate() throws Exception {
+    public void groupingHandlerTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_GROUPING_HANDLER, ITEM));
         TableFragment table = page.getGroupingHandlerTable();
         FormFragment form = page.getGroupingHandlerForm();
@@ -306,7 +306,7 @@ public class ServerClusteringTest {
     }
 
     @Test
-    public void bridgeTryCreate() throws Exception {
+    public void bridgeTryCreate() {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
         TableFragment table = page.getBridgeTable();
         FormFragment form = page.getBridgeForm();
@@ -494,6 +494,4 @@ public class ServerClusteringTest {
         crudOperations.deleteSingleton(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), form,
                 resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
     }
-
-
 }

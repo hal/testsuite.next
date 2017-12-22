@@ -21,6 +21,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
@@ -94,8 +95,7 @@ public class OutboundTest {
 
     @Test
     public void update() throws Exception {
-        ModelNode properties = new ModelNode();
-        properties.get("foo").set("bar");
+        ModelNode properties = Random.properties("foo", "bar");
 
         table.select(OUTBOUND_UPDATE);
         crud.update(outboundAddress(OUTBOUND_UPDATE), form,

@@ -29,8 +29,8 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.RESTART_JOBS_ON_RESUME;
 import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.SUBSYSTEM_ADDRESS;
@@ -39,16 +39,19 @@ import static org.jboss.hal.testsuite.test.configuration.batch.BatchFixtures.SUB
 public class BatchConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    private static final Operations operations = new Operations(client);
     private static BackupAndRestoreAttributes backup;
+    private static boolean restart;
 
     @BeforeClass
-    public static void beforeClass() throws CommandFailedException {
+    public static void beforeClass() throws Exception {
         backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
+        restart = operations.readAttribute(SUBSYSTEM_ADDRESS, RESTART_JOBS_ON_RESUME).booleanValue();
         client.apply(backup.backup());
     }
 
     @AfterClass
-    public static void afterClass() throws CommandFailedException {
+    public static void afterClass() throws Exception {
         client.apply(backup.restore());
     }
 
@@ -66,7 +69,7 @@ public class BatchConfigurationTest {
 
     @Test
     public void update() throws Exception {
-        crud.update(SUBSYSTEM_ADDRESS, form, RESTART_JOBS_ON_RESUME, false);
+        crud.update(SUBSYSTEM_ADDRESS, form, RESTART_JOBS_ON_RESUME, !restart);
     }
 
     @Test
