@@ -49,14 +49,20 @@ public class LocalCacheTest {
     public static void beforeClass() throws Exception {
         operations.add(cacheContainerAddress(CC_UPDATE));
         client.apply(new AddLocalCache.Builder(LC_UPDATE).cacheContainer(CC_UPDATE).build());
+        client.apply(new AddLocalCache.Builder(LC_UPDATE_ATTRIBUTES).cacheContainer(CC_UPDATE).build());
+        client.apply(new AddLocalCache.Builder(LC_UPDATE_EVICTION).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_RESET).cacheContainer(CC_UPDATE).build());
+        client.apply(new AddLocalCache.Builder(LC_RESET_TRANSACTION).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_REMOVE).cacheContainer(CC_UPDATE).build());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE));
+        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE_ATTRIBUTES));
+        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE_EVICTION));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET));
+        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET_TRANSACTION));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_REMOVE));
         operations.removeIfExists(cacheContainerAddress(CC_UPDATE));
     }
@@ -86,12 +92,12 @@ public class LocalCacheTest {
 
     @Test
     public void updateAttributes() throws Exception {
-        table.select(LC_UPDATE);
+        table.select(LC_UPDATE_ATTRIBUTES);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
         FormFragment form = page.getLocalCacheForm();
 
         String moduleName = Random.name();
-        crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE), form,
+        crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE_ATTRIBUTES), form,
                 f -> {
                     f.text(MODULE, moduleName);
                     f.flip(STATISTICS_ENABLED, true);
@@ -115,11 +121,11 @@ public class LocalCacheTest {
 
     @Test
     public void updateEviction() throws Exception {
-        table.select(LC_UPDATE);
+        table.select(LC_UPDATE_EVICTION);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
         FormFragment form = page.getEvictionForm();
 
-        crud.update(componentAddress(CC_UPDATE, LC_UPDATE, EVICTION), form,
+        crud.update(componentAddress(CC_UPDATE, LC_UPDATE_EVICTION, EVICTION), form,
                 f -> {
                     f.number(MAX_ENTRIES, 23);
                     f.select(STRATEGY, "LRU");
@@ -241,10 +247,10 @@ public class LocalCacheTest {
 
     @Test
     public void resetTransaction() throws Exception {
-        table.select(LC_RESET);
+        table.select(LC_RESET_TRANSACTION);
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
         FormFragment form = page.getTransactionForm();
-        crud.reset(componentAddress(CC_UPDATE, LC_RESET, TRANSACTION), form);
+        crud.reset(componentAddress(CC_UPDATE, LC_RESET_TRANSACTION, TRANSACTION), form);
     }
 
     @Test
