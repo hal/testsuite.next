@@ -51,7 +51,10 @@ public interface InfinispanFixtures {
 
     String LC_CREATE = Ids.build("lc", "create", Random.name());
     String LC_UPDATE = Ids.build("lc", "update", Random.name());
+    String LC_UPDATE_ATTRIBUTES = Ids.build("lc", "update-attributes", Random.name());
+    String LC_UPDATE_EVICTION = Ids.build("lc", "update-eviction", Random.name());
     String LC_RESET = Ids.build("lc", "reset", Random.name());
+    String LC_RESET_TRANSACTION = Ids.build("lc", "reset-transaction", Random.name());
     String LC_REMOVE = Ids.build("lc", "remove", Random.name());
 
     static Address localCacheAddress(String cacheContainer, String localCache) {
