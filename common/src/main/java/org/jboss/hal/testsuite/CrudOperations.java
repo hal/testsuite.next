@@ -97,13 +97,29 @@ public class CrudOperations {
     /** Tries to add a resource and expects client side errors. */
     public void createWithError(TableFragment table, Consumer<FormFragment> initialValues,
             String expectError) {
+        createWithErrorAndCloseDialogIfRequested(table, initialValues, expectError, false);
+    }
+
+    /** Tries to add a resource and expects client side errors. Afterwards close dialog to clean up.*/
+    public void createWithErrorAndCancelDialog(TableFragment table, Consumer<FormFragment> initialValues,
+            String expectError) {
+        createWithErrorAndCloseDialogIfRequested(table, initialValues, expectError, true);
+    }
+
+    private void createWithErrorAndCloseDialogIfRequested(TableFragment table,
+            Consumer<FormFragment> initialValues, String expectError, boolean closeDialog) {
         AddResourceDialogFragment dialog = table.add();
         FormFragment form = dialog.getForm();
         initialValues.accept(form);
         dialog.getPrimaryButton().click();
-        form.expectError(expectError);
+        try {
+            form.expectError(expectError);
+        } finally {
+            if (closeDialog) {
+                dialog.getSecondaryButton().click();
+            }
+        }
     }
-
 
     // ------------------------------------------------------ reset
 
