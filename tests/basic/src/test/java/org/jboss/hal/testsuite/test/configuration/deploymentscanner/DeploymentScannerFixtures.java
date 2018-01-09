@@ -29,6 +29,8 @@ public interface DeploymentScannerFixtures {
     String DS_CREATE = Ids.build("ds", "create", Random.name());
     String DS_READ = Ids.build("ds", "read", Random.name());
     String DS_UPDATE = Ids.build("ds", "update", Random.name());
+    String DS_UPDATE_INVALID = Ids.build("ds", "update-invalid", Random.name());
+    String DS_UPDATE_RESET = Ids.build("ds", "update-reset", Random.name());
     String DS_DELETE = Ids.build("ds", "delete", Random.name());
 
     static Address deploymentScannerAddress(String name) {

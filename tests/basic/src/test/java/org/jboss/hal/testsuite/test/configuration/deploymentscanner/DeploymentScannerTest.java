@@ -51,6 +51,8 @@ public class DeploymentScannerTest {
     public static void beforeClass() throws Exception {
         operations.add(deploymentScannerAddress(DS_READ), Values.of(PATH, path(DS_READ)));
         operations.add(deploymentScannerAddress(DS_UPDATE), Values.of(PATH, path(DS_UPDATE)));
+        operations.add(deploymentScannerAddress(DS_UPDATE_INVALID), Values.of(PATH, path(DS_UPDATE_INVALID)));
+        operations.add(deploymentScannerAddress(DS_UPDATE_RESET), Values.of(PATH, path(DS_UPDATE_RESET)));
         operations.add(deploymentScannerAddress(DS_DELETE), Values.of(PATH, path(DS_DELETE)));
     }
 
@@ -59,6 +61,8 @@ public class DeploymentScannerTest {
         operations.removeIfExists(deploymentScannerAddress(DS_CREATE));
         operations.removeIfExists(deploymentScannerAddress(DS_READ));
         operations.removeIfExists(deploymentScannerAddress(DS_UPDATE));
+        operations.removeIfExists(deploymentScannerAddress(DS_UPDATE_INVALID));
+        operations.removeIfExists(deploymentScannerAddress(DS_UPDATE_RESET));
         operations.removeIfExists(deploymentScannerAddress(DS_DELETE));
     }
 
@@ -98,7 +102,7 @@ public class DeploymentScannerTest {
 
     @Test
     public void updateInvalidRelativeTo() throws Exception {
-        table.select(DS_UPDATE);
+        table.select(DS_UPDATE_INVALID);
         form.edit();
         form.text(RELATIVE_TO, "invalid");
         form.save();
@@ -110,7 +114,7 @@ public class DeploymentScannerTest {
 
     @Test
     public void reset() throws Exception {
-        table.select(DS_UPDATE);
+        table.select(DS_UPDATE_RESET);
         crud.reset(deploymentScannerAddress(DS_UPDATE), form);
     }
 
