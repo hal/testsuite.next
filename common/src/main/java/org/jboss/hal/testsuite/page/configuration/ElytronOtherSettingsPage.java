@@ -25,6 +25,7 @@ import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_TEMPLATE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.REALMS;
 import static org.jboss.hal.resources.Ids.*;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
@@ -50,6 +51,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     // LDAP Key Store
     @FindBy(id = ELYTRON_LDAP_KEY_STORE + "-" + TABLE + WRAPPER) private TableFragment ldapKeyStoreTable;
     @FindBy(id = ELYTRON_LDAP_KEY_STORE + "-" + FORM) private FormFragment ldapKeyStoreForm;
+    @FindBy(id = ELYTRON_LDAP_KEY_STORE + "-" + NEW_ITEM_TEMPLATE + "-" + FORM) private FormFragment ldapKeyStoreNewItemTemplateForm;
     @FindBy(id = ELYTRON_LDAP_KEY_STORE + "-" + TAB_CONTAINER) private TabsFragment ldapKeyStoreTab;
 
     // Aggregate Providers
@@ -63,6 +65,8 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Key Manager
     @FindBy(id = ELYTRON_KEY_MANAGER + "-" + TABLE + WRAPPER) private TableFragment keyManagerTable;
     @FindBy(id = ELYTRON_KEY_MANAGER + "-" + FORM) private FormFragment keyManagerForm;
+    @FindBy(id = ELYTRON_KEY_MANAGER + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment keyManagerCredentialReferenceForm;
+    @FindBy(id = ELYTRON_KEY_MANAGER + "-" + TAB_CONTAINER) private TabsFragment keyManagerTab;
 
     // Provider Loader
     @FindBy(id = ELYTRON_PROVIDER_LOADER + "-" + TABLE + WRAPPER) private TableFragment providerLoaderTable;
@@ -83,6 +87,8 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Trust Manager
     @FindBy(id = ELYTRON_TRUST_MANAGER + "-" + TABLE + WRAPPER) private TableFragment trustManagerTable;
     @FindBy(id = ELYTRON_TRUST_MANAGER + "-" + FORM) private FormFragment trustManagerForm;
+    @FindBy(id = ELYTRON_TRUST_MANAGER + "-certificate-revocation-list-" + FORM) private FormFragment trustManagerCertificateRevocationListForm;
+    @FindBy(id = ELYTRON_TRUST_MANAGER + "-" + TAB_CONTAINER) private TabsFragment trustManagerTab;
 
     // Authentication Configuration
     @FindBy(id = ELYTRON_AUTHENTICATION_CONFIGURATION + "-" + TABLE + WRAPPER) private TableFragment authenticationConfigurationTable;
@@ -170,6 +176,10 @@ public class ElytronOtherSettingsPage extends BasePage {
         return ldapKeyStoreForm;
     }
 
+    public FormFragment getLdapKeyStoreNewItemTemplateForm() {
+        return ldapKeyStoreNewItemTemplateForm;
+    }
+
     public TabsFragment getLdapKeyStoreTab() {
         return ldapKeyStoreTab;
     }
@@ -196,6 +206,14 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getKeyManagerForm() {
         return keyManagerForm;
+    }
+
+    public FormFragment getKeyManagerCredentialReferenceForm() {
+        return keyManagerCredentialReferenceForm;
+    }
+
+    public TabsFragment getKeyManagerTab() {
+        return keyManagerTab;
     }
 
     public TableFragment getProviderLoaderTable() {
@@ -236,6 +254,14 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getTrustManagerForm() {
         return trustManagerForm;
+    }
+
+    public FormFragment getTrustManagerCertificateRevocationListForm() {
+        return trustManagerCertificateRevocationListForm;
+    }
+
+    public TabsFragment getTrustManagerTab() {
+        return trustManagerTab;
     }
 
     public TableFragment getAuthenticationConfigurationTable() {

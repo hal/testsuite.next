@@ -80,6 +80,8 @@ public interface ElytronFixtures {
     String JKS = "JKS";
     String ALIAS_FILTER = "alias-filter";
     String FILTER_ALIAS = "filter-alias";
+    String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
+    String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -524,6 +526,8 @@ public interface ElytronFixtures {
 
     String LDAPKEY_ST_CREATE = Ids.build("ldap-ks", "create", Random.name());
     String LDAPKEY_ST_UPDATE = Ids.build("ldap-ks", "update", Random.name());
+    String LDAPKEY_ST_TEMP1_UPDATE = Ids.build("ldap-ks-1", "update", Random.name());
+    String LDAPKEY_ST_TEMP2_DELETE = Ids.build("ldap-ks-2", "update", Random.name());
     String LDAPKEY_ST_DELETE = Ids.build("ldap-ks", "delete", Random.name());
 
     static Address ldapKeyStoreAddress(String name) {
@@ -564,6 +568,8 @@ public interface ElytronFixtures {
 
     String PROV_LOAD_CREATE = Ids.build("prov-load", "create", Random.name());
     String PROV_LOAD_UPDATE = Ids.build("prov-load", "update", Random.name());
+    String PROV_LOAD_UPDATE2 = Ids.build("prov-load-2", "update", Random.name());
+    String PROV_LOAD_UPDATE3 = Ids.build("prov-load-3", "update", Random.name());
     String PROV_LOAD_DELETE = Ids.build("prov-load", "delete", Random.name());
 
     static Address providerLoaderAddress(String name) {
@@ -584,6 +590,7 @@ public interface ElytronFixtures {
 
     String SEC_DOM_CREATE = Ids.build("sec-dom", "create", Random.name());
     String SEC_DOM_UPDATE = Ids.build("sec-dom", "update", Random.name());
+    String SEC_DOM_UPDATE2 = Ids.build("sec-dom-2", "update", Random.name());
     String SEC_DOM_DELETE = Ids.build("sec-dom", "delete", Random.name());
 
     static Address securityDomainAddress(String name) {
@@ -595,6 +602,7 @@ public interface ElytronFixtures {
 
     String TRU_MAN_CREATE = Ids.build("tru-man", "create", Random.name());
     String TRU_MAN_UPDATE = Ids.build("tru-man", "update", Random.name());
+    String TRU_MAN_UPDATE2 = Ids.build("tru-man-2", "update", Random.name());
     String TRU_MAN_DELETE = Ids.build("tru-man", "delete", Random.name());
 
     static Address trustManagertAddress(String name) {
