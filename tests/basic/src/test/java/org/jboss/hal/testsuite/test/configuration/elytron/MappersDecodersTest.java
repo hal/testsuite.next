@@ -181,7 +181,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_PREFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddPrefixRoleMapperTable();
 
-        crud.createWithError(table, f -> f.text(NAME, ADD_PRE_CREATE), PREFIX);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, ADD_PRE_CREATE), PREFIX);
     }
 
     @Test
@@ -231,7 +231,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_SUFFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddSuffixRoleMapperTable();
 
-        crud.createWithError(table, f -> f.text(NAME, ADD_SUF_CREATE), SUFFIX);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, ADD_SUF_CREATE), SUFFIX);
     }
 
     @Test
@@ -282,7 +282,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, AGGREGATE_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAggregateRoleMapperTable();
 
-        crud.createWithError(table, f -> f.text(NAME, AGG_ROLE_CREATE), ROLE_MAPPERS);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, AGG_ROLE_CREATE), ROLE_MAPPERS);
     }
 
     @Test
@@ -339,7 +339,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, CONSTANT_ROLE_MAPPER_ITEM);
         TableFragment table = page.getConstantRoleMapperTable();
 
-        crud.createWithError(table, f -> f.text(NAME, CON_ROLE_CREATE), ROLES);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CON_ROLE_CREATE), ROLES);
     }
 
     @Test
@@ -429,7 +429,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
         TableFragment table = page.getLogicalPermissionMapperTable();
 
-        crud.createWithError(table, f -> {
+        crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, LOG_PERM_CREATE);
             f.text(RIGHT, CON_PERM_UPDATE2);
         }, LEFT);
@@ -635,7 +635,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getConcatenatingPrincipalDecoderTable();
 
-        crud.createWithError(table, f -> f.text(NAME, CONC_PRI_CREATE),PRINCIPAL_DECODERS);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CONC_PRI_CREATE),PRINCIPAL_DECODERS);
     }
 
     @Test
@@ -676,7 +676,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getConstantPrincipalDecoderTable();
 
-        crud.createWithError(table, f -> f.text(NAME, CONS_PRI_CREATE), CONSTANT);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CONS_PRI_CREATE), CONSTANT);
     }
 
     @Test
@@ -717,7 +717,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getX500PrincipalDecoderTable();
 
-        crud.createWithError(table, f -> f.text(NAME, X500_PRI_CREATE), OID);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, X500_PRI_CREATE), OID);
     }
 
     @Test
@@ -758,7 +758,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
         TableFragment table = page.getSimpleRoleDecoderTable();
 
-        crud.createWithError(table, f -> f.text(NAME, SIMP_ROLE_CREATE), ATTRIBUTE);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, SIMP_ROLE_CREATE), ATTRIBUTE);
     }
 
     @Test
