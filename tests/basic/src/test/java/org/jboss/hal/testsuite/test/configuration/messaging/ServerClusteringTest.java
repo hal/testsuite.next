@@ -355,7 +355,7 @@ public class ServerClusteringTest {
         // first select the table item, then navigate to the tab
         page.getBridgeFormsTab().select(crTab);
         form.emptyState().mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
@@ -377,7 +377,7 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getPrimaryButton().click();
@@ -399,7 +399,7 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
@@ -424,7 +424,7 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(CLEAR_TEXT, anyString);
