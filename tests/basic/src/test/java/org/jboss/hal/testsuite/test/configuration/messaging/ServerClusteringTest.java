@@ -204,7 +204,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, CC_CREATE), CLUSTER_CONNECTION_ADDRESS);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CC_CREATE), CLUSTER_CONNECTION_ADDRESS);
     }
 
     @Test
@@ -264,7 +264,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getGroupingHandlerForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, GH_CREATE), GROUPING_HANDLER_ADDRESS);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, GH_CREATE), GROUPING_HANDLER_ADDRESS);
     }
 
     @Test
@@ -312,7 +312,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getBridgeForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, BRIDGE_CREATE), QUEUE_NAME);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, BRIDGE_CREATE), QUEUE_NAME);
     }
 
     @Test
@@ -360,7 +360,11 @@ public class ServerClusteringTest {
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -381,8 +385,12 @@ public class ServerClusteringTest {
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -405,8 +413,12 @@ public class ServerClusteringTest {
         addResource.getForm().text(STORE, anyString);
         addResource.getForm().text(CLEAR_TEXT, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
