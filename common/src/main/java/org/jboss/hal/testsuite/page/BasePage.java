@@ -17,13 +17,16 @@ package org.jboss.hal.testsuite.page;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 public abstract class BasePage {
 
+    @Drone private WebDriver browser;
     @Inject private Console console;
     @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
 
@@ -41,6 +44,16 @@ public abstract class BasePage {
                 .with(name, value)
                 .build();
         console.navigate(placeRequest);
+    }
+
+    /**
+     * Navigates again to the name token specified in the {@code @Place} annotation appending the specified name/value pair with forced browser refresh. <br />
+     * Use only in case that you need to refresh browser and navigate again to the same name token to e.g. reload new resource.
+     * In other cases use {@link #navigate(String, String)} instead.
+     */
+    public void navigateAgain(String name, String value) {
+        browser.navigate().refresh();
+        navigate(name, value);
     }
 
     public WebElement getRootContainer() {

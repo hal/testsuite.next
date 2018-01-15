@@ -204,7 +204,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, CC_CREATE), CLUSTER_CONNECTION_ADDRESS);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CC_CREATE), CLUSTER_CONNECTION_ADDRESS);
     }
 
     @Test
@@ -264,7 +264,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getGroupingHandlerForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, GH_CREATE), GROUPING_HANDLER_ADDRESS);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, GH_CREATE), GROUPING_HANDLER_ADDRESS);
     }
 
     @Test
@@ -312,7 +312,7 @@ public class ServerClusteringTest {
         FormFragment form = page.getBridgeForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, f -> f.text(NAME, BRIDGE_CREATE), QUEUE_NAME);
+        crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, BRIDGE_CREATE), QUEUE_NAME);
     }
 
     @Test
@@ -344,7 +344,7 @@ public class ServerClusteringTest {
     public void bridgeTryAddCredentialReferenceRequires() throws Exception {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -355,12 +355,16 @@ public class ServerClusteringTest {
         // first select the table item, then navigate to the tab
         page.getBridgeFormsTab().select(crTab);
         form.emptyState().mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -377,19 +381,23 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
     public void bridgeTryAddCredentialReferenceAlternatives() throws Exception {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -399,14 +407,18 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
         addResource.getForm().text(CLEAR_TEXT, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -414,7 +426,7 @@ public class ServerClusteringTest {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -424,7 +436,7 @@ public class ServerClusteringTest {
         table.select(BRIDGE_UPDATE);
         page.getBridgeFormsTab().select(crTab);
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(CLEAR_TEXT, anyString);
@@ -443,7 +455,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -462,7 +474,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -481,7 +493,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
 
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
