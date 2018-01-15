@@ -344,7 +344,7 @@ public class ServerClusteringTest {
     public void bridgeTryAddCredentialReferenceRequires() throws Exception {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -389,7 +389,7 @@ public class ServerClusteringTest {
     public void bridgeTryAddCredentialReferenceAlternatives() throws Exception {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -414,7 +414,7 @@ public class ServerClusteringTest {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -443,7 +443,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -462,7 +462,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
         TableFragment table = page.getBridgeTable();
@@ -481,7 +481,7 @@ public class ServerClusteringTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
 
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
