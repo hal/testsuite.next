@@ -82,6 +82,19 @@ public interface ElytronFixtures {
     String FILTER_ALIAS = "filter-alias";
     String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
     String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
+    String REALMS = "Realms";
+    String PRINCIPAL_TRANSFORMER = "principal-transformer";
+    String AUTHENTICATION_NAME = "authentication-name";
+    String EXTENDS = "extends";
+    String MATCH_RULES_TITLE = "Match Rules";
+    String MATCH_RULES = "match-rules";
+    String MATCH_HOST = "match-host";
+    String MATCH_ABSTRACT_TYPE = "match-abstract-type";
+    String SUFFIX_LOG = "yy-mm";
+    String HOSTNAME = "host-name";
+    String SERVER_ADDRESS = "server-address";
+    String LOCALHOST = "127.0.0.1";
+    String SECURITY_EVENT_LISTENERS = "security-event-listeners";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -127,6 +140,8 @@ public interface ElytronFixtures {
     String OTHER_ITEM = "other-item";
     String POLICY_ITEM = "elytron-policy";
     String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
+    String ADD_CUSTOM_POLICY = "Add Custom Policy";
+    String ADD_JACC_POLICY = "Add JACC Policy";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(ELYTRON);
 
@@ -591,12 +606,12 @@ public interface ElytronFixtures {
     String SEC_DOM_CREATE = Ids.build("sec-dom", "create", Random.name());
     String SEC_DOM_UPDATE = Ids.build("sec-dom", "update", Random.name());
     String SEC_DOM_UPDATE2 = Ids.build("sec-dom-2", "update", Random.name());
+    String SEC_DOM_UPDATE3 = Ids.build("sec-dom-3", "update", Random.name());
     String SEC_DOM_DELETE = Ids.build("sec-dom", "delete", Random.name());
 
     static Address securityDomainAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SECURITY_DOMAIN, name);
     }
-
 
     // -------------- trust-manager
 
@@ -623,7 +638,13 @@ public interface ElytronFixtures {
 
     String AUT_CT_CREATE = Ids.build("auth-ct", "create", Random.name());
     String AUT_CT_UPDATE = Ids.build("auth-ct", "update", Random.name());
+    String AUT_CT_UPDATE2 = Ids.build("auth-ct-2", "update", Random.name());
     String AUT_CT_DELETE = Ids.build("auth-ct", "delete", Random.name());
+
+    // authentication-context match-rules
+    String AUT_CT_MR_CREATE = Ids.build("auth-ct-match-rule", "create", Random.name());
+    String AUT_CT_MR_UPDATE = Ids.build("auth-ct-match-rule", "update", Random.name());
+    String AUT_CT_MR_DELETE = Ids.build("auth-ct-match-rule", "delete", Random.name());
 
     static Address authenticationContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONTEXT, name);
@@ -645,7 +666,7 @@ public interface ElytronFixtures {
     String PER_LOG_UPDATE = Ids.build("per-log", "update", Random.name());
     String PER_LOG_DELETE = Ids.build("per-log", "delete", Random.name());
 
-    static Address periodicRotatingfileAuditLogAddress(String name) {
+    static Address periodicRotatingFileAuditLogAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_AUDIT_LOG, name);
     }
 
@@ -655,7 +676,7 @@ public interface ElytronFixtures {
     String SIZ_LOG_UPDATE = Ids.build("siz-log", "update", Random.name());
     String SIZ_LOG_DELETE = Ids.build("siz-log", "delete", Random.name());
 
-    static Address sizeRotatingfileAuditLogAddress(String name) {
+    static Address sizeRotatingFileAuditLogAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_AUDIT_LOG, name);
     }
 
@@ -682,8 +703,6 @@ public interface ElytronFixtures {
     // -------------- policy
 
     String POL_CREATE = Ids.build("pol", "create", Random.name());
-    String POL_UPDATE = Ids.build("pol", "update", Random.name());
-    String POL_DELETE = Ids.build("pol", "delete", Random.name());
 
     static Address policyAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(POLICY, name);

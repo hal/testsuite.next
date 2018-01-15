@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.test.configuration.elytron;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
@@ -24,6 +25,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
@@ -37,14 +39,18 @@ import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REALMS;
 import static org.jboss.hal.resources.Ids.*;
+import static org.jboss.hal.testsuite.Selectors.contains;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -117,19 +123,56 @@ public class OtherSettingsTest {
         operations.add(serverSslContextAddress(SRV_SSL_UPDATE), serverSslContextValues);
 
         // a realm is required for new security-domain
+        operations.add(filesystemRealmAddress(FILESYS_REALM_CREATE), Values.of(PATH, ANY_STRING));
         operations.add(filesystemRealmAddress(FILESYS_REALM_UPDATE), Values.of(PATH, ANY_STRING));
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE));
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE2));
+        ModelNode realmNode1 = new ModelNode();
+        realmNode1.get(REALM).set(FILESYS_REALM_UPDATE);
+        ModelNode realmNode2 = new ModelNode();
+        realmNode2.get(REALM).set(FILESYS_REALM_CREATE);
+        Values secDomainParams = Values.of(DEFAULT_REALM, FILESYS_REALM_UPDATE).andList(REALMS, realmNode1);
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE), secDomainParams);
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE2), secDomainParams);
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE3),
+                Values.of(DEFAULT_REALM, FILESYS_REALM_UPDATE).andList(REALMS, realmNode1, realmNode2));
         operations.add(securityDomainAddress(SEC_DOM_DELETE));
 
         operations.add(trustManagertAddress(TRU_MAN_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
         operations.add(trustManagertAddress(TRU_MAN_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE));
-        ModelNode params = new ModelNode();
-        // the path attribute must be a valid file
-        params.get(PATH).set("${jboss.server.config.dir}/logging.properties");
         operations.add(trustManagertAddress(TRU_MAN_UPDATE2), Values.of(KEY_STORE, KEY_ST_UPDATE)
-                // .and(CERTIFICATE_REVOCATION_LIST, params));
-                .andObject(CERTIFICATE_REVOCATION_LIST, Values.of(PATH, "${jboss.server.config.dir}/logging.properties")));
+                .andObject(CERTIFICATE_REVOCATION_LIST,
+                        Values.of(PATH, "${jboss.server.config.dir}/logging.properties")));
+
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE), Values.of(CONSTANT, ANY_STRING));
+
+        operations.add(authenticationConfigurationAddress(AUT_CF_UPDATE));
+        operations.add(authenticationConfigurationAddress(AUT_CF_DELETE));
+
+        operations.add(authenticationContextAddress(AUT_CT_DELETE));
+        operations.add(authenticationContextAddress(AUT_CT_UPDATE));
+        ModelNode matchRuleUpdate = new ModelNode();
+        matchRuleUpdate.get(MATCH_ABSTRACT_TYPE).set(AUT_CT_MR_UPDATE);
+        ModelNode matchRuleDelete = new ModelNode();
+        matchRuleDelete.get(MATCH_ABSTRACT_TYPE).set(AUT_CT_MR_DELETE);
+        operations.add(authenticationContextAddress(AUT_CT_UPDATE2),
+                Values.ofList(MATCH_RULES, matchRuleUpdate, matchRuleDelete));
+
+        operations.add(fileAuditLogAddress(FILE_LOG_DELETE), Values.of(PATH, ANY_STRING));
+        operations.add(fileAuditLogAddress(FILE_LOG_UPDATE), Values.of(PATH, ANY_STRING));
+
+        Values params = Values.of(PATH, ANY_STRING).and(SUFFIX, SUFFIX_LOG);
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), params);
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), params);
+
+        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), Values.of(PATH, ANY_STRING));
+        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), Values.of(PATH, ANY_STRING));
+
+        Values syslogParams = Values.of(HOSTNAME, ANY_STRING).and(PORT, Random.number()).and(SERVER_ADDRESS, LOCALHOST);
+        operations.add(syslogAuditLogAddress(SYS_LOG_UPDATE), syslogParams);
+        operations.add(syslogAuditLogAddress(SYS_LOG_DELETE), syslogParams);
+
+        Values secEventParams = Values.ofList(SECURITY_EVENT_LISTENERS, SYS_LOG_UPDATE, SIZ_LOG_UPDATE);
+        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_UPDATE), secEventParams);
+        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE), secEventParams);
     }
 
     @AfterClass
@@ -146,15 +189,15 @@ public class OtherSettingsTest {
         operations.remove(keyStoreAddress(KEY_ST_CREATE));
         operations.remove(keyStoreAddress(KEY_ST_DELETE));
 
-        operations.remove(dirContextAddress(DIR_UPDATE));
-        operations.remove(dirContextAddress(DIR_DELETE));
-        operations.remove(dirContextAddress(DIR_CREATE));
-
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_DELETE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_CREATE));
+
+        operations.remove(dirContextAddress(DIR_UPDATE));
+        operations.remove(dirContextAddress(DIR_DELETE));
+        operations.remove(dirContextAddress(DIR_CREATE));
 
         // SSL
         operations.remove(aggregateProvidersAddress(AGG_PRV_DELETE));
@@ -176,6 +219,7 @@ public class OtherSettingsTest {
 
         operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
         operations.remove(securityDomainAddress(SEC_DOM_UPDATE2));
+        operations.remove(securityDomainAddress(SEC_DOM_UPDATE3));
         operations.remove(securityDomainAddress(SEC_DOM_DELETE));
         operations.remove(securityDomainAddress(SEC_DOM_CREATE));
 
@@ -194,6 +238,41 @@ public class OtherSettingsTest {
         operations.remove(providerLoaderAddress(PROV_LOAD_DELETE));
 
         operations.remove(filesystemRealmAddress(FILESYS_REALM_UPDATE));
+        operations.remove(filesystemRealmAddress(FILESYS_REALM_CREATE));
+
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE));
+
+        operations.remove(authenticationContextAddress(AUT_CT_UPDATE));
+        operations.remove(authenticationContextAddress(AUT_CT_UPDATE2));
+        operations.remove(authenticationContextAddress(AUT_CT_DELETE));
+        operations.remove(authenticationContextAddress(AUT_CT_CREATE));
+
+        operations.remove(authenticationConfigurationAddress(AUT_CF_CREATE));
+        operations.remove(authenticationConfigurationAddress(AUT_CF_UPDATE));
+        operations.remove(authenticationConfigurationAddress(AUT_CF_DELETE));
+
+        operations.remove(fileAuditLogAddress(FILE_LOG_DELETE));
+        operations.remove(fileAuditLogAddress(FILE_LOG_UPDATE));
+        operations.remove(fileAuditLogAddress(FILE_LOG_CREATE));
+
+        // remove the aggregate-security-event-listener first, as they require size audit log and syslog
+        operations.remove(aggregateSecurityEventListenerAddress(AGG_SEC_UPDATE));
+        operations.remove(aggregateSecurityEventListenerAddress(AGG_SEC_CREATE));
+        operations.remove(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE));
+
+        operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE));
+        operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE));
+        operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_CREATE));
+
+        operations.remove(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE));
+        operations.remove(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE));
+        operations.remove(sizeRotatingFileAuditLogAddress(SIZ_LOG_CREATE));
+
+        operations.remove(syslogAuditLogAddress(SYS_LOG_DELETE));
+        operations.remove(syslogAuditLogAddress(SYS_LOG_CREATE));
+        operations.remove(syslogAuditLogAddress(SYS_LOG_UPDATE));
+
+        operations.remove(policyAddress(POL_CREATE));
 
     }
 
@@ -327,9 +406,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
-        crud.createWithError(table, f -> {
-            f.text(NAME, KEY_ST_CREATE);
-        }, TYPE);
+        crud.createWithError(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
     }
 
     @Test
@@ -371,9 +448,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
 
-        crud.createWithError(table, f -> {
-            f.text(NAME, LDAPKEY_ST_CREATE);
-        }, DIR_CONTEXT);
+        crud.createWithError(table, f -> f.text(NAME, LDAPKEY_ST_CREATE), DIR_CONTEXT);
     }
 
     @Test
@@ -497,9 +572,7 @@ public class OtherSettingsTest {
         table.bind(form);
         table.select(AGG_PRV_UPDATE);
 
-        crud.update(aggregateProvidersAddress(AGG_PRV_UPDATE), form, f -> {
-            f.list(PROVIDERS).add(PROV_LOAD_UPDATE3);
-        }, verify -> verify.verifyListAttributeContainsValue(PROVIDERS, PROV_LOAD_UPDATE3));
+        crud.update(aggregateProvidersAddress(AGG_PRV_UPDATE), form, f -> f.list(PROVIDERS).add(PROV_LOAD_UPDATE3), verify -> verify.verifyListAttributeContainsValue(PROVIDERS, PROV_LOAD_UPDATE3));
     }
 
     @Test
@@ -705,7 +778,62 @@ public class OtherSettingsTest {
         crud.delete(securityDomainAddress(SEC_DOM_DELETE), table, SEC_DOM_DELETE);
     }
 
-    // --------------- security-domain
+    @Test
+    public void securityDomainRealmsCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SSL_ITEM, SECURITY_DOMAIN_ITEM);
+        TableFragment secDomaintable = page.getSecurityDomainTable();
+        TableFragment table = page.getSecurityDomainRealmsTable();
+
+        secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_REALM_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_REALM_CREATE));
+    }
+
+    @Test
+    public void securityDomainRealmsTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SSL_ITEM, SECURITY_DOMAIN_ITEM);
+        TableFragment secDomaintable = page.getSecurityDomainTable();
+        TableFragment table = page.getSecurityDomainRealmsTable();
+
+        secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        crud.createWithError(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+    }
+
+    @Test
+    public void securityDomainRealmsUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SSL_ITEM, SECURITY_DOMAIN_ITEM);
+        TableFragment secDomaintable = page.getSecurityDomainTable();
+        TableFragment table = page.getSecurityDomainRealmsTable();
+        FormFragment form = page.getSecurityDomainRealmsForm();
+
+        secDomaintable.action(SEC_DOM_UPDATE2, ElytronFixtures.REALMS);
+        waitGui().until().element(table.getRoot()).is().visible();
+        table.bind(form);
+        table.select(FILESYS_REALM_UPDATE);
+
+        crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
+                f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE));
+    }
+
+    @Test
+    public void securityDomainRealmsDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SSL_ITEM, SECURITY_DOMAIN_ITEM);
+        TableFragment secDomaintable = page.getSecurityDomainTable();
+        TableFragment table = page.getSecurityDomainRealmsTable();
+
+        secDomaintable.action(SEC_DOM_UPDATE3, ElytronFixtures.REALMS);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_REALM_CREATE,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_REALM_CREATE));
+    }
+
+    // --------------- trust-manager
 
     @Test
     public void trustManagerCreate() throws Exception {
@@ -733,9 +861,8 @@ public class OtherSettingsTest {
         table.bind(form);
         table.select(TRU_MAN_UPDATE);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, ATTRIBUTES, TAB));
-        crud.update(trustManagertAddress(TRU_MAN_UPDATE), form, f -> {
-            f.text(PROVIDER_NAME, ANY_STRING);
-        }, verify -> verify.verifyAttribute(PROVIDER_NAME, ANY_STRING));
+        crud.update(trustManagertAddress(TRU_MAN_UPDATE), form, f -> f.text(PROVIDER_NAME, ANY_STRING),
+                verify -> verify.verifyAttribute(PROVIDER_NAME, ANY_STRING));
     }
 
     @Test
@@ -764,9 +891,8 @@ public class OtherSettingsTest {
         table.select(TRU_MAN_UPDATE);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, CERTIFICATE_REVOCATION_LIST, TAB));
         String path = "${jboss.server.config.dir}/logging.properties";
-        crud.update(trustManagertAddress(TRU_MAN_UPDATE), form, f -> {
-            f.text(PATH, path);
-        }, verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + "." + PATH, path));
+        crud.update(trustManagertAddress(TRU_MAN_UPDATE), form, f -> f.text(PATH, path),
+                verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + "." + PATH, path));
     }
 
     @Test
@@ -788,4 +914,476 @@ public class OtherSettingsTest {
         TableFragment table = page.getTrustManagerTable();
         crud.delete(trustManagertAddress(TRU_MAN_DELETE), table, TRU_MAN_DELETE);
     }
+
+    // --------------- authentication-configuration
+
+    @Test
+    public void authenticationConfigurationCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+
+        crud.create(authenticationConfigurationAddress(AUT_CF_CREATE), table, AUT_CF_CREATE);
+    }
+
+    @Test
+    public void authenticationConfigurationUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+        FormFragment form = page.getAuthenticationConfigurationForm();
+        table.bind(form);
+        table.select(AUT_CF_UPDATE);
+        crud.update(authenticationConfigurationAddress(AUT_CF_UPDATE), form, AUTHENTICATION_NAME);
+    }
+
+    @Test
+    public void authenticationConfigurationDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+        crud.delete(authenticationConfigurationAddress(AUT_CF_DELETE), table, AUT_CF_DELETE);
+    }
+
+    //TODO: fix authentication-configuration save operation for credential-reference and add tests for credential-reference
+
+    // --------------- authentication-context
+
+    @Test
+    public void authenticationContextCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment table = page.getAuthenticationContextTable();
+
+        crud.create(authenticationContextAddress(AUT_CT_CREATE), table, AUT_CT_CREATE);
+    }
+
+    @Test
+    public void authenticationContextUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment table = page.getAuthenticationContextTable();
+        FormFragment form = page.getAuthenticationContextForm();
+        table.bind(form);
+        table.select(AUT_CT_UPDATE);
+        crud.update(authenticationContextAddress(AUT_CT_UPDATE), form, EXTENDS, AUT_CT_UPDATE2);
+    }
+
+    @Test
+    public void authenticationContextDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment table = page.getAuthenticationContextTable();
+        crud.delete(authenticationContextAddress(AUT_CT_DELETE), table, AUT_CT_DELETE);
+    }
+
+    @Test
+    public void authenticationContextMatchRulesCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment autTable = page.getAuthenticationContextTable();
+        TableFragment table = page.getAuthenticationContextMatchRulesTable();
+
+        autTable.action(AUT_CT_UPDATE, MATCH_RULES_TITLE);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        crud.create(authenticationContextAddress(AUT_CT_UPDATE), table,
+                f -> f.text(MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE));
+    }
+
+    @Test
+    public void authenticationContextMatchRulesUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment autTable = page.getAuthenticationContextTable();
+        TableFragment table = page.getAuthenticationContextMatchRulesTable();
+        FormFragment form = page.getAuthenticationContextMatchRulesForm();
+        table.bind(form);
+
+        autTable.action(AUT_CT_UPDATE2, MATCH_RULES_TITLE);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        table.select(AUT_CT_MR_UPDATE);
+        crud.update(authenticationContextAddress(AUT_CT_UPDATE2), form, f -> f.text(MATCH_HOST, ANY_STRING),
+                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_HOST, ANY_STRING));
+    }
+
+    @Test
+    public void authenticationContextMatchRulesDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONTEXT_ITEM);
+        TableFragment autTable = page.getAuthenticationContextTable();
+        TableFragment table = page.getAuthenticationContextMatchRulesTable();
+
+        autTable.action(AUT_CT_UPDATE2, MATCH_RULES_TITLE);
+        waitGui().until().element(table.getRoot()).is().visible();
+
+        crud.delete(authenticationContextAddress(AUT_CT_UPDATE2), table, AUT_CT_MR_DELETE,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE,
+                        AUT_CT_MR_DELETE));
+    }
+
+    // --------------- file-audit-log
+
+    @Test
+    public void fileAuditLogCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getFileAuditLogTable();
+
+        crud.create(fileAuditLogAddress(FILE_LOG_CREATE), table, f -> {
+            f.text(NAME, FILE_LOG_CREATE);
+            f.text(PATH, ANY_STRING);
+        });
+    }
+
+    @Test
+    public void fileAuditLogTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getFileAuditLogTable();
+        crud.createWithError(table, NAME, PATH);
+    }
+
+    @Test
+    public void fileAuditLogUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getFileAuditLogTable();
+        FormFragment form = page.getFileAuditLogForm();
+        table.bind(form);
+        table.select(FILE_LOG_UPDATE);
+        crud.update(fileAuditLogAddress(FILE_LOG_UPDATE), form, PATH);
+    }
+
+    @Test
+    public void fileAuditLogTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getFileAuditLogTable();
+        FormFragment form = page.getFileAuditLogForm();
+        table.bind(form);
+        table.select(FILE_LOG_UPDATE);
+        crud.updateWithError(form, f -> f.clear(PATH), PATH);
+    }
+
+    @Test
+    public void fileAuditLogDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getFileAuditLogTable();
+        crud.delete(fileAuditLogAddress(FILE_LOG_DELETE), table, FILE_LOG_DELETE);
+    }
+
+    // --------------- periodic-rotating-file-aaudit-log
+
+    @Test
+    public void periodicRotatingFileAuditLogCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
+
+        crud.create(periodicRotatingFileAuditLogAddress(PER_LOG_CREATE), table, f -> {
+            f.text(NAME, PER_LOG_CREATE);
+            f.text(PATH, ANY_STRING);
+            f.text(SUFFIX, SUFFIX_LOG);
+        });
+    }
+
+    @Test
+    public void periodicRotatingFileAuditLogTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
+        crud.createWithError(table, NAME, PATH);
+    }
+
+    @Test
+    public void periodicRotatingFileAuditLogUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
+        FormFragment form = page.getPeriodicRotatingFileAuditLogForm();
+        table.bind(form);
+        table.select(PER_LOG_UPDATE);
+        crud.update(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), form, PATH);
+    }
+
+    @Test
+    public void periodicRotatingFileAuditLogTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
+        FormFragment form = page.getPeriodicRotatingFileAuditLogForm();
+        table.bind(form);
+        table.select(PER_LOG_UPDATE);
+        crud.updateWithError(form, f -> f.clear(PATH), PATH);
+    }
+
+    @Test
+    public void periodicRotatingFileAuditLogDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
+        crud.delete(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), table, PER_LOG_DELETE);
+    }
+
+
+    // --------------- size-rotating-file-audit-log
+
+    @Test
+    public void sizeRotatingLogCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSizeRotatingFileAuditLogTable();
+
+        crud.create(sizeRotatingFileAuditLogAddress(SIZ_LOG_CREATE), table, f -> {
+            f.text(NAME, SIZ_LOG_CREATE);
+            f.text(PATH, ANY_STRING);
+        });
+    }
+
+    @Test
+    public void sizeRotatingLogTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSizeRotatingFileAuditLogTable();
+        crud.createWithError(table, NAME, PATH);
+    }
+
+    @Test
+    public void sizeRotatingLogUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSizeRotatingFileAuditLogTable();
+        FormFragment form = page.getSizeRotatingFileAuditLogForm();
+        table.bind(form);
+        table.select(SIZ_LOG_UPDATE);
+        crud.update(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), form, PATH);
+    }
+
+    @Test
+    public void sizeRotatingLogTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSizeRotatingFileAuditLogTable();
+        FormFragment form = page.getSizeRotatingFileAuditLogForm();
+        table.bind(form);
+        table.select(SIZ_LOG_UPDATE);
+        crud.updateWithError(form, f -> f.clear(PATH), PATH);
+    }
+
+    @Test
+    public void sizeRotatingLogDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSizeRotatingFileAuditLogTable();
+        crud.delete(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), table, SIZ_LOG_DELETE);
+    }
+
+    // --------------- syslog-audit-log
+
+    @Test
+    public void syslogAuditLogCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSyslogAuditLogTable();
+
+        crud.create(syslogAuditLogAddress(SYS_LOG_CREATE), table, f -> {
+            f.text(NAME, SYS_LOG_CREATE);
+            f.text(HOSTNAME, ANY_STRING);
+            f.number(PORT, Random.number());
+            f.text(SERVER_ADDRESS, LOCALHOST);
+        });
+    }
+
+    @Test
+    public void syslogAuditLogTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSyslogAuditLogTable();
+        crud.createWithError(table, NAME, HOSTNAME);
+    }
+
+    @Test
+    public void syslogAuditLogUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSyslogAuditLogTable();
+        FormFragment form = page.getSyslogAuditLogForm();
+        table.bind(form);
+        table.select(SYS_LOG_UPDATE);
+        crud.update(syslogAuditLogAddress(SYS_LOG_UPDATE), form, PORT, Random.number());
+    }
+
+    @Test
+    public void syslogAuditLogTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSyslogAuditLogTable();
+        FormFragment form = page.getSyslogAuditLogForm();
+        table.bind(form);
+        table.select(SYS_LOG_UPDATE);
+        crud.updateWithError(form, f -> f.clear(HOSTNAME), HOSTNAME);
+    }
+
+    @Test
+    public void syslogAuditLogDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
+        TableFragment table = page.getSyslogAuditLogTable();
+        crud.delete(syslogAuditLogAddress(SYS_LOG_DELETE), table, SYS_LOG_DELETE);
+    }
+
+    // --------------- aggregate-security-event-listener
+
+    @Test
+    public void aggregateSecurityEventListenerCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
+        TableFragment table = page.getAggregateSecurityEventListenerTable();
+
+        crud.create(aggregateSecurityEventListenerAddress(AGG_SEC_CREATE), table, f -> {
+            f.text(NAME, AGG_SEC_CREATE);
+            f.list(SECURITY_EVENT_LISTENERS).add(SIZ_LOG_UPDATE).add(SYS_LOG_UPDATE);
+        });
+    }
+
+    @Test
+    public void aggregateSecurityEventListenerTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
+        TableFragment table = page.getAggregateSecurityEventListenerTable();
+        crud.createWithError(table, NAME, SECURITY_EVENT_LISTENERS);
+    }
+
+    @Test
+    public void aggregateSecurityEventListenerUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
+        TableFragment table = page.getAggregateSecurityEventListenerTable();
+        FormFragment form = page.getAggregateSecurityEventListenerForm();
+        table.bind(form);
+        table.select(AGG_SEC_UPDATE);
+        crud.update(aggregateSecurityEventListenerAddress(AGG_SEC_UPDATE), form,
+                f -> f.list(SECURITY_EVENT_LISTENERS).add(PER_LOG_UPDATE),
+                verify -> verify.verifyListAttributeContainsValue(SECURITY_EVENT_LISTENERS, PER_LOG_UPDATE));
+    }
+
+    @Test
+    public void aggregateSecurityEventListenerTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
+        TableFragment table = page.getAggregateSecurityEventListenerTable();
+        FormFragment form = page.getAggregateSecurityEventListenerForm();
+        table.bind(form);
+        table.select(AGG_SEC_UPDATE);
+        crud.updateWithError(form, f -> f.list(SECURITY_EVENT_LISTENERS).removeTags(), SECURITY_EVENT_LISTENERS);
+    }
+
+    @Test
+    public void aggregateSecurityEventListenerDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
+        TableFragment table = page.getAggregateSecurityEventListenerTable();
+        crud.delete(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE), table, AGG_SEC_DELETE);
+    }
+
+    // --------------- jacc policy
+
+    @Test
+    public void jaccPolicyCreate() throws Exception {
+        operations.removeIfExists(policyAddress(POL_CREATE));
+        console.reload();
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
+        EmptyState emptyState = page.getEmptyPolicy();
+        By selector = ByJQuery.selector("button" + contains(ADD_JACC_POLICY));
+        emptyState.getRoot().findElement(selector).click();
+
+        AddResourceDialogFragment addDialog = console.addResourceDialog();
+        addDialog.getForm().text(NAME, POL_CREATE);
+        addDialog.add();
+
+        console.verifySuccess();
+        new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+    }
+
+    @Test
+    public void jaccPolicyUpdate() throws Exception {
+        if (!operations.exists(policyAddress(POL_CREATE))) {
+            ModelNode empty = new ModelNode();
+            empty.setEmptyObject();
+            operations.add(policyAddress(POL_CREATE), Values.of(JACC_POLICY, empty));
+            console.reload();
+        }
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
+        FormFragment form = page.getPolicyJaccForm();
+        crud.update(policyAddress(POL_CREATE), form, f -> f.text(POLICY, ANY_STRING),
+                verify -> verify.verifyAttribute("jacc-policy.policy", ANY_STRING));
+    }
+
+    @Test
+    public void jaccPolicyDelete() throws Exception {
+        if (!operations.exists(policyAddress(POL_CREATE))) {
+            ModelNode empty = new ModelNode();
+            empty.setEmptyObject();
+            operations.add(policyAddress(POL_CREATE), Values.of(JACC_POLICY, empty));
+            console.reload();
+        }
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
+        FormFragment form = page.getPolicyJaccForm();
+        form.getRoot().findElement(By.cssSelector("a[data-operation=remove]")).click();
+        console.confirmationDialog().confirm();
+        waitGui().until().element(By.id(ELYTRON_CUSTOM_POLICY_EMPTY)).is().visible();
+        // form.remove operation doesn't work because it waits for the blank-slate-pf css of form to become visible
+        // but the emptyState div is outside the form div
+        console.verifySuccess();
+        new ResourceVerifier(policyAddress(POL_CREATE), client).verifyDoesNotExist();
+    }
+
+    // --------------- custom policy
+
+    @Test
+    public void customPolicyCreate() throws Exception {
+        operations.removeIfExists(policyAddress(POL_CREATE));
+        console.reload();
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
+        EmptyState emptyState = page.getEmptyPolicy();
+        By selector = ByJQuery.selector("button" + contains(ADD_CUSTOM_POLICY));
+        emptyState.getRoot().findElement(selector).click();
+
+        AddResourceDialogFragment addDialog = console.addResourceDialog();
+        addDialog.getForm().text(NAME, POL_CREATE);
+        addDialog.getForm().text(CLASS_NAME, ANY_STRING);
+        addDialog.add();
+
+        console.verifySuccess();
+        new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+    }
+
+    @Test
+    public void customPolicyUpdate() throws Exception {
+        if (!operations.exists(policyAddress(POL_CREATE))) {
+            ModelNode customPolicy = new ModelNode();
+            customPolicy.get(CLASS_NAME).set(ANY_STRING);
+            operations.add(policyAddress(POL_CREATE), Values.of(CUSTOM_POLICY, customPolicy));
+            console.reload();
+        }
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
+        FormFragment form = page.getPolicyCustomForm();
+        String module = Random.name();
+        crud.update(policyAddress(POL_CREATE), form, f -> f.text(MODULE, module),
+                verify -> verify.verifyAttribute("custom-policy.module", module));
+    }
+
+    // There is no need for a customPolicyDelete test as the "remove" UI operation
+    // is the same for jacc and custom policy
+
+    // --------------- dir-context
+
+    @Test
+    public void dirContextCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+
+        crud.create(dirContextAddress(DIR_CREATE), table, f -> {
+            f.text(NAME, DIR_CREATE);
+            f.text(URL, ANY_STRING);
+        });
+    }
+
+    @Test
+    public void dirContextTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, DIR_CREATE), URL);
+    }
+
+    @Test
+    public void dirContextUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+        FormFragment form = page.getDirContextForm();
+        table.bind(form);
+        table.select(DIR_UPDATE);
+        crud.update(dirContextAddress(DIR_UPDATE), form, PRINCIPAL);
+    }
+
+    @Test
+    public void dirContextDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+        crud.delete(dirContextAddress(DIR_DELETE), table, DIR_DELETE);
+    }
+
+    // TODO: once the credential-reference save operation is fixed add tests for it
+
 }

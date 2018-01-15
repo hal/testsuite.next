@@ -17,6 +17,7 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
@@ -81,8 +82,8 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + FORM) private FormFragment securityDomainForm;
 
     // Security Domain / Realms
-    @FindBy(id = ELYTRON_SECURITY_DOMAIN + REALMS + "-" + "-" + TABLE + WRAPPER) private TableFragment securityDomainRealmsTable;
-    @FindBy(id = ELYTRON_SECURITY_DOMAIN + REALMS + "-" + "-" + FORM) private FormFragment securityDomainRealmsForm;
+    @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + REALMS + "-" + TABLE + WRAPPER) private TableFragment securityDomainRealmsTable;
+    @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + REALMS + "-" + FORM) private FormFragment securityDomainRealmsForm;
 
     // Trust Manager
     @FindBy(id = ELYTRON_TRUST_MANAGER + "-" + TABLE + WRAPPER) private TableFragment trustManagerTable;
@@ -125,7 +126,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Policy
     @FindBy(id = ELYTRON_JACC_POLICY_FORM) private FormFragment policyJaccForm;
     @FindBy(id = ELYTRON_CUSTOM_POLICY_FORM) private FormFragment policyCustomForm;
-    @FindBy(id = ELYTRON_CUSTOM_POLICY_EMPTY) private FormFragment emptyPolicy;
+    @FindBy(id = ELYTRON_CUSTOM_POLICY_EMPTY) private EmptyState emptyPolicy;
 
     // Dir Context
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + TABLE + WRAPPER) private TableFragment dirContextTable;
@@ -336,7 +337,7 @@ public class ElytronOtherSettingsPage extends BasePage {
         return policyCustomForm;
     }
 
-    public FormFragment getEmptyPolicy() {
+    public EmptyState getEmptyPolicy() {
         return emptyPolicy;
     }
 

@@ -210,8 +210,6 @@ public class FactoriesTransformersTest {
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_DELETE));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_CREATE));
 
-        operations.remove(filesystemRealmAddress(FILESYS_REALM_CREATE));
-
         operations.remove(aggregateSaslServerFactoryAddress(AGG_SASL_UPDATE));
         operations.remove(aggregateSaslServerFactoryAddress(AGG_SASL_DELETE));
         operations.remove(aggregateSaslServerFactoryAddress(AGG_SASL_CREATE));
@@ -262,6 +260,7 @@ public class FactoriesTransformersTest {
         operations.remove(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_UPDATE));
         operations.remove(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_DELETE));
 
+        operations.remove(providerSaslServerFactoryAddress(PROV_SASL_CREATE));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE2));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE3));
