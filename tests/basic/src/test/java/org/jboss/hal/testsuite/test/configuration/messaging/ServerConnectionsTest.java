@@ -133,7 +133,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorGenericForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_GEN_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_GEN_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -197,7 +197,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorInVMForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_INVM_CREATE, SERVER_ID);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_INVM_CREATE, SERVER_ID);
     }
 
     @Test
@@ -264,7 +264,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorHttpForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_HTTP_CREATE, HTTP_LISTENER);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_HTTP_CREATE, HTTP_LISTENER);
     }
 
     @Test
@@ -332,7 +332,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorRemoteForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_REM_CREATE, SOCKET_BINDING);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_REM_CREATE, SOCKET_BINDING);
     }
 
     @Test
@@ -397,7 +397,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorGenericForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_GEN_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_GEN_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -461,7 +461,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorInVMForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_INVM_CREATE, SERVER_ID);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_INVM_CREATE, SERVER_ID);
     }
 
     @Test
@@ -529,7 +529,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorHttpForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_HTTP_CREATE, ENDPOINT);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_HTTP_CREATE, ENDPOINT);
     }
 
     @Test
@@ -597,7 +597,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorRemoteForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_REM_CREATE, SOCKET_BINDING);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_REM_CREATE, SOCKET_BINDING);
     }
 
     @Test
@@ -660,7 +660,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorServiceForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_SVC_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_SVC_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -718,7 +718,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectionFactoryForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_FAC_CREATE, DISCOVERY_GROUP);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_FAC_CREATE, DISCOVERY_GROUP);
     }
 
     @Test
@@ -773,7 +773,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getPooledConnectionFactoryForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, POOL_CONN_CREATE, DISCOVERY_GROUP);
+        crudOperations.createWithErrorAndCancelDialog(table, POOL_CONN_CREATE, DISCOVERY_GROUP);
     }
 
     @Test
@@ -829,7 +829,11 @@ public class ServerConnectionsTest {
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -849,8 +853,12 @@ public class ServerConnectionsTest {
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -872,8 +880,12 @@ public class ServerConnectionsTest {
         addResource.getForm().text(STORE, anyString);
         addResource.getForm().text(CLEAR_TEXT, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
