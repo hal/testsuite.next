@@ -67,8 +67,10 @@ public class ServerClusteringTest {
         operations.add(broadcastGroupAddress(SRV_UPDATE, BG_UPDATE));
         operations.add(broadcastGroupAddress(SRV_UPDATE, BG_DELETE));
         operations.add(discoveryGroupAddress(SRV_UPDATE, DG_UPDATE));
+        operations.add(discoveryGroupAddress(SRV_UPDATE, DG_UPDATE_ALTERNATIVES));
         operations.add(discoveryGroupAddress(SRV_UPDATE, DG_DELETE));
         operations.add(clusterConnectionAddress(SRV_UPDATE, CC_UPDATE), CC_PARAMS);
+        operations.add(clusterConnectionAddress(SRV_UPDATE, CC_UPDATE_ALTERNATIVES), CC_PARAMS);
         operations.add(clusterConnectionAddress(SRV_UPDATE, CC_DELETE), CC_PARAMS);
         operations.add(groupingHandlerAddress(SRV_UPDATE, GH_UPDATE), GH_PARAMS);
         operations.add(groupingHandlerAddress(SRV_UPDATE, GH_DELETE), GH_PARAMS);
@@ -163,7 +165,7 @@ public class ServerClusteringTest {
         TableFragment table = page.getDiscoveryGroupTable();
         FormFragment form = page.getDiscoveryGroupForm();
         table.bind(form);
-        table.select(DG_UPDATE);
+        table.select(DG_UPDATE_ALTERNATIVES);
         crudOperations.updateWithError(form, f -> {
             f.text(JGROUPS_CHANNEL, EE);
             f.text(SOCKET_BINDING, HTTP);
@@ -223,7 +225,7 @@ public class ServerClusteringTest {
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
-        table.select(CC_UPDATE);
+        table.select(CC_UPDATE_ALTERNATIVES);
         crudOperations.updateWithError(form, f -> {
             f.text(DISCOVERY_GROUP, anyString);
             f.list(STATIC_CONNECTORS).add(HTTP);

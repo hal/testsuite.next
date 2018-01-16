@@ -279,6 +279,7 @@ public interface MessagingFixtures {
 
     String DG_CREATE = Ids.build("dg", "create", Random.name());
     String DG_UPDATE = Ids.build("dg", "update", Random.name());
+    String DG_UPDATE_ALTERNATIVES = Ids.build("dg", "update-alternatives", Random.name());
     String DG_DELETE = Ids.build("dg", "delete", Random.name());
 
     static Address discoveryGroupAddress(String server, String name) {
@@ -289,6 +290,7 @@ public interface MessagingFixtures {
 
     String CC_CREATE = Ids.build("cc", "create", Random.name());
     String CC_UPDATE = Ids.build("cc", "update", Random.name());
+    String CC_UPDATE_ALTERNATIVES = Ids.build("cc", "update-alternatives", Random.name());
     String CC_DELETE = Ids.build("cc", "delete", Random.name());
 
     static Address clusterConnectionAddress(String server, String name) {
