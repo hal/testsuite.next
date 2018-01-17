@@ -42,8 +42,8 @@ public class MessagingServerDestinationsPage extends BasePage {
     @FindBy(id = MESSAGING_JMS_TOPIC + "-" + FORM) private FormFragment jmsTopicForm;
 
     // ----------- Security Setting
-    @FindBy(id = MESSAGING_SECURITY_SETTING_ROLE + "-" + TABLE + WRAPPER) private TableFragment securitySettingTable;
-    @FindBy(id = MESSAGING_SECURITY_SETTING_ROLE + "-" + FORM) private FormFragment securitySettingForm;
+    @FindBy(id = "messaging-security-setting-role-" + TABLE + WRAPPER) private TableFragment securitySettingTable;
+    @FindBy(id = "messaging-security-setting-role-" + FORM) private FormFragment securitySettingForm;
 
     // ----------- Address Setting
     @FindBy(id = MESSAGING_ADDRESS_SETTING + "-" + TABLE + WRAPPER) private TableFragment addressSettingTable;

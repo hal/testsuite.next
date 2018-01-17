@@ -77,12 +77,12 @@ public class ElytronMappersDecodersPage extends BasePage {
     @FindBy(id = ELYTRON_SIMPLE_PERMISSION_MAPPER + "-" + FORM) private FormFragment simplePermissionMapperForm;
 
     // Simple Permission Mapper / Permission Mappings
-    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionMappingsTable;
-    @FindBy(id = ELYTRON_PERMISSION_MAPPINGS + "-" + FORM) private FormFragment simplePMPermissionMappingsForm;
+    @FindBy(id = "elytron-permission-mappings-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionMappingsTable;
+    @FindBy(id = "elytron-permission-mappings-" + FORM) private FormFragment simplePMPermissionMappingsForm;
 
     // Simple Permission Mapper / Permission Mappings / Permissions
-    @FindBy(id = ELYTRON_PERMISSIONS + "-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionsTable;
-    @FindBy(id = ELYTRON_PERMISSIONS + "-" + FORM) private FormFragment simplePMPermissionsForm;
+    @FindBy(id = "elytron-permissions-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionsTable;
+    @FindBy(id = "elytron-permissions-" + FORM) private FormFragment simplePMPermissionsForm;
 
     // Aggregate Principal Decoder
     @FindBy(id = MAPPERS_DECODERS + "-" + AGGREGATE_PRINCIPAL_DECODER + "-" + TABLE +  WRAPPER) private TableFragment aggregatePrincipalDecoderTable;
