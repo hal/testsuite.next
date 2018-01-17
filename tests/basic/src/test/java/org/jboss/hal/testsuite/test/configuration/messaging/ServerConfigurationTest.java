@@ -165,7 +165,11 @@ public class ServerConfigurationTest {
         addResource.getForm().text(STORE, Random.name());
         console.waitNoNotification();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
