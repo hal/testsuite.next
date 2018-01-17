@@ -248,6 +248,7 @@ public interface MessagingFixtures {
     // ------------------------------------------------------ server / connections / connector factory
 
     String CONN_FAC_CREATE = Ids.build("connector-fac", "create", Random.name());
+    String CONN_FAC_CREATE_ENTRY = Ids.build("connector-fac", "create-entry", Random.name());
     String CONN_FAC_UPDATE = Ids.build("connector-fac", "update", Random.name());
     String CONN_FAC_DELETE = Ids.build("connector-fac", "delete", Random.name());
 
@@ -258,6 +259,7 @@ public interface MessagingFixtures {
     // ------------------------------------------------------ server / connections / pooled connection factory
 
     String POOL_CONN_CREATE = Ids.build("pcf", "create", Random.name());
+    String POOL_CONN_CREATE_ENTRY = Ids.build("pcf", "-entry", Random.name());
     String POOL_CONN_UPDATE = Ids.build("pcf", "update", Random.name());
     String POOL_CONN_DELETE = Ids.build("pcf", "delete", Random.name());
 

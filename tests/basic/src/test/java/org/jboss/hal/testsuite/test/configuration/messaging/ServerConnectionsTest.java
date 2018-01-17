@@ -706,7 +706,7 @@ public class ServerConnectionsTest {
                 formFragment -> {
                     formFragment.text(NAME, CONN_FAC_CREATE);
                     formFragment.text(DISCOVERY_GROUP, anyString);
-                    formFragment.list(ENTRIES).add(anyString);
+                    formFragment.list(ENTRIES).add(CONN_FAC_CREATE_ENTRY);
                 }
         );
     }
@@ -761,7 +761,7 @@ public class ServerConnectionsTest {
                 formFragment -> {
                     formFragment.text(NAME, POOL_CONN_CREATE);
                     formFragment.text(DISCOVERY_GROUP, anyString);
-                    formFragment.list(ENTRIES).add(anyString);
+                    formFragment.list(ENTRIES).add(POOL_CONN_CREATE_ENTRY);
                 }
         );
     }
