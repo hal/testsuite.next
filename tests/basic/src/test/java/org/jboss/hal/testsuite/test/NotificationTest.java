@@ -68,8 +68,8 @@ public class NotificationTest {
 
         properties = new HashSet<>();
         for (int i = 0; i < COUNT; i++) {
-            String name = Ids.build(Ids.SYSTEM_PROPERTY, NAME, String.valueOf(i), Random.name());
-            String value = Ids.build(Ids.SYSTEM_PROPERTY, VALUE, String.valueOf(i), Random.name());
+            String name = Ids.build("system-property", NAME, String.valueOf(i), Random.name());
+            String value = Ids.build("system-property", VALUE, String.valueOf(i), Random.name());
 
             AddResourceDialogFragment dialog = table.add();
             dialog.getForm().text(NAME, name);
