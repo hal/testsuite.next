@@ -160,12 +160,16 @@ public class ServerConfigurationTest {
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, Random.name());
         console.waitNoNotification();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -175,7 +179,7 @@ public class ServerConfigurationTest {
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
         emptyState.mainAction();
-        console.confirmationDialog().confirm();
+        console.confirmationDialog().getPrimaryButton().click();
 
         String passwd = Random.name();
         AddResourceDialogFragment addResource = console.addResourceDialog();

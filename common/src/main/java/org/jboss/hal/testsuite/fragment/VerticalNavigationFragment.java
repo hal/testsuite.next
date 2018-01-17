@@ -15,9 +15,12 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 
 import static org.jboss.arquillian.graphene.Graphene.waitAjax;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -26,13 +29,16 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 public class VerticalNavigationFragment {
 
     @Root private WebElement root;
+    @Drone private WebDriver browser;
 
     public void selectPrimary(String id) {
         selectItem(id);
     }
 
     public void selectSecondary(String primaryId, String secondaryId) {
-        root.findElement(By.cssSelector("#" + primaryId + " > a")).click();
+        WebElement primaryMenuItem = root.findElement(By.cssSelector("#" + primaryId + " > a"));
+        new Actions(browser).moveToElement(primaryMenuItem).perform();
+        primaryMenuItem.click();
         waitGui().until().element(By.id(primaryId + "-secondary")).is().visible();
         selectItem(secondaryId);
     }
