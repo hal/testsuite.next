@@ -159,6 +159,7 @@ public interface MessagingFixtures {
 
     String ACCP_GEN_CREATE = Ids.build("acceptor-gen", "create", Random.name());
     String ACCP_GEN_UPDATE = Ids.build("acceptor-gen", "update", Random.name());
+    String ACCP_GEN_TRY_UPDATE = Ids.build("acceptor-gen", "try-update", Random.name());
     String ACCP_GEN_DELETE = Ids.build("acceptor-gen", "delete", Random.name());
 
     static Address acceptorGenericAddress(String server, String name) {
@@ -169,6 +170,7 @@ public interface MessagingFixtures {
 
     String ACCP_INVM_CREATE = Ids.build("acceptor-invm", "create", Random.name());
     String ACCP_INVM_UPDATE = Ids.build("acceptor-invm", "update", Random.name());
+    String ACCP_INVM_TRY_UPDATE = Ids.build("acceptor-invm", "try-update", Random.name());
     String ACCP_INVM_DELETE = Ids.build("acceptor-invm", "delete", Random.name());
 
     static Address acceptorInVMAddress(String server, String name) {
@@ -189,6 +191,7 @@ public interface MessagingFixtures {
 
     String ACCP_REM_CREATE = Ids.build("acceptor-rem", "create", Random.name());
     String ACCP_REM_UPDATE = Ids.build("acceptor-rem", "update", Random.name());
+    String ACCP_REM_TRY_UPDATE = Ids.build("acceptor-rem", "try-update", Random.name());
     String ACCP_REM_DELETE = Ids.build("acceptor-rem", "delete", Random.name());
 
     static Address acceptorRemoteAddress(String server, String name) {
@@ -209,6 +212,7 @@ public interface MessagingFixtures {
 
     String CONN_INVM_CREATE = Ids.build("connector-invm", "create", Random.name());
     String CONN_INVM_UPDATE = Ids.build("connector-invm", "update", Random.name());
+    String CONN_INVM_TRY_UPDATE = Ids.build("connector-invm", "try-update", Random.name());
     String CONN_INVM_DELETE = Ids.build("connector-invm", "delete", Random.name());
 
     static Address connectorInVMAddress(String server, String name) {
@@ -219,6 +223,7 @@ public interface MessagingFixtures {
 
     String CONN_HTTP_CREATE = Ids.build("connector-http", "create", Random.name());
     String CONN_HTTP_UPDATE = Ids.build("connector-http", "update", Random.name());
+    String CONN_HTTP_TRY_UPDATE = Ids.build("connector-http", "try-update", Random.name());
     String CONN_HTTP_DELETE = Ids.build("connector-http", "delete", Random.name());
 
     static Address connectorHttpAddress(String server, String name) {
@@ -248,7 +253,9 @@ public interface MessagingFixtures {
     // ------------------------------------------------------ server / connections / connector factory
 
     String CONN_FAC_CREATE = Ids.build("connector-fac", "create", Random.name());
+    String CONN_FAC_CREATE_ENTRY = Ids.build("connector-fac", "create-entry", Random.name());
     String CONN_FAC_UPDATE = Ids.build("connector-fac", "update", Random.name());
+    String CONN_FAC_TRY_UPDATE = Ids.build("connector-fac", "try-update", Random.name());
     String CONN_FAC_DELETE = Ids.build("connector-fac", "delete", Random.name());
 
     static Address connectionFactoryAddress(String server, String name) {
@@ -258,7 +265,9 @@ public interface MessagingFixtures {
     // ------------------------------------------------------ server / connections / pooled connection factory
 
     String POOL_CONN_CREATE = Ids.build("pcf", "create", Random.name());
+    String POOL_CONN_CREATE_ENTRY = Ids.build("pcf", "-entry", Random.name());
     String POOL_CONN_UPDATE = Ids.build("pcf", "update", Random.name());
+    String POOL_CONN_TRY_UPDATE = Ids.build("pcf", "try-update", Random.name());
     String POOL_CONN_DELETE = Ids.build("pcf", "delete", Random.name());
 
     static Address pooledConnectionFactoryAddress(String server, String name) {

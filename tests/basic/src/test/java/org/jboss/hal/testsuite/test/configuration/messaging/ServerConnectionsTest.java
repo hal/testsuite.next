@@ -60,19 +60,25 @@ public class ServerConnectionsTest {
 
         operations.add(serverAddress(SRV_UPDATE));
         operations.add(acceptorGenericAddress(SRV_UPDATE, ACCP_GEN_UPDATE), Values.of(FACTORY_CLASS, anyString));
+        operations.add(acceptorGenericAddress(SRV_UPDATE, ACCP_GEN_TRY_UPDATE), Values.of(FACTORY_CLASS, anyString));
         operations.add(acceptorGenericAddress(SRV_UPDATE, ACCP_GEN_DELETE), Values.of(FACTORY_CLASS, anyString));
         operations.add(acceptorInVMAddress(SRV_UPDATE, ACCP_INVM_UPDATE), Values.of(SERVER_ID, 11));
+        operations.add(acceptorInVMAddress(SRV_UPDATE, ACCP_INVM_TRY_UPDATE), Values.of(SERVER_ID, 12));
         operations.add(acceptorInVMAddress(SRV_UPDATE, ACCP_INVM_DELETE), Values.of(SERVER_ID, 22));
         operations.add(acceptorHttpAddress(SRV_UPDATE, ACCP_HTTP_UPDATE), Values.of(HTTP_LISTENER, DEFAULT));
         operations.add(acceptorHttpAddress(SRV_UPDATE, ACCP_HTTP_DELETE), Values.of(HTTP_LISTENER, DEFAULT));
         operations.add(acceptorRemoteAddress(SRV_UPDATE, ACCP_REM_UPDATE), Values.of(SOCKET_BINDING, HTTP));
+        operations.add(acceptorRemoteAddress(SRV_UPDATE, ACCP_REM_TRY_UPDATE), Values.of(SOCKET_BINDING, HTTP));
         operations.add(acceptorRemoteAddress(SRV_UPDATE, ACCP_REM_DELETE), Values.of(SOCKET_BINDING, HTTP));
 
         operations.add(connectorGenericAddress(SRV_UPDATE, CONN_GEN_UPDATE), Values.of(FACTORY_CLASS, anyString));
         operations.add(connectorGenericAddress(SRV_UPDATE, CONN_GEN_DELETE), Values.of(FACTORY_CLASS, anyString));
         operations.add(connectorInVMAddress(SRV_UPDATE, CONN_INVM_UPDATE), Values.of(SERVER_ID, 11));
+        operations.add(connectorInVMAddress(SRV_UPDATE, CONN_INVM_TRY_UPDATE), Values.of(SERVER_ID, 12));
         operations.add(connectorInVMAddress(SRV_UPDATE, CONN_INVM_DELETE), Values.of(SERVER_ID, 22));
         operations.add(connectorHttpAddress(SRV_UPDATE, CONN_HTTP_UPDATE),
+                Values.of(ENDPOINT, HTTP_ACCEPTOR).and(SOCKET_BINDING, HTTP));
+        operations.add(connectorHttpAddress(SRV_UPDATE, CONN_HTTP_TRY_UPDATE),
                 Values.of(ENDPOINT, HTTP_ACCEPTOR).and(SOCKET_BINDING, HTTP));
         operations.add(connectorHttpAddress(SRV_UPDATE, CONN_HTTP_DELETE),
                 Values.of(ENDPOINT, DEFAULT).and(SOCKET_BINDING, HTTP));
@@ -84,10 +90,14 @@ public class ServerConnectionsTest {
 
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE),
                 Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
+        operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_TRY_UPDATE),
+                Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_DELETE),
                 Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
 
         operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE),
+                Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
+        operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_TRY_UPDATE),
                 Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
         operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_DELETE),
                 Values.ofList(ENTRIES, anyString).and(DISCOVERY_GROUP, anyString));
@@ -133,7 +143,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorGenericForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_GEN_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_GEN_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -154,7 +164,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getAcceptorGenericTable();
         FormFragment form = page.getAcceptorGenericForm();
         table.bind(form);
-        table.select(ACCP_GEN_UPDATE);
+        table.select(ACCP_GEN_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.clear(FACTORY_CLASS), FACTORY_CLASS);
     }
 
@@ -197,7 +207,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorInVMForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_INVM_CREATE, SERVER_ID);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_INVM_CREATE, SERVER_ID);
     }
 
     @Test
@@ -220,7 +230,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getAcceptorInVMTable();
         FormFragment form = page.getAcceptorInVMForm();
         table.bind(form);
-        table.select(ACCP_INVM_UPDATE);
+        table.select(ACCP_INVM_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.clear(SERVER_ID), SERVER_ID);
     }
 
@@ -264,7 +274,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorHttpForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_HTTP_CREATE, HTTP_LISTENER);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_HTTP_CREATE, HTTP_LISTENER);
     }
 
     @Test
@@ -332,7 +342,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getAcceptorRemoteForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, ACCP_REM_CREATE, SOCKET_BINDING);
+        crudOperations.createWithErrorAndCancelDialog(table, ACCP_REM_CREATE, SOCKET_BINDING);
     }
 
     @Test
@@ -355,7 +365,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getAcceptorRemoteTable();
         FormFragment form = page.getAcceptorRemoteForm();
         table.bind(form);
-        table.select(ACCP_REM_UPDATE);
+        table.select(ACCP_REM_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.clear(SOCKET_BINDING), SOCKET_BINDING);
     }
 
@@ -397,7 +407,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorGenericForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_GEN_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_GEN_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -461,7 +471,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorInVMForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_INVM_CREATE, SERVER_ID);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_INVM_CREATE, SERVER_ID);
     }
 
     @Test
@@ -484,7 +494,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getConnectorInVMTable();
         FormFragment form = page.getConnectorInVMForm();
         table.bind(form);
-        table.select(CONN_INVM_UPDATE);
+        table.select(CONN_INVM_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.clear(SERVER_ID), SERVER_ID);
     }
 
@@ -529,7 +539,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorHttpForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_HTTP_CREATE, ENDPOINT);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_HTTP_CREATE, ENDPOINT);
     }
 
     @Test
@@ -552,7 +562,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getConnectorHttpTable();
         FormFragment form = page.getConnectorHttpForm();
         table.bind(form);
-        table.select(CONN_HTTP_UPDATE);
+        table.select(CONN_HTTP_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.clear(ENDPOINT), ENDPOINT);
     }
 
@@ -597,7 +607,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorRemoteForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_REM_CREATE, SOCKET_BINDING);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_REM_CREATE, SOCKET_BINDING);
     }
 
     @Test
@@ -660,7 +670,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectorServiceForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_SVC_CREATE, FACTORY_CLASS);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_SVC_CREATE, FACTORY_CLASS);
     }
 
     @Test
@@ -706,7 +716,7 @@ public class ServerConnectionsTest {
                 formFragment -> {
                     formFragment.text(NAME, CONN_FAC_CREATE);
                     formFragment.text(DISCOVERY_GROUP, anyString);
-                    formFragment.list(ENTRIES).add(anyString);
+                    formFragment.list(ENTRIES).add(CONN_FAC_CREATE_ENTRY);
                 }
         );
     }
@@ -718,7 +728,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getConnectionFactoryForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, CONN_FAC_CREATE, DISCOVERY_GROUP);
+        crudOperations.createWithErrorAndCancelDialog(table, CONN_FAC_CREATE, DISCOVERY_GROUP);
     }
 
     @Test
@@ -737,7 +747,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getConnectionFactoryTable();
         FormFragment form = page.getConnectionFactoryForm();
         table.bind(form);
-        table.select(CONN_FAC_UPDATE);
+        table.select(CONN_FAC_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.list(CONNECTORS).add(anyString), DISCOVERY_GROUP);
     }
 
@@ -761,7 +771,7 @@ public class ServerConnectionsTest {
                 formFragment -> {
                     formFragment.text(NAME, POOL_CONN_CREATE);
                     formFragment.text(DISCOVERY_GROUP, anyString);
-                    formFragment.list(ENTRIES).add(anyString);
+                    formFragment.list(ENTRIES).add(POOL_CONN_CREATE_ENTRY);
                 }
         );
     }
@@ -773,7 +783,7 @@ public class ServerConnectionsTest {
         FormFragment form = page.getPooledConnectionFactoryForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, POOL_CONN_CREATE, DISCOVERY_GROUP);
+        crudOperations.createWithErrorAndCancelDialog(table, POOL_CONN_CREATE, DISCOVERY_GROUP);
     }
 
     @Test
@@ -794,7 +804,7 @@ public class ServerConnectionsTest {
         TableFragment table = page.getPooledConnectionFactoryTable();
         FormFragment form = page.getPooledConnectionFactoryForm();
         table.bind(form);
-        table.select(POOL_CONN_UPDATE);
+        table.select(POOL_CONN_TRY_UPDATE);
         crudOperations.updateWithError(form, f -> f.list(CONNECTORS).add(anyString), DISCOVERY_GROUP);
     }
 
@@ -829,7 +839,11 @@ public class ServerConnectionsTest {
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(STORE, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(ALIAS);
+        try {
+            addResource.getForm().expectError(ALIAS);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -849,8 +863,12 @@ public class ServerConnectionsTest {
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -872,8 +890,12 @@ public class ServerConnectionsTest {
         addResource.getForm().text(STORE, anyString);
         addResource.getForm().text(CLEAR_TEXT, anyString);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(STORE);
-        addResource.getForm().expectError(CLEAR_TEXT);
+        try {
+            addResource.getForm().expectError(STORE);
+            addResource.getForm().expectError(CLEAR_TEXT);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
