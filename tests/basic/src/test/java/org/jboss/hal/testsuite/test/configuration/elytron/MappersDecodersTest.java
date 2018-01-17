@@ -177,7 +177,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void addPrefixRoleMapperTryCreate() throws Exception {
+    public void addPrefixRoleMapperTryCreate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_PREFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddPrefixRoleMapperTable();
 
@@ -196,7 +196,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void addPrefixRoleMapperTryUpdate() throws Exception {
+    public void addPrefixRoleMapperTryUpdate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_PREFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddPrefixRoleMapperTable();
         FormFragment form = page.getAddPrefixRoleMapperForm();
@@ -227,7 +227,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void addSuffixRoleMapperTryCreate() throws Exception {
+    public void addSuffixRoleMapperTryCreate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_SUFFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddSuffixRoleMapperTable();
 
@@ -246,7 +246,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void addSuffixRoleMapperTryUpdate() throws Exception {
+    public void addSuffixRoleMapperTryUpdate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, ADD_SUFFIX_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAddSuffixRoleMapperTable();
         FormFragment form = page.getAddSuffixRoleMapperForm();
@@ -278,7 +278,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void aggregateRoleMapperTryCreate() throws Exception {
+    public void aggregateRoleMapperTryCreate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, AGGREGATE_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAggregateRoleMapperTable();
 
@@ -303,7 +303,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void aggregateRoleMapperTryUpdate() throws Exception {
+    public void aggregateRoleMapperTryUpdate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, AGGREGATE_ROLE_MAPPER_ITEM);
         TableFragment table = page.getAggregateRoleMapperTable();
         FormFragment form = page.getAggregateRoleMapperForm();
@@ -335,7 +335,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void constantRoleMapperTryCreate() throws Exception {
+    public void constantRoleMapperTryCreate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, CONSTANT_ROLE_MAPPER_ITEM);
         TableFragment table = page.getConstantRoleMapperTable();
 
@@ -360,7 +360,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void constantRoleMapperTryUpdate() throws Exception {
+    public void constantRoleMapperTryUpdate() {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, CONSTANT_ROLE_MAPPER_ITEM);
         TableFragment table = page.getConstantRoleMapperTable();
         FormFragment form = page.getConstantRoleMapperForm();
@@ -384,9 +384,7 @@ public class MappersDecodersTest {
         console.verticalNavigation().selectSecondary(ROLE_MAPPERS_ITEM, LOGICAL_ROLE_MAPPER_ITEM);
         TableFragment table = page.getLogicalRoleMapperTable();
 
-        crud.create(logicalRoleMapperAddress(LOG_ROLE_CREATE), table, f -> {
-            f.text(NAME, LOG_ROLE_CREATE);
-        });
+        crud.create(logicalRoleMapperAddress(LOG_ROLE_CREATE), table, f -> f.text(NAME, LOG_ROLE_CREATE));
     }
 
     @Test
@@ -425,7 +423,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void logicalPermissionMapperTryCreate() throws Exception {
+    public void logicalPermissionMapperTryCreate() {
         console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
         TableFragment table = page.getLogicalPermissionMapperTable();
 
@@ -448,7 +446,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void logicalPermissionMapperTryUpdate() throws Exception {
+    public void logicalPermissionMapperTryUpdate() {
         console.verticalNavigation().selectSecondary(PERMISSION_MAPPER_ITEM, LOGICAL_PERMISSION_MAPPER_ITEM);
         TableFragment table = page.getLogicalPermissionMapperTable();
         FormFragment form = page.getLogicalPermissionMapperForm();
@@ -631,7 +629,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void concatenatingPrincipalDecoderTryCreate() throws Exception {
+    public void concatenatingPrincipalDecoderTryCreate() {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONCATENATING_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getConcatenatingPrincipalDecoderTable();
 
@@ -672,7 +670,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void constantPrincipalDecoderTryCreate() throws Exception {
+    public void constantPrincipalDecoderTryCreate() {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, CONSTANT_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getConstantPrincipalDecoderTable();
 
@@ -713,7 +711,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void x500AttributePrincipalDecoderTryCreate() throws Exception {
+    public void x500AttributePrincipalDecoderTryCreate() {
         console.verticalNavigation().selectSecondary(PRINCIPAL_DECODER_ITEM, X500_PRINCIPAL_DECODER_ITEM);
         TableFragment table = page.getX500PrincipalDecoderTable();
 
@@ -754,7 +752,7 @@ public class MappersDecodersTest {
     }
 
     @Test
-    public void simpleRoleDecoderTryCreate() throws Exception {
+    public void simpleRoleDecoderTryCreate() {
         console.verticalNavigation().selectSecondary(ROLE_DECODER_ITEM, SIMPLE_ROLE_DECODER_ITEM);
         TableFragment table = page.getSimpleRoleDecoderTable();
 

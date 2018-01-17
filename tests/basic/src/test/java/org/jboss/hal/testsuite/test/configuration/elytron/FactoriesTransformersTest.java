@@ -297,7 +297,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateHttpServerMechanismFactoryTryCreate() throws Exception {
+    public void aggregateHttpServerMechanismFactoryTryCreate() {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getAggregateHttpServerMechanismTable();
 
@@ -305,7 +305,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateHttpServerMechanismFactoryTryCreateMin() throws Exception {
+    public void aggregateHttpServerMechanismFactoryTryCreateMin() {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getAggregateHttpServerMechanismTable();
 
@@ -333,7 +333,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateHttpServerMechanismFactoryTryUpdate() throws Exception {
+    public void aggregateHttpServerMechanismFactoryTryUpdate() {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getAggregateHttpServerMechanismTable();
         FormFragment form = page.getAggregateHttpServerMechanismForm();
@@ -366,7 +366,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void configurableHttpServerMechanismFactoryTryCreate() throws Exception {
+    public void configurableHttpServerMechanismFactoryTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(HTTP_FACTORIES_ITEM, CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getConfigurableHttpServerMechanismTable();
@@ -388,7 +388,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void configurableHttpServerMechanismFactoryTryUpdate() throws Exception {
+    public void configurableHttpServerMechanismFactoryTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(HTTP_FACTORIES_ITEM, CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getConfigurableHttpServerMechanismTable();
@@ -471,7 +471,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void httpAuthenticationFactoryTryCreate() throws Exception {
+    public void httpAuthenticationFactoryTryCreate() {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, HTTP_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getHttpAuthenticationFactoryTable();
 
@@ -491,7 +491,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void httpAuthenticationFactoryTryUpdate() throws Exception {
+    public void httpAuthenticationFactoryTryUpdate() {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, HTTP_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getHttpAuthenticationFactoryTable();
         FormFragment form = page.getHttpAuthenticationFactoryForm();
@@ -696,7 +696,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateSaslServerFactoryTryCreate() throws Exception {
+    public void aggregateSaslServerFactoryTryCreate() {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, AGGREGATE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getAggregateSaslServerTable();
 
@@ -704,7 +704,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateSaslServerFactoryTryCreateMin() throws Exception {
+    public void aggregateSaslServerFactoryTryCreateMin() {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, AGGREGATE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getAggregateSaslServerTable();
 
@@ -732,7 +732,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregateSaslServerFactoryTryUpdate() throws Exception {
+    public void aggregateSaslServerFactoryTryUpdate() {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, AGGREGATE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getAggregateSaslServerTable();
         FormFragment form = page.getAggregateSaslServerForm();
@@ -765,7 +765,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void configurableSaslServerFactoryTryCreate() throws Exception {
+    public void configurableSaslServerFactoryTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(SASL_FACTORIES_ITEM, CONFIGURABLE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getConfigurableSaslServerTable();
@@ -787,7 +787,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void configurableSaslServerFactoryTryUpdate() throws Exception {
+    public void configurableSaslServerFactoryTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(SASL_FACTORIES_ITEM, CONFIGURABLE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getConfigurableSaslServerTable();
@@ -871,7 +871,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void mechanismProviderFilteringSaslServerFactoryTryCreate() throws Exception {
+    public void mechanismProviderFilteringSaslServerFactoryTryCreate() {
         console.verticalNavigation()
                 .selectSecondary(SASL_FACTORIES_ITEM, MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getMechanismProviderFilteringSaslServerTable();
@@ -893,7 +893,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void mechanismProviderFilteringSaslServerFactoryTryUpdate() throws Exception {
+    public void mechanismProviderFilteringSaslServerFactoryTryUpdate() {
         console.verticalNavigation()
                 .selectSecondary(SASL_FACTORIES_ITEM, MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getMechanismProviderFilteringSaslServerTable();
@@ -1008,7 +1008,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void saslAuthenticationFactoryTryCreate() throws Exception {
+    public void saslAuthenticationFactoryTryCreate() {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getSaslAuthenticationFactoryTable();
 
@@ -1028,7 +1028,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void saslAuthenticationFactoryTryUpdate() throws Exception {
+    public void saslAuthenticationFactoryTryUpdate() {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getSaslAuthenticationFactoryTable();
         FormFragment form = page.getSaslAuthenticationFactoryForm();
@@ -1204,7 +1204,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void kerberosSecurityFactoryTryCreate() throws Exception {
+    public void kerberosSecurityFactoryTryCreate() {
         console.verticalNavigation().selectSecondary(OTHER_FACTORIES_ITEM, KERBEROS_SECURITY_FACTORY_ITEM);
         TableFragment table = page.getKerberosSecurityTable();
 
@@ -1223,7 +1223,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void kerberosSecurityFactoryTryUpdate() throws Exception {
+    public void kerberosSecurityFactoryTryUpdate() {
         console.verticalNavigation().selectSecondary(OTHER_FACTORIES_ITEM, KERBEROS_SECURITY_FACTORY_ITEM);
         TableFragment table = page.getKerberosSecurityTable();
         FormFragment form = page.getKerberosSecurityForm();
@@ -1254,7 +1254,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregatePrincipalTransformerTryCreate() throws Exception {
+    public void aggregatePrincipalTransformerTryCreate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getAggregatePrincipalTransformerTable();
 
@@ -1262,7 +1262,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregatePrincipalTransformerTryCreateMin() throws Exception {
+    public void aggregatePrincipalTransformerTryCreateMin() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getAggregatePrincipalTransformerTable();
 
@@ -1290,7 +1290,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void aggregatePrincipalTransformerTryUpdate() throws Exception {
+    public void aggregatePrincipalTransformerTryUpdate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getAggregatePrincipalTransformerTable();
         FormFragment form = page.getAggregatePrincipalTransformerForm();
@@ -1322,7 +1322,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void chainedPrincipalTransformerTryCreate() throws Exception {
+    public void chainedPrincipalTransformerTryCreate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CHAINED_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getChainedPrincipalTransformerTable();
 
@@ -1330,7 +1330,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void chainedPrincipalTransformerTryCreateMin() throws Exception {
+    public void chainedPrincipalTransformerTryCreateMin() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CHAINED_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getChainedPrincipalTransformerTable();
 
@@ -1358,7 +1358,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void chainedPrincipalTransformerTryUpdate() throws Exception {
+    public void chainedPrincipalTransformerTryUpdate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CHAINED_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getChainedPrincipalTransformerTable();
         FormFragment form = page.getChainedPrincipalTransformerForm();
@@ -1390,7 +1390,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void constantPrincipalTransformerTryCreate() throws Exception {
+    public void constantPrincipalTransformerTryCreate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CONSTANT_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getConstantPrincipalTransformerTable();
 
@@ -1409,7 +1409,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void constantPrincipalTransformerTryUpdate() throws Exception {
+    public void constantPrincipalTransformerTryUpdate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CONSTANT_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getConstantPrincipalTransformerTable();
         FormFragment form = page.getConstantPrincipalTransformerForm();
@@ -1442,7 +1442,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void regexPrincipalTransformerTryCreate() throws Exception {
+    public void regexPrincipalTransformerTryCreate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexPrincipalTransformerTable();
 
@@ -1461,7 +1461,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void regexPrincipalTransformerTryUpdate() throws Exception {
+    public void regexPrincipalTransformerTryUpdate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexPrincipalTransformerTable();
         FormFragment form = page.getRegexPrincipalTransformerForm();
@@ -1492,7 +1492,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void regexValidatingPrincipalTransformerTryCreate() throws Exception {
+    public void regexValidatingPrincipalTransformerTryCreate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexValidatingPrincipalTransformerTable();
 
@@ -1511,7 +1511,7 @@ public class FactoriesTransformersTest {
     }
 
     @Test
-    public void regexValidatingPrincipalTransformerTryUpdate() throws Exception {
+    public void regexValidatingPrincipalTransformerTryUpdate() {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexValidatingPrincipalTransformerTable();
         FormFragment form = page.getRegexValidatingPrincipalTransformerForm();

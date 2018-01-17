@@ -300,7 +300,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void credentialStoreTryCreate() throws Exception {
+    public void credentialStoreTryCreate() {
         console.verticalNavigation().selectSecondary(STORES_ITEM, CREDENTIAL_STORE_ITEM);
         TableFragment table = page.getCredentialStoreTable();
 
@@ -358,7 +358,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void filteringKeyStoreTryCreate() throws Exception {
+    public void filteringKeyStoreTryCreate() {
         console.verticalNavigation().selectSecondary(STORES_ITEM, FILTERING_KEY_STORE_ITEM);
         TableFragment table = page.getFilteringKeyStoreTable();
 
@@ -402,7 +402,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void keyStoreTryCreate() throws Exception {
+    public void keyStoreTryCreate() {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
@@ -444,7 +444,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void ldapKeyStoreTryCreate() throws Exception {
+    public void ldapKeyStoreTryCreate() {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
 
@@ -472,7 +472,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void ldapKeyStoreNewItemTemplateTryAdd() throws Exception {
+    public void ldapKeyStoreNewItemTemplateTryAdd() {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
@@ -557,7 +557,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void aggregateProvidersTryCreate() throws Exception {
+    public void aggregateProvidersTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, AGGREGATE_PROVIDERS_ITEM);
         TableFragment table = page.getAggregateProvidersTable();
 
@@ -627,7 +627,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void keyManagerTryCreate() throws Exception {
+    public void keyManagerTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, KEY_MANAGER_ITEM);
         TableFragment table = page.getKeyManagerTable();
 
@@ -647,7 +647,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void keyManagerTryUpdate() throws Exception {
+    public void keyManagerTryUpdate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, KEY_MANAGER_ITEM);
         TableFragment table = page.getKeyManagerTable();
         FormFragment form = page.getKeyManagerForm();
@@ -709,7 +709,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void serverSslContextTryCreate() throws Exception {
+    public void serverSslContextTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, SERVER_SSL_CONTEXT_ITEM);
         TableFragment table = page.getServerSslContextTable();
 
@@ -728,7 +728,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void serverSslContextTryUpdate() throws Exception {
+    public void serverSslContextTryUpdate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, SERVER_SSL_CONTEXT_ITEM);
         TableFragment table = page.getServerSslContextTable();
         FormFragment form = page.getServerSslContextForm();
@@ -792,7 +792,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void securityDomainRealmsTryCreate() throws Exception {
+    public void securityDomainRealmsTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, SECURITY_DOMAIN_ITEM);
         TableFragment secDomaintable = page.getSecurityDomainTable();
         TableFragment table = page.getSecurityDomainRealmsTable();
@@ -847,7 +847,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void trustManagerTryCreate() throws Exception {
+    public void trustManagerTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, TRUST_MANAGER_ITEM);
         TableFragment table = page.getTrustManagerTable();
         crud.createWithError(table, TRU_MAN_CREATE, KEY_STORE);
@@ -1029,7 +1029,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void fileAuditLogTryCreate() throws Exception {
+    public void fileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getFileAuditLogTable();
         crud.createWithError(table, NAME, PATH);
@@ -1046,7 +1046,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void fileAuditLogTryUpdate() throws Exception {
+    public void fileAuditLogTryUpdate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getFileAuditLogTable();
         FormFragment form = page.getFileAuditLogForm();
@@ -1077,7 +1077,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void periodicRotatingFileAuditLogTryCreate() throws Exception {
+    public void periodicRotatingFileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
         crud.createWithError(table, NAME, PATH);
@@ -1094,7 +1094,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void periodicRotatingFileAuditLogTryUpdate() throws Exception {
+    public void periodicRotatingFileAuditLogTryUpdate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
         FormFragment form = page.getPeriodicRotatingFileAuditLogForm();
@@ -1125,7 +1125,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void sizeRotatingLogTryCreate() throws Exception {
+    public void sizeRotatingLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getSizeRotatingFileAuditLogTable();
         crud.createWithError(table, NAME, PATH);
@@ -1142,7 +1142,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void sizeRotatingLogTryUpdate() throws Exception {
+    public void sizeRotatingLogTryUpdate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getSizeRotatingFileAuditLogTable();
         FormFragment form = page.getSizeRotatingFileAuditLogForm();
@@ -1174,7 +1174,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void syslogAuditLogTryCreate() throws Exception {
+    public void syslogAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
         TableFragment table = page.getSyslogAuditLogTable();
         crud.createWithError(table, NAME, HOSTNAME);
@@ -1191,7 +1191,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void syslogAuditLogTryUpdate() throws Exception {
+    public void syslogAuditLogTryUpdate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
         TableFragment table = page.getSyslogAuditLogTable();
         FormFragment form = page.getSyslogAuditLogForm();
@@ -1221,7 +1221,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void aggregateSecurityEventListenerTryCreate() throws Exception {
+    public void aggregateSecurityEventListenerTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
         TableFragment table = page.getAggregateSecurityEventListenerTable();
         crud.createWithError(table, NAME, SECURITY_EVENT_LISTENERS);
@@ -1240,7 +1240,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void aggregateSecurityEventListenerTryUpdate() throws Exception {
+    public void aggregateSecurityEventListenerTryUpdate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
         TableFragment table = page.getAggregateSecurityEventListenerTable();
         FormFragment form = page.getAggregateSecurityEventListenerForm();
@@ -1360,7 +1360,7 @@ public class OtherSettingsTest {
     }
 
     @Test
-    public void dirContextTryCreate() throws Exception {
+    public void dirContextTryCreate() {
         console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
         TableFragment table = page.getDirContextTable();
 

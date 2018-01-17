@@ -33,7 +33,6 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.INITIAL_PROVIDERS;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.SUBSYSTEM_ADDRESS;
 
-
 @RunWith(Arquillian.class)
 public class GlobalSettingsTest {
 
