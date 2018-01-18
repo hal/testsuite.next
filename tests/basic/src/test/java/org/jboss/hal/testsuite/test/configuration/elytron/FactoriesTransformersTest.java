@@ -301,7 +301,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getAggregateHttpServerMechanismTable();
 
-        crud.createWithError(table, AGG_HTTP_CREATE, HTTP_SERVER_MECH_FACTORIES);
+        crud.createWithErrorAndCancelDialog(table, AGG_HTTP_CREATE, HTTP_SERVER_MECH_FACTORIES);
     }
 
     @Test
@@ -371,7 +371,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(HTTP_FACTORIES_ITEM, CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getConfigurableHttpServerMechanismTable();
 
-        crud.createWithError(table, CONF_HTTP_CREATE, HTTP_SERVER_MECH_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, CONF_HTTP_CREATE, HTTP_SERVER_MECH_FACTORY);
     }
 
     @Test
@@ -475,7 +475,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, HTTP_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getHttpAuthenticationFactoryTable();
 
-        crud.createWithError(table, HTTP_AUTH_CREATE, HTTP_SERVER_MECH_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, HTTP_AUTH_CREATE, HTTP_SERVER_MECH_FACTORY);
     }
 
     @Test
@@ -700,7 +700,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, AGGREGATE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getAggregateSaslServerTable();
 
-        crud.createWithError(table, AGG_SASL_CREATE, SASL_SERVER_FACTORIES);
+        crud.createWithErrorAndCancelDialog(table, AGG_SASL_CREATE, SASL_SERVER_FACTORIES);
     }
 
     @Test
@@ -770,7 +770,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(SASL_FACTORIES_ITEM, CONFIGURABLE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getConfigurableSaslServerTable();
 
-        crud.createWithError(table, CONF_SASL_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, CONF_SASL_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -876,7 +876,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(SASL_FACTORIES_ITEM, MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getMechanismProviderFilteringSaslServerTable();
 
-        crud.createWithError(table, MECH_SASL_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, MECH_SASL_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -1012,7 +1012,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getSaslAuthenticationFactoryTable();
 
-        crud.createWithError(table, SASL_AUTH_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, SASL_AUTH_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -1208,7 +1208,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(OTHER_FACTORIES_ITEM, KERBEROS_SECURITY_FACTORY_ITEM);
         TableFragment table = page.getKerberosSecurityTable();
 
-        crud.createWithError(table, KERB_CREATE, PATH);
+        crud.createWithErrorAndCancelDialog(table, KERB_CREATE, PATH);
     }
 
     @Test
@@ -1258,7 +1258,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getAggregatePrincipalTransformerTable();
 
-        crud.createWithError(table, AGG_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
+        crud.createWithErrorAndCancelDialog(table, AGG_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
     }
 
     @Test
@@ -1326,7 +1326,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CHAINED_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getChainedPrincipalTransformerTable();
 
-        crud.createWithError(table, CHA_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
+        crud.createWithErrorAndCancelDialog(table, CHA_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
     }
 
     @Test
@@ -1394,7 +1394,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CONSTANT_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getConstantPrincipalTransformerTable();
 
-        crud.createWithError(table, CONS_PRI_TRANS_CREATE, CONSTANT);
+        crud.createWithErrorAndCancelDialog(table, CONS_PRI_TRANS_CREATE, CONSTANT);
     }
 
     @Test
@@ -1446,7 +1446,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexPrincipalTransformerTable();
 
-        crud.createWithError(table, REG_PRI_TRANS_CREATE, PATTERN);
+        crud.createWithErrorAndCancelDialog(table, REG_PRI_TRANS_CREATE, PATTERN);
     }
 
     @Test
@@ -1496,7 +1496,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexValidatingPrincipalTransformerTable();
 
-        crud.createWithError(table, REGV_PRI_TRANS_CREATE, PATTERN);
+        crud.createWithErrorAndCancelDialog(table, REGV_PRI_TRANS_CREATE, PATTERN);
     }
 
     @Test
