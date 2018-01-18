@@ -74,6 +74,7 @@ public class FactoriesTransformersTest {
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE));
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE2));
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE3));
+        operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE4));
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_DELETE));
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE), HTTP_PARAMS);
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_DELETE), HTTP_PARAMS);
@@ -129,6 +130,7 @@ public class FactoriesTransformersTest {
         operations.add(providerSaslServerFactoryAddress(PROV_SASL_UPDATE));
         operations.add(providerSaslServerFactoryAddress(PROV_SASL_UPDATE2));
         operations.add(providerSaslServerFactoryAddress(PROV_SASL_UPDATE3));
+        operations.add(providerSaslServerFactoryAddress(PROV_SASL_UPDATE4));
         operations.add(providerSaslServerFactoryAddress(PROV_SASL_DELETE));
 
         operations.add(aggregateSaslServerFactoryAddress(AGG_SASL_UPDATE), SASL_PARAMS);
@@ -169,6 +171,11 @@ public class FactoriesTransformersTest {
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE), Values.of(CONSTANT, ANY_STRING));
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE2), Values.of(CONSTANT, ANY_STRING));
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE3), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE4), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE5), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE6), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE7), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE8), Values.of(CONSTANT, ANY_STRING));
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_DELETE), Values.of(CONSTANT, ANY_STRING));
 
         operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE), AGG_PRI_PARAMS);
@@ -207,6 +214,7 @@ public class FactoriesTransformersTest {
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE2));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE3));
+        operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE4));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_DELETE));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_CREATE));
 
@@ -246,6 +254,11 @@ public class FactoriesTransformersTest {
         operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE));
         operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE2));
         operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE3));
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE4));
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE5));
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE6));
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE7));
+        operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE8));
         operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_DELETE));
 
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_CREATE));
@@ -264,6 +277,7 @@ public class FactoriesTransformersTest {
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE2));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE3));
+        operations.remove(providerSaslServerFactoryAddress(PROV_SASL_UPDATE4));
         operations.remove(providerSaslServerFactoryAddress(PROV_SASL_DELETE));
 
         operations.remove(providerLoaderAddress(PROV_LOAD_CREATE));
@@ -301,7 +315,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getAggregateHttpServerMechanismTable();
 
-        crud.createWithError(table, AGG_HTTP_CREATE, HTTP_SERVER_MECH_FACTORIES);
+        crud.createWithErrorAndCancelDialog(table, AGG_HTTP_CREATE, HTTP_SERVER_MECH_FACTORIES);
     }
 
     @Test
@@ -325,10 +339,10 @@ public class FactoriesTransformersTest {
         table.bind(form);
 
         ModelNode expected = new ModelNode();
-        expected.add(PROV_HTTP_UPDATE).add(PROV_HTTP_UPDATE2).add(PROV_HTTP_UPDATE3);
+        expected.add(PROV_HTTP_UPDATE).add(PROV_HTTP_UPDATE2).add(PROV_HTTP_UPDATE4);
         table.select(AGG_HTTP_UPDATE);
         crud.update(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE), form,
-                f -> f.list(HTTP_SERVER_MECH_FACTORIES).add(PROV_HTTP_UPDATE3),
+                f -> f.list(HTTP_SERVER_MECH_FACTORIES).add(PROV_HTTP_UPDATE4),
                 changes -> changes.verifyAttribute(HTTP_SERVER_MECH_FACTORIES, expected));
     }
 
@@ -371,7 +385,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(HTTP_FACTORIES_ITEM, CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM);
         TableFragment table = page.getConfigurableHttpServerMechanismTable();
 
-        crud.createWithError(table, CONF_HTTP_CREATE, HTTP_SERVER_MECH_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, CONF_HTTP_CREATE, HTTP_SERVER_MECH_FACTORY);
     }
 
     @Test
@@ -475,7 +489,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(HTTP_FACTORIES_ITEM, HTTP_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getHttpAuthenticationFactoryTable();
 
-        crud.createWithError(table, HTTP_AUTH_CREATE, HTTP_SERVER_MECH_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, HTTP_AUTH_CREATE, HTTP_SERVER_MECH_FACTORY);
     }
 
     @Test
@@ -700,7 +714,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, AGGREGATE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getAggregateSaslServerTable();
 
-        crud.createWithError(table, AGG_SASL_CREATE, SASL_SERVER_FACTORIES);
+        crud.createWithErrorAndCancelDialog(table, AGG_SASL_CREATE, SASL_SERVER_FACTORIES);
     }
 
     @Test
@@ -724,10 +738,10 @@ public class FactoriesTransformersTest {
         table.bind(form);
 
         ModelNode expected = new ModelNode();
-        expected.add(PROV_SASL_UPDATE).add(PROV_SASL_UPDATE2).add(PROV_SASL_UPDATE3);
+        expected.add(PROV_SASL_UPDATE).add(PROV_SASL_UPDATE2).add(PROV_SASL_UPDATE4);
         table.select(AGG_SASL_UPDATE);
         crud.update(aggregateSaslServerFactoryAddress(AGG_SASL_UPDATE), form,
-                f -> f.list(SASL_SERVER_FACTORIES).add(PROV_SASL_UPDATE3),
+                f -> f.list(SASL_SERVER_FACTORIES).add(PROV_SASL_UPDATE4),
                 changes -> changes.verifyAttribute(SASL_SERVER_FACTORIES, expected));
     }
 
@@ -770,7 +784,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(SASL_FACTORIES_ITEM, CONFIGURABLE_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getConfigurableSaslServerTable();
 
-        crud.createWithError(table, CONF_SASL_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, CONF_SASL_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -876,7 +890,7 @@ public class FactoriesTransformersTest {
                 .selectSecondary(SASL_FACTORIES_ITEM, MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM);
         TableFragment table = page.getMechanismProviderFilteringSaslServerTable();
 
-        crud.createWithError(table, MECH_SASL_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, MECH_SASL_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -1012,7 +1026,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(SASL_FACTORIES_ITEM, SASL_AUTHENTICATION_FACTORY_ITEM);
         TableFragment table = page.getSaslAuthenticationFactoryTable();
 
-        crud.createWithError(table, SASL_AUTH_CREATE, SASL_SERVER_FACTORY);
+        crud.createWithErrorAndCancelDialog(table, SASL_AUTH_CREATE, SASL_SERVER_FACTORY);
     }
 
     @Test
@@ -1208,7 +1222,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(OTHER_FACTORIES_ITEM, KERBEROS_SECURITY_FACTORY_ITEM);
         TableFragment table = page.getKerberosSecurityTable();
 
-        crud.createWithError(table, KERB_CREATE, PATH);
+        crud.createWithErrorAndCancelDialog(table, KERB_CREATE, PATH);
     }
 
     @Test
@@ -1258,7 +1272,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getAggregatePrincipalTransformerTable();
 
-        crud.createWithError(table, AGG_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
+        crud.createWithErrorAndCancelDialog(table, AGG_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
     }
 
     @Test
@@ -1268,7 +1282,7 @@ public class FactoriesTransformersTest {
 
         AddResourceDialogFragment dialog = table.add();
         dialog.getForm().text(NAME, AGG_PRI_TRANS_CREATE);
-        dialog.getForm().list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE);
+        dialog.getForm().list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE3);
         dialog.add();
 
         console.verifyError();
@@ -1282,10 +1296,10 @@ public class FactoriesTransformersTest {
         table.bind(form);
 
         ModelNode expected = new ModelNode();
-        expected.add(CONS_PRI_TRANS_UPDATE).add(CONS_PRI_TRANS_UPDATE2).add(CONS_PRI_TRANS_UPDATE3);
+        expected.add(CONS_PRI_TRANS_UPDATE).add(CONS_PRI_TRANS_UPDATE2).add(CONS_PRI_TRANS_UPDATE4);
         table.select(AGG_PRI_TRANS_UPDATE);
         crud.update(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE), form,
-                f -> f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE3),
+                f -> f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE4),
                 changes -> changes.verifyAttribute(PRINCIPAL_TRANSFORMERS, expected));
     }
 
@@ -1317,7 +1331,7 @@ public class FactoriesTransformersTest {
 
         crud.create(chainedPrincipalTransformerAddress(CHA_PRI_TRANS_CREATE), table, f -> {
             f.text(NAME, CHA_PRI_TRANS_CREATE);
-            f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE).add(CONS_PRI_TRANS_UPDATE2);
+            f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE5).add(CONS_PRI_TRANS_UPDATE6);
         });
     }
 
@@ -1326,7 +1340,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CHAINED_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getChainedPrincipalTransformerTable();
 
-        crud.createWithError(table, CHA_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
+        crud.createWithErrorAndCancelDialog(table, CHA_PRI_TRANS_CREATE, PRINCIPAL_TRANSFORMERS);
     }
 
     @Test
@@ -1336,7 +1350,7 @@ public class FactoriesTransformersTest {
 
         AddResourceDialogFragment dialog = table.add();
         dialog.getForm().text(NAME, CHA_PRI_TRANS_CREATE);
-        dialog.getForm().list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE);
+        dialog.getForm().list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE7);
         dialog.add();
 
         console.verifyError();
@@ -1350,10 +1364,10 @@ public class FactoriesTransformersTest {
         table.bind(form);
 
         ModelNode expected = new ModelNode();
-        expected.add(CONS_PRI_TRANS_UPDATE).add(CONS_PRI_TRANS_UPDATE2).add(CONS_PRI_TRANS_UPDATE3);
+        expected.add(CONS_PRI_TRANS_UPDATE).add(CONS_PRI_TRANS_UPDATE2).add(CONS_PRI_TRANS_UPDATE8);
         table.select(CHA_PRI_TRANS_UPDATE);
         crud.update(chainedPrincipalTransformerAddress(CHA_PRI_TRANS_UPDATE), form,
-                f -> f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE3),
+                f -> f.list(PRINCIPAL_TRANSFORMERS).add(CONS_PRI_TRANS_UPDATE8),
                 changes -> changes.verifyAttribute(PRINCIPAL_TRANSFORMERS, expected));
     }
 
@@ -1394,7 +1408,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, CONSTANT_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getConstantPrincipalTransformerTable();
 
-        crud.createWithError(table, CONS_PRI_TRANS_CREATE, CONSTANT);
+        crud.createWithErrorAndCancelDialog(table, CONS_PRI_TRANS_CREATE, CONSTANT);
     }
 
     @Test
@@ -1446,7 +1460,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexPrincipalTransformerTable();
 
-        crud.createWithError(table, REG_PRI_TRANS_CREATE, PATTERN);
+        crud.createWithErrorAndCancelDialog(table, REG_PRI_TRANS_CREATE, PATTERN);
     }
 
     @Test
@@ -1496,7 +1510,7 @@ public class FactoriesTransformersTest {
         console.verticalNavigation().selectSecondary(TRANSFORMERS_ITEM, REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM);
         TableFragment table = page.getRegexValidatingPrincipalTransformerTable();
 
-        crud.createWithError(table, REGV_PRI_TRANS_CREATE, PATTERN);
+        crud.createWithErrorAndCancelDialog(table, REGV_PRI_TRANS_CREATE, PATTERN);
     }
 
     @Test
