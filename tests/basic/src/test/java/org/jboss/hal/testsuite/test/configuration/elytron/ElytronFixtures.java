@@ -202,6 +202,7 @@ public interface ElytronFixtures {
     String PROV_HTTP_UPDATE = Ids.build("prov-http", "update", Random.name());
     String PROV_HTTP_UPDATE2 = Ids.build("prov-http2", "update", Random.name());
     String PROV_HTTP_UPDATE3 = Ids.build("prov-http3", "update", Random.name());
+    String PROV_HTTP_UPDATE4 = Ids.build("prov-http4", "update", Random.name());
     String PROV_HTTP_DELETE = Ids.build("prov-http", "delete", Random.name());
 
     static Address providerHttpServerMechanismFactoryAddress(String name) {
@@ -305,6 +306,11 @@ public interface ElytronFixtures {
     String CONS_PRI_TRANS_UPDATE = Ids.build("cons-pri-trans", "update", Random.name());
     String CONS_PRI_TRANS_UPDATE2 = Ids.build("cons-pri-trans2", "update", Random.name());
     String CONS_PRI_TRANS_UPDATE3 = Ids.build("cons-pri-trans3", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE4 = Ids.build("cons-pri-trans4", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE5 = Ids.build("cons-pri-trans5", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE6 = Ids.build("cons-pri-trans6", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE7 = Ids.build("cons-pri-trans7", "update", Random.name());
+    String CONS_PRI_TRANS_UPDATE8 = Ids.build("cons-pri-trans8", "update", Random.name());
     String CONS_PRI_TRANS_DELETE = Ids.build("cons-pri-trans", "delete", Random.name());
 
     static Address constantPrincipalTransformerAddress(String name) {
@@ -360,6 +366,7 @@ public interface ElytronFixtures {
     String PROV_SASL_UPDATE = Ids.build("prov-sasl", "update", Random.name());
     String PROV_SASL_UPDATE2 = Ids.build("prov-sasl2", "update", Random.name());
     String PROV_SASL_UPDATE3 = Ids.build("prov-sasl3", "update", Random.name());
+    String PROV_SASL_UPDATE4 = Ids.build("prov-sasl4", "update", Random.name());
     String PROV_SASL_DELETE = Ids.build("prov-sasl", "delete", Random.name());
 
     static Address providerSaslServerFactoryAddress(String name) {
