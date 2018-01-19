@@ -358,6 +358,40 @@ public class ResourceVerifier {
     }
 
     /**
+     * Verifies that if an attribute value exists for a given LIST attribute contained in a top LIST attribute.
+     * As an usage example, see /subsystem=elytron/http-authentication-factory=* resource, there is an attribute
+     * "mechanism-configurations" of type LIST, it contains "mechanism-realm-configurations" attribute of type LIST
+     * of OBJECT, one of its attributes is "realm-name".
+     * Then this method can verify the "realm-name" value.
+     *
+     * @param listAttribute the attribute name of type LIST.
+     * @param filterAttribute the object attribute name
+     * @param filterValue the object attribute value
+     * @param singletonAttribute the inner attribute name of type LIST, contained in listAttribute
+     * @param objectValue The inner object value
+     */
+    public ResourceVerifier verifyListAttributeContainsObjectValue(String listAttribute, String filterAttribute, String filterValue,
+            String singletonAttribute, ModelNode objectValue) throws Exception {
+        waitFor(() -> {
+            ModelNodeResult actualResult = ops.readAttribute(address, listAttribute);
+            return actualResult.isSuccess() &&
+                    actualResult.hasDefinedValue() &&
+                    ModelNodeUtils.isObjectPresentInModelNodeList(actualResult.get(RESULT), filterAttribute,
+                            filterValue, singletonAttribute, objectValue);
+        });
+
+        ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttribute);
+        modelNodeResult.assertSuccess();
+
+        String path = address + "." + listAttribute + "={" + filterAttribute + "=" + filterValue + "}";
+        String errorMessage = "For path: " + path + ". The expected model in " + singletonAttribute + " is " + objectValue + ", but was not found.";
+        boolean found = ModelNodeUtils.isObjectPresentInModelNodeList(modelNodeResult.get(RESULT), filterAttribute,
+                filterValue, singletonAttribute, objectValue);
+        assertTrue(errorMessage, found);
+        return this;
+    }
+
+    /**
      * Verifies that list type attribute contains give value.
      *
      * @param value Value which should be present in the list.
@@ -461,6 +495,41 @@ public class ResourceVerifier {
                 innerListAttribute, innerObjectAttribute, innerObjectValue));
         return this;
     }
+
+    /**
+     * Verifies that if an attribute value exists for a given LIST attribute contained in a top LIST attribute.
+     * As an usage example, see /subsystem=elytron/http-authentication-factory=* resource, there is an attribute
+     * "mechanism-configurations" of type LIST, it contains "mechanism-realm-configurations" attribute of type LIST
+     * of OBJECT, one of its attributes is "realm-name".
+     * Then this method can verify the "realm-name" value.
+     *
+     * @param listAttribute the attribute name of type LIST.
+     * @param filterAttribute the object attribute name
+     * @param filterValue the object attribute value
+     * @param singletonAttribute the inner attribute name of type LIST, contained in listAttribute
+     */
+    public ResourceVerifier verifyListAttributeObjectIsUndefined(String listAttribute, String filterAttribute,
+            String filterValue, String singletonAttribute) throws Exception {
+        waitFor(() -> {
+            ModelNodeResult actualResult = ops.readAttribute(address, listAttribute);
+            return actualResult.isSuccess() &&
+                    actualResult.hasDefinedValue() &&
+                    ModelNodeUtils.isObjectUndefinedInModelNodeList(actualResult.get(RESULT), filterAttribute,
+                            filterValue, singletonAttribute);
+        });
+
+        ModelNodeResult modelNodeResult = ops.readAttribute(address, listAttribute);
+        modelNodeResult.assertSuccess();
+
+        String path = address + "." + listAttribute + "={" + filterAttribute + "=" + filterValue + "}";
+        String errorMessage = "For path: " + path + ". The attribute " + singletonAttribute + " exists, but is expteced to be undefined.";
+        boolean found = ModelNodeUtils.isObjectUndefinedInModelNodeList(modelNodeResult.get(RESULT), filterAttribute,
+                filterValue, singletonAttribute);
+        assertTrue(errorMessage, found);
+        return this;
+    }
+
+
 
     /**
      * Verifies that list type attribute contains give value.

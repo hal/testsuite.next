@@ -115,6 +115,62 @@ public class ModelNodeUtils {
         return false;
     }
 
+    /**
+     * Verifies if a object value exists for a given OBJECT attribute contained in a top LIST attribute, filtered by
+     * filterAttribute=filterValue, then it gets the objectName and compares the inner object with the value object
+     * parameter. An example is /subsystem=elytron/jdbc-realm=*, the principal-query of type LIST, contains an sql
+     * attribute and bcrypt-mapper of type OBJECT.
+     *
+     * @param list list to be checked
+     * @param filterAttribute the attribute name to filter
+     * @param filterValue the attribute value to filter
+     * @param objectName the inner attribute name of type OBJECT, contained in listAttribute
+     * @param value The inner object value
+     *
+     * @return true if value was found, false otherwise
+     */
+    public static boolean isObjectPresentInModelNodeList(ModelNode list, String filterAttribute,
+            String filterValue, String objectName, ModelNode value)
+            throws IOException {
+        boolean found = false;
+        String pair = filterAttribute + "/" + filterValue;
+        Optional<ModelNode> optional = list.asList().stream()
+                .peek(modelNode -> log.debug("Filtering by '{}' in complex attribute '{}' for model {}.", pair,
+                        objectName, modelNode.toString()))
+                .filter(m -> m.hasDefined(filterAttribute) && m.get(filterAttribute).asString().equals(filterValue))
+                .findFirst();
+        if (optional.isPresent()) {
+            ModelNode modelFound = optional.get().get(objectName);
+            found = value.equals(modelFound);
+        }
+        return found;
+    }
+
+    /**
+     * Verifies if an attribute is undefined in a top LIST attribute, filtered by filterAttribute=filterValue, then it
+     * checks if the objectName attribute is defined. An example is /subsystem=elytron/jdbc-realm=*, the
+     * principal-query of type LIST, contains an sql attribute and bcrypt-mapper of type OBJECT.
+     *
+     * @param list list to be checked
+     * @param filterAttribute the attribute name to filter
+     * @param filterValue the attribute value to filter
+     * @param objectName the inner attribute name of type OBJECT, contained in listAttribute
+     *
+     * @return true if undefined
+     */
+    public static boolean isObjectUndefinedInModelNodeList(ModelNode list, String filterAttribute,
+            String filterValue, String objectName)
+            throws IOException {
+        boolean isUndefined = false;
+        Optional<ModelNode> optional = list.asList().stream()
+                .filter(m -> m.hasDefined(filterAttribute) && m.get(filterAttribute).asString().equals(filterValue))
+                .findFirst();
+        if (optional.isPresent()) {
+            isUndefined = !optional.get().hasDefined(objectName);
+        }
+        return isUndefined;
+    }
+
     private ModelNodeUtils() {
     }
 }

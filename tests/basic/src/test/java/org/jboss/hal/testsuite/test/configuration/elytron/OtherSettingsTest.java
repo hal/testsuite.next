@@ -58,7 +58,6 @@ public class OtherSettingsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static final String ANY_STRING = Random.name();
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -123,17 +122,17 @@ public class OtherSettingsTest {
         operations.add(serverSslContextAddress(SRV_SSL_UPDATE), serverSslContextValues);
 
         // a realm is required for new security-domain
-        operations.add(filesystemRealmAddress(FILESYS_REALM_CREATE), Values.of(PATH, ANY_STRING));
-        operations.add(filesystemRealmAddress(FILESYS_REALM_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(filesystemRealmAddress(FILESYS_RLM_CREATE), Values.of(PATH, ANY_STRING));
+        operations.add(filesystemRealmAddress(FILESYS_RLM_UPDATE), Values.of(PATH, ANY_STRING));
         ModelNode realmNode1 = new ModelNode();
-        realmNode1.get(REALM).set(FILESYS_REALM_UPDATE);
+        realmNode1.get(REALM).set(FILESYS_RLM_UPDATE);
         ModelNode realmNode2 = new ModelNode();
-        realmNode2.get(REALM).set(FILESYS_REALM_CREATE);
-        Values secDomainParams = Values.of(DEFAULT_REALM, FILESYS_REALM_UPDATE).andList(REALMS, realmNode1);
+        realmNode2.get(REALM).set(FILESYS_RLM_CREATE);
+        Values secDomainParams = Values.of(DEFAULT_REALM, FILESYS_RLM_UPDATE).andList(REALMS, realmNode1);
         operations.add(securityDomainAddress(SEC_DOM_UPDATE), secDomainParams);
         operations.add(securityDomainAddress(SEC_DOM_UPDATE2), secDomainParams);
         operations.add(securityDomainAddress(SEC_DOM_UPDATE3),
-                Values.of(DEFAULT_REALM, FILESYS_REALM_UPDATE).andList(REALMS, realmNode1, realmNode2));
+                Values.of(DEFAULT_REALM, FILESYS_RLM_UPDATE).andList(REALMS, realmNode1, realmNode2));
         operations.add(securityDomainAddress(SEC_DOM_DELETE));
 
         operations.add(trustManagertAddress(TRU_MAN_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
@@ -237,8 +236,8 @@ public class OtherSettingsTest {
         operations.remove(providerLoaderAddress(PROV_LOAD_CREATE));
         operations.remove(providerLoaderAddress(PROV_LOAD_DELETE));
 
-        operations.remove(filesystemRealmAddress(FILESYS_REALM_UPDATE));
-        operations.remove(filesystemRealmAddress(FILESYS_REALM_CREATE));
+        operations.remove(filesystemRealmAddress(FILESYS_RLM_UPDATE));
+        operations.remove(filesystemRealmAddress(FILESYS_RLM_CREATE));
 
         operations.remove(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE));
 
@@ -755,7 +754,7 @@ public class OtherSettingsTest {
 
         crud.create(securityDomainAddress(SEC_DOM_CREATE), table, f -> {
             f.text(NAME, SEC_DOM_CREATE);
-            f.text(DEFAULT_REALM, FILESYS_REALM_UPDATE);
+            f.text(DEFAULT_REALM, FILESYS_RLM_UPDATE);
         });
     }
 
@@ -787,8 +786,8 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_REALM_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_REALM_CREATE));
+        crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_RLM_CREATE),
+                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
     }
 
     @Test
@@ -813,7 +812,7 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE2, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
         table.bind(form);
-        table.select(FILESYS_REALM_UPDATE);
+        table.select(FILESYS_RLM_UPDATE);
 
         crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
                 f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
@@ -829,8 +828,8 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE3, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_REALM_CREATE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_REALM_CREATE));
+        crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_RLM_CREATE,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
     }
 
     // --------------- trust-manager

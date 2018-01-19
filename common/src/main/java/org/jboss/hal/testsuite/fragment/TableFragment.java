@@ -49,6 +49,23 @@ public class TableFragment {
         return console.addResourceDialog();
     }
 
+    /** Filter the table items */
+    public void filter(String name) {
+        // By selector = ByJQuery.selector("input " + contains(value) + " ~ td > a." + columnAction + contains(action));
+        By selector = By.tagName("input");
+        WebElement inputElement = root.findElement(selector);
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+        inputElement.sendKeys(name);
+        waitGui().until().element(inputElement).value().equalTo(name);
+    }
+
+    /** Filter the table items and select the table item */
+    public void filterAndSelect(String name) {
+        filter(name);
+        select(name);
+    }
+
     /** Clicks on the remove button and confirms the confirms the confirmation dialog */
     public void remove(String name) {
         select(name);

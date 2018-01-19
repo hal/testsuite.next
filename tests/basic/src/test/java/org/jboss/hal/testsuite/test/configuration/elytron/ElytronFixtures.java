@@ -26,6 +26,7 @@ import static org.jboss.hal.resources.Ids.*;
 
 public interface ElytronFixtures {
 
+    String ANY_STRING = Random.name();
     String INITIAL_PROVIDERS = "initial-providers";
     String HTTP_SERVER_MECH_FACTORIES = "http-server-mechanism-factories";
     String SASL_SERVER_FACTORIES = "sasl-server-factories";
@@ -95,6 +96,28 @@ public interface ElytronFixtures {
     String SERVER_ADDRESS = "server-address";
     String LOCALHOST = "127.0.0.1";
     String SECURITY_EVENT_LISTENERS = "security-event-listeners";
+    String ADD_CUSTOM_POLICY = "Add Custom Policy";
+    String ADD_JACC_POLICY = "Add JACC Policy";
+    String AUTHENTICATION_REALM = "authentication-realm";
+    String AUTHORIZATION_REALM = "authorization-realm";
+    String MAXIMUM_AGE = "maximum-age";
+    String LEVELS = "levels";
+    String IDENTITY = "identity";
+    String ATTRIBUTE_NAME = "attribute-name";
+    String PQ_LABEL = "Principal Query";
+    String CLEAR_PASSWORD_MAPPER_TAB = "elytron-jdbc-realm-principal-query-clear-password-mapper-tab";
+    String BCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-bcrypt-mapper-tab";
+    String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
+    String SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-simple-digest-mapper-tab";
+    String SCRAM_MAPPER_TAB = "elytron-jdbc-realm-principal-query-scram-mapper-tab";
+    String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
+    String BCRYPT_MAPPER = "bcrypt-mapper";
+    String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
+    String SIMPLE_DIGEST_MAPPER = "simple-digest-mapper";
+    String SCRAM_MAPPER = "scram-mapper";
+    String PASSWORD_INDEX = "password-index";
+    String ITERATION_COUNT_INDEX = "iteration-count-index";
+    String SALT_INDEX = "salt-index";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -140,8 +163,25 @@ public interface ElytronFixtures {
     String OTHER_ITEM = "other-item";
     String POLICY_ITEM = "elytron-policy";
     String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
-    String ADD_CUSTOM_POLICY = "Add Custom Policy";
-    String ADD_JACC_POLICY = "Add JACC Policy";
+
+    String SECURITY_REALM_ITEM = "security-realm-item";
+    String REALM_MAPPER_ITEM = "realm-mapper-item";
+    String AGGREGATE_REALM_ITEM = "elytron-aggregate-realm-item";
+    String CACHING_REALM_ITEM = "elytron-caching-realm-item";
+    String CUSTOM_MODIFIABLE_REALM_ITEM = "elytron-custom-modifiable-realm-item";
+    String CUSTOM_REALM_ITEM = "elytron-custom-realm-item";
+    String FILESYSTEM_REALM_ITEM = "elytron-filesystem-realm-item";
+    String IDENTITY_REALM_ITEM = "elytron-identity-realm-item";
+    String JDBC_REALM_ITEM = "elytron-jdbc-realm-item";
+    String KEYSTORE_REALM_ITEM = "elytron-key-store-realm-item";
+    String LDAP_REALM_ITEM = "elytron-ldap-realm-item";
+    String PROPERTIES_REALM_ITEM = "elytron-properties-realm-item";
+    String TOKEN_REALM_ITEM = "elytron-token-realm-item";
+    String CONSTANT_REALM_MAPPER_ITEM = "elytron-constant-realm-mapper-item";
+    String CUSTOM_REALM_MAPPER_ITEM = "elytron-custom-realm-mapper-item";
+    String MAPPED_REGEX_REALM_MAPPER_ITEM = "elytron-mapped-regex-realm-mapper-item";
+    String SIMPLE_REGEX_REALM_MAPPER_ITEM = "elytron-simple-regex-realm-mapper-item";
+
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(ELYTRON);
 
@@ -345,19 +385,6 @@ public interface ElytronFixtures {
 
     static Address regexValidatingPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, name);
-    }
-
-
-
-    // ===================================================================================
-    // -------------- file-system realm
-
-    String FILESYS_REALM_CREATE = Ids.build("filesys-realm", "create", Random.name());
-    String FILESYS_REALM_UPDATE = Ids.build("filesys-realm", "update", Random.name());
-    String FILESYS_REALM_DELETE = Ids.build("filesys-realm", "delete", Random.name());
-
-    static Address filesystemRealmAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(FILESYSTEM_REALM, name);
     }
 
     // -------------- provider-sasl-server-factory
@@ -723,6 +750,192 @@ public interface ElytronFixtures {
 
     static Address dirContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(DIR_CONTEXT, name);
+    }
+
+    // -------------- aggregate-realm
+
+    String AGG_RLM_CREATE = Ids.build("agg-rlm", "create", Random.name());
+    String AGG_RLM_UPDATE = Ids.build("agg-rlm", "update", Random.name());
+    String AGG_RLM_DELETE = Ids.build("agg-rlm", "delete", Random.name());
+
+    static Address aggregateRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(AGGREGATE_REALM, name);
+    }
+
+    // -------------- caching-realm
+
+    String CAC_RLM_CREATE = Ids.build("cac-rlm", "create", Random.name());
+    String CAC_RLM_UPDATE = Ids.build("cac-rlm", "update", Random.name());
+    String CAC_RLM_DELETE = Ids.build("cac-rlm", "delete", Random.name());
+
+    static Address cachingRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CACHING_REALM, name);
+    }
+
+    // -------------- custom-modifiable-realm
+
+    String CMO_RLM_CREATE = Ids.build("cmo-rlm", "create", Random.name());
+    String CMO_RLM_UPDATE = Ids.build("cmo-rlm", "update", Random.name());
+    String CMO_RLM_DELETE = Ids.build("cmo-rlm", "delete", Random.name());
+
+    static Address customModifiableRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CUSTOM_MODIFIABLE_REALM, name);
+    }
+
+    // -------------- custom-realm
+
+    String CST_RLM_CREATE = Ids.build("cst-rlm", "create", Random.name());
+    String CST_RLM_UPDATE = Ids.build("cst-rlm", "update", Random.name());
+    String CST_RLM_DELETE = Ids.build("cst-rlm", "delete", Random.name());
+
+    static Address customRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CUSTOM_REALM, name);
+    }
+
+    // -------------- filesystem realm
+
+    String FILESYS_RLM_CREATE = Ids.build("filesys-rlm", "create", Random.name());
+    String FILESYS_RLM_UPDATE = Ids.build("filesys-rlm", "update", Random.name());
+    String FILESYS_RLM_UPDATE2 = Ids.build("filesys-rlm-2", "update", Random.name());
+    String FILESYS_RLM_UPDATE3 = Ids.build("filesys-rlm-3", "update", Random.name());
+    String FILESYS_RLM_DELETE = Ids.build("filesys-rlm", "delete", Random.name());
+
+    static Address filesystemRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(FILESYSTEM_REALM, name);
+    }
+
+    // -------------- identity realm
+
+    String IDEN_RLM_CREATE = Ids.build("iden-rlm", "create", Random.name());
+    String IDEN_RLM_UPDATE = Ids.build("iden-rlm", "update", Random.name());
+    String IDEN_RLM_DELETE = Ids.build("iden-rlm", "delete", Random.name());
+
+    static Address identityRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(IDENTITY_REALM, name);
+    }
+
+    // -------------- jdbc realm
+
+    String JDBC_RLM_CREATE = Ids.build("jdbc-rlm", "create", Random.name());
+    String JDBC_RLM_UPDATE = Ids.build("jdbc-rlm", "update", Random.name());
+    String JDBC_RLM_DELETE = Ids.build("jdbc-rlm", "delete", Random.name());
+
+    String SQL_CREATE = Ids.build("sql", "create", Random.name());
+    String SQL_UPDATE = Ids.build("sql", "update", Random.name());
+    String SQL_UPDATE2 = Ids.build("sql-2", "update", Random.name());
+
+    String SQL_CPM_CRT = Ids.build("sql-cpm", "create", Random.name());
+    String SQL_CPM_UPD = Ids.build("sql-cpm", "update", Random.name());
+    String SQL_CPM_DEL = Ids.build("sql-cpm", "delete", Random.name());
+
+    String SQL_BCM_CRT = Ids.build("sql-bcm", "create", Random.name());
+    String SQL_BCM_UPD = Ids.build("sql-bcm", "update", Random.name());
+    String SQL_BCM_DEL = Ids.build("sql-bcm", "delete", Random.name());
+
+    String SQL_SSDM_CRT = Ids.build("sql-ssdm", "create", Random.name());
+    String SQL_SSDM_UPD = Ids.build("sql-ssdm", "update", Random.name());
+    String SQL_SSDM_DEL = Ids.build("sql-ssdm", "delete", Random.name());
+
+    String SQL_SDM_CRT = Ids.build("sql-sdm", "create", Random.name());
+    String SQL_SDM_UPD = Ids.build("sql-sdm", "update", Random.name());
+    String SQL_SDM_DEL = Ids.build("sql-sdm", "delete", Random.name());
+
+    String SQL_SM_CRT = Ids.build("sql-sm", "create", Random.name());
+    String SQL_SM_UPD = Ids.build("sql-sm", "update", Random.name());
+    String SQL_SM_DEL = Ids.build("sql-sm", "delete", Random.name());
+
+
+    String SQL_DELETE = Ids.build("sql", "delete", Random.name());
+
+    static Address jdbcRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(JDBC_REALM, name);
+    }
+
+    //  datasource-address
+    String JDBC_PQ_DS = Ids.build("ds", Random.name());
+
+    static Address datasourceAddress(String name) {
+        return Address.subsystem(DATASOURCES).and(DATA_SOURCE, name);
+    }
+
+    // -------------- keystore realm
+
+    String KS_RLM_CREATE = Ids.build("ks-rlm", "create", Random.name());
+    String KS_RLM_UPDATE = Ids.build("ks-rlm", "update", Random.name());
+    String KS_RLM_DELETE = Ids.build("ks-rlm", "delete", Random.name());
+
+    static Address keystoreRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(KEY_STORE_REALM, name);
+    }
+
+    // -------------- ldap realm
+
+    String LDAP_RLM_CREATE = Ids.build("ldap-rlm", "create", Random.name());
+    String LDAP_RLM_UPDATE = Ids.build("ldap-rlm", "update", Random.name());
+    String LDAP_RLM_DELETE = Ids.build("ldap-rlm", "delete", Random.name());
+
+    static Address ldapRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(LDAP_REALM, name);
+    }
+
+    // -------------- properties realm
+
+    String PROP_RLM_CREATE = Ids.build("prop-rlm", "create", Random.name());
+    String PROP_RLM_UPDATE = Ids.build("prop-rlm", "update", Random.name());
+    String PROP_RLM_DELETE = Ids.build("prop-rlm", "delete", Random.name());
+
+    static Address propertiesRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(PROPERTIES_REALM, name);
+    }
+
+    // -------------- token realm
+
+    String TKN_RLM_CREATE = Ids.build("token-rlm", "create", Random.name());
+    String TKN_RLM_UPDATE = Ids.build("token-rlm", "update", Random.name());
+    String TKN_RLM_DELETE = Ids.build("token-rlm", "delete", Random.name());
+
+    static Address tokenRealmAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(TOKEN_REALM, name);
+    }
+
+    // -------------- constant realm-mapper
+
+    String CON_RM_CREATE = Ids.build("con-rm", "create", Random.name());
+    String CON_RM_UPDATE = Ids.build("con-rm", "update", Random.name());
+    String CON_RM_DELETE = Ids.build("con-rm", "delete", Random.name());
+
+    static Address constantRealmMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CONSTANT_REALM_MAPPER, name);
+    }
+
+    // -------------- custom realm-mapper
+
+    String CUS_RM_CREATE = Ids.build("cus-rm", "create", Random.name());
+    String CUS_RM_UPDATE = Ids.build("cus-rm", "update", Random.name());
+    String CUS_RM_DELETE = Ids.build("cus-rm", "delete", Random.name());
+
+    static Address customRealmMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(CUSTOM_REALM_MAPPER, name);
+    }
+
+    // -------------- mapped-regex-realm-mapper
+
+    String MAPP_RM_CREATE = Ids.build("mapp-rm", "create", Random.name());
+    String MAPP_RM_UPDATE = Ids.build("mapp-rm", "update", Random.name());
+    String MAPP_RM_DELETE = Ids.build("mapp-rm", "delete", Random.name());
+
+    static Address mappedRegexRealmMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(MAPPED_REGEX_REALM_MAPPER, name);
+    }
+
+    // -------------- simple-regex-realm-mapper
+
+    String SIMP_RM_CREATE = Ids.build("simp-rm", "create", Random.name());
+    String SIMP_RM_UPDATE = Ids.build("simp-rm", "update", Random.name());
+    String SIMP_RM_DELETE = Ids.build("simp-rm", "delete", Random.name());
+
+    static Address simpleRegexRealmMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(SIMPLE_REGEX_REALM_MAPPER, name);
     }
 
 }
