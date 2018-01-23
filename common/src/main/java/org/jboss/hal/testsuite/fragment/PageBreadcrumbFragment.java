@@ -30,4 +30,8 @@ public class PageBreadcrumbFragment {
     public String lastValue() {
         return root.findElement(By.cssSelector("li:last-child")).getText();
     }
+
+    public WebElement firstElement() {
+        return root.findElement(By.cssSelector("li:first-child"));
+    }
 }

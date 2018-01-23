@@ -16,11 +16,16 @@
 
 package org.jboss.hal.testsuite.page.configuration;
 
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.PagesFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.FILTERS;
@@ -98,6 +103,13 @@ public class ElytronFactoriesTransformersPage extends BasePage {
 
     public FormFragment getAggregateHttpServerMechanismForm() {
         return aggregateHttpServerMechanismForm;
+    }
+
+    public void getBackToResourcePageViaBreadcrumb(String resource) {
+        String pagesId = resource + "-" + Ids.PAGES;
+        WebElement pagesElement = getRootContainer().findElement(By.id(pagesId));
+        Graphene.createPageFragment(PagesFragment.class, pagesElement).breadcrumb().firstElement().click();
+        Graphene.waitAjax().until().element(By.cssSelector("#" + pagesId + " h1")).is().visible();
     }
 
     public TableFragment getConfigurableHttpServerMechanismTable() {
