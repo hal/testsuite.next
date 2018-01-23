@@ -84,8 +84,11 @@ public class FactoriesTransformersTest {
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE4));
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_DELETE));
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE), HTTP_PARAMS);
+        operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_TRY_UPDATE), HTTP_PARAMS);
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_DELETE), HTTP_PARAMS);
         operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE),
+                Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
+        operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_TRY_UPDATE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
         operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_DELETE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
@@ -115,6 +118,8 @@ public class FactoriesTransformersTest {
                         new ModelNodePropertiesBuilder().addProperty(REALM, realmName).build())
                 .build()));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE),
+                Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
+        operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_TRY_UPDATE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_DELETE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
@@ -158,6 +163,8 @@ public class FactoriesTransformersTest {
 
         operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE),
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
+        operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_TRY_UPDATE),
+                Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
         operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_DELETE),
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
 
@@ -191,6 +198,7 @@ public class FactoriesTransformersTest {
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_DELETE), Values.of(CONSTANT, ANY_STRING));
 
         operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE), AGG_PRI_PARAMS);
+        operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_TRY_UPDATE), AGG_PRI_PARAMS);
         operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_DELETE), AGG_PRI_PARAMS);
 
         operations.add(chainedPrincipalTransformerAddress(CHA_PRI_TRANS_UPDATE), AGG_PRI_PARAMS);
@@ -198,15 +206,21 @@ public class FactoriesTransformersTest {
 
         operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_UPDATE),
                 Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
+        operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_TRY_UPDATE),
+                Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
         operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_DELETE),
                 Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
 
         operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_UPDATE),
                 Values.of(PATTERN, ANY_STRING));
+        operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_TRY_UPDATE),
+                Values.of(PATTERN, ANY_STRING));
         operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_DELETE),
                 Values.of(PATTERN, ANY_STRING));
 
         operations.add(kerberosSecurityFactoryAddress(KERB_UPDATE),
+                Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
+        operations.add(kerberosSecurityFactoryAddress(KERB_TRY_UPDATE),
                 Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
         operations.add(kerberosSecurityFactoryAddress(KERB_DELETE),
                 Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
@@ -216,11 +230,14 @@ public class FactoriesTransformersTest {
     public static void tearDown() throws Exception {
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_DELETE));
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE));
+        operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_TRY_UPDATE));
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_CREATE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE));
+        operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_TRY_UPDATE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_DELETE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_CREATE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE));
+        operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_TRY_UPDATE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_DELETE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE));
@@ -244,6 +261,7 @@ public class FactoriesTransformersTest {
 
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_CREATE));
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE));
+        operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_TRY_UPDATE));
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_DELETE));
 
         operations.remove(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE));
@@ -251,10 +269,12 @@ public class FactoriesTransformersTest {
         operations.remove(saslAuthenticationFactoryAddress(SASL_AUTH_CREATE));
 
         operations.remove(kerberosSecurityFactoryAddress(KERB_UPDATE));
+        operations.remove(kerberosSecurityFactoryAddress(KERB_TRY_UPDATE));
         operations.remove(kerberosSecurityFactoryAddress(KERB_DELETE));
         operations.remove(kerberosSecurityFactoryAddress(KERB_CREATE));
 
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE));
+        operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_TRY_UPDATE));
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_DELETE));
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_CREATE));
 
@@ -275,10 +295,12 @@ public class FactoriesTransformersTest {
 
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_CREATE));
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_UPDATE));
+        operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_TRY_UPDATE));
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_DELETE));
 
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_CREATE));
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_UPDATE));
+        operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_TRY_UPDATE));
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_DELETE));
 
         operations.remove(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_CREATE));
@@ -365,7 +387,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getAggregateHttpServerMechanismForm();
         table.bind(form);
 
-        table.select(AGG_HTTP_UPDATE);
+        table.select(AGG_HTTP_TRY_UPDATE);
         crud.updateWithError(form, f -> f.list(HTTP_SERVER_MECH_FACTORIES).removeTags(),
                 HTTP_SERVER_MECH_FACTORIES);
     }
@@ -421,7 +443,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getConfigurableHttpServerMechanismForm();
         table.bind(form);
 
-        table.select(CONF_HTTP_UPDATE);
+        table.select(CONF_HTTP_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HTTP_SERVER_MECH_FACTORY),
                 HTTP_SERVER_MECH_FACTORY);
     }
@@ -537,7 +559,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getHttpAuthenticationFactoryForm();
         table.bind(form);
 
-        table.select(HTTP_AUTH_UPDATE);
+        table.select(HTTP_AUTH_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HTTP_SERVER_MECH_FACTORY),
                 HTTP_SERVER_MECH_FACTORY);
     }
@@ -985,7 +1007,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getMechanismProviderFilteringSaslServerForm();
         table.bind(form);
 
-        table.select(MECH_SASL_UPDATE);
+        table.select(MECH_SASL_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(SASL_SERVER_FACTORY),
                 SASL_SERVER_FACTORY);
     }
@@ -1359,7 +1381,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getKerberosSecurityForm();
         table.bind(form);
 
-        table.select(KERB_UPDATE);
+        table.select(KERB_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1426,7 +1448,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getAggregatePrincipalTransformerForm();
         table.bind(form);
 
-        table.select(AGG_PRI_TRANS_UPDATE);
+        table.select(AGG_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.list(PRINCIPAL_TRANSFORMERS).removeTags(),
                 PRINCIPAL_TRANSFORMERS);
     }
@@ -1597,7 +1619,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getRegexPrincipalTransformerForm();
         table.bind(form);
 
-        table.select(REG_PRI_TRANS_UPDATE);
+        table.select(REG_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATTERN), PATTERN);
     }
 
@@ -1647,7 +1669,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getRegexValidatingPrincipalTransformerForm();
         table.bind(form);
 
-        table.select(REGV_PRI_TRANS_UPDATE);
+        table.select(REGV_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATTERN), PATTERN);
     }
 
