@@ -39,6 +39,8 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REALMS;
+import static org.jboss.hal.testsuite.dmr.ModelNodeGenerator.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.PREDEFINED_FILTER;
 
@@ -101,7 +103,12 @@ public class FactoriesTransformersTest {
         operations.writeListAttribute(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), FILTERS,
                 FILTER_UPDATE_MODEL, FILTER_DELETE_MODEL);
 
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE));
+        String realmName = "local";
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE),
+                Values.of(DEFAULT_REALM, realmName)
+                .and(REALMS, new ModelNodeListBuilder().addNode(
+                        new ModelNodePropertiesBuilder().addProperty(REALM, realmName).build())
+                .build()));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_DELETE),
