@@ -189,6 +189,7 @@ public interface ElytronFixtures {
 
     String AGG_HTTP_CREATE = Ids.build("agg-http", "create", Random.name());
     String AGG_HTTP_UPDATE = Ids.build("agg-http", "update", Random.name());
+    String AGG_HTTP_TRY_UPDATE = Ids.build("agg-http", "try-update", Random.name());
     String AGG_HTTP_DELETE = Ids.build("agg-http", "delete", Random.name());
 
     static Address aggregateHttpServerMechanismFactoryAddress(String name) {
@@ -199,6 +200,7 @@ public interface ElytronFixtures {
 
     String CONF_HTTP_CREATE = Ids.build("conf-http", "create", Random.name());
     String CONF_HTTP_UPDATE = Ids.build("conf-http", "update", Random.name());
+    String CONF_HTTP_TRY_UPDATE = Ids.build("conf-http", "try-update", Random.name());
     String CONF_HTTP_DELETE = Ids.build("conf-http", "delete", Random.name());
 
     static Address configurableHttpServerMechanismFactoryAddress(String name) {
@@ -216,6 +218,7 @@ public interface ElytronFixtures {
 
     String HTTP_AUTH_CREATE = Ids.build("http-auth", "create", Random.name());
     String HTTP_AUTH_UPDATE = Ids.build("http-auth", "update", Random.name());
+    String HTTP_AUTH_TRY_UPDATE = Ids.build("http-auth", "try-update", Random.name());
     String HTTP_AUTH_DELETE = Ids.build("http-auth", "delete", Random.name());
 
     static Address httpAuthenticationFactoryAddress(String name) {
@@ -283,6 +286,7 @@ public interface ElytronFixtures {
 
     String MECH_SASL_CREATE = Ids.build("mech-sasl", "create", Random.name());
     String MECH_SASL_UPDATE = Ids.build("mech-sasl", "update", Random.name());
+    String MECH_SASL_TRY_UPDATE = Ids.build("mech-sasl", "try-update", Random.name());
     String MECH_SASL_DELETE = Ids.build("mech-sasl", "delete", Random.name());
 
     static Address mechanismProviderFilteringSaslServerFactoryAddress(String name) {
@@ -314,6 +318,7 @@ public interface ElytronFixtures {
 
     String KERB_CREATE = Ids.build("kerb", "create", Random.name());
     String KERB_UPDATE = Ids.build("kerb", "update", Random.name());
+    String KERB_TRY_UPDATE = Ids.build("kerb", "try-update", Random.name());
     String KERB_DELETE = Ids.build("kerb", "delete", Random.name());
 
     static Address kerberosSecurityFactoryAddress(String name) {
@@ -324,6 +329,7 @@ public interface ElytronFixtures {
 
     String AGG_PRI_TRANS_CREATE = Ids.build("agg-pri-trans", "create", Random.name());
     String AGG_PRI_TRANS_UPDATE = Ids.build("agg-pri-trans", "update", Random.name());
+    String AGG_PRI_TRANS_TRY_UPDATE = Ids.build("agg-pri-trans", "try-update", Random.name());
     String AGG_PRI_TRANS_DELETE = Ids.build("agg-pri-trans", "delete", Random.name());
 
     static Address aggregatePrincipalTransformerAddress(String name) {
@@ -371,6 +377,7 @@ public interface ElytronFixtures {
 
     String REG_PRI_TRANS_CREATE = Ids.build("reg-pri-trans", "create", Random.name());
     String REG_PRI_TRANS_UPDATE = Ids.build("reg-pri-trans", "update", Random.name());
+    String REG_PRI_TRANS_TRY_UPDATE = Ids.build("reg-pri-trans", "try-update", Random.name());
     String REG_PRI_TRANS_DELETE = Ids.build("reg-pri-trans", "delete", Random.name());
 
     static Address regexPrincipalTransformerAddress(String name) {
@@ -381,6 +388,7 @@ public interface ElytronFixtures {
 
     String REGV_PRI_TRANS_CREATE = Ids.build("regv-pri-trans", "create", Random.name());
     String REGV_PRI_TRANS_UPDATE = Ids.build("regv-pri-trans", "update", Random.name());
+    String REGV_PRI_TRANS_TRY_UPDATE = Ids.build("regv-pri-trans", "try-update", Random.name());
     String REGV_PRI_TRANS_DELETE = Ids.build("regv-pri-trans", "delete", Random.name());
 
     static Address regexValidatingPrincipalTransformerAddress(String name) {

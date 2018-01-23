@@ -39,6 +39,13 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REALMS;
+import static org.jboss.hal.testsuite.dmr.ModelNodeGenerator.*;
+import static org.jboss.hal.resources.Ids.ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY;
+import static org.jboss.hal.resources.Ids.ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY;
+import static org.jboss.hal.resources.Ids.ELYTRON_HTTP_AUTHENTICATION_FACTORY;
+import static org.jboss.hal.resources.Ids.ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY;
+import static org.jboss.hal.resources.Ids.ELYTRON_SASL_AUTHENTICATION_FACTORY;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.PREDEFINED_FILTER;
 
@@ -77,8 +84,11 @@ public class FactoriesTransformersTest {
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE4));
         operations.add(providerHttpServerMechanismFactoryAddress(PROV_HTTP_DELETE));
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE), HTTP_PARAMS);
+        operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_TRY_UPDATE), HTTP_PARAMS);
         operations.add(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_DELETE), HTTP_PARAMS);
         operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE),
+                Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
+        operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_TRY_UPDATE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
         operations.add(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_DELETE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE));
@@ -101,8 +111,15 @@ public class FactoriesTransformersTest {
         operations.writeListAttribute(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), FILTERS,
                 FILTER_UPDATE_MODEL, FILTER_DELETE_MODEL);
 
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE));
+        String realmName = "local";
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE),
+                Values.of(DEFAULT_REALM, realmName)
+                .and(REALMS, new ModelNodeListBuilder().addNode(
+                        new ModelNodePropertiesBuilder().addProperty(REALM, realmName).build())
+                .build()));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE),
+                Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
+        operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_TRY_UPDATE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_DELETE),
                 Values.of(HTTP_SERVER_MECH_FACTORY, PROV_HTTP_UPDATE).and(SECURITY_DOMAIN, SEC_DOM_UPDATE));
@@ -146,6 +163,8 @@ public class FactoriesTransformersTest {
 
         operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE),
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
+        operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_TRY_UPDATE),
+                Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
         operations.add(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_DELETE),
                 Values.of(SASL_SERVER_FACTORY, PROV_SASL_UPDATE));
 
@@ -179,6 +198,7 @@ public class FactoriesTransformersTest {
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_DELETE), Values.of(CONSTANT, ANY_STRING));
 
         operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE), AGG_PRI_PARAMS);
+        operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_TRY_UPDATE), AGG_PRI_PARAMS);
         operations.add(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_DELETE), AGG_PRI_PARAMS);
 
         operations.add(chainedPrincipalTransformerAddress(CHA_PRI_TRANS_UPDATE), AGG_PRI_PARAMS);
@@ -186,15 +206,21 @@ public class FactoriesTransformersTest {
 
         operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_UPDATE),
                 Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
+        operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_TRY_UPDATE),
+                Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
         operations.add(regexPrincipalTransformerAddress(REG_PRI_TRANS_DELETE),
                 Values.of(PATTERN, ANY_STRING).and(REPLACEMENT, ANY_STRING));
 
         operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_UPDATE),
                 Values.of(PATTERN, ANY_STRING));
+        operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_TRY_UPDATE),
+                Values.of(PATTERN, ANY_STRING));
         operations.add(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_DELETE),
                 Values.of(PATTERN, ANY_STRING));
 
         operations.add(kerberosSecurityFactoryAddress(KERB_UPDATE),
+                Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
+        operations.add(kerberosSecurityFactoryAddress(KERB_TRY_UPDATE),
                 Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
         operations.add(kerberosSecurityFactoryAddress(KERB_DELETE),
                 Values.of(PATH, ANY_STRING).and(PRINCIPAL, ANY_STRING));
@@ -204,11 +230,14 @@ public class FactoriesTransformersTest {
     public static void tearDown() throws Exception {
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_DELETE));
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_UPDATE));
+        operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_TRY_UPDATE));
         operations.remove(aggregateHttpServerMechanismFactoryAddress(AGG_HTTP_CREATE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE));
+        operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_TRY_UPDATE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_DELETE));
         operations.remove(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_CREATE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE));
+        operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_TRY_UPDATE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_DELETE));
         operations.remove(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE));
         operations.remove(providerHttpServerMechanismFactoryAddress(PROV_HTTP_UPDATE));
@@ -232,6 +261,7 @@ public class FactoriesTransformersTest {
 
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_CREATE));
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE));
+        operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_TRY_UPDATE));
         operations.remove(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_DELETE));
 
         operations.remove(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE));
@@ -239,10 +269,12 @@ public class FactoriesTransformersTest {
         operations.remove(saslAuthenticationFactoryAddress(SASL_AUTH_CREATE));
 
         operations.remove(kerberosSecurityFactoryAddress(KERB_UPDATE));
+        operations.remove(kerberosSecurityFactoryAddress(KERB_TRY_UPDATE));
         operations.remove(kerberosSecurityFactoryAddress(KERB_DELETE));
         operations.remove(kerberosSecurityFactoryAddress(KERB_CREATE));
 
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_UPDATE));
+        operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_TRY_UPDATE));
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_DELETE));
         operations.remove(aggregatePrincipalTransformerAddress(AGG_PRI_TRANS_CREATE));
 
@@ -263,10 +295,12 @@ public class FactoriesTransformersTest {
 
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_CREATE));
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_UPDATE));
+        operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_TRY_UPDATE));
         operations.remove(regexPrincipalTransformerAddress(REG_PRI_TRANS_DELETE));
 
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_CREATE));
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_UPDATE));
+        operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_TRY_UPDATE));
         operations.remove(regexValidatingPrincipalTransformerAddress(REGV_PRI_TRANS_DELETE));
 
         operations.remove(serviceLoaderSaslServerFactoryAddress(SVC_LOAD_SASL_CREATE));
@@ -353,7 +387,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getAggregateHttpServerMechanismForm();
         table.bind(form);
 
-        table.select(AGG_HTTP_UPDATE);
+        table.select(AGG_HTTP_TRY_UPDATE);
         crud.updateWithError(form, f -> f.list(HTTP_SERVER_MECH_FACTORIES).removeTags(),
                 HTTP_SERVER_MECH_FACTORIES);
     }
@@ -409,7 +443,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getConfigurableHttpServerMechanismForm();
         table.bind(form);
 
-        table.select(CONF_HTTP_UPDATE);
+        table.select(CONF_HTTP_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HTTP_SERVER_MECH_FACTORY),
                 HTTP_SERVER_MECH_FACTORY);
     }
@@ -431,10 +465,14 @@ public class FactoriesTransformersTest {
 
         table.action(CONF_HTTP_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
-
-        crud.create(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), filtersTable,
-                f -> f.text(PATTERN_FILTER, FILTERS_CREATE),
-                vc -> vc.verifyListAttributeContainsValue(FILTERS, FILTER_CREATE_MODEL));
+        try {
+            crud.create(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), filtersTable,
+                    f -> f.text(PATTERN_FILTER, FILTERS_CREATE),
+                    vc -> vc.verifyListAttributeContainsValue(FILTERS, FILTER_CREATE_MODEL));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY);
+        }
     }
 
     @Test
@@ -450,9 +488,14 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getConfigurableHttpServerMechanismFiltersForm();
         filtersTable.bind(form);
         filtersTable.select(FILTERS_UPDATE);
-        crud.update(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), form,
-                f -> f.text(PATTERN_FILTER, FILTERS_UPDATE2),
-                vc -> vc.verifyListAttributeContainsValue(FILTERS, FILTER_UPDATE2_MODEL));
+        try {
+            crud.update(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), form,
+                    f -> f.text(PATTERN_FILTER, FILTERS_UPDATE2),
+                    vc -> vc.verifyListAttributeContainsValue(FILTERS, FILTER_UPDATE2_MODEL));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY);
+        }
     }
 
     @Test
@@ -465,9 +508,14 @@ public class FactoriesTransformersTest {
         table.action(CONF_HTTP_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
 
-        crud.delete(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), filtersTable,
-                FILTERS_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainValue(FILTERS, FILTER_DELETE_MODEL));
+        try {
+            crud.delete(configurableHttpServerMechanismFactoryAddress(CONF_HTTP_UPDATE), filtersTable,
+                    FILTERS_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainValue(FILTERS, FILTER_DELETE_MODEL));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY);
+        }
     }
 
     // --------------- http-authentication-factory
@@ -511,7 +559,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getHttpAuthenticationFactoryForm();
         table.bind(form);
 
-        table.select(HTTP_AUTH_UPDATE);
+        table.select(HTTP_AUTH_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HTTP_SERVER_MECH_FACTORY),
                 HTTP_SERVER_MECH_FACTORY);
     }
@@ -532,10 +580,15 @@ public class FactoriesTransformersTest {
         table.action(HTTP_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
         waitGui().until().element(mechanismConf.getRoot()).is().visible();
 
-        crud.create(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismConf,
-                f -> f.text(MECHANISM_NAME, MECH_CONF_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_CREATE));
+        try {
+            crud.create(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismConf,
+                    f -> f.text(MECHANISM_NAME, MECH_CONF_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -551,9 +604,14 @@ public class FactoriesTransformersTest {
         mechanismConfTable.bind(form);
         mechanismConfTable.select(MECH_CONF_UPDATE);
 
-        crud.update(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), form,
-                f -> f.text(PROTOCOL, ANY_STRING),
-                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, PROTOCOL, ANY_STRING));
+        try {
+            crud.update(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), form,
+                    f -> f.text(PROTOCOL, ANY_STRING),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, PROTOCOL, ANY_STRING));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -565,10 +623,15 @@ public class FactoriesTransformersTest {
         table.action(HTTP_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
         waitGui().until().element(mechanismConfTable.getRoot()).is().visible();
 
-        crud.delete(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismConfTable,
-                MECH_CONF_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_DELETE));
+        try {
+            crud.delete(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismConfTable,
+                    MECH_CONF_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -584,10 +647,15 @@ public class FactoriesTransformersTest {
         mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
         waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
 
-        crud.create(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismRealmConf,
-                f -> f.text(REALM_NAME, MECH_RE_CONF_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_CREATE));
+        try {
+            crud.create(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismRealmConf,
+                    f -> f.text(REALM_NAME, MECH_RE_CONF_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -607,10 +675,15 @@ public class FactoriesTransformersTest {
         mechanismRealmConf.bind(form);
         mechanismRealmConf.select(MECH_RE_CONF_UPDATE);
 
-        crud.update(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), form,
-                f -> f.text(REALM_NAME, MECH_RE_CONF_UPDATE2),
-                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_UPDATE2));
+        try {
+            crud.update(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), form,
+                    f -> f.text(REALM_NAME, MECH_RE_CONF_UPDATE2),
+                    vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_UPDATE2));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -626,10 +699,15 @@ public class FactoriesTransformersTest {
         mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
         waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
 
-        crud.delete(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismRealmConf,
-                MECH_RE_CONF_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
+        try {
+            crud.delete(httpAuthenticationFactoryAddress(HTTP_AUTH_UPDATE), mechanismRealmConf,
+                    MECH_RE_CONF_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_HTTP_AUTHENTICATION_FACTORY);
+        }
     }
 
     // --------------- provider-http-server-mechanism-factory
@@ -831,9 +909,14 @@ public class FactoriesTransformersTest {
         table.action(CONF_SASL_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
 
-        crud.create(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersTable,
-                f -> f.text(PATTERN_FILTER, FILTERS_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PATTERN_FILTER, FILTERS_CREATE));
+        try {
+            crud.create(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersTable,
+                    f -> f.text(PATTERN_FILTER, FILTERS_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PATTERN_FILTER, FILTERS_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY);
+        }
     }
 
     @Test
@@ -848,12 +931,17 @@ public class FactoriesTransformersTest {
         FormFragment filtersForm = page.getConfigurableSaslServerFiltersForm();
         filtersTable.bind(filtersForm);
         filtersTable.select(FILTERS_UPDATE);
-        crud.update(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersForm,
-                f -> {
-                    f.clear(PATTERN_FILTER);
-                    f.select(PREDEFINED_FILTER, HASH_SHA);
-                },
-                vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PREDEFINED_FILTER, HASH_SHA));
+        try {
+            crud.update(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersForm,
+                    f -> {
+                        f.clear(PATTERN_FILTER);
+                        f.select(PREDEFINED_FILTER, HASH_SHA);
+                    },
+                    vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PREDEFINED_FILTER, HASH_SHA));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY);
+        }
     }
 
     @Test
@@ -865,8 +953,13 @@ public class FactoriesTransformersTest {
 
         table.action(CONF_SASL_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
-        crud.delete(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersTable, FILTERS_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(FILTERS, PREDEFINED_FILTER, FILTERS_DELETE));
+        try {
+            crud.delete(configurableSaslServerFactoryAddress(CONF_SASL_UPDATE), filtersTable, FILTERS_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(FILTERS, PREDEFINED_FILTER, FILTERS_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY);
+        }
     }
 
 
@@ -914,7 +1007,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getMechanismProviderFilteringSaslServerForm();
         table.bind(form);
 
-        table.select(MECH_SASL_UPDATE);
+        table.select(MECH_SASL_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(SASL_SERVER_FACTORY),
                 SASL_SERVER_FACTORY);
     }
@@ -938,9 +1031,14 @@ public class FactoriesTransformersTest {
         table.action(MECH_SASL_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
 
-        crud.create(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), filtersTable,
-                f -> f.text(PROVIDER_NAME, FILTERS_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PROVIDER_NAME, FILTERS_CREATE));
+        try {
+            crud.create(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), filtersTable,
+                    f -> f.text(PROVIDER_NAME, FILTERS_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, PROVIDER_NAME, FILTERS_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY);
+        }
     }
 
     @Test
@@ -957,9 +1055,14 @@ public class FactoriesTransformersTest {
         filtersTable.bind(form);
         filtersTable.select(FILTERS_UPDATE);
 
-        crud.update(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), form,
-                f -> f.text(MECHANISM_NAME, ANY_STRING),
-                vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, MECHANISM_NAME, ANY_STRING));
+        try {
+            crud.update(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), form,
+                    f -> f.text(MECHANISM_NAME, ANY_STRING),
+                    vc -> vc.verifyListAttributeContainsSingleValue(FILTERS, MECHANISM_NAME, ANY_STRING));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY);
+        }
     }
 
     @Test
@@ -972,8 +1075,13 @@ public class FactoriesTransformersTest {
         table.action(MECH_SASL_UPDATE, Names.FILTERS);
         waitGui().until().element(filtersTable.getRoot()).is().visible();
 
-        crud.delete(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), filtersTable, FILTERS_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(FILTERS, PROVIDER_NAME, FILTERS_DELETE));
+        try {
+            crud.delete(mechanismProviderFilteringSaslServerFactoryAddress(MECH_SASL_UPDATE), filtersTable, FILTERS_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(FILTERS, PROVIDER_NAME, FILTERS_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY);
+        }
     }
 
 
@@ -1069,10 +1177,15 @@ public class FactoriesTransformersTest {
         table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
         waitGui().until().element(mechanismConf.getRoot()).is().visible();
 
-        crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
-                f -> f.text(MECHANISM_NAME, MECH_CONF_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_CREATE));
+        try {
+            crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
+                    f -> f.text(MECHANISM_NAME, MECH_CONF_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -1088,9 +1201,14 @@ public class FactoriesTransformersTest {
         mechanismConf.bind(form);
         mechanismConf.select(MECH_CONF_UPDATE);
 
-        crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
-                f -> f.text(PROTOCOL, ANY_STRING),
-                vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, PROTOCOL, ANY_STRING));
+        try {
+            crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
+                    f -> f.text(PROTOCOL, ANY_STRING),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MECHANISM_CONFIGURATIONS, PROTOCOL, ANY_STRING));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -1102,10 +1220,15 @@ public class FactoriesTransformersTest {
         table.action(SASL_AUTH_UPDATE, Names.MECHANISM_CONFIGURATIONS);
         waitGui().until().element(mechanismConf.getRoot()).is().visible();
 
-        crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
-                MECH_CONF_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_DELETE));
+        try {
+            crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismConf,
+                    MECH_CONF_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -1121,10 +1244,15 @@ public class FactoriesTransformersTest {
         mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
         waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
 
-        crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
-                f -> f.text(REALM_NAME, MECH_RE_CONF_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_CREATE));
+        try {
+            crud.create(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
+                    f -> f.text(REALM_NAME, MECH_RE_CONF_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -1144,10 +1272,15 @@ public class FactoriesTransformersTest {
         mechanismRealmConf.bind(form);
         mechanismRealmConf.select(MECH_RE_CONF_UPDATE);
 
-        crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
-                f -> f.text(REALM_NAME, MECH_RE_CONF_UPDATE2),
-                vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_UPDATE2));
+        try {
+            crud.update(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), form,
+                    f -> f.text(REALM_NAME, MECH_RE_CONF_UPDATE2),
+                    vc -> vc.verifyListAttributeContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_UPDATE2));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     @Test
@@ -1163,10 +1296,15 @@ public class FactoriesTransformersTest {
         mechanismConf.action(MECH_CONF_UPDATE, Names.MECHANISM_REALM_CONFIGURATIONS);
         waitGui().until().element(mechanismRealmConf.getRoot()).is().visible();
 
-        crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
-                MECH_RE_CONF_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
-                        MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
+        try {
+            crud.delete(saslAuthenticationFactoryAddress(SASL_AUTH_UPDATE), mechanismRealmConf,
+                    MECH_RE_CONF_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainsSingleValueOfList(MECHANISM_CONFIGURATIONS, MECHANISM_NAME,
+                            MECH_CONF_UPDATE, MECHANISM_REALM_CONFIGURATIONS, REALM_NAME, MECH_RE_CONF_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getBackToResourcePageViaBreadcrumb(ELYTRON_SASL_AUTHENTICATION_FACTORY);
+        }
     }
 
     // --------------- service-loader-http-server-factory
@@ -1243,7 +1381,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getKerberosSecurityForm();
         table.bind(form);
 
-        table.select(KERB_UPDATE);
+        table.select(KERB_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1310,7 +1448,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getAggregatePrincipalTransformerForm();
         table.bind(form);
 
-        table.select(AGG_PRI_TRANS_UPDATE);
+        table.select(AGG_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.list(PRINCIPAL_TRANSFORMERS).removeTags(),
                 PRINCIPAL_TRANSFORMERS);
     }
@@ -1481,7 +1619,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getRegexPrincipalTransformerForm();
         table.bind(form);
 
-        table.select(REG_PRI_TRANS_UPDATE);
+        table.select(REG_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATTERN), PATTERN);
     }
 
@@ -1531,7 +1669,7 @@ public class FactoriesTransformersTest {
         FormFragment form = page.getRegexValidatingPrincipalTransformerForm();
         table.bind(form);
 
-        table.select(REGV_PRI_TRANS_UPDATE);
+        table.select(REGV_PRI_TRANS_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATTERN), PATTERN);
     }
 
