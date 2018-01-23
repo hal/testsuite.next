@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Red Hat, Inc, and individual contributors.
+ * Copyright 2015-2018 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -68,7 +68,6 @@ public class JDBCRealmTest {
         bcrypt.get(PASSWORD_INDEX).set(523);
         bcrypt.get(SALT_INDEX).set(323);
         bcrypt.get(ITERATION_COUNT_INDEX).set(345);
-        // ssdm.get(ITERATION_COUNT_INDEX).set(345);
         Values jdbcParams = Values.ofList(PRINCIPAL_QUERY, createSqlNode(SQL_UPDATE), createSqlNode(SQL_DELETE),
                 createSqlNode(SQL_CPM_CRT),
                 createSqlNode(SQL_CPM_UPD, CLEAR_PASSWORD_MAPPER, cpm),
@@ -89,6 +88,14 @@ public class JDBCRealmTest {
         operations.add(jdbcRealmAddress(JDBC_RLM_DELETE), jdbcParams);
     }
 
+    @AfterClass
+    public static void tearDown() throws Exception {
+        operations.remove(jdbcRealmAddress(JDBC_RLM_DELETE));
+        operations.remove(jdbcRealmAddress(JDBC_RLM_UPDATE));
+        operations.remove(jdbcRealmAddress(JDBC_RLM_CREATE));
+        operations.remove(datasourceAddress(JDBC_PQ_DS));
+    }
+
     private static ModelNode createSqlNode(String name) {
         return createSqlNode(name, null, null);
     }
@@ -103,16 +110,6 @@ public class JDBCRealmTest {
         return model;
     }
 
-    @AfterClass
-    public static void tearDown() throws Exception {
-
-        operations.remove(jdbcRealmAddress(JDBC_RLM_DELETE));
-        operations.remove(jdbcRealmAddress(JDBC_RLM_UPDATE));
-        operations.remove(jdbcRealmAddress(JDBC_RLM_CREATE));
-
-        operations.remove(datasourceAddress(JDBC_PQ_DS));
-
-    }
 
     @Page private ElytronSecurityRealmsPage page;
     @Inject private Console console;
@@ -126,7 +123,7 @@ public class JDBCRealmTest {
     // --------------- jdbc-realm
 
     @Test
-    public void Create() throws Exception {
+    public void create() throws Exception {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
         TableFragment table = page.getJdbcRealmTable();
         crud.create(jdbcRealmAddress(JDBC_RLM_CREATE), table, f -> {
@@ -137,14 +134,14 @@ public class JDBCRealmTest {
     }
 
     @Test
-    public void TryCreate() throws Exception {
+    public void tryCreate() throws Exception {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
         TableFragment table = page.getJdbcRealmTable();
         crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, JDBC_RLM_CREATE), SQL);
     }
 
     @Test
-    public void Delete() throws Exception {
+    public void delete() throws Exception {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
         TableFragment table = page.getJdbcRealmTable();
         crud.delete(jdbcRealmAddress(JDBC_RLM_DELETE), table, JDBC_RLM_DELETE);
@@ -445,9 +442,7 @@ public class JDBCRealmTest {
         long passIdx = 81;
         ModelNode mapper = new ModelNode();
         mapper.get(PASSWORD_INDEX).set(passIdx);
-        crud.update(jdbcRealmAddress(JDBC_RLM_UPDATE), form, f -> {
-                    f.number(PASSWORD_INDEX, passIdx);
-                },
+        crud.update(jdbcRealmAddress(JDBC_RLM_UPDATE), form, f -> f.number(PASSWORD_INDEX, passIdx),
                 ver -> ver.verifyListAttributeContainsObjectValue(PRINCIPAL_QUERY, SQL, SQL_SDM_UPD,
                         SIMPLE_DIGEST_MAPPER, mapper));
     }

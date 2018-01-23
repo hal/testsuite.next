@@ -83,7 +83,7 @@ public class ElytronSecurityRealmsPage extends BasePage {
     @FindBy(id = ELYTRON_LDAP_REALM + "-" + OTP_CREDENTIAL_MAPPER + "-" + FORM) private FormFragment ldapRealmOTPCredentialMapperForm;
     @FindBy(id = ELYTRON_LDAP_REALM + "-" + X509_CREDENTIAL_MAPPER + "-" + FORM) private FormFragment ldapRealmX509CredentialMapperForm;
     @FindBy(id = ELYTRON_LDAP_REALM + "-" + ATTRIBUTE_MAPPING + "-" + TABLE + WRAPPER) private TableFragment ldapRealmIdentityAttributeMappingsTable;
-    @FindBy(id = ELYTRON_LDAP_REALM + "-" + ATTRIBUTE_MAPPING + "-" + "-" + FORM) private FormFragment ldapRealmIdentityAttributeMappingsForm;
+    @FindBy(id = ELYTRON_LDAP_REALM + "-" + ATTRIBUTE_MAPPING + "-" + FORM) private FormFragment ldapRealmIdentityAttributeMappingsForm;
 
     // Properties Realm
     @FindBy(id = ELYTRON_PROPERTIES_REALM + "-" + TABLE + WRAPPER) private TableFragment propertiesRealmTable;

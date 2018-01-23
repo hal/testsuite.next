@@ -1,5 +1,5 @@
 /*
- * Copyright 2015-2016 Red Hat, Inc, and individual contributors.
+ * Copyright 2015-2018 Red Hat, Inc, and individual contributors.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
-import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -64,42 +63,25 @@ public class SecurityRealmsTest {
         operations.add(identityRealmAddress(IDEN_RLM_UPDATE), Values.of(IDENTITY, ANY_STRING));
         operations.add(identityRealmAddress(IDEN_RLM_DELETE), Values.of(IDENTITY, ANY_STRING));
 
-        operations.add(datasourceAddress(JDBC_PQ_DS), Values.of(JNDI_NAME, Random.jndiName())
-                .and(DRIVER_NAME, "h2")
-                .and(USER_NAME, "sa")
-                .and(CONNECTION_URL, "jdbc:h2:mem:anytemp;DB_CLOSE_DELAY=-1"));
+        ModelNode credRef = new ModelNode();
+        credRef.get(CLEAR_TEXT).set(ANY_STRING);
+        Values ksParams = Values.of(TYPE, JKS).and(CREDENTIAL_REFERENCE, credRef);
+        operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams);
+        operations.add(keyStoreAddress(KEY_ST_CREATE), ksParams);
 
-        ModelNode cpm = new ModelNode();
-        cpm.get(PASSWORD_INDEX).set(123);
-        ModelNode bcrypt = new ModelNode();
-        bcrypt.get(PASSWORD_INDEX).set(123);
-        bcrypt.get(SALT_INDEX).set(234);
-        bcrypt.get(ITERATION_COUNT_INDEX).set(345);
-        ModelNode ssdm = new ModelNode();
-        ssdm.get(PASSWORD_INDEX).set(123);
-        ssdm.get(SALT_INDEX).set(234);
-        Values jdbcParams = Values.ofList(PRINCIPAL_QUERY, createSqlNode(SQL_UPDATE), createSqlNode(SQL_DELETE),
-                createSqlNode(SQL_CPM_UPD, CLEAR_PASSWORD_MAPPER, cpm), createSqlNode(SQL_CPM_DEL, CLEAR_PASSWORD_MAPPER, cpm),
-                createSqlNode(SQL_BCM_UPD, BCRYPT_MAPPER, bcrypt), createSqlNode(SQL_BCM_DEL, BCRYPT_MAPPER, bcrypt),
-                createSqlNode(SQL_SSDM_UPD, SALTED_SIMPLE_DIGEST_MAPPER, ssdm), createSqlNode(SQL_SSDM_DEL, SALTED_SIMPLE_DIGEST_MAPPER, ssdm),
-                createSqlNode(SQL_SDM_UPD, SIMPLE_DIGEST_MAPPER, cpm), createSqlNode(SQL_SDM_DEL, SIMPLE_DIGEST_MAPPER, cpm),
-                createSqlNode(SQL_SM_UPD, SCRAM_MAPPER, ssdm), createSqlNode(SQL_SM_DEL, SCRAM_MAPPER, ssdm));
-        operations.add(jdbcRealmAddress(JDBC_RLM_UPDATE), jdbcParams);
-        operations.add(jdbcRealmAddress(JDBC_RLM_DELETE), jdbcParams);
-    }
+        operations.add(keystoreRealmAddress(KS_RLM_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
+        operations.add(keystoreRealmAddress(KS_RLM_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE));
 
-    private static ModelNode createSqlNode(String name) {
-        return createSqlNode(name, null, null);
-    }
+        operations.add(dirContextAddress(DIR_UPDATE), Values.of(URL, ANY_STRING));
+        operations.add(dirContextAddress(DIR_CREATE), Values.of(URL, ANY_STRING));
 
-    private static ModelNode createSqlNode(String name, String coName, ModelNode node) {
-        ModelNode model = new ModelNode();
-        model.get(SQL).set(name);
-        model.get(DATA_SOURCE).set(JDBC_PQ_DS);
-        if (coName != null) {
-            model.get(coName).set(node);
-        }
-        return model;
+        ModelNode rdnMap = new ModelNode();
+        rdnMap.get(RDN_IDENTIFIER, ANY_STRING);
+        operations.add(ldapRealmAddress(LDAP_RLM_UPDATE),
+                Values.of(DIR_CONTEXT, DIR_UPDATE).and(IDENTITY_MAPPING, rdnMap));
+        operations.add(ldapRealmAddress(LDAP_RLM_DELETE),
+                Values.of(DIR_CONTEXT, DIR_UPDATE).and(IDENTITY_MAPPING, rdnMap));
+
     }
 
     @AfterClass
@@ -124,11 +106,20 @@ public class SecurityRealmsTest {
         operations.remove(filesystemRealmAddress(FILESYS_RLM_DELETE));
         operations.remove(filesystemRealmAddress(FILESYS_RLM_CREATE));
 
-        operations.remove(jdbcRealmAddress(JDBC_RLM_DELETE));
-        operations.remove(jdbcRealmAddress(JDBC_RLM_UPDATE));
-        operations.remove(jdbcRealmAddress(JDBC_RLM_CREATE));
 
-        operations.remove(datasourceAddress(JDBC_PQ_DS));
+        operations.remove(keystoreRealmAddress(KS_RLM_UPDATE));
+        operations.remove(keystoreRealmAddress(KS_RLM_DELETE));
+        operations.remove(keystoreRealmAddress(KS_RLM_CREATE));
+
+        operations.remove(keyStoreAddress(KEY_ST_UPDATE));
+        operations.remove(keyStoreAddress(KEY_ST_CREATE));
+
+        operations.remove(ldapRealmAddress(LDAP_RLM_DELETE));
+        operations.remove(ldapRealmAddress(LDAP_RLM_CREATE));
+        operations.remove(ldapRealmAddress(LDAP_RLM_UPDATE));
+
+        operations.remove(dirContextAddress(DIR_UPDATE));
+        operations.remove(dirContextAddress(DIR_CREATE));
 
     }
 
@@ -328,6 +319,53 @@ public class SecurityRealmsTest {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, IDENTITY_REALM_ITEM);
         TableFragment table = page.getIdentityRealmTable();
         crud.delete(identityRealmAddress(IDEN_RLM_DELETE), table, IDEN_RLM_DELETE);
+    }
+
+    // --------------- keystore-realm
+
+    @Test
+    public void keystoreRealmCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, KEYSTORE_REALM_ITEM);
+        TableFragment table = page.getKeyStoreRealmTable();
+
+        crud.create(keystoreRealmAddress(KS_RLM_CREATE), table, f -> {
+            f.text(NAME, KS_RLM_CREATE);
+            f.text(KEY_STORE, KEY_ST_UPDATE);
+        });
+    }
+
+    @Test
+    public void keystoreRealmTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, KEYSTORE_REALM_ITEM);
+        TableFragment table = page.getKeyStoreRealmTable();
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KS_RLM_CREATE), KEY_STORE);
+    }
+
+    @Test
+    public void keystoreRealmUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, KEYSTORE_REALM_ITEM);
+        TableFragment table = page.getKeyStoreRealmTable();
+        FormFragment form = page.getKeyStoreRealmForm();
+        table.bind(form);
+        table.select(KS_RLM_UPDATE);
+        crud.update(keystoreRealmAddress(KS_RLM_UPDATE), form, KEY_STORE, KEY_ST_CREATE);
+    }
+
+    @Test
+    public void keystoreRealmTryUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, KEYSTORE_REALM_ITEM);
+        TableFragment table = page.getKeyStoreRealmTable();
+        FormFragment form = page.getKeyStoreRealmForm();
+        table.bind(form);
+        table.select(KS_RLM_UPDATE);
+        crud.updateWithError(form, f -> f.clear(KEY_STORE), KEY_STORE);
+    }
+
+    @Test
+    public void keystoreRealmDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, KEYSTORE_REALM_ITEM);
+        TableFragment table = page.getKeyStoreRealmTable();
+        crud.delete(keystoreRealmAddress(KS_RLM_DELETE), table, KS_RLM_DELETE);
     }
 
 

@@ -118,6 +118,13 @@ public interface ElytronFixtures {
     String PASSWORD_INDEX = "password-index";
     String ITERATION_COUNT_INDEX = "iteration-count-index";
     String SALT_INDEX = "salt-index";
+    String ALGORITHM_FROM = "algorithm-from";
+    String HASH_FROM = "hash-from";
+    String SEED_FROM = "seed-from";
+    String SEQUENCE_FROM = "sequence-from";
+    String CERTIFICATE_FROM = "certificate-from";
+    String FILTER_NAME = "filter-name";
+    String IDENTITY_ATTRIBUTES_MAPPING_LB = "Identity Attribute Mapping";
 
     String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
@@ -881,6 +888,23 @@ public interface ElytronFixtures {
     String LDAP_RLM_CREATE = Ids.build("ldap-rlm", "create", Random.name());
     String LDAP_RLM_UPDATE = Ids.build("ldap-rlm", "update", Random.name());
     String LDAP_RLM_DELETE = Ids.build("ldap-rlm", "delete", Random.name());
+
+    String LDAP_RLM_USER_MAPPER_CRT = Ids.build("ldap-rlm-user-map", "create", Random.name());
+    String LDAP_RLM_USER_MAPPER_UPD = Ids.build("ldap-rlm-user-map", "update", Random.name());
+    String LDAP_RLM_USER_MAPPER_DEL = Ids.build("ldap-rlm-user-map", "delete", Random.name());
+    String LDAP_RLM_OTP_MAPPER_CRT = Ids.build("ldap-rlm-otp-map", "create", Random.name());
+    String LDAP_RLM_OTP_MAPPER_UPD = Ids.build("ldap-rlm-otp-map", "update", Random.name());
+    String LDAP_RLM_OTP_MAPPER_DEL = Ids.build("ldap-rlm-otp-map", "delete", Random.name());
+    String LDAP_RLM_X509_MAPPER_CRT = Ids.build("ldap-rlm-x509-map", "create", Random.name());
+    String LDAP_RLM_X509_MAPPER_UPD = Ids.build("ldap-rlm-x509-map", "update", Random.name());
+    String LDAP_RLM_X509_MAPPER_DEL = Ids.build("ldap-rlm-x509-map", "delete", Random.name());
+
+    String LDAP_RLM_AM_CRT = Ids.build("ldap-rlm-am", "create", Random.name());
+    String LDAP_RLM_AM_UPD = Ids.build("ldap-rlm-am", "update", Random.name());
+    String LDAP_RLM_AM_DEL = Ids.build("ldap-rlm-am", "delete", Random.name());
+
+    String LDAP_RLM_AM_FROM_UPD = Ids.build("ldap-rlm-am-from", "update", Random.name());
+    String LDAP_RLM_AM_FROM_DEL = Ids.build("ldap-rlm-am-from", "delete", Random.name());
 
     static Address ldapRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(LDAP_REALM, name);
