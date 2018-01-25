@@ -381,6 +381,4 @@ public class LdapRealmTest {
                 ver -> ver.verifyListAttributeDoesNotContainSingleValue(attr, FROM, LDAP_RLM_AM_FROM_DEL));
     }
 
-
-
 }

@@ -31,12 +31,10 @@ import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ElytronOtherSettingsPage;
-import org.jboss.hal.testsuite.util.Library;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
@@ -88,6 +86,12 @@ public class OtherSettingsTest {
         operations.add(dirContextAddress(DIR_UPDATE), Values.of(URL, ANY_STRING));
         operations.add(dirContextAddress(DIR_DELETE), Values.of(URL, ANY_STRING));
 
+        Values dirCtxParams = Values.of(URL, ANY_STRING)
+                .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
+        operations.add(dirContextAddress(DIR_CR_CRT), Values.of(URL, ANY_STRING));
+        operations.add(dirContextAddress(DIR_CR_UPD), dirCtxParams);
+        operations.add(dirContextAddress(DIR_CR_DEL), dirCtxParams);
+
         Values ldapKsValues = Values.of(DIR_CONTEXT, DIR_UPDATE).and(SEARCH_PATH, ANY_STRING);
         ModelNode props = new ModelNode();
         props.get(NAME).set("p1");
@@ -137,14 +141,22 @@ public class OtherSettingsTest {
 
         operations.add(trustManagertAddress(TRU_MAN_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
         operations.add(trustManagertAddress(TRU_MAN_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE));
-        operations.add(trustManagertAddress(TRU_MAN_UPDATE2), Values.of(KEY_STORE, KEY_ST_UPDATE)
-                .andObject(CERTIFICATE_REVOCATION_LIST,
-                        Values.of(PATH, "${jboss.server.config.dir}/logging.properties")));
+
+        Values trustParams = Values.of(KEY_STORE, KEY_ST_UPDATE).andObject(CERTIFICATE_REVOCATION_LIST,
+                        Values.of(PATH, "${jboss.server.config.dir}/logging.properties"));
+        operations.add(trustManagertAddress(TRU_MAN_CRL_CRT), Values.of(KEY_STORE, KEY_ST_UPDATE));
+        operations.add(trustManagertAddress(TRU_MAN_CRL_UPD), trustParams);
+        operations.add(trustManagertAddress(TRU_MAN_CRL_DEL), trustParams);
 
         operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE), Values.of(CONSTANT, ANY_STRING));
 
         operations.add(authenticationConfigurationAddress(AUT_CF_UPDATE));
         operations.add(authenticationConfigurationAddress(AUT_CF_DELETE));
+
+        Values autParams = Values.ofObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_CRT));
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_UPD), autParams);
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_DEL), autParams);
 
         operations.add(authenticationContextAddress(AUT_CT_DELETE));
         operations.add(authenticationContextAddress(AUT_CT_UPDATE));
@@ -197,6 +209,9 @@ public class OtherSettingsTest {
         operations.remove(dirContextAddress(DIR_UPDATE));
         operations.remove(dirContextAddress(DIR_DELETE));
         operations.remove(dirContextAddress(DIR_CREATE));
+        operations.remove(dirContextAddress(DIR_CR_CRT));
+        operations.remove(dirContextAddress(DIR_CR_UPD));
+        operations.remove(dirContextAddress(DIR_CR_DEL));
 
         // SSL
         operations.remove(aggregateProvidersAddress(AGG_PRV_DELETE));
@@ -223,9 +238,11 @@ public class OtherSettingsTest {
         operations.remove(securityDomainAddress(SEC_DOM_CREATE));
 
         operations.remove(trustManagertAddress(TRU_MAN_UPDATE));
-        operations.remove(trustManagertAddress(TRU_MAN_UPDATE2));
         operations.remove(trustManagertAddress(TRU_MAN_CREATE));
         operations.remove(trustManagertAddress(TRU_MAN_DELETE));
+        operations.remove(trustManagertAddress(TRU_MAN_CRL_CRT));
+        operations.remove(trustManagertAddress(TRU_MAN_CRL_UPD));
+        operations.remove(trustManagertAddress(TRU_MAN_CRL_DEL));
 
         // key-store is a dependency on key-manager and trust-manager, remove it after key-manager and trust-manager
         operations.remove(keyStoreAddress(KEY_ST_UPDATE));
@@ -249,6 +266,9 @@ public class OtherSettingsTest {
         operations.remove(authenticationConfigurationAddress(AUT_CF_CREATE));
         operations.remove(authenticationConfigurationAddress(AUT_CF_UPDATE));
         operations.remove(authenticationConfigurationAddress(AUT_CF_DELETE));
+        operations.remove(authenticationConfigurationAddress(AUT_CF_CR_CRT));
+        operations.remove(authenticationConfigurationAddress(AUT_CF_CR_UPD));
+        operations.remove(authenticationConfigurationAddress(AUT_CF_CR_DEL));
 
         operations.remove(fileAuditLogAddress(FILE_LOG_DELETE));
         operations.remove(fileAuditLogAddress(FILE_LOG_UPDATE));
@@ -312,26 +332,24 @@ public class OtherSettingsTest {
     @Test
     public void credentialStoreUpdate() throws Exception {
         console.verticalNavigation().selectSecondary(STORES_ITEM, CREDENTIAL_STORE_ITEM);
-        page.getCredentialStoreTab().select(Ids.build(ELYTRON_CREDENTIAL_STORE, ATTRIBUTES, TAB));
         TableFragment table = page.getCredentialStoreTable();
         FormFragment form = page.getCredentialStoreForm();
         table.bind(form);
         table.select(CRED_ST_UPDATE);
-
+        page.getCredentialStoreTab().select(Ids.build(ELYTRON_CREDENTIAL_STORE, ATTRIBUTES, TAB));
         crud.update(credentialStoreAddress(CRED_ST_UPDATE), form, PROVIDER_NAME, ANY_STRING);
     }
 
-    // TODO: investigate why the save operation doesnt work
-    @Ignore
+    @Test
     public void credentialStoreCredentialReferenceUpdate() throws Exception {
         console.verticalNavigation().selectSecondary(STORES_ITEM, CREDENTIAL_STORE_ITEM);
-        page.getCredentialStoreTab().select(Ids.build(ELYTRON_CREDENTIAL_STORE, CREDENTIAL_REFERENCE, TAB));
         TableFragment table = page.getCredentialStoreTable();
         FormFragment form = page.getCredentialStoreCredentialReferenceForm();
         table.bind(form);
         table.select(CRED_ST_UPDATE);
-
-        crud.update(credentialStoreAddress(CRED_ST_UPDATE), form, CLEAR_TEXT);
+        page.getCredentialStoreTab().select(Ids.build(ELYTRON_CREDENTIAL_STORE, CREDENTIAL_REFERENCE, TAB));
+        crud.update(credentialStoreAddress(CRED_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
@@ -416,8 +434,19 @@ public class OtherSettingsTest {
         FormFragment form = page.getKeyStoreForm();
         table.bind(form);
         table.select(KEY_ST_UPDATE);
-
         crud.update(keyStoreAddress(KEY_ST_UPDATE), form, PATH);
+    }
+
+    @Test
+    public void keyStoreCredentialReferenceUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
+        TableFragment table = page.getKeyStoreTable();
+        FormFragment form = page.getKeyStoreCredentialReferenceForm();
+        table.bind(form);
+        table.select(KEY_ST_UPDATE);
+        page.getKeyStoreTab().select(Ids.build(ELYTRON_KEY_STORE, CREDENTIAL_REFERENCE, TAB));
+        crud.update(keyStoreAddress(KEY_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
@@ -664,7 +693,18 @@ public class OtherSettingsTest {
 
         crud.delete(keyManagertAddress(KEY_MAN_DELETE), table, KEY_MAN_DELETE);
     }
-    // TODO: tests for key manager credential reference, cr doesnt save attributes, fix that in hal.next
+
+    @Test
+    public void keyManagerCredentialReferenceUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SSL_ITEM, KEY_MANAGER_ITEM);
+        TableFragment table = page.getKeyManagerTable();
+        FormFragment form = page.getKeyManagerCredentialReferenceForm();
+        table.bind(form);
+        table.select(KEY_MAN_UPDATE);
+        page.getKeyManagerTab().select(Ids.build(ELYTRON_KEY_MANAGER, CREDENTIAL_REFERENCE, TAB));
+        crud.update(keyManagertAddress(KEY_MAN_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+    }
 
     // --------------- provider-loader
 
@@ -870,28 +910,26 @@ public class OtherSettingsTest {
         TableFragment table = page.getTrustManagerTable();
         FormFragment form = page.getTrustManagerCertificateRevocationListForm();
         table.bind(form);
-        table.select(TRU_MAN_UPDATE);
+        table.select(TRU_MAN_CRL_CRT);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, CERTIFICATE_REVOCATION_LIST, TAB));
         form.emptyState().mainAction();
         console.verifySuccess();
         // the UI "add" operation adds a certificate-revocation-list with no inner attributes, as they are not required
-        ModelNodeResult actualResult = operations.readAttribute(trustManagertAddress(TRU_MAN_UPDATE),
+        ModelNodeResult actualResult = operations.readAttribute(trustManagertAddress(TRU_MAN_CRL_CRT),
                 CERTIFICATE_REVOCATION_LIST);
         Assert.assertTrue("attribute certificate-revocation-list should exist", actualResult.get(RESULT).isDefined());
     }
 
-    // TODO: fix certificarte-revocation-list save operation
-    @Ignore
+    @Test
     public void trustManagerCertificateRevocationListUpdate() throws Exception {
         console.verticalNavigation().selectSecondary(SSL_ITEM, TRUST_MANAGER_ITEM);
         TableFragment table = page.getTrustManagerTable();
         FormFragment form = page.getTrustManagerCertificateRevocationListForm();
         table.bind(form);
-        table.select(TRU_MAN_UPDATE);
+        table.select(TRU_MAN_CRL_UPD);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, CERTIFICATE_REVOCATION_LIST, TAB));
-        String path = "${jboss.server.config.dir}/logging.properties";
-        crud.update(trustManagertAddress(TRU_MAN_UPDATE), form, f -> f.text(PATH, path),
-                verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + "." + PATH, path));
+        crud.update(trustManagertAddress(TRU_MAN_CRL_UPD), form, f -> f.text(PATH, ANY_STRING),
+                verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + "." + PATH, ANY_STRING));
     }
 
     @Test
@@ -900,10 +938,9 @@ public class OtherSettingsTest {
         TableFragment table = page.getTrustManagerTable();
         FormFragment form = page.getTrustManagerCertificateRevocationListForm();
         table.bind(form);
-        Library.letsSleep(3000);
-        table.select(TRU_MAN_UPDATE2);
+        table.select(TRU_MAN_CRL_DEL);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, CERTIFICATE_REVOCATION_LIST, TAB));
-        crud.deleteSingleton(trustManagertAddress(TRU_MAN_UPDATE2), form,
+        crud.deleteSingleton(trustManagertAddress(TRU_MAN_CRL_DEL), form,
                 verify -> verify.verifyAttributeIsUndefined(CERTIFICATE_REVOCATION_LIST));
     }
 
@@ -941,7 +978,48 @@ public class OtherSettingsTest {
         crud.delete(authenticationConfigurationAddress(AUT_CF_DELETE), table, AUT_CF_DELETE);
     }
 
-    //TODO: fix authentication-configuration save operation for credential-reference and add tests for credential-reference
+    @Test
+    public void authenticationConfigurationCredentialReferenceAdd() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+        FormFragment form = page.getAuthConfigCredentialReferenceForm();
+        table.bind(form);
+        table.select(AUT_CF_CR_CRT);
+        page.getAuthenticationConfigurationTabs().select(Ids.build(ELYTRON_AUTHENTICATION_CONFIGURATION, CREDENTIAL_REFERENCE, TAB));
+        form.emptyState().mainAction();
+        console.verifySuccess();
+        // the UI "add" operation adds a credential-reference with no inner attributes, as they are not required
+        ModelNodeResult actualResult = operations.readAttribute(authenticationConfigurationAddress(AUT_CF_CR_CRT),
+                CREDENTIAL_REFERENCE);
+        Assert.assertTrue("attribute credential-reference should exist", actualResult.value().isDefined());
+    }
+
+    @Test
+    public void authenticationConfigurationCredentialReferenceUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+        FormFragment form = page.getAuthConfigCredentialReferenceForm();
+        table.bind(form);
+        table.select(AUT_CF_CR_UPD);
+        page.getAuthenticationConfigurationTabs()
+                .select(Ids.build(ELYTRON_AUTHENTICATION_CONFIGURATION, CREDENTIAL_REFERENCE, TAB));
+        crud.update(authenticationConfigurationAddress(AUT_CF_CR_UPD), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+    }
+
+    @Test
+    public void authenticationConfigurationCredentialReferenceDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(AUTHENTICATION_ITEM, AUTHENTICATION_CONFIGURATION_ITEM);
+        TableFragment table = page.getAuthenticationConfigurationTable();
+        FormFragment form = page.getAuthConfigCredentialReferenceForm();
+        table.bind(form);
+        table.select(AUT_CF_CR_DEL);
+        page.getAuthenticationConfigurationTabs()
+                .select(Ids.build(ELYTRON_AUTHENTICATION_CONFIGURATION, CREDENTIAL_REFERENCE, TAB));
+        crud.deleteSingleton(authenticationConfigurationAddress(AUT_CF_CR_DEL), form,
+                ver -> ver.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
+    }
+
 
     // --------------- authentication-context
 
@@ -1383,6 +1461,42 @@ public class OtherSettingsTest {
         crud.delete(dirContextAddress(DIR_DELETE), table, DIR_DELETE);
     }
 
-    // TODO: once the credential-reference save operation is fixed add tests for it
+    @Test
+    public void dirContextCredentialReferenceAdd() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+        FormFragment form = page.getDirContextCredentialReferenceForm();
+        table.bind(form);
+        table.select(DIR_CR_CRT);
+        page.getDirContextTabs().select(Ids.build(ELYTRON_DIR_CONTEXT, CREDENTIAL_REFERENCE, TAB));
+        form.emptyState().mainAction();
+        console.verifySuccess();
+        // the UI "add" operation adds a credential-reference with no inner attributes, as they are not required
+        ModelNodeResult actualResult = operations.readAttribute(dirContextAddress(DIR_CR_CRT), CREDENTIAL_REFERENCE);
+        Assert.assertTrue("attribute credential-reference should exist", actualResult.value().isDefined());
+    }
 
+    @Test
+    public void dirContextCredentialReferenceUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+        FormFragment form = page.getDirContextCredentialReferenceForm();
+        table.bind(form);
+        table.select(DIR_CR_UPD);
+        page.getDirContextTabs().select(Ids.build(ELYTRON_DIR_CONTEXT, CREDENTIAL_REFERENCE, TAB));
+        crud.update(dirContextAddress(DIR_CR_UPD), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+    }
+
+    @Test
+    public void dirContextCredentialReferenceDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
+        TableFragment table = page.getDirContextTable();
+        FormFragment form = page.getDirContextCredentialReferenceForm();
+        table.bind(form);
+        table.select(DIR_CR_DEL);
+        page.getDirContextTabs().select(Ids.build(ELYTRON_DIR_CONTEXT, CREDENTIAL_REFERENCE, TAB));
+        crud.deleteSingleton(dirContextAddress(DIR_CR_DEL), form,
+                ver -> ver.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
+    }
 }

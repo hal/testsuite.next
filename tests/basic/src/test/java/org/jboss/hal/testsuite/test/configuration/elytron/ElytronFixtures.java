@@ -125,15 +125,36 @@ public interface ElytronFixtures {
     String CERTIFICATE_FROM = "certificate-from";
     String FILTER_NAME = "filter-name";
     String IDENTITY_ATTRIBUTES_MAPPING_LB = "Identity Attribute Mapping";
+    String APP_USERS_PROPS = "application-users.properties";
+    String APP_ROLES_PROPS = "application-roles.properties";
+    String JBOSS_SRV_CONFIG_DIR = "jboss.server.config.dir";
+    String GROUPS_PROPERTIES = "groups-properties";
+    String DIGEST_REALM_NAME ="digest-realm-name";
+    String PRINCIPAL_CLAIM = "principal-claim";
+    String AUDIENCE = "audience";
+    String JWT = "jwt";
+    String OAUTH2_INTROSPECTION = "oauth2-introspection";
+    String CLIENT_ID = "client-id";
+    String CLIENT_SECRET = "client-secret";
+    String INTROSPECTION_URL = "introspection-url";
+    String PUBLIC_KEY = "public-key";
+    String REALM_MAP = "realm-map";
+    String REGEX_PATTERN = "[a-z]@([a-z])";
+    String DELEGATE_REALM_MAPPER = "delegate-realm-mapper";
 
-    String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY,
+            ITEM);
+    String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String HTTP_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_HTTP_AUTHENTICATION_FACTORY, ITEM);
-    String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY,
+            ITEM);
+    String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     String AGGREGATE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_SASL_SERVER_FACTORY, ITEM);
     String CONFIGURABLE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY, ITEM);
-    String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, ITEM);
+    String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM = Ids.build(
+            ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, ITEM);
     String PROVIDER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_SASL_SERVER_FACTORY, ITEM);
     String SASL_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_SASL_AUTHENTICATION_FACTORY, ITEM);
     String SERVICE_LOADER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY, ITEM);
@@ -143,7 +164,8 @@ public interface ElytronFixtures {
     String CONSTANT_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CONSTANT_PRINCIPAL_TRANSFORMER, ITEM);
     String CUSTOM_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CUSTOM_PRINCIPAL_TRANSFORMER, ITEM);
     String REGEX_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_PRINCIPAL_TRANSFORMER, ITEM);
-    String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, ITEM);
+    String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER,
+            ITEM);
 
     String STORES_ITEM = "stores-item";
     String CREDENTIAL_STORE_ITEM = "elytron-credential-store-item";
@@ -666,8 +688,11 @@ public interface ElytronFixtures {
 
     String TRU_MAN_CREATE = Ids.build("tru-man", "create", Random.name());
     String TRU_MAN_UPDATE = Ids.build("tru-man", "update", Random.name());
-    String TRU_MAN_UPDATE2 = Ids.build("tru-man-2", "update", Random.name());
     String TRU_MAN_DELETE = Ids.build("tru-man", "delete", Random.name());
+
+    String TRU_MAN_CRL_CRT = Ids.build("tru-man-crl", "create", Random.name());
+    String TRU_MAN_CRL_UPD = Ids.build("tru-man-crl", "update", Random.name());
+    String TRU_MAN_CRL_DEL = Ids.build("tru-man-crl", "delete", Random.name());
 
     static Address trustManagertAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(TRUST_MANAGER, name);
@@ -678,6 +703,10 @@ public interface ElytronFixtures {
     String AUT_CF_CREATE = Ids.build("auth-conf", "create", Random.name());
     String AUT_CF_UPDATE = Ids.build("auth-conf", "update", Random.name());
     String AUT_CF_DELETE = Ids.build("auth-conf", "delete", Random.name());
+
+    String AUT_CF_CR_CRT = Ids.build("auth-conf-cr", "create", Random.name());
+    String AUT_CF_CR_UPD = Ids.build("auth-conf-cr", "update", Random.name());
+    String AUT_CF_CR_DEL = Ids.build("auth-conf-cr", "delete", Random.name());
 
     static Address authenticationConfigurationAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONFIGURATION, name);
@@ -762,6 +791,10 @@ public interface ElytronFixtures {
     String DIR_CREATE = Ids.build("dir", "create", Random.name());
     String DIR_UPDATE = Ids.build("dir", "update", Random.name());
     String DIR_DELETE = Ids.build("dir", "delete", Random.name());
+
+    String DIR_CR_CRT = Ids.build("dir-cr", "create", Random.name());
+    String DIR_CR_UPD = Ids.build("dir-cr", "update", Random.name());
+    String DIR_CR_DEL = Ids.build("dir-cr", "delete", Random.name());
 
     static Address dirContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(DIR_CONTEXT, name);
@@ -916,6 +949,10 @@ public interface ElytronFixtures {
     String PROP_RLM_UPDATE = Ids.build("prop-rlm", "update", Random.name());
     String PROP_RLM_DELETE = Ids.build("prop-rlm", "delete", Random.name());
 
+    String PROP_RLM_GP_ADD = Ids.build("prop-rlm-gp", "add", Random.name());
+    String PROP_RLM_GP_UPD = Ids.build("prop-rlm-gp", "upd", Random.name());
+    String PROP_RLM_GP_DEL = Ids.build("prop-rlm-gp", "del", Random.name());
+
     static Address propertiesRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PROPERTIES_REALM, name);
     }
@@ -925,6 +962,14 @@ public interface ElytronFixtures {
     String TKN_RLM_CREATE = Ids.build("token-rlm", "create", Random.name());
     String TKN_RLM_UPDATE = Ids.build("token-rlm", "update", Random.name());
     String TKN_RLM_DELETE = Ids.build("token-rlm", "delete", Random.name());
+
+    String TKN_RLM_JWT_CRT = Ids.build("token-rlm-jwt", "create", Random.name());
+    String TKN_RLM_JWT_UPD = Ids.build("token-rlm-jwt", "update", Random.name());
+    String TKN_RLM_JWT_DEL = Ids.build("token-rlm-jwt", "delete", Random.name());
+
+    String TKN_RLM_OAU_CRT = Ids.build("token-rlm-oau", "create", Random.name());
+    String TKN_RLM_OAU_UPD = Ids.build("token-rlm-oau", "update", Random.name());
+    String TKN_RLM_OAU_DEL = Ids.build("token-rlm-oau", "delete", Random.name());
 
     static Address tokenRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(TOKEN_REALM, name);

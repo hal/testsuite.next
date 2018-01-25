@@ -19,22 +19,28 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ElytronSecurityRealmsPage;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -72,15 +78,40 @@ public class SecurityRealmsTest {
         operations.add(keystoreRealmAddress(KS_RLM_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
         operations.add(keystoreRealmAddress(KS_RLM_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE));
 
-        operations.add(dirContextAddress(DIR_UPDATE), Values.of(URL, ANY_STRING));
-        operations.add(dirContextAddress(DIR_CREATE), Values.of(URL, ANY_STRING));
+        Values propParams = Values.ofObject(USERS_PROPERTIES,
+                Values.of(PATH, APP_USERS_PROPS).and(RELATIVE_TO, JBOSS_SRV_CONFIG_DIR));
+        Values propGroupParams = Values.ofObject(USERS_PROPERTIES,
+                Values.of(PATH, APP_USERS_PROPS).and(RELATIVE_TO, JBOSS_SRV_CONFIG_DIR))
+                .andObject(GROUPS_PROPERTIES, Values.of(PATH, APP_ROLES_PROPS).and(RELATIVE_TO, JBOSS_SRV_CONFIG_DIR));
+        operations.add(propertiesRealmAddress(PROP_RLM_UPDATE), propParams);
+        operations.add(propertiesRealmAddress(PROP_RLM_DELETE), propParams);
+        operations.add(propertiesRealmAddress(PROP_RLM_GP_ADD), propParams);
+        operations.add(propertiesRealmAddress(PROP_RLM_GP_UPD), propGroupParams);
+        operations.add(propertiesRealmAddress(PROP_RLM_GP_DEL), propGroupParams);
 
-        ModelNode rdnMap = new ModelNode();
-        rdnMap.get(RDN_IDENTIFIER, ANY_STRING);
-        operations.add(ldapRealmAddress(LDAP_RLM_UPDATE),
-                Values.of(DIR_CONTEXT, DIR_UPDATE).and(IDENTITY_MAPPING, rdnMap));
-        operations.add(ldapRealmAddress(LDAP_RLM_DELETE),
-                Values.of(DIR_CONTEXT, DIR_UPDATE).and(IDENTITY_MAPPING, rdnMap));
+        Values jwtParams = Values.ofObject(JWT, Values.ofList(AUDIENCE, ANY_STRING));
+        String url = "http://" + ANY_STRING;
+        Values oauth2Params = Values.ofObject(OAUTH2_INTROSPECTION,
+                Values.of(CLIENT_ID, ANY_STRING).and(CLIENT_SECRET, ANY_STRING).and(INTROSPECTION_URL, url));
+        operations.add(tokenRealmAddress(TKN_RLM_UPDATE));
+        operations.add(tokenRealmAddress(TKN_RLM_DELETE));
+        operations.add(tokenRealmAddress(TKN_RLM_JWT_CRT));
+        operations.add(tokenRealmAddress(TKN_RLM_JWT_UPD), jwtParams);
+        operations.add(tokenRealmAddress(TKN_RLM_JWT_DEL), jwtParams);
+        operations.add(tokenRealmAddress(TKN_RLM_OAU_CRT));
+        operations.add(tokenRealmAddress(TKN_RLM_OAU_UPD), oauth2Params);
+        operations.add(tokenRealmAddress(TKN_RLM_OAU_DEL), oauth2Params);
+
+        operations.add(constantRealmMapperAddress(CON_RM_UPDATE), Values.of(REALM_NAME, ANY_STRING));
+        operations.add(constantRealmMapperAddress(CON_RM_DELETE), Values.of(REALM_NAME, ANY_STRING));
+
+        Values mappedParams = Values.of(PATTERN, REGEX_PATTERN).andObject(REALM_MAP, Values.of("a", "b"));
+        operations.add(mappedRegexRealmMapperAddress(MAPP_RM_UPDATE), mappedParams);
+        operations.add(mappedRegexRealmMapperAddress(MAPP_RM_DELETE), mappedParams);
+
+        Values simpleParams = Values.of(PATTERN, REGEX_PATTERN);
+        operations.add(simpleRegexRealmMapperAddress(SIMP_RM_UPDATE), simpleParams);
+        operations.add(simpleRegexRealmMapperAddress(SIMP_RM_DELETE), simpleParams);
 
     }
 
@@ -114,12 +145,34 @@ public class SecurityRealmsTest {
         operations.remove(keyStoreAddress(KEY_ST_UPDATE));
         operations.remove(keyStoreAddress(KEY_ST_CREATE));
 
-        operations.remove(ldapRealmAddress(LDAP_RLM_DELETE));
-        operations.remove(ldapRealmAddress(LDAP_RLM_CREATE));
-        operations.remove(ldapRealmAddress(LDAP_RLM_UPDATE));
+        operations.remove(propertiesRealmAddress(PROP_RLM_UPDATE));
+        operations.remove(propertiesRealmAddress(PROP_RLM_CREATE));
+        operations.remove(propertiesRealmAddress(PROP_RLM_DELETE));
+        operations.remove(propertiesRealmAddress(PROP_RLM_GP_ADD));
+        operations.remove(propertiesRealmAddress(PROP_RLM_GP_UPD));
+        operations.remove(propertiesRealmAddress(PROP_RLM_GP_DEL));
 
-        operations.remove(dirContextAddress(DIR_UPDATE));
-        operations.remove(dirContextAddress(DIR_CREATE));
+        operations.remove(tokenRealmAddress(TKN_RLM_CREATE));
+        operations.remove(tokenRealmAddress(TKN_RLM_UPDATE));
+        operations.remove(tokenRealmAddress(TKN_RLM_DELETE));
+        operations.remove(tokenRealmAddress(TKN_RLM_JWT_CRT));
+        operations.remove(tokenRealmAddress(TKN_RLM_JWT_UPD));
+        operations.remove(tokenRealmAddress(TKN_RLM_JWT_DEL));
+        operations.remove(tokenRealmAddress(TKN_RLM_OAU_CRT));
+        operations.remove(tokenRealmAddress(TKN_RLM_OAU_UPD));
+        operations.remove(tokenRealmAddress(TKN_RLM_OAU_DEL));
+
+        operations.remove(mappedRegexRealmMapperAddress(MAPP_RM_CREATE));
+        operations.remove(mappedRegexRealmMapperAddress(MAPP_RM_UPDATE));
+        operations.remove(mappedRegexRealmMapperAddress(MAPP_RM_DELETE));
+
+        operations.remove(simpleRegexRealmMapperAddress(SIMP_RM_CREATE));
+        operations.remove(simpleRegexRealmMapperAddress(SIMP_RM_UPDATE));
+        operations.remove(simpleRegexRealmMapperAddress(SIMP_RM_DELETE));
+
+        operations.remove(constantRealmMapperAddress(CON_RM_CREATE));
+        operations.remove(constantRealmMapperAddress(CON_RM_UPDATE));
+        operations.remove(constantRealmMapperAddress(CON_RM_DELETE));
 
     }
 
@@ -368,5 +421,300 @@ public class SecurityRealmsTest {
         crud.delete(keystoreRealmAddress(KS_RLM_DELETE), table, KS_RLM_DELETE);
     }
 
+    // --------------- properties-realm
+
+    @Test
+    public void propertiesRealmCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+
+        crud.create(propertiesRealmAddress(PROP_RLM_CREATE), table, f -> {
+            f.text(NAME, PROP_RLM_CREATE);
+            f.text(PATH, APP_USERS_PROPS);
+            f.text(RELATIVE_TO, JBOSS_SRV_CONFIG_DIR);
+        });
+    }
+
+    @Test
+    public void propertiesRealmTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, PROP_RLM_CREATE), PATH);
+    }
+
+    @Test
+    public void propertiesRealmUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        FormFragment form = page.getPropertiesRealmForm();
+        table.bind(form);
+        table.select(PROP_RLM_UPDATE);
+        page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, ATTRIBUTES, TAB));
+        crud.update(propertiesRealmAddress(PROP_RLM_UPDATE), form, GROUPS_ATTRIBUTE, ANY_STRING);
+    }
+
+    @Test
+    public void propertiesRealmDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        crud.delete(propertiesRealmAddress(PROP_RLM_DELETE), table, PROP_RLM_DELETE);
+    }
+
+    @Test
+    public void propertiesRealmGroupsPropertiesAdd() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        FormFragment form = page.getPropertiesRealmGroupsForm();
+        table.bind(form);
+        table.select(PROP_RLM_GP_ADD);
+        page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, GROUPS_PROPERTIES, TAB));
+        crud.createSingleton(propertiesRealmAddress(PROP_RLM_GP_ADD), form, f -> f.text(PATH, ANY_STRING),
+                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + "." + PATH, ANY_STRING));
+    }
+
+    @Test
+    public void propertiesRealmGroupsPropertiesUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        FormFragment form = page.getPropertiesRealmGroupsForm();
+        table.bind(form);
+        table.select(PROP_RLM_GP_UPD);
+        page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, GROUPS_PROPERTIES, TAB));
+        crud.update(propertiesRealmAddress(PROP_RLM_GP_UPD), form, f -> f.text(RELATIVE_TO, ANY_STRING),
+                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + "." + RELATIVE_TO, ANY_STRING));
+    }
+
+    @Test
+    public void propertiesRealmGroupsPropertiesRemove() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        FormFragment form = page.getPropertiesRealmGroupsForm();
+        table.bind(form);
+        table.select(PROP_RLM_GP_DEL);
+        page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, GROUPS_PROPERTIES, TAB));
+        crud.deleteSingleton(propertiesRealmAddress(PROP_RLM_GP_DEL), form,
+                ver -> ver.verifyAttributeIsUndefined(GROUPS_PROPERTIES));
+    }
+
+    @Test
+    public void propertiesRealmUsersPropertiesUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
+        TableFragment table = page.getPropertiesRealmTable();
+        FormFragment form = page.getPropertiesRealmUsersForm();
+        table.bind(form);
+        table.select(PROP_RLM_UPDATE);
+        page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, USERS_PROPERTIES, TAB));
+        crud.update(propertiesRealmAddress(PROP_RLM_UPDATE), form, f -> f.text(DIGEST_REALM_NAME, ANY_STRING),
+                ver -> ver.verifyAttribute(USERS_PROPERTIES + "." + DIGEST_REALM_NAME, ANY_STRING));
+    }
+
+    // --------------- token-realm
+
+    @Test
+    public void tokenRealmCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        crud.create(tokenRealmAddress(TKN_RLM_CREATE), table, f -> f.text(NAME, TKN_RLM_CREATE));
+    }
+
+    @Test
+    public void tokenRealmTryCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        // do not set the NAME attribute
+        crud.createWithErrorAndCancelDialog(table, f -> {}, NAME);
+    }
+
+    @Test
+    public void tokenRealmUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmForm();
+        table.bind(form);
+        table.select(TKN_RLM_UPDATE);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, ATTRIBUTES, TAB));
+        crud.update(tokenRealmAddress(TKN_RLM_UPDATE), form, PRINCIPAL_CLAIM, ANY_STRING);
+    }
+
+    @Test
+    public void tokenRealmDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        crud.delete(tokenRealmAddress(TKN_RLM_DELETE), table, TKN_RLM_DELETE);
+    }
+
+    @Test
+    public void tokenRealmJwtAdd() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmJWTForm();
+        table.bind(form);
+        table.select(TKN_RLM_JWT_CRT);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, JWT, TAB));
+        form.emptyState().mainAction();
+        console.verifySuccess();
+        // the UI "add" operation adds a jwt with no inner attributes, as they are not required
+        ModelNodeResult actualResult = operations.readAttribute(tokenRealmAddress(TKN_RLM_JWT_CRT), JWT);
+        Assert.assertTrue("attribute jwt should exist", actualResult.value().isDefined());
+
+    }
+
+    @Test
+    public void tokenRealmJwtUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmJWTForm();
+        table.bind(form);
+        table.select(TKN_RLM_JWT_UPD);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, JWT, TAB));
+        crud.update(tokenRealmAddress(TKN_RLM_JWT_UPD), form, f -> f.text(PUBLIC_KEY, ANY_STRING),
+                ver -> ver.verifyAttribute(JWT + "." + PUBLIC_KEY, ANY_STRING));
+    }
+
+    @Test
+    public void tokenRealmJwtRemove() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmJWTForm();
+        table.bind(form);
+        table.select(TKN_RLM_JWT_DEL);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, JWT, TAB));
+        crud.deleteSingleton(tokenRealmAddress(TKN_RLM_JWT_DEL), form,
+                ver -> ver.verifyAttributeIsUndefined(JWT));
+    }
+
+    @Test
+    public void tokenRealmOauth2Add() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmOAuth2Form();
+        table.bind(form);
+        table.select(TKN_RLM_OAU_CRT);
+        String url = "http://" + ANY_STRING;
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, OAUTH2_INTROSPECTION, TAB));
+        ModelNode oauth = new ModelNode();
+        oauth.get(CLIENT_ID).set(ANY_STRING);
+        oauth.get(CLIENT_SECRET).set(ANY_STRING);
+        oauth.get(INTROSPECTION_URL).set(url);
+        crud.createSingleton(tokenRealmAddress(TKN_RLM_OAU_CRT), form, f -> {
+                    f.text(CLIENT_ID, ANY_STRING);
+                    f.text(CLIENT_SECRET, ANY_STRING);
+                    f.text(INTROSPECTION_URL, url);
+                },
+                ver -> ver.verifyAttribute(OAUTH2_INTROSPECTION, oauth));
+    }
+
+    @Test
+    public void tokenRealmOauth2Update() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmOAuth2Form();
+        table.bind(form);
+        table.select(TKN_RLM_OAU_UPD);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, OAUTH2_INTROSPECTION, TAB));
+        String secret = Random.name();
+        crud.update(tokenRealmAddress(TKN_RLM_OAU_UPD), form, f -> f.text(CLIENT_SECRET, secret),
+                ver -> ver.verifyAttribute(OAUTH2_INTROSPECTION + "." + CLIENT_SECRET, secret));
+    }
+
+    @Test
+    public void tokenRealmOauth2Remove() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
+        TableFragment table = page.getTokenRealmTable();
+        FormFragment form = page.getTokenRealmOAuth2Form();
+        table.bind(form);
+        table.select(TKN_RLM_OAU_DEL);
+        page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, OAUTH2_INTROSPECTION, TAB));
+        crud.deleteSingleton(tokenRealmAddress(TKN_RLM_OAU_DEL), form,
+                ver -> ver.verifyAttributeIsUndefined(OAUTH2_INTROSPECTION));
+    }
+
+    // --------------- constant-realm-mapper
+
+    @Test
+    public void constantRealmMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, CONSTANT_REALM_MAPPER_ITEM);
+        TableFragment table = page.getConstantRealmMapperTable();
+        crud.create(constantRealmMapperAddress(CON_RM_CREATE), table, f -> {
+            f.text(NAME, CON_RM_CREATE);
+            f.text(REALM_NAME, ANY_STRING);
+        }, ResourceVerifier::verifyExists);
+    }
+
+    @Test
+    public void constantRealmMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, CONSTANT_REALM_MAPPER_ITEM);
+        TableFragment table = page.getConstantRealmMapperTable();
+        FormFragment form = page.getConstantRealmMapperForm();
+        table.bind(form);
+        table.select(CON_RM_UPDATE);
+        crud.update(constantRealmMapperAddress(CON_RM_UPDATE), form, REALM_NAME, Random.name());
+    }
+
+    @Test
+    public void constantRealmMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, CONSTANT_REALM_MAPPER_ITEM);
+        TableFragment table = page.getConstantRealmMapperTable();
+        crud.delete(constantRealmMapperAddress(CON_RM_DELETE), table, CON_RM_DELETE);
+    }
+
+    // --------------- mapped-regex-realm-mapper
+
+    @Test
+    public void mappedRegexRealmMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, MAPPED_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getMappedRegexRealmMapperTable();
+        crud.create(mappedRegexRealmMapperAddress(MAPP_RM_CREATE), table, f -> {
+            f.text(NAME, MAPP_RM_CREATE);
+            f.text(PATTERN, REGEX_PATTERN);
+            f.list(REALM_MAP).add("a", "b");
+        }, ResourceVerifier::verifyExists);
+    }
+
+    @Test
+    public void mappedRegexRealmMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, MAPPED_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getMappedRegexRealmMapperTable();
+        FormFragment form = page.getMappedRegexRealmMapperForm();
+        table.bind(form);
+        table.select(MAPP_RM_UPDATE);
+        crud.update(mappedRegexRealmMapperAddress(MAPP_RM_UPDATE), form, DELEGATE_REALM_MAPPER, CON_RM_UPDATE);
+    }
+
+    @Test
+    public void mappedRegexRealmMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, MAPPED_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getMappedRegexRealmMapperTable();
+        crud.delete(mappedRegexRealmMapperAddress(MAPP_RM_DELETE), table, MAPP_RM_DELETE);
+    }
+
+    // --------------- simple-regex-realm-mapper
+
+    @Test
+    public void simpleRegexRealmMapperCreate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, SIMPLE_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getSimpleRegexRealmMapperTable();
+        crud.create(simpleRegexRealmMapperAddress(SIMP_RM_CREATE), table, f -> {
+            f.text(NAME, SIMP_RM_CREATE);
+            f.text(PATTERN, REGEX_PATTERN);
+        }, ResourceVerifier::verifyExists);
+    }
+
+    @Test
+    public void simpleRegexRealmMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, SIMPLE_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getSimpleRegexRealmMapperTable();
+        FormFragment form = page.getSimpleRegexRealmMapperForm();
+        table.bind(form);
+        table.select(SIMP_RM_UPDATE);
+        crud.update(simpleRegexRealmMapperAddress(SIMP_RM_UPDATE), form, DELEGATE_REALM_MAPPER, CON_RM_UPDATE);
+    }
+
+    @Test
+    public void simpleRegexRealmMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(REALM_MAPPER_ITEM, SIMPLE_REGEX_REALM_MAPPER_ITEM);
+        TableFragment table = page.getSimpleRegexRealmMapperTable();
+        crud.delete(simpleRegexRealmMapperAddress(SIMP_RM_DELETE), table, SIMP_RM_DELETE);
+    }
 
 }

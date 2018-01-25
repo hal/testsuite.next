@@ -47,6 +47,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Key Store
     @FindBy(id = ELYTRON_KEY_STORE + "-" + TABLE + WRAPPER) private TableFragment keyStoreTable;
     @FindBy(id = ELYTRON_KEY_STORE + "-" + FORM) private FormFragment keyStoreForm;
+    @FindBy(id = ELYTRON_KEY_STORE + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment keyStoreCredentialReferenceForm;
     @FindBy(id = ELYTRON_KEY_STORE + "-" + TAB_CONTAINER) private TabsFragment keyStoreTab;
 
     // LDAP Key Store
@@ -93,7 +94,9 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     // Authentication Configuration
     @FindBy(id = ELYTRON_AUTHENTICATION_CONFIGURATION + "-" + TABLE + WRAPPER) private TableFragment authenticationConfigurationTable;
+    @FindBy(id = ELYTRON_AUTHENTICATION_CONFIGURATION + "-" + TAB_CONTAINER) private TabsFragment authenticationConfigurationTabs;
     @FindBy(id = ELYTRON_AUTHENTICATION_CONFIGURATION + "-" + FORM) private FormFragment authenticationConfigurationForm;
+    @FindBy(id = ELYTRON_AUTHENTICATION_CONFIGURATION + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment authConfigCredentialReferenceForm;
 
     // Authentication Context
     @FindBy(id = ELYTRON_AUTHENTICATION_CONTEXT + "-" + TABLE + WRAPPER) private TableFragment authenticationContextTable;
@@ -132,6 +135,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + TABLE + WRAPPER) private TableFragment dirContextTable;
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + FORM) private FormFragment dirContextForm;
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment dirContextCredentialReferenceForm;
+    @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + TAB_CONTAINER) private TabsFragment dirContextTabs;
 
     public TableFragment getCredentialStoreTable() {
         return credentialStoreTable;
@@ -155,6 +159,10 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getFilteringKeyStoreForm() {
         return filteringKeyStoreForm;
+    }
+
+    public FormFragment getKeyStoreCredentialReferenceForm() {
+        return keyStoreCredentialReferenceForm;
     }
 
     public TableFragment getKeyStoreTable() {
@@ -273,6 +281,14 @@ public class ElytronOtherSettingsPage extends BasePage {
         return authenticationConfigurationForm;
     }
 
+    public TabsFragment getAuthenticationConfigurationTabs() {
+        return authenticationConfigurationTabs;
+    }
+
+    public FormFragment getAuthConfigCredentialReferenceForm() {
+        return authConfigCredentialReferenceForm;
+    }
+
     public TableFragment getAuthenticationContextTable() {
         return authenticationContextTable;
     }
@@ -351,5 +367,9 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getDirContextCredentialReferenceForm() {
         return dirContextCredentialReferenceForm;
+    }
+
+    public TabsFragment getDirContextTabs() {
+        return dirContextTabs;
     }
 }
