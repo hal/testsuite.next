@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.testsuite.Console;
@@ -38,6 +39,7 @@ public class TableFragment {
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
     @Inject private Console console;
     private List<FormFragment> forms;
+    private PagerFragment pager;
 
     public TableFragment() {
         this.forms = new ArrayList<>();
@@ -86,6 +88,7 @@ public class TableFragment {
      */
     public void select(String value) {
         By selector = ByJQuery.selector("td" + contains(value));
+        goToPageWithElement(selector);
         root.findElement(selector).click();
         if (!forms.isEmpty()) {
             for (FormFragment form : forms) {
@@ -99,6 +102,7 @@ public class TableFragment {
     /** Clicks on the &lt;action&gt; column in the row which contains "&lt;value&gt;". */
     public void action(String value, String action) {
         By selector = ByJQuery.selector("td" + contains(value) + " ~ td > a." + columnAction + contains(action));
+        goToPageWithElement(selector);
         root.findElement(selector).click();
     }
 
@@ -120,5 +124,21 @@ public class TableFragment {
 
     public WebElement getRoot() {
         return root;
+    }
+
+    public PagerFragment getPager() {
+        if (pager == null) {
+            WebElement pagerElement = root.findElement(By.className("dataTables_footer"));
+            pager = Graphene.createPageFragment(PagerFragment.class, pagerElement);
+        }
+        return pager;
+    }
+
+    private void goToPageWithElement(By selector) {
+        PagerFragment pager = getPager();
+        pager.goToFirstPage();
+        while (root.findElements(selector).isEmpty() && !pager.isLastPage()) {
+            pager.goToNextPage();
+        }
     }
 }
