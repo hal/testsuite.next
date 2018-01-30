@@ -826,8 +826,13 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_RLM_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        try {
+            crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_RLM_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -839,7 +844,12 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.createWithErrorAndCancelDialog(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+        try {
+            crud.createWithErrorAndCancelDialog(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -854,9 +864,14 @@ public class OtherSettingsTest {
         table.bind(form);
         table.select(FILESYS_RLM_UPDATE);
 
-        crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
-                f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE));
+        try {
+            crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
+                    f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(REALMS, PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -868,8 +883,13 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE3, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_RLM_CREATE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        try {
+            crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_RLM_CREATE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     // --------------- trust-manager
@@ -1057,9 +1077,14 @@ public class OtherSettingsTest {
         autTable.action(AUT_CT_UPDATE, MATCH_RULES_TITLE);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.create(authenticationContextAddress(AUT_CT_UPDATE), table,
-                f -> f.text(MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE));
+        try {
+            crud.create(authenticationContextAddress(AUT_CT_UPDATE), table,
+                    f -> f.text(MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -1074,8 +1099,13 @@ public class OtherSettingsTest {
         waitGui().until().element(table.getRoot()).is().visible();
 
         table.select(AUT_CT_MR_UPDATE);
-        crud.update(authenticationContextAddress(AUT_CT_UPDATE2), form, f -> f.text(MATCH_HOST, ANY_STRING),
-                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_HOST, ANY_STRING));
+        try {
+            crud.update(authenticationContextAddress(AUT_CT_UPDATE2), form, f -> f.text(MATCH_HOST, ANY_STRING),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_HOST, ANY_STRING));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -1087,9 +1117,14 @@ public class OtherSettingsTest {
         autTable.action(AUT_CT_UPDATE2, MATCH_RULES_TITLE);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.delete(authenticationContextAddress(AUT_CT_UPDATE2), table, AUT_CT_MR_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE,
-                        AUT_CT_MR_DELETE));
+        try {
+            crud.delete(authenticationContextAddress(AUT_CT_UPDATE2), table, AUT_CT_MR_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE,
+                            AUT_CT_MR_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     // --------------- file-audit-log

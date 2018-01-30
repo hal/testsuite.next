@@ -19,6 +19,7 @@ package org.jboss.hal.testsuite.page.configuration;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.PagesFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
@@ -81,6 +82,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Security Domain
     @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + TABLE + WRAPPER) private TableFragment securityDomainTable;
     @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + FORM) private FormFragment securityDomainForm;
+    @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + PAGES) private PagesFragment securityDomainPages;
 
     // Security Domain / Realms
     @FindBy(id = ELYTRON_SECURITY_DOMAIN + "-" + REALMS + "-" + TABLE + WRAPPER) private TableFragment securityDomainRealmsTable;
@@ -101,6 +103,7 @@ public class ElytronOtherSettingsPage extends BasePage {
     // Authentication Context
     @FindBy(id = ELYTRON_AUTHENTICATION_CONTEXT + "-" + TABLE + WRAPPER) private TableFragment authenticationContextTable;
     @FindBy(id = ELYTRON_AUTHENTICATION_CONTEXT + "-" + FORM) private FormFragment authenticationContextForm;
+    @FindBy(id = ELYTRON_AUTHENTICATION_CONTEXT + "-" + PAGES) private PagesFragment authenticationContextPages;
 
     // Authentication Context / Match Rules
     @FindBy(id = ELYTRON_AUTHENTICATION_CONTEXT + "-match-rules-" + TABLE + WRAPPER) private TableFragment authenticationContextMatchRulesTable;
@@ -249,6 +252,10 @@ public class ElytronOtherSettingsPage extends BasePage {
         return securityDomainForm;
     }
 
+    public PagesFragment getSecurityDomainPages() {
+        return securityDomainPages;
+    }
+
     public TableFragment getSecurityDomainRealmsTable() {
         return securityDomainRealmsTable;
     }
@@ -295,6 +302,10 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getAuthenticationContextForm() {
         return authenticationContextForm;
+    }
+
+    public PagesFragment getAuthenticationContextPages() {
+        return authenticationContextPages;
     }
 
     public TableFragment getAuthenticationContextMatchRulesTable() {
