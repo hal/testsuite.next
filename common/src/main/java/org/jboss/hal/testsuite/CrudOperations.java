@@ -53,6 +53,7 @@ public class CrudOperations {
     /** Adds a resource using the 'Add' button of the specified table. */
     public void create(Address address, TableFragment table, Consumer<FormFragment> initialValues,
             VerifyChanges verifyChanges) throws Exception {
+        console.waitNoNotification();
         AddResourceDialogFragment dialog = table.add();
         initialValues.accept(dialog.getForm()); // use the form of add resource dialog!
         dialog.add();
@@ -113,6 +114,7 @@ public class CrudOperations {
 
     private void createWithErrorAndCloseDialogIfRequested(TableFragment table,
             Consumer<FormFragment> initialValues, String expectError, boolean closeDialog) {
+        console.waitNoNotification();
         AddResourceDialogFragment dialog = table.add();
         FormFragment form = dialog.getForm();
         initialValues.accept(form);
@@ -230,6 +232,7 @@ public class CrudOperations {
     /** Removes the named resource from the table and verifies that it no longer exists. */
     public void delete(Address address, TableFragment table, String name, VerifyChanges verifyChanges)
             throws Exception {
+        console.waitNoNotification();
         table.remove(name);
         console.verifySuccess();
         verifyChanges.verify(new ResourceVerifier(address, client));
