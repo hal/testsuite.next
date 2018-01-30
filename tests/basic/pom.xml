@@ -28,4 +28,13 @@
     <artifactId>hal-testsuite-tests-basic</artifactId>
     <name>HAL Testsuite :: Tests :: Basic</name>
     <description>Basic tests</description>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
