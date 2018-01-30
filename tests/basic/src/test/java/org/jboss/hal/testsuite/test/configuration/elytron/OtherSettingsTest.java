@@ -323,7 +323,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, CREDENTIAL_STORE_ITEM);
         TableFragment table = page.getCredentialStoreTable();
 
-        crud.createWithError(table, f -> {
+        crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, CRED_ST_CREATE);
             f.flip(CREATE, true);
         }, CLEAR_TEXT);
@@ -379,7 +379,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, FILTERING_KEY_STORE_ITEM);
         TableFragment table = page.getFilteringKeyStoreTable();
 
-        crud.createWithError(table, f -> {
+        crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, FILT_ST_CREATE);
             f.text(ALIAS_FILTER, ANY_STRING);
         }, KEY_STORE);
@@ -423,7 +423,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
-        crud.createWithError(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
     }
 
     @Test
@@ -476,7 +476,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
 
-        crud.createWithError(table, f -> f.text(NAME, LDAPKEY_ST_CREATE), DIR_CONTEXT);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, LDAPKEY_ST_CREATE), DIR_CONTEXT);
     }
 
     @Test
@@ -589,7 +589,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, AGGREGATE_PROVIDERS_ITEM);
         TableFragment table = page.getAggregateProvidersTable();
 
-        crud.createWithError(table, AGG_PRV_CREATE, PROVIDERS);
+        crud.createWithErrorAndCancelDialog(table, AGG_PRV_CREATE, PROVIDERS);
     }
 
     @Test
@@ -659,7 +659,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, KEY_MANAGER_ITEM);
         TableFragment table = page.getKeyManagerTable();
 
-        crud.createWithError(table, KEY_MAN_CREATE, KEY_STORE);
+        crud.createWithErrorAndCancelDialog(table, KEY_MAN_CREATE, KEY_STORE);
     }
 
     @Test
@@ -752,7 +752,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, SERVER_SSL_CONTEXT_ITEM);
         TableFragment table = page.getServerSslContextTable();
 
-        crud.createWithError(table, SRV_SSL_CREATE, KEY_MANAGER);
+        crud.createWithErrorAndCancelDialog(table, SRV_SSL_CREATE, KEY_MANAGER);
     }
 
     @Test
@@ -839,7 +839,7 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.createWithError(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text("role-decoder", ANY_STRING), REALM);
     }
 
     @Test
@@ -889,7 +889,7 @@ public class OtherSettingsTest {
     public void trustManagerTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, TRUST_MANAGER_ITEM);
         TableFragment table = page.getTrustManagerTable();
-        crud.createWithError(table, TRU_MAN_CREATE, KEY_STORE);
+        crud.createWithErrorAndCancelDialog(table, TRU_MAN_CREATE, KEY_STORE);
     }
 
     @Test
@@ -1109,7 +1109,7 @@ public class OtherSettingsTest {
     public void fileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1157,7 +1157,7 @@ public class OtherSettingsTest {
     public void periodicRotatingFileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1205,7 +1205,7 @@ public class OtherSettingsTest {
     public void sizeRotatingLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getSizeRotatingFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1254,7 +1254,7 @@ public class OtherSettingsTest {
     public void syslogAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
         TableFragment table = page.getSyslogAuditLogTable();
-        crud.createWithError(table, NAME, HOSTNAME);
+        crud.createWithErrorAndCancelDialog(table, NAME, HOSTNAME);
     }
 
     @Test
@@ -1301,7 +1301,7 @@ public class OtherSettingsTest {
     public void aggregateSecurityEventListenerTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
         TableFragment table = page.getAggregateSecurityEventListenerTable();
-        crud.createWithError(table, NAME, SECURITY_EVENT_LISTENERS);
+        crud.createWithErrorAndCancelDialog(table, NAME, SECURITY_EVENT_LISTENERS);
     }
 
     @Test
