@@ -33,6 +33,7 @@ public abstract class BasePage {
     /** Navigates to the name token specified in the {@code @Place} annotation. */
     public void navigate() {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
+        browser.navigate().refresh();
         console.navigate(placeRequest);
     }
 
@@ -43,6 +44,7 @@ public abstract class BasePage {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
                 .with(name, value)
                 .build();
+        browser.navigate().refresh();
         console.navigate(placeRequest);
     }
 
