@@ -57,6 +57,14 @@ public class FormFragment {
         return createPageFragment(EmptyState.class, root.findElement(By.id(emptyId)));
     }
 
+    /**
+    * Waits until the blank section is visible. If this form is part of a tab pane, make sure to {@linkplain
+    * TabsFragment#select(String) select} the tab first!
+    */
+   public void viewBlank() {
+       waitGui().until().element(blankSlate).is().visible();
+   }
+
     // ------------------------------------------------------ read-only mode
 
     /**

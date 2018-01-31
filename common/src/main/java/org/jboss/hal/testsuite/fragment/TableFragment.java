@@ -39,10 +39,12 @@ public class TableFragment {
     @FindBy(css = "." + halTableButtons) private WebElement buttons;
     @Inject private Console console;
     private List<FormFragment> forms;
+    private List<FormFragment> blankForms;
     private PagerFragment pager;
 
     public TableFragment() {
         this.forms = new ArrayList<>();
+        this.blankForms = new ArrayList<>();
     }
 
     /** Clicks on the add button and returns an {@link AddResourceDialogFragment}. */
@@ -83,8 +85,9 @@ public class TableFragment {
     }
 
     /**
-     * Selects the first {@code td} which contains the specified value, then clicks on it. If forms were bound to this
-     * table, {@link FormFragment#view()} is called.
+     * Selects the first {@code td} which contains the specified value, then clicks on it. <br />
+     * If forms were bound to this table, {@link FormFragment#view()} is called for each one. <br />
+     * If blank forms were bound to this table, {@link FormFragment#viewBlank()} is called for each one. <br />
      */
     public void select(String value) {
         By selector = ByJQuery.selector("td" + contains(value));
@@ -94,6 +97,13 @@ public class TableFragment {
             for (FormFragment form : forms) {
                 if (form.getRoot().isDisplayed()) {
                     form.view();
+                }
+            }
+        }
+        if (!blankForms.isEmpty()) {
+            for (FormFragment form : blankForms) {
+                if (form.getRoot().isDisplayed()) {
+                    form.viewBlank();
                 }
             }
         }
@@ -120,6 +130,14 @@ public class TableFragment {
      */
     public void bind(FormFragment form) {
         this.forms.add(form);
+    }
+
+    /**
+     * Binds the blank form to the table. Calling {@link TableFragment#select(String)} will trigger {@link
+     * FormFragment#viewBlank()}.
+     */
+    public void bindBlank(FormFragment form) {
+        this.blankForms.add(form);
     }
 
     public WebElement getRoot() {

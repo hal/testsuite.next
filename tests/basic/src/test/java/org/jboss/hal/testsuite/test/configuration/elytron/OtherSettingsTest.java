@@ -504,7 +504,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
-        table.bind(form);
+        table.bindBlank(form);
         table.select(LDAPKEY_ST_UPDATE);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
         EmptyState emptyState = form.emptyState();
@@ -522,7 +522,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
-        table.bind(form);
+        table.bindBlank(form);
         table.select(LDAPKEY_ST_UPDATE);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
 
