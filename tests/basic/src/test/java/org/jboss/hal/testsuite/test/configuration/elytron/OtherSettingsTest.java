@@ -75,6 +75,7 @@ public class OtherSettingsTest {
 
         Values ksParams = Values.of(TYPE, JKS).and(CREDENTIAL_REFERENCE, credRef);
         operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams);
+        operations.add(keyStoreAddress(KEY_ST_CR_UPDATE), ksParams);
         operations.add(keyStoreAddress(KEY_ST_DELETE), ksParams);
         operations.writeAttribute(keyStoreAddress(KEY_ST_UPDATE), PROVIDERS, PROV_LOAD_UPDATE);
 
@@ -105,6 +106,8 @@ public class OtherSettingsTest {
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_DELETE), ldapKsValues);
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), ldapKsValues);
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), ldapKsValues);
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), ldapKsValues);
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD), ldapKsValues);
         operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), NEW_ITEM_TEMPLATE, newItemTemplate);
         operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), NEW_ITEM_TEMPLATE, newItemTemplate);
 
@@ -119,6 +122,7 @@ public class OtherSettingsTest {
         Values keyManagerValues = Values.of(KEY_STORE, KEY_ST_UPDATE)
                 .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
         operations.add(keyManagertAddress(KEY_MAN_UPDATE), keyManagerValues);
+        operations.add(keyManagertAddress(KEY_MAN_TRY_UPDATE), keyManagerValues);
         operations.add(keyManagertAddress(KEY_MAN_DELETE), keyManagerValues);
 
         Values serverSslContextValues = Values.of(KEY_MANAGER, KEY_MAN_UPDATE);
@@ -169,16 +173,19 @@ public class OtherSettingsTest {
 
         operations.add(fileAuditLogAddress(FILE_LOG_DELETE), Values.of(PATH, ANY_STRING));
         operations.add(fileAuditLogAddress(FILE_LOG_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(fileAuditLogAddress(FILE_LOG_TRY_UPDATE), Values.of(PATH, ANY_STRING));
 
         Values params = Values.of(PATH, ANY_STRING).and(SUFFIX, SUFFIX_LOG);
         operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), params);
         operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), params);
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE), params);
 
         operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), Values.of(PATH, ANY_STRING));
         operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), Values.of(PATH, ANY_STRING));
 
         Values syslogParams = Values.of(HOSTNAME, ANY_STRING).and(PORT, Random.number()).and(SERVER_ADDRESS, LOCALHOST);
         operations.add(syslogAuditLogAddress(SYS_LOG_UPDATE), syslogParams);
+        operations.add(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE), syslogParams);
         operations.add(syslogAuditLogAddress(SYS_LOG_DELETE), syslogParams);
 
         Values secEventParams = Values.ofList(SECURITY_EVENT_LISTENERS, SYS_LOG_UPDATE, SIZ_LOG_UPDATE);
@@ -204,6 +211,8 @@ public class OtherSettingsTest {
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE));
+        operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD));
+        operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_CREATE));
 
         operations.remove(dirContextAddress(DIR_UPDATE));
@@ -229,6 +238,7 @@ public class OtherSettingsTest {
 
         operations.remove(keyManagertAddress(KEY_MAN_CREATE));
         operations.remove(keyManagertAddress(KEY_MAN_UPDATE));
+        operations.remove(keyManagertAddress(KEY_MAN_TRY_UPDATE));
         operations.remove(keyManagertAddress(KEY_MAN_DELETE));
 
         operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
@@ -246,6 +256,7 @@ public class OtherSettingsTest {
 
         // key-store is a dependency on key-manager and trust-manager, remove it after key-manager and trust-manager
         operations.remove(keyStoreAddress(KEY_ST_UPDATE));
+        operations.remove(keyStoreAddress(KEY_ST_CR_UPDATE));
 
         operations.remove(providerLoaderAddress(PROV_LOAD_UPDATE));
         operations.remove(providerLoaderAddress(PROV_LOAD_UPDATE2));
@@ -272,6 +283,7 @@ public class OtherSettingsTest {
 
         operations.remove(fileAuditLogAddress(FILE_LOG_DELETE));
         operations.remove(fileAuditLogAddress(FILE_LOG_UPDATE));
+        operations.remove(fileAuditLogAddress(FILE_LOG_TRY_UPDATE));
         operations.remove(fileAuditLogAddress(FILE_LOG_CREATE));
 
         // remove the aggregate-security-event-listener first, as they require size audit log and syslog
@@ -280,6 +292,7 @@ public class OtherSettingsTest {
         operations.remove(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE));
 
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE));
+        operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE));
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE));
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_CREATE));
 
@@ -290,6 +303,7 @@ public class OtherSettingsTest {
         operations.remove(syslogAuditLogAddress(SYS_LOG_DELETE));
         operations.remove(syslogAuditLogAddress(SYS_LOG_CREATE));
         operations.remove(syslogAuditLogAddress(SYS_LOG_UPDATE));
+        operations.remove(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE));
 
         operations.remove(policyAddress(POL_CREATE));
 
@@ -443,7 +457,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getKeyStoreTable();
         FormFragment form = page.getKeyStoreCredentialReferenceForm();
         table.bind(form);
-        table.select(KEY_ST_UPDATE);
+        table.select(KEY_ST_CR_UPDATE);
         page.getKeyStoreTab().select(Ids.build(ELYTRON_KEY_STORE, CREDENTIAL_REFERENCE, TAB));
         crud.update(keyStoreAddress(KEY_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
                 ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
@@ -505,7 +519,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
         table.bindBlank(form);
-        table.select(LDAPKEY_ST_UPDATE);
+        table.select(LDAPKEY_ST_TEMP4_TRY_ADD);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
         EmptyState emptyState = form.emptyState();
         emptyState.mainAction();
@@ -523,7 +537,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
         table.bindBlank(form);
-        table.select(LDAPKEY_ST_UPDATE);
+        table.select(LDAPKEY_ST_TEMP3_ADD);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
 
         String rndName = "p1";
@@ -536,7 +550,7 @@ public class OtherSettingsTest {
         newItemTemplate.get(NEW_ITEM_RDN).set(ANY_STRING);
         newItemTemplate.get(NEW_ITEM_ATTRIBUTES).add(props);
 
-        crud.createSingleton(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE), form, f -> {
+        crud.createSingleton(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), form, f -> {
             f.text(NEW_ITEM_PATH, ANY_STRING);
             f.text(NEW_ITEM_RDN, ANY_STRING);
             f.list(NEW_ITEM_ATTRIBUTES).add(rndName, rndValue);
@@ -680,7 +694,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getKeyManagerTable();
         FormFragment form = page.getKeyManagerForm();
         table.bind(form);
-        table.select(KEY_MAN_UPDATE);
+        table.select(KEY_MAN_TRY_UPDATE);
         page.getKeyManagerTab().select(Ids.build(ELYTRON_KEY_MANAGER, ATTRIBUTES, TAB));
 
         crud.updateWithError(form, f -> f.clear(KEY_STORE), KEY_STORE);
@@ -1163,7 +1177,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getFileAuditLogTable();
         FormFragment form = page.getFileAuditLogForm();
         table.bind(form);
-        table.select(FILE_LOG_UPDATE);
+        table.select(FILE_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1211,7 +1225,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
         FormFragment form = page.getPeriodicRotatingFileAuditLogForm();
         table.bind(form);
-        table.select(PER_LOG_UPDATE);
+        table.select(PER_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1308,7 +1322,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getSyslogAuditLogTable();
         FormFragment form = page.getSyslogAuditLogForm();
         table.bind(form);
-        table.select(SYS_LOG_UPDATE);
+        table.select(SYS_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HOSTNAME), HOSTNAME);
     }
 
