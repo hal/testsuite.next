@@ -528,7 +528,11 @@ public class OtherSettingsTest {
         addResource.getForm().text(NEW_ITEM_PATH, ANY_STRING);
         addResource.getForm().text(NEW_ITEM_RDN, ANY_STRING);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(NEW_ITEM_ATTRIBUTES);
+        try {
+            addResource.getForm().expectError(NEW_ITEM_ATTRIBUTES);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
