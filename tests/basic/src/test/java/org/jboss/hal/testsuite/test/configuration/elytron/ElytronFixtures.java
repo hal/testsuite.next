@@ -602,6 +602,7 @@ public interface ElytronFixtures {
 
     String KEY_ST_CREATE = Ids.build("ks", "create", Random.name());
     String KEY_ST_UPDATE = Ids.build("ks", "update", Random.name());
+    String KEY_ST_CR_UPDATE = Ids.build("ks", "cr-update", Random.name());
     String KEY_ST_DELETE = Ids.build("ks", "delete", Random.name());
 
     static Address keyStoreAddress(String name) {
@@ -614,6 +615,8 @@ public interface ElytronFixtures {
     String LDAPKEY_ST_UPDATE = Ids.build("ldap-ks", "update", Random.name());
     String LDAPKEY_ST_TEMP1_UPDATE = Ids.build("ldap-ks-1", "update", Random.name());
     String LDAPKEY_ST_TEMP2_DELETE = Ids.build("ldap-ks-2", "update", Random.name());
+    String LDAPKEY_ST_TEMP3_ADD = Ids.build("ldap-ks-3", "add", Random.name());
+    String LDAPKEY_ST_TEMP4_TRY_ADD = Ids.build("ldap-ks-4", "try-add", Random.name());
     String LDAPKEY_ST_DELETE = Ids.build("ldap-ks", "delete", Random.name());
 
     static Address ldapKeyStoreAddress(String name) {
@@ -644,6 +647,7 @@ public interface ElytronFixtures {
 
     String KEY_MAN_CREATE = Ids.build("key-man", "create", Random.name());
     String KEY_MAN_UPDATE = Ids.build("key-man", "update", Random.name());
+    String KEY_MAN_TRY_UPDATE = Ids.build("key-man", "try-update", Random.name());
     String KEY_MAN_DELETE = Ids.build("key-man", "delete", Random.name());
 
     static Address keyManagertAddress(String name) {
@@ -732,6 +736,7 @@ public interface ElytronFixtures {
 
     String FILE_LOG_CREATE = Ids.build("file-log", "create", Random.name());
     String FILE_LOG_UPDATE = Ids.build("file-log", "update", Random.name());
+    String FILE_LOG_TRY_UPDATE = Ids.build("file-log", "try-update", Random.name());
     String FILE_LOG_DELETE = Ids.build("file-log", "delete", Random.name());
 
     static Address fileAuditLogAddress(String name) {
@@ -742,6 +747,7 @@ public interface ElytronFixtures {
 
     String PER_LOG_CREATE = Ids.build("per-log", "create", Random.name());
     String PER_LOG_UPDATE = Ids.build("per-log", "update", Random.name());
+    String PER_LOG_TRY_UPDATE = Ids.build("per-log", "try-update", Random.name());
     String PER_LOG_DELETE = Ids.build("per-log", "delete", Random.name());
 
     static Address periodicRotatingFileAuditLogAddress(String name) {
@@ -762,6 +768,7 @@ public interface ElytronFixtures {
 
     String SYS_LOG_CREATE = Ids.build("sys-log", "create", Random.name());
     String SYS_LOG_UPDATE = Ids.build("sys-log", "update", Random.name());
+    String SYS_LOG_TRY_UPDATE = Ids.build("sys-log", "try-update", Random.name());
     String SYS_LOG_DELETE = Ids.build("sys-log", "delete", Random.name());
 
     static Address syslogAuditLogAddress(String name) {

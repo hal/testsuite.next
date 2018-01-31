@@ -75,6 +75,7 @@ public class OtherSettingsTest {
 
         Values ksParams = Values.of(TYPE, JKS).and(CREDENTIAL_REFERENCE, credRef);
         operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams);
+        operations.add(keyStoreAddress(KEY_ST_CR_UPDATE), ksParams);
         operations.add(keyStoreAddress(KEY_ST_DELETE), ksParams);
         operations.writeAttribute(keyStoreAddress(KEY_ST_UPDATE), PROVIDERS, PROV_LOAD_UPDATE);
 
@@ -105,6 +106,8 @@ public class OtherSettingsTest {
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_DELETE), ldapKsValues);
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), ldapKsValues);
         operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), ldapKsValues);
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), ldapKsValues);
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD), ldapKsValues);
         operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), NEW_ITEM_TEMPLATE, newItemTemplate);
         operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), NEW_ITEM_TEMPLATE, newItemTemplate);
 
@@ -119,6 +122,7 @@ public class OtherSettingsTest {
         Values keyManagerValues = Values.of(KEY_STORE, KEY_ST_UPDATE)
                 .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
         operations.add(keyManagertAddress(KEY_MAN_UPDATE), keyManagerValues);
+        operations.add(keyManagertAddress(KEY_MAN_TRY_UPDATE), keyManagerValues);
         operations.add(keyManagertAddress(KEY_MAN_DELETE), keyManagerValues);
 
         Values serverSslContextValues = Values.of(KEY_MANAGER, KEY_MAN_UPDATE);
@@ -169,16 +173,19 @@ public class OtherSettingsTest {
 
         operations.add(fileAuditLogAddress(FILE_LOG_DELETE), Values.of(PATH, ANY_STRING));
         operations.add(fileAuditLogAddress(FILE_LOG_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(fileAuditLogAddress(FILE_LOG_TRY_UPDATE), Values.of(PATH, ANY_STRING));
 
         Values params = Values.of(PATH, ANY_STRING).and(SUFFIX, SUFFIX_LOG);
         operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), params);
         operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), params);
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE), params);
 
         operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), Values.of(PATH, ANY_STRING));
         operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), Values.of(PATH, ANY_STRING));
 
         Values syslogParams = Values.of(HOSTNAME, ANY_STRING).and(PORT, Random.number()).and(SERVER_ADDRESS, LOCALHOST);
         operations.add(syslogAuditLogAddress(SYS_LOG_UPDATE), syslogParams);
+        operations.add(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE), syslogParams);
         operations.add(syslogAuditLogAddress(SYS_LOG_DELETE), syslogParams);
 
         Values secEventParams = Values.ofList(SECURITY_EVENT_LISTENERS, SYS_LOG_UPDATE, SIZ_LOG_UPDATE);
@@ -204,6 +211,8 @@ public class OtherSettingsTest {
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE));
+        operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD));
+        operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD));
         operations.remove(ldapKeyStoreAddress(LDAPKEY_ST_CREATE));
 
         operations.remove(dirContextAddress(DIR_UPDATE));
@@ -229,6 +238,7 @@ public class OtherSettingsTest {
 
         operations.remove(keyManagertAddress(KEY_MAN_CREATE));
         operations.remove(keyManagertAddress(KEY_MAN_UPDATE));
+        operations.remove(keyManagertAddress(KEY_MAN_TRY_UPDATE));
         operations.remove(keyManagertAddress(KEY_MAN_DELETE));
 
         operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
@@ -246,6 +256,7 @@ public class OtherSettingsTest {
 
         // key-store is a dependency on key-manager and trust-manager, remove it after key-manager and trust-manager
         operations.remove(keyStoreAddress(KEY_ST_UPDATE));
+        operations.remove(keyStoreAddress(KEY_ST_CR_UPDATE));
 
         operations.remove(providerLoaderAddress(PROV_LOAD_UPDATE));
         operations.remove(providerLoaderAddress(PROV_LOAD_UPDATE2));
@@ -272,6 +283,7 @@ public class OtherSettingsTest {
 
         operations.remove(fileAuditLogAddress(FILE_LOG_DELETE));
         operations.remove(fileAuditLogAddress(FILE_LOG_UPDATE));
+        operations.remove(fileAuditLogAddress(FILE_LOG_TRY_UPDATE));
         operations.remove(fileAuditLogAddress(FILE_LOG_CREATE));
 
         // remove the aggregate-security-event-listener first, as they require size audit log and syslog
@@ -280,6 +292,7 @@ public class OtherSettingsTest {
         operations.remove(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE));
 
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE));
+        operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE));
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE));
         operations.remove(periodicRotatingFileAuditLogAddress(PER_LOG_CREATE));
 
@@ -290,6 +303,7 @@ public class OtherSettingsTest {
         operations.remove(syslogAuditLogAddress(SYS_LOG_DELETE));
         operations.remove(syslogAuditLogAddress(SYS_LOG_CREATE));
         operations.remove(syslogAuditLogAddress(SYS_LOG_UPDATE));
+        operations.remove(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE));
 
         operations.remove(policyAddress(POL_CREATE));
 
@@ -323,7 +337,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, CREDENTIAL_STORE_ITEM);
         TableFragment table = page.getCredentialStoreTable();
 
-        crud.createWithError(table, f -> {
+        crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, CRED_ST_CREATE);
             f.flip(CREATE, true);
         }, CLEAR_TEXT);
@@ -379,7 +393,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, FILTERING_KEY_STORE_ITEM);
         TableFragment table = page.getFilteringKeyStoreTable();
 
-        crud.createWithError(table, f -> {
+        crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, FILT_ST_CREATE);
             f.text(ALIAS_FILTER, ANY_STRING);
         }, KEY_STORE);
@@ -423,7 +437,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
-        crud.createWithError(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
     }
 
     @Test
@@ -443,7 +457,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getKeyStoreTable();
         FormFragment form = page.getKeyStoreCredentialReferenceForm();
         table.bind(form);
-        table.select(KEY_ST_UPDATE);
+        table.select(KEY_ST_CR_UPDATE);
         page.getKeyStoreTab().select(Ids.build(ELYTRON_KEY_STORE, CREDENTIAL_REFERENCE, TAB));
         crud.update(keyStoreAddress(KEY_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
                 ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
@@ -476,7 +490,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
 
-        crud.createWithError(table, f -> f.text(NAME, LDAPKEY_ST_CREATE), DIR_CONTEXT);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, LDAPKEY_ST_CREATE), DIR_CONTEXT);
     }
 
     @Test
@@ -504,8 +518,8 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
-        table.bind(form);
-        table.select(LDAPKEY_ST_UPDATE);
+        table.bindBlank(form);
+        table.select(LDAPKEY_ST_TEMP4_TRY_ADD);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
         EmptyState emptyState = form.emptyState();
         emptyState.mainAction();
@@ -514,7 +528,11 @@ public class OtherSettingsTest {
         addResource.getForm().text(NEW_ITEM_PATH, ANY_STRING);
         addResource.getForm().text(NEW_ITEM_RDN, ANY_STRING);
         addResource.getPrimaryButton().click();
-        addResource.getForm().expectError(NEW_ITEM_ATTRIBUTES);
+        try {
+            addResource.getForm().expectError(NEW_ITEM_ATTRIBUTES);
+        } finally {
+            addResource.getSecondaryButton().click(); // close dialog to cleanup
+        }
     }
 
     @Test
@@ -522,8 +540,8 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, LDAP_KEY_STORE_ITEM);
         TableFragment table = page.getLdapKeyStoreTable();
         FormFragment form = page.getLdapKeyStoreNewItemTemplateForm();
-        table.bind(form);
-        table.select(LDAPKEY_ST_UPDATE);
+        table.bindBlank(form);
+        table.select(LDAPKEY_ST_TEMP3_ADD);
         page.getLdapKeyStoreTab().select(Ids.build(ELYTRON_LDAP_KEY_STORE, NEW_ITEM_TEMPLATE, TAB));
 
         String rndName = "p1";
@@ -536,7 +554,7 @@ public class OtherSettingsTest {
         newItemTemplate.get(NEW_ITEM_RDN).set(ANY_STRING);
         newItemTemplate.get(NEW_ITEM_ATTRIBUTES).add(props);
 
-        crud.createSingleton(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE), form, f -> {
+        crud.createSingleton(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), form, f -> {
             f.text(NEW_ITEM_PATH, ANY_STRING);
             f.text(NEW_ITEM_RDN, ANY_STRING);
             f.list(NEW_ITEM_ATTRIBUTES).add(rndName, rndValue);
@@ -589,7 +607,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, AGGREGATE_PROVIDERS_ITEM);
         TableFragment table = page.getAggregateProvidersTable();
 
-        crud.createWithError(table, AGG_PRV_CREATE, PROVIDERS);
+        crud.createWithErrorAndCancelDialog(table, AGG_PRV_CREATE, PROVIDERS);
     }
 
     @Test
@@ -659,7 +677,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, KEY_MANAGER_ITEM);
         TableFragment table = page.getKeyManagerTable();
 
-        crud.createWithError(table, KEY_MAN_CREATE, KEY_STORE);
+        crud.createWithErrorAndCancelDialog(table, KEY_MAN_CREATE, KEY_STORE);
     }
 
     @Test
@@ -680,7 +698,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getKeyManagerTable();
         FormFragment form = page.getKeyManagerForm();
         table.bind(form);
-        table.select(KEY_MAN_UPDATE);
+        table.select(KEY_MAN_TRY_UPDATE);
         page.getKeyManagerTab().select(Ids.build(ELYTRON_KEY_MANAGER, ATTRIBUTES, TAB));
 
         crud.updateWithError(form, f -> f.clear(KEY_STORE), KEY_STORE);
@@ -752,7 +770,7 @@ public class OtherSettingsTest {
         console.verticalNavigation().selectSecondary(SSL_ITEM, SERVER_SSL_CONTEXT_ITEM);
         TableFragment table = page.getServerSslContextTable();
 
-        crud.createWithError(table, SRV_SSL_CREATE, KEY_MANAGER);
+        crud.createWithErrorAndCancelDialog(table, SRV_SSL_CREATE, KEY_MANAGER);
     }
 
     @Test
@@ -826,8 +844,13 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_RLM_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        try {
+            crud.create(securityDomainAddress(SEC_DOM_UPDATE), table, f -> f.text(REALM, FILESYS_RLM_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -839,7 +862,12 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.createWithError(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+        try {
+            crud.createWithErrorAndCancelDialog(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -854,9 +882,14 @@ public class OtherSettingsTest {
         table.bind(form);
         table.select(FILESYS_RLM_UPDATE);
 
-        crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
-                f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(REALMS, PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE));
+        try {
+            crud.update(securityDomainAddress(SEC_DOM_UPDATE2), form,
+                    f -> f.text(PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(REALMS, PRINCIPAL_TRANSFORMER, CONS_PRI_TRANS_UPDATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -868,8 +901,13 @@ public class OtherSettingsTest {
         secDomaintable.action(SEC_DOM_UPDATE3, ElytronFixtures.REALMS);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_RLM_CREATE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        try {
+            crud.delete(securityDomainAddress(SEC_DOM_UPDATE3), table, FILESYS_RLM_CREATE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(REALMS, REALM, FILESYS_RLM_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     // --------------- trust-manager
@@ -889,7 +927,7 @@ public class OtherSettingsTest {
     public void trustManagerTryCreate() {
         console.verticalNavigation().selectSecondary(SSL_ITEM, TRUST_MANAGER_ITEM);
         TableFragment table = page.getTrustManagerTable();
-        crud.createWithError(table, TRU_MAN_CREATE, KEY_STORE);
+        crud.createWithErrorAndCancelDialog(table, TRU_MAN_CREATE, KEY_STORE);
     }
 
     @Test
@@ -1057,9 +1095,14 @@ public class OtherSettingsTest {
         autTable.action(AUT_CT_UPDATE, MATCH_RULES_TITLE);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.create(authenticationContextAddress(AUT_CT_UPDATE), table,
-                f -> f.text(MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE));
+        try {
+            crud.create(authenticationContextAddress(AUT_CT_UPDATE), table,
+                    f -> f.text(MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE, AUT_CT_MR_CREATE));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -1074,8 +1117,13 @@ public class OtherSettingsTest {
         waitGui().until().element(table.getRoot()).is().visible();
 
         table.select(AUT_CT_MR_UPDATE);
-        crud.update(authenticationContextAddress(AUT_CT_UPDATE2), form, f -> f.text(MATCH_HOST, ANY_STRING),
-                vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_HOST, ANY_STRING));
+        try {
+            crud.update(authenticationContextAddress(AUT_CT_UPDATE2), form, f -> f.text(MATCH_HOST, ANY_STRING),
+                    vc -> vc.verifyListAttributeContainsSingleValue(MATCH_RULES, MATCH_HOST, ANY_STRING));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     @Test
@@ -1087,9 +1135,14 @@ public class OtherSettingsTest {
         autTable.action(AUT_CT_UPDATE2, MATCH_RULES_TITLE);
         waitGui().until().element(table.getRoot()).is().visible();
 
-        crud.delete(authenticationContextAddress(AUT_CT_UPDATE2), table, AUT_CT_MR_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE,
-                        AUT_CT_MR_DELETE));
+        try {
+            crud.delete(authenticationContextAddress(AUT_CT_UPDATE2), table, AUT_CT_MR_DELETE,
+                    vc -> vc.verifyListAttributeDoesNotContainSingleValue(MATCH_RULES, MATCH_ABSTRACT_TYPE,
+                            AUT_CT_MR_DELETE));
+        } finally {
+            // getting rid of action selection
+            page.getAuthenticationContextPages().breadcrumb().getBackToMainPage();
+        }
     }
 
     // --------------- file-audit-log
@@ -1109,7 +1162,7 @@ public class OtherSettingsTest {
     public void fileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1128,7 +1181,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getFileAuditLogTable();
         FormFragment form = page.getFileAuditLogForm();
         table.bind(form);
-        table.select(FILE_LOG_UPDATE);
+        table.select(FILE_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1157,7 +1210,7 @@ public class OtherSettingsTest {
     public void periodicRotatingFileAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1176,7 +1229,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getPeriodicRotatingFileAuditLogTable();
         FormFragment form = page.getPeriodicRotatingFileAuditLogForm();
         table.bind(form);
-        table.select(PER_LOG_UPDATE);
+        table.select(PER_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(PATH), PATH);
     }
 
@@ -1205,7 +1258,7 @@ public class OtherSettingsTest {
     public void sizeRotatingLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SIZE_ROTATING_FILE_AUDIT_LOG_ITEM);
         TableFragment table = page.getSizeRotatingFileAuditLogTable();
-        crud.createWithError(table, NAME, PATH);
+        crud.createWithErrorAndCancelDialog(table, NAME, PATH);
     }
 
     @Test
@@ -1254,7 +1307,7 @@ public class OtherSettingsTest {
     public void syslogAuditLogTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, SYSLOG_AUDIT_LOG_ITEM);
         TableFragment table = page.getSyslogAuditLogTable();
-        crud.createWithError(table, NAME, HOSTNAME);
+        crud.createWithErrorAndCancelDialog(table, NAME, HOSTNAME);
     }
 
     @Test
@@ -1273,7 +1326,7 @@ public class OtherSettingsTest {
         TableFragment table = page.getSyslogAuditLogTable();
         FormFragment form = page.getSyslogAuditLogForm();
         table.bind(form);
-        table.select(SYS_LOG_UPDATE);
+        table.select(SYS_LOG_TRY_UPDATE);
         crud.updateWithError(form, f -> f.clear(HOSTNAME), HOSTNAME);
     }
 
@@ -1301,7 +1354,7 @@ public class OtherSettingsTest {
     public void aggregateSecurityEventListenerTryCreate() {
         console.verticalNavigation().selectSecondary(LOGS_ITEM, AGGREGATE_SECURITY_EVENT_LISTENER_ITEM);
         TableFragment table = page.getAggregateSecurityEventListenerTable();
-        crud.createWithError(table, NAME, SECURITY_EVENT_LISTENERS);
+        crud.createWithErrorAndCancelDialog(table, NAME, SECURITY_EVENT_LISTENERS);
     }
 
     @Test

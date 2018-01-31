@@ -15,6 +15,7 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -33,5 +34,13 @@ public class PageBreadcrumbFragment {
 
     public WebElement firstElement() {
         return root.findElement(By.cssSelector("li:first-child"));
+    }
+
+    /**
+     * Get back to the main page from the nested detail
+     */
+    public void getBackToMainPage() {
+        firstElement().click();
+        Graphene.waitAjax().until().element(root).is().not().visible();
     }
 }
