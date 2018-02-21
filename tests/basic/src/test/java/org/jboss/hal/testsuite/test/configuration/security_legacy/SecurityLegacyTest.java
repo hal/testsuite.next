@@ -27,7 +27,6 @@ import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SecurityLegacyPage;
-import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -76,24 +75,24 @@ public class SecurityLegacyTest {
 
         String keystoreFile = "${"+ JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_KEYSTORE_FILENAME;
         String truststoreFile = "${"+ JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_TRUSTSTORE_FILENAME;
-        operations.add(SecurityLegacyFixtures.securityDomainAddress(ElytronFixtures.SEC_DOM_CREATE));
-        operations.add(SecurityLegacyFixtures.securityDomainAddress(ElytronFixtures.SEC_DOM_UPDATE));
+        operations.add(securityDomainAddress(SEC_DOM_CREATE));
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE));
         Values jsseParams = Values.of(CLIENT_AUTH, true)
                 .andObject(TRUSTSTORE, Values.of(PASSWORD, SAMPLE_PASSWORD).and(URL, truststoreFile))
                 .andObject(KEYSTORE, Values.of(PASSWORD, SAMPLE_PASSWORD).and(URL, keystoreFile));
-        operations.add(SecurityLegacyFixtures.securityDomainJSSEAddress(ElytronFixtures.SEC_DOM_CREATE), jsseParams);
-        operations.add(SecurityLegacyFixtures.securityDomainJSSEAddress(ElytronFixtures.SEC_DOM_UPDATE), jsseParams);
+        operations.add(securityDomainJSSEAddress(SEC_DOM_CREATE), jsseParams);
+        operations.add(securityDomainJSSEAddress(SEC_DOM_UPDATE), jsseParams);
         // must reload standalone, to take effect
         administration.reload();
 
-        Values legacyParams = Values.of(LEGACY_JSSE_CONFIG, ElytronFixtures.SEC_DOM_CREATE);
+        Values legacyParams = Values.of(LEGACY_JSSE_CONFIG, SEC_DOM_CREATE);
         operations.add(elytronKeyManagerAddress(EKM_UPDATE), legacyParams);
         operations.add(elytronKeyManagerAddress(EKM_DELETE), legacyParams);
 
         operations.add(elytronKeyStoreAddress(EKS_UPDATE), legacyParams);
         operations.add(elytronKeyStoreAddress(EKS_DELETE), legacyParams);
 
-        Values realmLegacyParams = Values.of(LEGACY_JAAS_CONFIG, ElytronFixtures.SEC_DOM_CREATE);
+        Values realmLegacyParams = Values.of(LEGACY_JAAS_CONFIG, SEC_DOM_CREATE);
         operations.add(elytronRealmAddress(REALM_UPDATE), realmLegacyParams);
         operations.add(elytronRealmAddress(REALM_DELETE), realmLegacyParams);
 
@@ -130,8 +129,8 @@ public class SecurityLegacyTest {
 
         operations.remove(vaultAddress());
 
-        operations.remove(SecurityLegacyFixtures.securityDomainAddress(ElytronFixtures.SEC_DOM_CREATE));
-        operations.remove(SecurityLegacyFixtures.securityDomainAddress(ElytronFixtures.SEC_DOM_UPDATE));
+        operations.remove(securityDomainAddress(SEC_DOM_CREATE));
+        operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
         operations.remove(keyStoreAddress(KEY_ST_CREATE));
         operations.remove(keyStoreAddress(KEY_ST_UPDATE));
     }
@@ -198,7 +197,7 @@ public class SecurityLegacyTest {
         console.waitNoNotification();
         crud.create(elytronRealmAddress(REALM_CREATE), table, f -> {
             f.text(NAME, REALM_CREATE);
-            f.text(LEGACY_JAAS_CONFIG, ElytronFixtures.SEC_DOM_CREATE);
+            f.text(LEGACY_JAAS_CONFIG, SEC_DOM_CREATE);
         });
     }
 
@@ -210,9 +209,7 @@ public class SecurityLegacyTest {
         console.verticalNavigation().selectPrimary(REALM_ITEM);
         console.waitNoNotification();
         table.select(REALM_UPDATE);
-        crud.update(elytronRealmAddress(REALM_UPDATE), form,
-                f -> f.text(LEGACY_JAAS_CONFIG, ElytronFixtures.SEC_DOM_UPDATE),
-                ver -> ver.verifyAttribute(LEGACY_JAAS_CONFIG, ElytronFixtures.SEC_DOM_UPDATE));
+        crud.update(elytronRealmAddress(REALM_UPDATE), form,LEGACY_JAAS_CONFIG, SEC_DOM_UPDATE);
     }
 
     @Test
@@ -285,16 +282,13 @@ public class SecurityLegacyTest {
 
     }
 
-
-
     // ---------------- crud templates
 
     public void templateCreate(String item, TableFragment table, String resourceName, Address address) throws Exception {
         console.verticalNavigation().selectPrimary(item);
-        console.waitNoNotification();
         crud.create(address, table, f -> {
             f.text(NAME, resourceName);
-            f.text(LEGACY_JSSE_CONFIG, ElytronFixtures.SEC_DOM_CREATE);
+            f.text(LEGACY_JSSE_CONFIG, SEC_DOM_CREATE);
         });
     }
 
@@ -302,16 +296,13 @@ public class SecurityLegacyTest {
             Address address) throws Exception {
         console.verticalNavigation().selectPrimary(item);
         table.bind(form);
-        console.waitNoNotification();
         table.select(resourceName);
-        crud.update(address, form, f -> f.text(LEGACY_JSSE_CONFIG, ElytronFixtures.SEC_DOM_UPDATE),
-                ver -> ver.verifyAttribute(LEGACY_JSSE_CONFIG, ElytronFixtures.SEC_DOM_UPDATE));
+        crud.update(address, form, LEGACY_JSSE_CONFIG, SEC_DOM_UPDATE);
     }
 
     public void templateDelete(String item, TableFragment table, String resourceName, Address address)
             throws Exception {
         console.verticalNavigation().selectPrimary(item);
-        console.waitNoNotification();
         crud.delete(address, table, resourceName);
     }
 
