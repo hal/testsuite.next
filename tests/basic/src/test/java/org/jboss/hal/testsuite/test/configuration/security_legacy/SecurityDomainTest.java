@@ -82,7 +82,7 @@ public class SecurityDomainTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        // operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
+        operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
     }
 
     @Page private SecurityDomainLegacyPage page;
