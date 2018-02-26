@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.test.configuration.mail;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -23,19 +24,21 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.MAIL;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MAIL_SESSION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
 
-public interface MailFixtures {
+public final class MailFixtures {
 
-    String MAIL_SMTP = "mail-smtp";
-    String SECRET = "secret";
+    private static final String SESSION_PREFIX = "ms";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(MAIL);
+    static String MAIL_SMTP = "mail-smtp";
+    static String SECRET = "secret";
+
+    static Address SUBSYSTEM_ADDRESS = Address.subsystem(MAIL);
 
     // ------------------------------------------------------ session
 
-    String SESSION_CREATE = Ids.build("ms", "create", Random.name());
-    String SESSION_READ = Ids.build("ms", "read", Random.name());
-    String SESSION_UPDATE = Ids.build("ms", "update", Random.name());
-    String SESSION_DELETE = Ids.build("ms", "delete", Random.name());
+    static String SESSION_CREATE = Ids.build(SESSION_PREFIX, CrudConstants.CREATE, Random.name());
+    static String SESSION_READ = Ids.build(SESSION_PREFIX, CrudConstants.READ, Random.name());
+    static String SESSION_UPDATE = Ids.build(SESSION_PREFIX, CrudConstants.UPDATE, Random.name());
+    static String SESSION_DELETE = Ids.build(SESSION_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address sessionAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MAIL_SESSION, name);
@@ -45,5 +48,8 @@ public interface MailFixtures {
 
     static Address serverAddress(String session, String type) {
         return sessionAddress(session).and(SERVER, type);
+    }
+
+    private MailFixtures() {
     }
 }
