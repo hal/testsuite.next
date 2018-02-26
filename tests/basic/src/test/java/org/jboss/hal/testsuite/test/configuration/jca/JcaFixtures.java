@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.test.configuration.jca;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -23,33 +24,37 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.BEAN_VALIDATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JCA;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.WORKMANAGER;
 
-public interface JcaFixtures {
+public final class JcaFixtures {
 
-    String ALLOW_CORE_TIMEOUT = "allow-core-timeout";
-    String ARCHIVE_VALIDATION = "archive-validation";
-    String BOOTSTRAP_CONTEXT = "bootstrap-context";
-    String CACHED_CONNECTION_MANAGER = "cached-connection-manager";
-    String DEBUG = "debug";
-    String TRACER = "tracer";
+    private static final String BOOTSTRAP_CONTEXT_PREFIX = "bc";
+    private static final String WORKMANAGER_PREFIX = "wm";
+    private static final String WORKMANAGER_THREADPOOL_PREFIX = "wm-tp";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(JCA);
+    static String ALLOW_CORE_TIMEOUT = "allow-core-timeout";
+    static String ARCHIVE_VALIDATION = "archive-validation";
+    static String BOOTSTRAP_CONTEXT = "bootstrap-context";
+    static String CACHED_CONNECTION_MANAGER = "cached-connection-manager";
+    static String DEBUG = "debug";
+    static String TRACER = "tracer";
+
+    static Address SUBSYSTEM_ADDRESS = Address.subsystem(JCA);
 
     // ------------------------------------------------------ configuration
 
-    Address CACHED_CONNECTION_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and(CACHED_CONNECTION_MANAGER,
+    static Address CACHED_CONNECTION_MANAGER_ADDRESS = SUBSYSTEM_ADDRESS.and(CACHED_CONNECTION_MANAGER,
             CACHED_CONNECTION_MANAGER);
-    Address ARCHIVE_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(ARCHIVE_VALIDATION, ARCHIVE_VALIDATION);
-    Address BEAN_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(BEAN_VALIDATION, BEAN_VALIDATION);
+    static Address ARCHIVE_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(ARCHIVE_VALIDATION, ARCHIVE_VALIDATION);
+    static Address BEAN_VALIDATION_ADDRESS = SUBSYSTEM_ADDRESS.and(BEAN_VALIDATION, BEAN_VALIDATION);
 
     // ------------------------------------------------------ tracer
 
-    Address TRACER_ADDRESS = SUBSYSTEM_ADDRESS.and(TRACER, TRACER);
+    static Address TRACER_ADDRESS = SUBSYSTEM_ADDRESS.and(TRACER, TRACER);
 
     // ------------------------------------------------------ bootstrap context
 
-    String BC_CREATE = Ids.build("bc", "create", Random.name());
-    String BC_READ = Ids.build("bc", "read", Random.name());
-    String BC_DELETE = Ids.build("bc", "delete", Random.name());
+    static String BC_CREATE = Ids.build(BOOTSTRAP_CONTEXT_PREFIX, CrudConstants.CREATE, Random.name());
+    static String BC_READ = Ids.build(BOOTSTRAP_CONTEXT_PREFIX, CrudConstants.READ, Random.name());
+    static String BC_DELETE = Ids.build(BOOTSTRAP_CONTEXT_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address bootstrapContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(BOOTSTRAP_CONTEXT, name);
@@ -57,9 +62,9 @@ public interface JcaFixtures {
 
     // ------------------------------------------------------ workmanager
 
-    String WM_CREATE = Ids.build("wm", "create", Random.name());
-    String WM_UPDATE = Ids.build("wm", "update", Random.name());
-    String WM_DELETE = Ids.build("wm", "delete", Random.name());
+    static String WM_CREATE = Ids.build(WORKMANAGER_PREFIX, CrudConstants.CREATE, Random.name());
+    static String WM_UPDATE = Ids.build(WORKMANAGER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static String WM_DELETE = Ids.build(WORKMANAGER_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address workmanagerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(WORKMANAGER, name);
@@ -67,13 +72,13 @@ public interface JcaFixtures {
 
     // ------------------------------------------------------ wm thread pool
 
-    String LRT = "lrt";
-    String SRT = "srt";
+    static String LRT = "lrt";
+    static String SRT = "srt";
 
-    String WM_THREAD_POOL_CREATE = Ids.build("wm-tp", "create", Random.name());
-    String WM_THREAD_POOL_READ = Ids.build("wm-tp", "read", Random.name());
-    String WM_THREAD_POOL_UPDATE = Ids.build("wm-tp", "update", Random.name());
-    String WM_THREAD_POOL_DELETE = Ids.build("wm-tp", "delete", Random.name());
+    static String WM_THREAD_POOL_CREATE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.CREATE, Random.name());
+    static String WM_THREAD_POOL_READ = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.READ, Random.name());
+    static String WM_THREAD_POOL_UPDATE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.UPDATE, Random.name());
+    static String WM_THREAD_POOL_DELETE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address longRunningAddress(String workmanager, String threadPool) {
         return workmanagerAddress(workmanager).and("long-running-threads", threadPool);
@@ -85,5 +90,8 @@ public interface JcaFixtures {
 
     static String threadPoolName(String workmanager, String threadPool) {
         return Ids.build(workmanager, threadPool);
+    }
+
+    private JcaFixtures() {
     }
 }

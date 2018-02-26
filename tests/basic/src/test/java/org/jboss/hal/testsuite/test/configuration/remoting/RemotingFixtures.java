@@ -128,4 +128,7 @@ public final class RemotingFixtures {
     static Address outboundRemoteAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("remote-outbound-connection", name);
     }
+
+    private RemotingFixtures() {
+    }
 }

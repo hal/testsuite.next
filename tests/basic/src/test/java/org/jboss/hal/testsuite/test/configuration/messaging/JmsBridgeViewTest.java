@@ -47,6 +47,7 @@ public class JmsBridgeViewTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String NESTED_ATTRIBUTE_DELIMITER = ".";
     private static String anyString = Random.name();
     private static Values PARAMS;
 
@@ -121,7 +122,7 @@ public class JmsBridgeViewTest {
         dialog.add();
         console.verifySuccess();
         new ResourceVerifier(jmsBridgeAddress(JMSBRIDGE_UPDATE), client).verifyAttribute(
-                SOURCE_CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, anyString);
+                SOURCE_CREDENTIAL_REFERENCE + NESTED_ATTRIBUTE_DELIMITER + CLEAR_TEXT, anyString);
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_CREDENTIAL_REFERENCE);
     }
 
@@ -150,7 +151,7 @@ public class JmsBridgeViewTest {
         FormFragment form = page.getSourceCredentialReferenceForm();
         String randomText = Random.name();
         crudOperations.update(jmsBridgeAddress(JMSBRIDGE_UPDATE), form, f -> f.text(CLEAR_TEXT, randomText),
-                v -> v.verifyAttribute(SOURCE_CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, randomText));
+                verifier -> verifier.verifyAttribute(SOURCE_CREDENTIAL_REFERENCE + NESTED_ATTRIBUTE_DELIMITER + CLEAR_TEXT, randomText));
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_CREDENTIAL_REFERENCE);
     }
 
@@ -201,7 +202,7 @@ public class JmsBridgeViewTest {
         dialog.add();
         console.verifySuccess();
         new ResourceVerifier(jmsBridgeAddress(JMSBRIDGE_UPDATE), client).verifyAttribute(
-                TARGET_CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, anyString);
+                TARGET_CREDENTIAL_REFERENCE + NESTED_ATTRIBUTE_DELIMITER + CLEAR_TEXT, anyString);
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE);
     }
 
@@ -230,7 +231,7 @@ public class JmsBridgeViewTest {
         FormFragment form = page.getTargetCredentialReferenceForm();
         String randomText = Random.name();
         crudOperations.update(jmsBridgeAddress(JMSBRIDGE_UPDATE), form, f -> f.text(CLEAR_TEXT, randomText),
-                v -> v.verifyAttribute(TARGET_CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, randomText));
+                v -> v.verifyAttribute(TARGET_CREDENTIAL_REFERENCE + NESTED_ATTRIBUTE_DELIMITER + CLEAR_TEXT, randomText));
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE);
     }
 

@@ -57,6 +57,7 @@ public class ServerConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String ID_DELIMITER = "-";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -81,7 +82,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void attributesConnectionTTLOverride() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, ATTRIBUTES, TAB));
         FormFragment form = page.getAttributesForm();
 
@@ -90,7 +91,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void attributesPersistenceEnabled() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, ATTRIBUTES, TAB));
         FormFragment form = page.getAttributesForm();
 
@@ -101,7 +102,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void managementMaskJmxDomain() {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
         String message = valueMustBeMasked(JMX_DOMAIN, form.value(JMX_DOMAIN));
@@ -110,7 +111,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void managementUnmaskJmxDomain() {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, MANAGEMENT, TAB));
         FormFragment form = page.getManagementForm();
         form.showSensitive(JMX_DOMAIN);
@@ -122,7 +123,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void securityUpdateElytronDomain() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, SECURITY, TAB));
         FormFragment form = page.getSecurityForm();
 
@@ -133,7 +134,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void updateJournal() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
         FormFragment form = page.getJournalForm();
         String table = Random.name();
@@ -144,7 +145,7 @@ public class ServerConfigurationTest {
     // --------------- cluster tab
     @Test
     public void clusterPassword() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "cluster", TAB));
         FormFragment form = page.getClusterForm();
         String passwd = Random.name();
@@ -155,7 +156,7 @@ public class ServerConfigurationTest {
     // --------------- cluster credential reference tab
     @Test
     public void clusterCredentialReferenceAddInvalid() {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
@@ -174,7 +175,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void clusterCredentialReferenceAddSuccess() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getClusterCredentialReferenceEmptyState();
         waitGui().until().element(emptyState.getRoot()).is().visible();
@@ -193,17 +194,16 @@ public class ServerConfigurationTest {
 
     @Test
     public void clusterCredentialReferenceEditInvalid() {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();
         crudOperations.updateWithError(form, f ->
-                        f.text(ALIAS, Random.name())
-                , STORE);
+                        f.text(ALIAS, Random.name()), STORE);
     }
 
     @Test
     public void clusterCredentialReferenceRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();
         crudOperations.deleteSingleton(serverAddress(SRV_UPDATE), form,
