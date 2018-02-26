@@ -16,32 +16,39 @@
 package org.jboss.hal.testsuite.test.configuration.resourceadapter;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.RESOURCE_ADAPTER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.RESOURCE_ADAPTERS;
 
-public interface ResourceAdapterFixtures {
+public final class ResourceAdapterFixtures {
 
-    String BEANVALIDATIONGROUPS = "beanvalidationgroups";
-    String BOOTSTRAP_CONTEXT = "bootstrap-context";
-    String LOCAL_TRANSACTION = "LocalTransaction";
-    String WM_SECURITY = "wm-security";
-    String WM_SECURITY_DEFAULT_GROUPS = "wm-security-default-groups";
-    String WM_SECURITY_DEFAULT_PRINCIPAL = "wm-security-default-principal";
-    String WM_SECURITY_MAPPING_REQUIRED = "wm-security-mapping-required";
+    private static final String RESOURCE_ADAPTERS_PREFIX = "ra";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(RESOURCE_ADAPTERS);
+    static String BEANVALIDATIONGROUPS = "beanvalidationgroups";
+    static String BOOTSTRAP_CONTEXT = "bootstrap-context";
+    static String LOCAL_TRANSACTION = "LocalTransaction";
+    static String WM_SECURITY = "wm-security";
+    static String WM_SECURITY_DEFAULT_GROUPS = "wm-security-default-groups";
+    static String WM_SECURITY_DEFAULT_PRINCIPAL = "wm-security-default-principal";
+    static String WM_SECURITY_MAPPING_REQUIRED = "wm-security-mapping-required";
+
+    static Address SUBSYSTEM_ADDRESS = Address.subsystem(RESOURCE_ADAPTERS);
 
     // ------------------------------------------------------ resource adapter
 
-    String RESOURCE_ADAPTER_CREATE = Ids.build("ra", "create", Random.name());
-    String RESOURCE_ADAPTER_READ = Ids.build("ra", "read", Random.name());
-    String RESOURCE_ADAPTER_UPDATE = Ids.build("ra", "update", Random.name());
-    String RESOURCE_ADAPTER_DELETE = Ids.build("ra", "delete", Random.name());
+    static String RESOURCE_ADAPTER_CREATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.CREATE, Random.name());
+    static String RESOURCE_ADAPTER_READ = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.READ, Random.name());
+    static String RESOURCE_ADAPTER_UPDATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.UPDATE, Random.name());
+    static String RESOURCE_ADAPTER_DELETE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address resourceAdapterAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(RESOURCE_ADAPTER, name);
+    }
+
+    private ResourceAdapterFixtures() {
+
     }
 }

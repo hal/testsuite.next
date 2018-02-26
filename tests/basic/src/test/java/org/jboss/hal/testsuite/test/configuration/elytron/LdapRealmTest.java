@@ -279,7 +279,7 @@ public class LdapRealmTest {
         table.filterAndSelect(LDAP_RLM_OTP_MAPPER_DEL);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, OTP_CREDENTIAL_MAPPER, TAB));
         crud.deleteSingleton(ldapRealmAddress(LDAP_RLM_OTP_MAPPER_DEL), form,
-                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "."+  OTP_CREDENTIAL_MAPPER));
+                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "." +  OTP_CREDENTIAL_MAPPER));
     }
 
     // ------------ x509-credential-mapper
@@ -320,7 +320,7 @@ public class LdapRealmTest {
         table.filterAndSelect(LDAP_RLM_X509_MAPPER_DEL);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, X509_CREDENTIAL_MAPPER, TAB));
         crud.deleteSingleton(ldapRealmAddress(LDAP_RLM_X509_MAPPER_DEL), form,
-                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "."+  X509_CREDENTIAL_MAPPER));
+                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "." +  X509_CREDENTIAL_MAPPER));
     }
 
     // ------------ attribute-mapping action

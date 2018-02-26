@@ -250,9 +250,12 @@
                         <id>checkstyle</id>
                         <phase>validate</phase>
                         <goals>
-                            <goal>check</goal>
+                            <goal>checkstyle-aggregate</goal>
                         </goals>
                         <configuration>
+                            <includes>**/*.*</includes>
+                            <includeTestSourceDirectory>true</includeTestSourceDirectory>
+                            <failsOnError>true</failsOnError>
                             <configLocation>build/checkstyle.xml</configLocation>
                             <encoding>UTF-8</encoding>
                             <consoleOutput>true</consoleOutput>
