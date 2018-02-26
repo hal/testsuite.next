@@ -51,6 +51,8 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class DataSourceCreateTest {
 
+    private static final String H2_CSS_SELECTOR = "input[type=radio][name=template][value=h2]";
+
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
     private static final Administration administration = new Administration(client);
@@ -91,7 +93,7 @@ public class DataSourceCreateTest {
     /** Create a data source that already exists */
     @Test
     public void createExisting() {
-        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.getRoot().findElement(By.cssSelector(H2_CSS_SELECTOR)).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
         namesForms.clear(NAME);
@@ -151,7 +153,7 @@ public class DataSourceCreateTest {
     /** Create a data source using the H2 template */
     @Test
     public void createH2() throws Exception {
-        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.getRoot().findElement(By.cssSelector(H2_CSS_SELECTOR)).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         wizard.next(Ids.DATA_SOURCE_DRIVER_FORM);
         wizard.next(Ids.DATA_SOURCE_CONNECTION_FORM);
@@ -183,7 +185,7 @@ public class DataSourceCreateTest {
     public void createTestCancel() throws Exception {
         administration.reloadIfRequired();
 
-        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.getRoot().findElement(By.cssSelector(H2_CSS_SELECTOR)).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
         namesForms.clear(NAME);
@@ -206,7 +208,7 @@ public class DataSourceCreateTest {
     /** Create a data source, test the connection and finish the wizard */
     @Test
     public void createTestFinish() throws Exception {
-        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.getRoot().findElement(By.cssSelector(H2_CSS_SELECTOR)).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
         namesForms.clear(NAME);
@@ -245,7 +247,7 @@ public class DataSourceCreateTest {
     /** Create a data source, test the connection, make changes and finish the wizard */
     @Test
     public void createTestChange() throws Exception {
-        wizard.getRoot().findElement(By.cssSelector("input[type=radio][name=template][value=h2]")).click();
+        wizard.getRoot().findElement(By.cssSelector(H2_CSS_SELECTOR)).click();
         wizard.next(Ids.DATA_SOURCE_NAMES_FORM);
         FormFragment namesForms = wizard.getForm(Ids.DATA_SOURCE_NAMES_FORM);
         namesForms.clear(NAME);

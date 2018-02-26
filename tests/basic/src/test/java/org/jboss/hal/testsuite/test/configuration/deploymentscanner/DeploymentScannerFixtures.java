@@ -16,22 +16,25 @@
 package org.jboss.hal.testsuite.test.configuration.deploymentscanner;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEPLOYMENT_SCANNER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
 
-public interface DeploymentScannerFixtures {
+public final class DeploymentScannerFixtures {
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(DEPLOYMENT_SCANNER);
+    private static final String DEPLOYMENT_SCANNER_PREFIX = "ds";
 
-    String DS_CREATE = Ids.build("ds", "create", Random.name());
-    String DS_READ = Ids.build("ds", "read", Random.name());
-    String DS_UPDATE = Ids.build("ds", "update", Random.name());
-    String DS_UPDATE_INVALID = Ids.build("ds", "update-invalid", Random.name());
-    String DS_UPDATE_RESET = Ids.build("ds", "update-reset", Random.name());
-    String DS_DELETE = Ids.build("ds", "delete", Random.name());
+    static Address SUBSYSTEM_ADDRESS = Address.subsystem(DEPLOYMENT_SCANNER);
+
+    static String DS_CREATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.CREATE, Random.name());
+    static String DS_READ = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.READ, Random.name());
+    static String DS_UPDATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static String DS_UPDATE_INVALID = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-invalid", Random.name());
+    static String DS_UPDATE_RESET = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-reset", Random.name());
+    static String DS_DELETE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address deploymentScannerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("scanner", name);
@@ -39,5 +42,8 @@ public interface DeploymentScannerFixtures {
 
     static String path(String name) {
         return name + "/" + PATH;
+    }
+
+    private DeploymentScannerFixtures() {
     }
 }
