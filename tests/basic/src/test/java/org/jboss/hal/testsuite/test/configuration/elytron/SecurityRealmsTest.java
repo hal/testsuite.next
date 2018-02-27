@@ -48,6 +48,7 @@ public class SecurityRealmsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String PROPERTY_DELMITER = ".";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -469,7 +470,7 @@ public class SecurityRealmsTest {
         table.select(PROP_RLM_GP_ADD);
         page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, GROUPS_PROPERTIES, TAB));
         crud.createSingleton(propertiesRealmAddress(PROP_RLM_GP_ADD), form, f -> f.text(PATH, ANY_STRING),
-                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + "." + PATH, ANY_STRING));
+                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + PROPERTY_DELMITER + PATH, ANY_STRING));
     }
 
     @Test
@@ -481,7 +482,7 @@ public class SecurityRealmsTest {
         table.select(PROP_RLM_GP_UPD);
         page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, GROUPS_PROPERTIES, TAB));
         crud.update(propertiesRealmAddress(PROP_RLM_GP_UPD), form, f -> f.text(RELATIVE_TO, ANY_STRING),
-                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + "." + RELATIVE_TO, ANY_STRING));
+                ver -> ver.verifyAttribute(GROUPS_PROPERTIES + PROPERTY_DELMITER + RELATIVE_TO, ANY_STRING));
     }
 
     @Test
@@ -505,7 +506,7 @@ public class SecurityRealmsTest {
         table.select(PROP_RLM_UPDATE);
         page.getPropertiesRealmFormTabs().select(Ids.build(Ids.ELYTRON_PROPERTIES_REALM, USERS_PROPERTIES, TAB));
         crud.update(propertiesRealmAddress(PROP_RLM_UPDATE), form, f -> f.text(DIGEST_REALM_NAME, ANY_STRING),
-                ver -> ver.verifyAttribute(USERS_PROPERTIES + "." + DIGEST_REALM_NAME, ANY_STRING));
+                ver -> ver.verifyAttribute(USERS_PROPERTIES + PROPERTY_DELMITER + DIGEST_REALM_NAME, ANY_STRING));
     }
 
     // --------------- token-realm
@@ -522,7 +523,7 @@ public class SecurityRealmsTest {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, TOKEN_REALM_ITEM);
         TableFragment table = page.getTokenRealmTable();
         // do not set the NAME attribute
-        crud.createWithErrorAndCancelDialog(table, f -> {}, NAME);
+        crud.createWithErrorAndCancelDialog(table, f -> { }, NAME);
     }
 
     @Test
@@ -568,7 +569,7 @@ public class SecurityRealmsTest {
         table.select(TKN_RLM_JWT_UPD);
         page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, JWT, TAB));
         crud.update(tokenRealmAddress(TKN_RLM_JWT_UPD), form, f -> f.text(PUBLIC_KEY, ANY_STRING),
-                ver -> ver.verifyAttribute(JWT + "." + PUBLIC_KEY, ANY_STRING));
+                ver -> ver.verifyAttribute(JWT + PROPERTY_DELMITER + PUBLIC_KEY, ANY_STRING));
     }
 
     @Test
@@ -614,7 +615,7 @@ public class SecurityRealmsTest {
         page.getTokenRealmFormTabs().select(Ids.build(Ids.ELYTRON_TOKEN_REALM, OAUTH2_INTROSPECTION, TAB));
         String secret = Random.name();
         crud.update(tokenRealmAddress(TKN_RLM_OAU_UPD), form, f -> f.text(CLIENT_SECRET, secret),
-                ver -> ver.verifyAttribute(OAUTH2_INTROSPECTION + "." + CLIENT_SECRET, secret));
+                ver -> ver.verifyAttribute(OAUTH2_INTROSPECTION + PROPERTY_DELMITER + CLIENT_SECRET, secret));
     }
 
     @Test

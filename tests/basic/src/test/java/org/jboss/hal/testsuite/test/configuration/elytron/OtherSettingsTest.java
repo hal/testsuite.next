@@ -45,9 +45,42 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CLASS_NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CREATE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CUSTOM_POLICY;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_REALM;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DIR_CONTEXT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JACC_POLICY;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_MANAGER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_ATTRIBUTES;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_RDN;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_TEMPLATE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.POLICY;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PORT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PROVIDER_NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REALM;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.REALMS;
-import static org.jboss.hal.resources.Ids.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RESULT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SEARCH_PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TYPE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.URL;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
+import static org.jboss.hal.resources.Ids.ELYTRON_AUTHENTICATION_CONFIGURATION;
+import static org.jboss.hal.resources.Ids.ELYTRON_CREDENTIAL_STORE;
+import static org.jboss.hal.resources.Ids.ELYTRON_CUSTOM_POLICY_EMPTY;
+import static org.jboss.hal.resources.Ids.ELYTRON_DIR_CONTEXT;
+import static org.jboss.hal.resources.Ids.ELYTRON_KEY_MANAGER;
+import static org.jboss.hal.resources.Ids.ELYTRON_KEY_STORE;
+import static org.jboss.hal.resources.Ids.ELYTRON_LDAP_KEY_STORE;
+import static org.jboss.hal.resources.Ids.ELYTRON_TRUST_MANAGER;
+import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.Selectors.contains;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 
@@ -56,6 +89,7 @@ public class OtherSettingsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String PROPERTY_DELIMITER = ".";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -363,7 +397,7 @@ public class OtherSettingsTest {
         table.select(CRED_ST_UPDATE);
         page.getCredentialStoreTab().select(Ids.build(ELYTRON_CREDENTIAL_STORE, CREDENTIAL_REFERENCE, TAB));
         crud.update(credentialStoreAddress(CRED_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
-                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + PROPERTY_DELIMITER + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
@@ -460,7 +494,7 @@ public class OtherSettingsTest {
         table.select(KEY_ST_CR_UPDATE);
         page.getKeyStoreTab().select(Ids.build(ELYTRON_KEY_STORE, CREDENTIAL_REFERENCE, TAB));
         crud.update(keyStoreAddress(KEY_ST_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
-                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + PROPERTY_DELIMITER + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
@@ -573,7 +607,7 @@ public class OtherSettingsTest {
         String rndValue = Random.name();
 
         crud.update(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), form, f -> f.text(NEW_ITEM_RDN, rndValue),
-                verifier -> verifier.verifyAttribute(NEW_ITEM_TEMPLATE + "." + NEW_ITEM_RDN, rndValue));
+                verifier -> verifier.verifyAttribute(NEW_ITEM_TEMPLATE + PROPERTY_DELIMITER + NEW_ITEM_RDN, rndValue));
     }
 
     @Test
@@ -721,7 +755,7 @@ public class OtherSettingsTest {
         table.select(KEY_MAN_UPDATE);
         page.getKeyManagerTab().select(Ids.build(ELYTRON_KEY_MANAGER, CREDENTIAL_REFERENCE, TAB));
         crud.update(keyManagerAddress(KEY_MAN_UPDATE), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
-                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + PROPERTY_DELIMITER + CLEAR_TEXT, ANY_STRING));
     }
 
     // --------------- provider-loader
@@ -967,7 +1001,7 @@ public class OtherSettingsTest {
         table.select(TRU_MAN_CRL_UPD);
         page.getTrustManagerTab().select(Ids.build(ELYTRON_TRUST_MANAGER, CERTIFICATE_REVOCATION_LIST, TAB));
         crud.update(trustManagerAddress(TRU_MAN_CRL_UPD), form, f -> f.text(PATH, ANY_STRING),
-                verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + "." + PATH, ANY_STRING));
+                verify -> verify.verifyAttribute(CERTIFICATE_REVOCATION_LIST + PROPERTY_DELIMITER + PATH, ANY_STRING));
     }
 
     @Test
@@ -1042,7 +1076,7 @@ public class OtherSettingsTest {
         page.getAuthenticationConfigurationTabs()
                 .select(Ids.build(ELYTRON_AUTHENTICATION_CONFIGURATION, CREDENTIAL_REFERENCE, TAB));
         crud.update(authenticationConfigurationAddress(AUT_CF_CR_UPD), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
-                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + PROPERTY_DELIMITER + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
@@ -1538,7 +1572,7 @@ public class OtherSettingsTest {
         table.select(DIR_CR_UPD);
         page.getDirContextTabs().select(Ids.build(ELYTRON_DIR_CONTEXT, CREDENTIAL_REFERENCE, TAB));
         crud.update(dirContextAddress(DIR_CR_UPD), form, f -> f.text(CLEAR_TEXT, ANY_STRING),
-                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, ANY_STRING));
+                ver -> ver.verifyAttribute(CREDENTIAL_REFERENCE + PROPERTY_DELIMITER + CLEAR_TEXT, ANY_STRING));
     }
 
     @Test
