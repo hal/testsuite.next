@@ -16,39 +16,46 @@
 package org.jboss.hal.testsuite.test.configuration.io;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IO;
 
-public interface IOFixtures {
+public final class IOFixtures {
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(IO);
+    private static final String WORKER_PREFIX = "worker";
+    private static final String BUFFER_POOL_PREFIX = "bp";
+
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(IO);
 
     // ------------------------------------------------------ worker
 
-    String WORKER_CREATE = Ids.build("worker", "create", Random.name());
-    String WORKER_READ = Ids.build("worker", "read", Random.name());
-    String WORKER_UPDATE = Ids.build("worker", "update", Random.name());
-    String WORKER_DELETE = Ids.build("worker", "delete", Random.name());
+    static final String WORKER_CREATE = Ids.build(WORKER_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String WORKER_READ = Ids.build(WORKER_PREFIX, CrudConstants.READ, Random.name());
+    static final String WORKER_UPDATE = Ids.build(WORKER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String WORKER_DELETE = Ids.build(WORKER_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address workerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("worker", name);
+        return SUBSYSTEM_ADDRESS.and(WORKER_PREFIX, name);
     }
 
 
     // ------------------------------------------------------ buffer pool
 
-    String BUFFER_SIZE = "buffer-size";
-    String BUFFERS_PER_SLICE = "buffers-per-slice";
-    String DIRECT_BUFFERS = "direct-buffers";
+    static final String BUFFER_SIZE = "buffer-size";
+    static final String BUFFERS_PER_SLICE = "buffers-per-slice";
+    static final String DIRECT_BUFFERS = "direct-buffers";
 
-    String BP_CREATE = Ids.build("bp", "create", Random.name());
-    String BP_READ = Ids.build("bp", "read", Random.name());
-    String BP_UPDATE = Ids.build("bp", "update", Random.name());
-    String BP_DELETE = Ids.build("bp", "delete", Random.name());
+    static final String BP_CREATE = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String BP_READ = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.READ, Random.name());
+    static final String BP_UPDATE = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String BP_DELETE = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address bufferPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("buffer-pool", name);
+    }
+
+    private IOFixtures() {
     }
 }

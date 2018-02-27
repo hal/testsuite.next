@@ -47,6 +47,7 @@ public class LdapRealmTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String PROPERTY_DELIMITER = ".";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -189,7 +190,7 @@ public class LdapRealmTest {
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, IDENTITY_MAPPING, TAB));
         String filterName = Random.name();
         crud.update(ldapRealmAddress(LDAP_RLM_UPDATE), form, f -> f.text(FILTER_NAME, filterName),
-                ver -> ver.verifyAttribute(IDENTITY_MAPPING + "." + FILTER_NAME, filterName));
+                ver -> ver.verifyAttribute(IDENTITY_MAPPING + PROPERTY_DELIMITER + FILTER_NAME, filterName));
     }
 
     // ------------ user-password-mapper
@@ -201,7 +202,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_USER_MAPPER_CRT);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, USER_PASSWORD_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, USER_PASSWORD_MAPPER, FROM);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, USER_PASSWORD_MAPPER, FROM);
         crud.createSingleton(ldapRealmAddress(LDAP_RLM_USER_MAPPER_CRT), form, f -> f.text(FROM, ANY_STRING),
                 ver -> ver.verifyAttribute(attr, ANY_STRING));
     }
@@ -214,7 +215,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_USER_MAPPER_UPD);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, USER_PASSWORD_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, USER_PASSWORD_MAPPER, FROM);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, USER_PASSWORD_MAPPER, FROM);
         String from = Random.name();
         crud.update(ldapRealmAddress(LDAP_RLM_USER_MAPPER_UPD), form, f -> f.text(FROM, from),
                 ver -> ver.verifyAttribute(attr, from));
@@ -229,7 +230,7 @@ public class LdapRealmTest {
         table.filterAndSelect(LDAP_RLM_USER_MAPPER_DEL);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, USER_PASSWORD_MAPPER, TAB));
         crud.deleteSingleton(ldapRealmAddress(LDAP_RLM_USER_MAPPER_DEL), form,
-                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "." +  USER_PASSWORD_MAPPER));
+                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + PROPERTY_DELIMITER +  USER_PASSWORD_MAPPER));
     }
 
     // ------------ otp-credential-mapper
@@ -241,7 +242,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_OTP_MAPPER_CRT);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, OTP_CREDENTIAL_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, OTP_CREDENTIAL_MAPPER);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, OTP_CREDENTIAL_MAPPER);
         ModelNode otp = new ModelNode();
         otp.get(ALGORITHM_FROM).set(ANY_STRING);
         otp.get(HASH_FROM).set(ANY_STRING);
@@ -264,7 +265,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_OTP_MAPPER_UPD);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, OTP_CREDENTIAL_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, OTP_CREDENTIAL_MAPPER, ALGORITHM_FROM);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, OTP_CREDENTIAL_MAPPER, ALGORITHM_FROM);
         String algFrom = Random.name();
         crud.update(ldapRealmAddress(LDAP_RLM_OTP_MAPPER_UPD), form,
                 f -> f.text(ALGORITHM_FROM, algFrom), ver -> ver.verifyAttribute(attr, algFrom));
@@ -279,7 +280,7 @@ public class LdapRealmTest {
         table.filterAndSelect(LDAP_RLM_OTP_MAPPER_DEL);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, OTP_CREDENTIAL_MAPPER, TAB));
         crud.deleteSingleton(ldapRealmAddress(LDAP_RLM_OTP_MAPPER_DEL), form,
-                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "."+  OTP_CREDENTIAL_MAPPER));
+                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + PROPERTY_DELIMITER +  OTP_CREDENTIAL_MAPPER));
     }
 
     // ------------ x509-credential-mapper
@@ -291,7 +292,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_X509_MAPPER_CRT);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, X509_CREDENTIAL_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, X509_CREDENTIAL_MAPPER, CERTIFICATE_FROM);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, X509_CREDENTIAL_MAPPER, CERTIFICATE_FROM);
         String certFrom = Random.name();
         crud.createSingleton(ldapRealmAddress(LDAP_RLM_X509_MAPPER_CRT), form, f -> f.text(CERTIFICATE_FROM, certFrom),
                 ver -> ver.verifyAttribute(attr, certFrom));
@@ -305,7 +306,7 @@ public class LdapRealmTest {
         table.bind(form);
         table.filterAndSelect(LDAP_RLM_X509_MAPPER_UPD);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, X509_CREDENTIAL_MAPPER, TAB));
-        String attr = Joiner.on(".").join(IDENTITY_MAPPING, X509_CREDENTIAL_MAPPER, CERTIFICATE_FROM);
+        String attr = Joiner.on(PROPERTY_DELIMITER).join(IDENTITY_MAPPING, X509_CREDENTIAL_MAPPER, CERTIFICATE_FROM);
         String certFrom = Random.name();
         crud.update(ldapRealmAddress(LDAP_RLM_X509_MAPPER_UPD), form,
                 f -> f.text(CERTIFICATE_FROM, certFrom), ver -> ver.verifyAttribute(attr, certFrom));
@@ -320,7 +321,7 @@ public class LdapRealmTest {
         table.filterAndSelect(LDAP_RLM_X509_MAPPER_DEL);
         page.getLdapRealmFormTabs().select(Ids.build(ELYTRON, LDAP_REALM, X509_CREDENTIAL_MAPPER, TAB));
         crud.deleteSingleton(ldapRealmAddress(LDAP_RLM_X509_MAPPER_DEL), form,
-                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + "."+  X509_CREDENTIAL_MAPPER));
+                ver -> ver.verifyAttributeIsUndefined(IDENTITY_MAPPING + PROPERTY_DELIMITER +  X509_CREDENTIAL_MAPPER));
     }
 
     // ------------ attribute-mapping action
@@ -332,7 +333,7 @@ public class LdapRealmTest {
         ldTable.action(LDAP_RLM_AM_CRT, IDENTITY_ATTRIBUTES_MAPPING_LB);
         TableFragment table = page.getLdapRealmIdentityAttributeMappingsTable();
         waitGui().until().element(table.getRoot()).is().visible();
-        String attr = IDENTITY_MAPPING + "." +  ATTRIBUTE_MAPPING;
+        String attr = IDENTITY_MAPPING + PROPERTY_DELIMITER +  ATTRIBUTE_MAPPING;
         crud.create(ldapRealmAddress(LDAP_RLM_AM_CRT), table, f -> {
                     f.text(FROM, ANY_STRING);
                     f.text(TO, ANY_STRING);
@@ -348,7 +349,7 @@ public class LdapRealmTest {
         ldTable.action(LDAP_RLM_AM_CRT, IDENTITY_ATTRIBUTES_MAPPING_LB);
         TableFragment table = page.getLdapRealmIdentityAttributeMappingsTable();
         waitGui().until().element(table.getRoot()).is().visible();
-        crud.createWithErrorAndCancelDialog(table, f -> {}, FROM);
+        crud.createWithErrorAndCancelDialog(table, f -> { }, FROM);
     }
 
     @Test
@@ -361,7 +362,7 @@ public class LdapRealmTest {
         FormFragment form = page.getLdapRealmIdentityAttributeMappingsForm();
         table.bind(form);
         waitGui().until().element(table.getRoot()).is().visible();
-        String attr = IDENTITY_MAPPING + "." +  ATTRIBUTE_MAPPING;
+        String attr = IDENTITY_MAPPING + PROPERTY_DELIMITER +  ATTRIBUTE_MAPPING;
         String to = Random.name();
         table.select(LDAP_RLM_AM_FROM_UPD);
         crud.update(ldapRealmAddress(LDAP_RLM_AM_UPD), form, f -> f.text(TO, to),
@@ -376,7 +377,7 @@ public class LdapRealmTest {
         ldTable.action(LDAP_RLM_AM_DEL, IDENTITY_ATTRIBUTES_MAPPING_LB);
         TableFragment table = page.getLdapRealmIdentityAttributeMappingsTable();
         waitGui().until().element(table.getRoot()).is().visible();
-        String attr = IDENTITY_MAPPING + "." +  ATTRIBUTE_MAPPING;
+        String attr = IDENTITY_MAPPING + PROPERTY_DELIMITER +  ATTRIBUTE_MAPPING;
         crud.delete(ldapRealmAddress(LDAP_RLM_AM_DEL), table, LDAP_RLM_AM_FROM_DEL,
                 ver -> ver.verifyListAttributeDoesNotContainSingleValue(attr, FROM, LDAP_RLM_AM_FROM_DEL));
     }

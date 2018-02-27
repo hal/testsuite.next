@@ -46,6 +46,7 @@ public class ServerDestinationsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String ID_DELIMITER = "-";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -94,7 +95,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void coreQueueCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + ID_DELIMITER + ITEM);
         TableFragment table = page.getCoreQueueTable();
         FormFragment form = page.getCoreQueueForm();
         table.bind(form);
@@ -109,7 +110,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void coreQueueRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_CORE_QUEUE + ID_DELIMITER + ITEM);
         TableFragment table = page.getCoreQueueTable();
         FormFragment form = page.getCoreQueueForm();
         table.bind(form);
@@ -121,7 +122,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsQueueCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsQueueTable();
         FormFragment form = page.getJmsQueueForm();
         table.bind(form);
@@ -136,7 +137,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsQueueUpdate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsQueueTable();
         FormFragment form = page.getJmsQueueForm();
         table.bind(form);
@@ -150,7 +151,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsQueueRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_QUEUE + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsQueueTable();
         FormFragment form = page.getJmsQueueForm();
         table.bind(form);
@@ -162,7 +163,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsTopicCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsTopicTable();
         FormFragment form = page.getJmsTopicForm();
         table.bind(form);
@@ -177,7 +178,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsTopicUpdate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsTopicTable();
         FormFragment form = page.getJmsTopicForm();
         table.bind(form);
@@ -191,7 +192,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void jmsTopicRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_JMS_TOPIC + ID_DELIMITER + ITEM);
         TableFragment table = page.getJmsTopicTable();
         FormFragment form = page.getJmsTopicForm();
         table.bind(form);
@@ -203,7 +204,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void securitySettingCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + ID_DELIMITER + ITEM);
         TableFragment table = page.getSecuritySettingTable();
         FormFragment form = page.getSecuritySettingForm();
         table.bind(form);
@@ -218,7 +219,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void securitySettingUpdate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + ID_DELIMITER + ITEM);
         TableFragment table = page.getSecuritySettingTable();
         FormFragment form = page.getSecuritySettingForm();
         table.bind(form);
@@ -229,7 +230,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void securitySettingRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_SECURITY_SETTING_ROLE + ID_DELIMITER + ITEM);
         TableFragment table = page.getSecuritySettingTable();
         FormFragment form = page.getSecuritySettingForm();
         table.bind(form);
@@ -241,7 +242,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void addressSettingCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + ID_DELIMITER + ITEM);
         TableFragment table = page.getAddressSettingTable();
         FormFragment form = page.getAddressSettingForm();
         table.bind(form);
@@ -251,7 +252,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void addressSettingUpdate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + ID_DELIMITER + ITEM);
         TableFragment table = page.getAddressSettingTable();
         FormFragment form = page.getAddressSettingForm();
         table.bind(form);
@@ -262,7 +263,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void addressSettingRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_ADDRESS_SETTING + ID_DELIMITER + ITEM);
         TableFragment table = page.getAddressSettingTable();
         FormFragment form = page.getAddressSettingForm();
         table.bind(form);
@@ -274,7 +275,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void divertCreate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + ID_DELIMITER + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
         table.bind(form);
@@ -288,7 +289,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void divertCreateRequiredField() {
-        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + ID_DELIMITER + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
         table.bind(form);
@@ -298,7 +299,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void divertUpdate() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + ID_DELIMITER + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
         table.bind(form);
@@ -309,7 +310,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void divertUpdateRequiredField() {
-        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + ID_DELIMITER + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
         table.bind(form);
@@ -320,7 +321,7 @@ public class ServerDestinationsTest {
 
     @Test
     public void divertRemove() throws Exception {
-        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + "-" + ITEM);
+        console.verticalNavigation().selectPrimary(MESSAGING_DIVERT + ID_DELIMITER + ITEM);
         TableFragment table = page.getDivertTable();
         FormFragment form = page.getDivertForm();
         table.bind(form);

@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.test.configuration.ejb;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -23,28 +24,36 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.EJB3;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ELYTRON;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVICE;
 
-public interface EJBFixtures {
+public final class EJBFixtures {
 
-    String ALIASES = "aliases";
-    String CLUSTER = "cluster";
-    String DEFAULT_DISTINCT_NAME = "default-distinct-name";
-    String DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT = "default-singleton-bean-access-timeout";
-    String DERIVE_SIZE = "derive-size";
-    String FROM_WORKER_POOLS = "from-worker-pools";
-    String LOCAL_RECEIVER_PASS_BY_VALUE = "local-receiver-pass-by-value";
-    String MAX_SIZE = "max-size";
-    String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
-    String THREAD_POOL_NAME = "thread-pool-name";
-    String USE_QUALIFIED_NAME = "use-qualified-name";
+    private static final String THREAD_POOL_PREFIX = "tp";
+    private static final String REMOTING_PROFILE_PREFIX = "rp";
+    private static final String BEAN_POOL_PREFIX = "bp";
+    private static final String CACHE_PREFIX = "cache";
+    private static final String PASSIVATION_PREFIX = "passivation";
+    private static final String MDB_PREFIX = "mdb";
+    private static final String ASD_PREFIX = "asd";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(EJB3);
+    static final String ALIASES = "aliases";
+    static final String CLUSTER = "cluster";
+    static final String DEFAULT_DISTINCT_NAME = "default-distinct-name";
+    static final String DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT = "default-singleton-bean-access-timeout";
+    static final String DERIVE_SIZE = "derive-size";
+    static final String FROM_WORKER_POOLS = "from-worker-pools";
+    static final String LOCAL_RECEIVER_PASS_BY_VALUE = "local-receiver-pass-by-value";
+    static final String MAX_SIZE = "max-size";
+    static final String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
+    static final String THREAD_POOL_NAME = "thread-pool-name";
+    static final String USE_QUALIFIED_NAME = "use-qualified-name";
+
+    public static Address SUBSYSTEM_ADDRESS = Address.subsystem(EJB3);
 
     // ------------------------------------------------------ container / thread pool
 
-    String TP_CREATE = Ids.build("tp", "create", Random.name());
-    String TP_READ = Ids.build("tp", "read", Random.name());
-    String TP_UPDATE = Ids.build("tp", "update", Random.name());
-    String TP_DELETE = Ids.build("tp", "delete", Random.name());
+    static final String TP_CREATE = Ids.build(THREAD_POOL_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String TP_READ = Ids.build(THREAD_POOL_PREFIX, CrudConstants.READ, Random.name());
+    static final String TP_UPDATE = Ids.build(THREAD_POOL_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String TP_DELETE = Ids.build(THREAD_POOL_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address threadPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("thread-pool", name);
@@ -52,10 +61,10 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ container / remoting profile
 
-    String RP_CREATE = Ids.build("rp", "create", Random.name());
-    String RP_READ = Ids.build("rp", "read", Random.name());
-    String RP_UPDATE = Ids.build("rp", "update", Random.name());
-    String RP_DELETE = Ids.build("rp", "delete", Random.name());
+    static final String RP_CREATE = Ids.build(REMOTING_PROFILE_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String RP_READ = Ids.build(REMOTING_PROFILE_PREFIX, CrudConstants.READ, Random.name());
+    static final String RP_UPDATE = Ids.build(REMOTING_PROFILE_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String RP_DELETE = Ids.build(REMOTING_PROFILE_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address remotingProfileAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("remoting-profile", name);
@@ -63,10 +72,10 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ bean pool
 
-    String BP_CREATE = Ids.build("bp", "create", Random.name());
-    String BP_READ = Ids.build("bp", "read", Random.name());
-    String BP_UPDATE = Ids.build("bp", "update", Random.name());
-    String BP_DELETE = Ids.build("bp", "delete", Random.name());
+    static final String BP_CREATE = Ids.build(BEAN_POOL_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String BP_READ = Ids.build(BEAN_POOL_PREFIX, CrudConstants.READ, Random.name());
+    static final String BP_UPDATE = Ids.build(BEAN_POOL_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String BP_DELETE = Ids.build(BEAN_POOL_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address beanPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("strict-max-bean-instance-pool", name);
@@ -74,10 +83,10 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ state management / cache
 
-    String CACHE_CREATE = Ids.build("cache", "create", Random.name());
-    String CACHE_READ = Ids.build("cache", "read", Random.name());
-    String CACHE_UPDATE = Ids.build("cache", "update", Random.name());
-    String CACHE_DELETE = Ids.build("cache", "delete", Random.name());
+    static final String CACHE_CREATE = Ids.build(CACHE_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String CACHE_READ = Ids.build(CACHE_PREFIX, CrudConstants.READ, Random.name());
+    static final String CACHE_UPDATE = Ids.build(CACHE_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CACHE_DELETE = Ids.build(CACHE_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address cacheAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("cache", name);
@@ -85,16 +94,16 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ state management / passivation
 
-    String PS_CREATE = Ids.build("passivation", "create", Random.name());
-    String PS_READ = Ids.build("passivation", "read", Random.name());
-    String PS_UPDATE = Ids.build("passivation", "update", Random.name());
-    String PS_DELETE = Ids.build("passivation", "delete", Random.name());
+    static final String PS_CREATE = Ids.build(PASSIVATION_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String PS_READ = Ids.build(PASSIVATION_PREFIX, CrudConstants.READ, Random.name());
+    static final String PS_UPDATE = Ids.build(PASSIVATION_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String PS_DELETE = Ids.build(PASSIVATION_PREFIX, CrudConstants.DELETE, Random.name());
 
-    Address SERVICE_ASYNC_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "async");
-    Address SERVICE_IDENTITY_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "identity");
-    Address SERVICE_IIOP_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "iiop");
-    Address SERVICE_REMOTE_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "remote");
-    Address SERVICE_TIMER_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "timer-service");
+    static final Address SERVICE_ASYNC_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "async");
+    static final Address SERVICE_IDENTITY_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "identity");
+    static final Address SERVICE_IIOP_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "iiop");
+    static final Address SERVICE_REMOTE_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "remote");
+    static final Address SERVICE_TIMER_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, "timer-service");
 
     static Address passivationAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("passivation-store", name);
@@ -102,10 +111,10 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ mdb delivery group
 
-    String MDB_CREATE = Ids.build("mdb", "create", Random.name());
-    String MDB_READ = Ids.build("mdb", "read", Random.name());
-    String MDB_UPDATE = Ids.build("mdb", "update", Random.name());
-    String MDB_DELETE = Ids.build("mdb", "delete", Random.name());
+    static final String MDB_CREATE = Ids.build(MDB_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String MDB_READ = Ids.build(MDB_PREFIX, CrudConstants.READ, Random.name());
+    static final String MDB_UPDATE = Ids.build(MDB_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String MDB_DELETE = Ids.build(MDB_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address mdbDeliveryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("mdb-delivery-group", name);
@@ -113,13 +122,16 @@ public interface EJBFixtures {
 
     // ------------------------------------------------------ application security domain
 
-    String ASD_CREATE = Ids.build("asd", "create", Random.name());
-    String ASD_UPDATE = Ids.build("asd", "update", Random.name());
-    String ASD_DELETE = Ids.build("asd", "delete", Random.name());
+    static final String ASD_CREATE = Ids.build(ASD_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String ASD_UPDATE = Ids.build(ASD_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String ASD_DELETE = Ids.build(ASD_PREFIX, CrudConstants.DELETE, Random.name());
 
-    Address ELYTRON_ADDRESS = Address.subsystem(ELYTRON);
+    static final Address ELYTRON_ADDRESS = Address.subsystem(ELYTRON);
 
     static Address applicationSecurityDomainAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("application-security-domain", name);
+    }
+
+    private EJBFixtures() {
     }
 }

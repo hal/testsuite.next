@@ -20,14 +20,17 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONFIGURATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODCLUSTER;
 
-public interface ModclusterFixtures {
+public final class ModclusterFixtures {
 
-    String EXCLUDED_CONTEXTS = "excluded-contexts";
-    String NODE_TIMEOUT = "node-timeout";
-    String PROXY_URL = "proxy-url";
-    String STICKY_SESSION = "sticky-session";
+    static final String EXCLUDED_CONTEXTS = "excluded-contexts";
+    static final String NODE_TIMEOUT = "node-timeout";
+    static final String PROXY_URL = "proxy-url";
+    static final String STICKY_SESSION = "sticky-session";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(MODCLUSTER);
-    Address CONFIG_ADDRESS = SUBSYSTEM_ADDRESS.and("mod-cluster-config", CONFIGURATION);
-    Address SSL_ADDRESS = CONFIG_ADDRESS.and("ssl", CONFIGURATION);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(MODCLUSTER);
+    static final Address CONFIG_ADDRESS = SUBSYSTEM_ADDRESS.and("mod-cluster-config", CONFIGURATION);
+    static final Address SSL_ADDRESS = CONFIG_ADDRESS.and("ssl", CONFIGURATION);
+
+    private ModclusterFixtures() {
+    }
 }

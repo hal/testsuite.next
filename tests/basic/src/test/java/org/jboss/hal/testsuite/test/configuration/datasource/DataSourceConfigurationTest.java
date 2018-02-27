@@ -37,8 +37,17 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BACKGROUND_VALIDATION;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BACKGROUND_VALIDATION_MILLIS;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BLOCKING_TIMEOUT_WAIT_MILLIS;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.DATA_SOURCE_UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.SPY;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.TRACKING;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.URL_DELIMITER;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.USE_TRY_LOCK;
 import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.VALID_CONNECTION_CHECKER_CLASS_NAME;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.VALID_CONNECTION_CHECKER_PROPERTIES;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.dataSourceAddress;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.h2ConnectionUrl;
 
 @RunWith(Arquillian.class)
 public class DataSourceConfigurationTest {

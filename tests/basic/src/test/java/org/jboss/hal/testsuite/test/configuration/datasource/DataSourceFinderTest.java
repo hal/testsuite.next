@@ -47,34 +47,36 @@ import static org.junit.Assert.assertTrue;
 @RunWith(Arquillian.class)
 public class DataSourceFinderTest {
 
+    private static final String H2_DRIVER_NAME = "h2";
+
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
         client.apply(new AddDataSource.Builder<>(DATA_SOURCE_DELETE)
-                .driverName("h2")
+                .driverName(H2_DRIVER_NAME)
                 .jndiName(Random.jndiName(DATA_SOURCE_DELETE))
                 .connectionUrl(h2ConnectionUrl(DATA_SOURCE_DELETE))
                 .build());
         client.apply(new AddDataSource.Builder<>(DATA_SOURCE_DISABLE)
-                .driverName("h2")
+                .driverName(H2_DRIVER_NAME)
                 .jndiName(Random.jndiName(DATA_SOURCE_DISABLE))
                 .connectionUrl(h2ConnectionUrl(DATA_SOURCE_DISABLE))
                 .enableAfterCreate()
                 .build());
         client.apply(new AddDataSource.Builder<>(DATA_SOURCE_ENABLE)
-                .driverName("h2")
+                .driverName(H2_DRIVER_NAME)
                 .jndiName(Random.jndiName(DATA_SOURCE_ENABLE))
                 .connectionUrl(h2ConnectionUrl(DATA_SOURCE_ENABLE))
                 .build());
         client.apply(new AddDataSource.Builder<>(DATA_SOURCE_READ)
-                .driverName("h2")
+                .driverName(H2_DRIVER_NAME)
                 .jndiName(Random.jndiName(DATA_SOURCE_READ))
                 .connectionUrl(h2ConnectionUrl(DATA_SOURCE_READ))
                 .build());
         client.apply(new AddDataSource.Builder<>(DATA_SOURCE_TEST)
-                .driverName("h2")
+                .driverName(H2_DRIVER_NAME)
                 .jndiName(Random.jndiName(DATA_SOURCE_TEST))
                 .connectionUrl(h2ConnectionUrl(DATA_SOURCE_TEST))
                 .enableAfterCreate()
