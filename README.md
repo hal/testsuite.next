@@ -1,3 +1,5 @@
+[![TC Build](https://ci.wildfly.org/app/rest/builds/buildType:(id:hal_TestSuiteDevelopment)/statusIcon.svg)](https://ci.wildfly.org/viewType.html?buildTypeId=hal_Elemento&guest=1)
+
 # Testsuite
 
 Testsuite for the HAL management console based on [Drone & Graphene](http://arquillian.org/guides/functional_testing_using_graphene/) Arquillian extensions.
