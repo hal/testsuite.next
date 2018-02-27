@@ -26,12 +26,12 @@ public final class InterfaceFixtures {
 
     private static final String INTERFACE_PREFIX = "ifc";
 
-    static String LOCALHOST = "127.0.0.1";
+    static final String LOCALHOST = "127.0.0.1";
 
-    static String CREATE = Ids.build(INTERFACE_PREFIX, CrudConstants.CREATE, Random.name());
-    static String READ = Ids.build(INTERFACE_PREFIX, CrudConstants.READ, Random.name());
-    static String UPDATE = Ids.build(INTERFACE_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String DELETE = Ids.build(INTERFACE_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CREATE = Ids.build(INTERFACE_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String READ = Ids.build(INTERFACE_PREFIX, CrudConstants.READ, Random.name());
+    static final String UPDATE = Ids.build(INTERFACE_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String DELETE = Ids.build(INTERFACE_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address interfaceAddress(String name) {
         return Address.of(INTERFACE, name);

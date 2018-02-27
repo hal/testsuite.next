@@ -27,22 +27,22 @@ public final class ResourceAdapterFixtures {
 
     private static final String RESOURCE_ADAPTERS_PREFIX = "ra";
 
-    static String BEANVALIDATIONGROUPS = "beanvalidationgroups";
-    static String BOOTSTRAP_CONTEXT = "bootstrap-context";
-    static String LOCAL_TRANSACTION = "LocalTransaction";
-    static String WM_SECURITY = "wm-security";
-    static String WM_SECURITY_DEFAULT_GROUPS = "wm-security-default-groups";
-    static String WM_SECURITY_DEFAULT_PRINCIPAL = "wm-security-default-principal";
-    static String WM_SECURITY_MAPPING_REQUIRED = "wm-security-mapping-required";
+    static final String BEANVALIDATIONGROUPS = "beanvalidationgroups";
+    static final String BOOTSTRAP_CONTEXT = "bootstrap-context";
+    static final String LOCAL_TRANSACTION = "LocalTransaction";
+    static final String WM_SECURITY = "wm-security";
+    static final String WM_SECURITY_DEFAULT_GROUPS = "wm-security-default-groups";
+    static final String WM_SECURITY_DEFAULT_PRINCIPAL = "wm-security-default-principal";
+    static final String WM_SECURITY_MAPPING_REQUIRED = "wm-security-mapping-required";
 
     static Address SUBSYSTEM_ADDRESS = Address.subsystem(RESOURCE_ADAPTERS);
 
     // ------------------------------------------------------ resource adapter
 
-    static String RESOURCE_ADAPTER_CREATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.CREATE, Random.name());
-    static String RESOURCE_ADAPTER_READ = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.READ, Random.name());
-    static String RESOURCE_ADAPTER_UPDATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String RESOURCE_ADAPTER_DELETE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String RESOURCE_ADAPTER_CREATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String RESOURCE_ADAPTER_READ = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.READ, Random.name());
+    static final String RESOURCE_ADAPTER_UPDATE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String RESOURCE_ADAPTER_DELETE = Ids.build(RESOURCE_ADAPTERS_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address resourceAdapterAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(RESOURCE_ADAPTER, name);

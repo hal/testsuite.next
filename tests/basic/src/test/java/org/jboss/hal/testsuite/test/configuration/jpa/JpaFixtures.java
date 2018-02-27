@@ -19,9 +19,12 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JPA;
 
-public interface JpaFixtures {
+public final class JpaFixtures {
 
-    String DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE = "default-extended-persistence-inheritance";
-    String SHALLOW = "SHALLOW";
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(JPA);
+    static final String DEFAULT_EXTENDED_PERSISTENCE_INHERITANCE = "default-extended-persistence-inheritance";
+    static final String SHALLOW = "SHALLOW";
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(JPA);
+
+    private JpaFixtures() {
+    }
 }

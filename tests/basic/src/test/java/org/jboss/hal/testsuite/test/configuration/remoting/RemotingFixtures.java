@@ -32,28 +32,28 @@ public final class RemotingFixtures {
     private static final String POLICY = "policy";
     private static final String SECURITY = "security";
 
-    static String AUTH_REALM = "auth-realm";
-    static String AUTHENTICATION_PROVIDER = "authentication-provider";
-    static String BUFFER_REGION_SIZE = "buffer-region-size";
-    static String CONNECTOR_REF = "connector-ref";
-    static String FORWARD_SECRECY = "forward-secrecy";
-    static String INCLUDE_MECHANISMS = "include-mechanisms";
-    static String MAX_INBOUND_CHANNELS = "max-inbound-channels";
-    static String SASL = "sasl";
-    static String SASL_POLICY = "sasl-policy";
-    static String URI = "uri";
+    static final String AUTH_REALM = "auth-realm";
+    static final String AUTHENTICATION_PROVIDER = "authentication-provider";
+    static final String BUFFER_REGION_SIZE = "buffer-region-size";
+    static final String CONNECTOR_REF = "connector-ref";
+    static final String FORWARD_SECRECY = "forward-secrecy";
+    static final String INCLUDE_MECHANISMS = "include-mechanisms";
+    static final String MAX_INBOUND_CHANNELS = "max-inbound-channels";
+    static final String SASL = "sasl";
+    static final String SASL_POLICY = "sasl-policy";
+    static final String URI = "uri";
 
-    static Address SUBSYSTEM_ADDRESS = Address.subsystem(REMOTING);
-    static Address ENDPOINT_ADDRESS = SUBSYSTEM_ADDRESS.and(CONFIGURATION, ENDPOINT);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(REMOTING);
+    static final Address ENDPOINT_ADDRESS = SUBSYSTEM_ADDRESS.and(CONFIGURATION, ENDPOINT);
 
     // ------------------------------------------------------ connector
 
-    static String CONNECTOR_CREATE = Ids.build(CONNECTOR_PREFIX, CrudConstants.CREATE, Random.name());
-    static String CONNECTOR_READ = Ids.build(CONNECTOR_PREFIX, CrudConstants.READ, Random.name());
-    static String CONNECTOR_UPDATE = Ids.build(CONNECTOR_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String CONNECTOR_DELETE = Ids.build(CONNECTOR_PREFIX, CrudConstants.DELETE, Random.name());
-    static String CONNECTOR_SECURITY = Ids.build(CONNECTOR_PREFIX, SECURITY, Random.name());
-    static String CONNECTOR_POLICY = Ids.build(CONNECTOR_PREFIX, POLICY, Random.name());
+    static final String CONNECTOR_CREATE = Ids.build(CONNECTOR_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String CONNECTOR_READ = Ids.build(CONNECTOR_PREFIX, CrudConstants.READ, Random.name());
+    static final String CONNECTOR_UPDATE = Ids.build(CONNECTOR_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CONNECTOR_DELETE = Ids.build(CONNECTOR_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONNECTOR_SECURITY = Ids.build(CONNECTOR_PREFIX, SECURITY, Random.name());
+    static final String CONNECTOR_POLICY = Ids.build(CONNECTOR_PREFIX, POLICY, Random.name());
 
     static Address connectorAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONNECTOR, name);
@@ -69,12 +69,12 @@ public final class RemotingFixtures {
 
     // ------------------------------------------------------ http connector
 
-    static String HTTP_CONNECTOR_CREATE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.CREATE, Random.name());
-    static String HTTP_CONNECTOR_READ = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.READ, Random.name());
-    static String HTTP_CONNECTOR_UPDATE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String HTTP_CONNECTOR_DELETE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.DELETE, Random.name());
-    static String HTTP_CONNECTOR_SECURITY = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, SECURITY, Random.name());
-    static String HTTP_CONNECTOR_POLICY = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, POLICY, Random.name());
+    static final String HTTP_CONNECTOR_CREATE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String HTTP_CONNECTOR_READ = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.READ, Random.name());
+    static final String HTTP_CONNECTOR_UPDATE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String HTTP_CONNECTOR_DELETE = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String HTTP_CONNECTOR_SECURITY = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, SECURITY, Random.name());
+    static final String HTTP_CONNECTOR_POLICY = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, POLICY, Random.name());
 
     static String httpConnectorRef(String name) {
         return Ids.build(name, "ref");
@@ -94,10 +94,10 @@ public final class RemotingFixtures {
 
     // ------------------------------------------------------ local outbound
 
-    static String LOCAL_OUTBOUND_CREATE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
-    static String LOCAL_OUTBOUND_READ = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
-    static String LOCAL_OUTBOUND_UPDATE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String LOCAL_OUTBOUND_DELETE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String LOCAL_OUTBOUND_CREATE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String LOCAL_OUTBOUND_READ = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
+    static final String LOCAL_OUTBOUND_UPDATE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String LOCAL_OUTBOUND_DELETE = Ids.build(LOCAL_OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address outboundLocalAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("local-outbound-connection", name);
@@ -105,10 +105,10 @@ public final class RemotingFixtures {
 
     // ------------------------------------------------------ local outbound
 
-    static String OUTBOUND_CREATE = Ids.build(OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
-    static String OUTBOUND_READ = Ids.build(OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
-    static String OUTBOUND_UPDATE = Ids.build(OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String OUTBOUND_DELETE = Ids.build(OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String OUTBOUND_CREATE = Ids.build(OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String OUTBOUND_READ = Ids.build(OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
+    static final String OUTBOUND_UPDATE = Ids.build(OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String OUTBOUND_DELETE = Ids.build(OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
 
     static String uri(String name) {
         return Ids.build(name, "uri");
@@ -120,10 +120,10 @@ public final class RemotingFixtures {
 
     // ------------------------------------------------------ remote outbound
 
-    static String REMOTE_OUTBOUND_CREATE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
-    static String REMOTE_OUTBOUND_READ = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
-    static String REMOTE_OUTBOUND_UPDATE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String REMOTE_OUTBOUND_DELETE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String REMOTE_OUTBOUND_CREATE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String REMOTE_OUTBOUND_READ = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.READ, Random.name());
+    static final String REMOTE_OUTBOUND_UPDATE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String REMOTE_OUTBOUND_DELETE = Ids.build(REMOTE_OUTBOUND_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address outboundRemoteAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("remote-outbound-connection", name);

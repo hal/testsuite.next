@@ -28,17 +28,17 @@ public final class MailFixtures {
 
     private static final String SESSION_PREFIX = "ms";
 
-    static String MAIL_SMTP = "mail-smtp";
-    static String SECRET = "secret";
+    static final String MAIL_SMTP = "mail-smtp";
+    static final String SECRET = "secret";
 
-    static Address SUBSYSTEM_ADDRESS = Address.subsystem(MAIL);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(MAIL);
 
     // ------------------------------------------------------ session
 
-    static String SESSION_CREATE = Ids.build(SESSION_PREFIX, CrudConstants.CREATE, Random.name());
-    static String SESSION_READ = Ids.build(SESSION_PREFIX, CrudConstants.READ, Random.name());
-    static String SESSION_UPDATE = Ids.build(SESSION_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String SESSION_DELETE = Ids.build(SESSION_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SESSION_CREATE = Ids.build(SESSION_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String SESSION_READ = Ids.build(SESSION_PREFIX, CrudConstants.READ, Random.name());
+    static final String SESSION_UPDATE = Ids.build(SESSION_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String SESSION_DELETE = Ids.build(SESSION_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address sessionAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MAIL_SESSION, name);

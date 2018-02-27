@@ -27,14 +27,14 @@ public final class DeploymentScannerFixtures {
 
     private static final String DEPLOYMENT_SCANNER_PREFIX = "ds";
 
-    static Address SUBSYSTEM_ADDRESS = Address.subsystem(DEPLOYMENT_SCANNER);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(DEPLOYMENT_SCANNER);
 
-    static String DS_CREATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.CREATE, Random.name());
-    static String DS_READ = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.READ, Random.name());
-    static String DS_UPDATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String DS_UPDATE_INVALID = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-invalid", Random.name());
-    static String DS_UPDATE_RESET = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-reset", Random.name());
-    static String DS_DELETE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String DS_CREATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String DS_READ = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.READ, Random.name());
+    static final String DS_UPDATE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String DS_UPDATE_INVALID = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-invalid", Random.name());
+    static final String DS_UPDATE_RESET = Ids.build(DEPLOYMENT_SCANNER_PREFIX, "update-reset", Random.name());
+    static final String DS_DELETE = Ids.build(DEPLOYMENT_SCANNER_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address deploymentScannerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("scanner", name);

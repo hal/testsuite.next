@@ -31,14 +31,14 @@ public final class EEFixtures {
     private static final String THREAD_FACTORY_PREFIX = "tf";
 
 
-    static Address SUBSYSTEM_ADDRESS = Address.subsystem(EE);
-    static Address DEFAULT_BINDINGS_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, DEFAULT_BINDINGS);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(EE);
+    static final Address DEFAULT_BINDINGS_ADDRESS = SUBSYSTEM_ADDRESS.and(SERVICE, DEFAULT_BINDINGS);
 
 
     // ------------------------------------------------------ global module
 
-    static String GLOBAL_MODULES_CREATE = Ids.build("gm", CrudConstants.CREATE, Random.name());
-    static String GLOBAL_MODULES_DELETE = Ids.build("gm", CrudConstants.DELETE, Random.name());
+    static final String GLOBAL_MODULES_CREATE = Ids.build("gm", CrudConstants.CREATE, Random.name());
+    static final String GLOBAL_MODULES_DELETE = Ids.build("gm", CrudConstants.DELETE, Random.name());
 
     static ModelNode globalModule(String name) {
         ModelNode globalModule = new ModelNode();
@@ -50,10 +50,10 @@ public final class EEFixtures {
 
     // ------------------------------------------------------ context service
 
-    static String CONTEXT_SERVICE_CREATE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.CREATE, Random.name());
-    static String CONTEXT_SERVICE_READ = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.READ, Random.name());
-    static String CONTEXT_SERVICE_UPDATE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String CONTEXT_SERVICE_DELETE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONTEXT_SERVICE_CREATE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String CONTEXT_SERVICE_READ = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.READ, Random.name());
+    static final String CONTEXT_SERVICE_UPDATE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CONTEXT_SERVICE_DELETE = Ids.build(CONTEXT_SERVICE_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address contextServiceAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONTEXT_SERVICE, name);
@@ -62,10 +62,10 @@ public final class EEFixtures {
 
     // ------------------------------------------------------ executor
 
-    static String EXECUTOR_CREATE = Ids.build(EXECUTOR_PREFIX, CrudConstants.CREATE, Random.name());
-    static String EXECUTOR_READ = Ids.build(EXECUTOR_PREFIX, CrudConstants.READ, Random.name());
-    static String EXECUTOR_UPDATE = Ids.build(EXECUTOR_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String EXECUTOR_DELETE = Ids.build(EXECUTOR_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String EXECUTOR_CREATE = Ids.build(EXECUTOR_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String EXECUTOR_READ = Ids.build(EXECUTOR_PREFIX, CrudConstants.READ, Random.name());
+    static final String EXECUTOR_UPDATE = Ids.build(EXECUTOR_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String EXECUTOR_DELETE = Ids.build(EXECUTOR_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address executorAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MANAGED_EXECUTOR_SERVICE, name);
@@ -74,10 +74,10 @@ public final class EEFixtures {
 
     // ------------------------------------------------------ scheduled executor
 
-    static String SCHEDULED_EXECUTOR_CREATE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.CREATE, Random.name());
-    static String SCHEDULED_EXECUTOR_READ = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.READ, Random.name());
-    static String SCHEDULED_EXECUTOR_UPDATE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String SCHEDULED_EXECUTOR_DELETE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SCHEDULED_EXECUTOR_CREATE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String SCHEDULED_EXECUTOR_READ = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.READ, Random.name());
+    static final String SCHEDULED_EXECUTOR_UPDATE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String SCHEDULED_EXECUTOR_DELETE = Ids.build(SCHEDULED_EXECUTOR_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address scheduledExecutorAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MANAGED_SCHEDULED_EXECUTOR_SERVICE, name);
@@ -86,10 +86,10 @@ public final class EEFixtures {
 
     // ------------------------------------------------------ thread factory
 
-    static String THREAD_FACTORY_CREATE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static String THREAD_FACTORY_READ = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.READ, Random.name());
-    static String THREAD_FACTORY_UPDATE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String THREAD_FACTORY_DELETE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String THREAD_FACTORY_CREATE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String THREAD_FACTORY_READ = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.READ, Random.name());
+    static final String THREAD_FACTORY_UPDATE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String THREAD_FACTORY_DELETE = Ids.build(THREAD_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address threadFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MANAGED_THREAD_FACTORY, name);

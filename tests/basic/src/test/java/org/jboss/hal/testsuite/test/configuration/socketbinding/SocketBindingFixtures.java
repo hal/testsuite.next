@@ -35,18 +35,18 @@ public final class SocketBindingFixtures {
     private static final String REMOTE = "remote";
 
     public static int OUTBOUND_REMOTE_PORT = 60000;
-    public static String LOCALHOST = "localhost";
-    static String PRIVATE = "private";
-    static String PUBLIC = "public";
-    public static String STANDARD_SOCKETS = "standard-sockets";
-    static String SOURCE_PORT = "source-port";
+    public static final String LOCALHOST = "localhost";
+    static final String PRIVATE = "private";
+    static final String PUBLIC = "public";
+    public static final String STANDARD_SOCKETS = "standard-sockets";
+    static final String SOURCE_PORT = "source-port";
 
     // ------------------------------------------------------ socket binding group
 
-    static String SBG_CREATE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.CREATE, Random.name());
-    static String SBG_READ = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.READ, Random.name());
-    static String SBG_UPDATE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.UPDATE, Random.name());
-    static String SBG_DELETE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SBG_CREATE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.CREATE, Random.name());
+    static final String SBG_READ = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.READ, Random.name());
+    static final String SBG_UPDATE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String SBG_DELETE = Ids.build(SOCKET_BINDING_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
 
     static Address socketBindingGroupAddress(String name) {
         return Address.of(SOCKET_BINDING_GROUP, name);
@@ -55,10 +55,10 @@ public final class SocketBindingFixtures {
     // ------------------------------------------------------ inbound
 
     // prefix with "a", so the resources are on the first table page
-    static String INBOUND_CREATE = Ids.build(A_PREFIX, INBOUND, CrudConstants.CREATE, Random.name());
-    public static String INBOUND_READ = Ids.build(A_PREFIX, INBOUND, CrudConstants.READ, Random.name());
-    static String INBOUND_UPDATE = Ids.build(A_PREFIX, INBOUND, CrudConstants.UPDATE, Random.name());
-    static String INBOUND_DELETE = Ids.build(A_PREFIX, INBOUND, CrudConstants.DELETE, Random.name());
+    static final String INBOUND_CREATE = Ids.build(A_PREFIX, INBOUND, CrudConstants.CREATE, Random.name());
+    public static final String INBOUND_READ = Ids.build(A_PREFIX, INBOUND, CrudConstants.READ, Random.name());
+    static final String INBOUND_UPDATE = Ids.build(A_PREFIX, INBOUND, CrudConstants.UPDATE, Random.name());
+    static final String INBOUND_DELETE = Ids.build(A_PREFIX, INBOUND, CrudConstants.DELETE, Random.name());
 
     public static Address inboundAddress(String sbg, String name) {
         return socketBindingGroupAddress(sbg).and(SOCKET_BINDING, name);
@@ -66,10 +66,10 @@ public final class SocketBindingFixtures {
 
     // ------------------------------------------------------ outbound local
 
-    static String OUTBOUND_LOCAL_CREATE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.CREATE, Random.name());
-    public static String OUTBOUND_LOCAL_READ = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.READ, Random.name());
-    static String OUTBOUND_LOCAL_UPDATE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.UPDATE, Random.name());
-    static String OUTBOUND_LOCAL_DELETE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.DELETE, Random.name());
+    static final String OUTBOUND_LOCAL_CREATE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.CREATE, Random.name());
+    public static final String OUTBOUND_LOCAL_READ = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.READ, Random.name());
+    static final String OUTBOUND_LOCAL_UPDATE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.UPDATE, Random.name());
+    static final String OUTBOUND_LOCAL_DELETE = Ids.build(OUTBOUND_PREFIX, LOCAL, CrudConstants.DELETE, Random.name());
 
     static Address outboundLocalAddress(String sbg, String name) {
         return socketBindingGroupAddress(sbg).and(LOCAL_DESTINATION_OUTBOUND_SOCKET_BINDING, name);
@@ -77,10 +77,10 @@ public final class SocketBindingFixtures {
 
     // ------------------------------------------------------ outbound local
 
-    static String OUTBOUND_REMOTE_CREATE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.CREATE, Random.name());
-    public static String OUTBOUND_REMOTE_READ = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.READ, Random.name());
-    static String OUTBOUND_REMOTE_UPDATE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.UPDATE, Random.name());
-    static String OUTBOUND_REMOTE_DELETE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.DELETE, Random.name());
+    static final String OUTBOUND_REMOTE_CREATE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.CREATE, Random.name());
+    public static final String OUTBOUND_REMOTE_READ = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.READ, Random.name());
+    static final String OUTBOUND_REMOTE_UPDATE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.UPDATE, Random.name());
+    static final String OUTBOUND_REMOTE_DELETE = Ids.build(OUTBOUND_PREFIX, REMOTE, CrudConstants.DELETE, Random.name());
 
     static Address outboundRemoteAddress(String sbg, String name) {
         return socketBindingGroupAddress(sbg).and(REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING, name);

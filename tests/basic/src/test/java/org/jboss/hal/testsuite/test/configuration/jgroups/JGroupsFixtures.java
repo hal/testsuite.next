@@ -24,21 +24,21 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 
 public final class JGroupsFixtures {
 
-    static String DEFAULT_CHANNEL = "default-channel";
-    static String TCP = "tcp";
-    static String JGROUPS_TCP = "jgroups-tcp";
-    static String CLUSTER = "cluster";
-    static String SITE = "site";
-    static String KEEPALIVE_TIME = "keepalive-time";
-    static String REMOTE_SITE = "remote-site";
+    static final String DEFAULT_CHANNEL = "default-channel";
+    static final String TCP = "tcp";
+    static final String JGROUPS_TCP = "jgroups-tcp";
+    static final String CLUSTER = "cluster";
+    static final String SITE = "site";
+    static final String KEEPALIVE_TIME = "keepalive-time";
+    static final String REMOTE_SITE = "remote-site";
 
-    static Address SUBSYSTEM_ADDRESS = Address.subsystem(JGROUPS);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(JGROUPS);
 
     // ------------------------------------------------------ stack
 
-    static String STACK_CREATE = Ids.build(STACK, CrudConstants.CREATE, Random.name());
-    static String STACK_UPDATE = Ids.build(STACK, CrudConstants.UPDATE, Random.name());
-    static String STACK_DELETE = Ids.build(STACK, CrudConstants.DELETE, Random.name());
+    static final String STACK_CREATE = Ids.build(STACK, CrudConstants.CREATE, Random.name());
+    static final String STACK_UPDATE = Ids.build(STACK, CrudConstants.UPDATE, Random.name());
+    static final String STACK_DELETE = Ids.build(STACK, CrudConstants.DELETE, Random.name());
 
     static Address stackAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(STACK, name);
@@ -52,9 +52,9 @@ public final class JGroupsFixtures {
 
     // ------------------------------------------------------ stack / remote site
 
-    static String REMOTESITE_CREATE = Ids.build(REMOTE_SITE, CrudConstants.CREATE, Random.name());
-    static String REMOTESITE_UPDATE = Ids.build(REMOTE_SITE, CrudConstants.UPDATE, Random.name());
-    static String REMOTESITE_DELETE = Ids.build(REMOTE_SITE, CrudConstants.DELETE, Random.name());
+    static final String REMOTESITE_CREATE = Ids.build(REMOTE_SITE, CrudConstants.CREATE, Random.name());
+    static final String REMOTESITE_UPDATE = Ids.build(REMOTE_SITE, CrudConstants.UPDATE, Random.name());
+    static final String REMOTESITE_DELETE = Ids.build(REMOTE_SITE, CrudConstants.DELETE, Random.name());
 
     static Address relayRemoteSiteAddress(String stack, String remoteSite) {
         return relayAddress(stack).and(REMOTE_SITE, remoteSite);
@@ -62,9 +62,9 @@ public final class JGroupsFixtures {
 
     // ------------------------------------------------------ stack / protocol
 
-    static String PROTOCOL_CREATE = Ids.build(PROTOCOL, CrudConstants.CREATE, Random.name());
-    static String PROTOCOL_UPDATE = Ids.build(PROTOCOL, CrudConstants.UPDATE, Random.name());
-    static String PROTOCOL_DELETE = Ids.build(PROTOCOL, CrudConstants.DELETE, Random.name());
+    static final String PROTOCOL_CREATE = Ids.build(PROTOCOL, CrudConstants.CREATE, Random.name());
+    static final String PROTOCOL_UPDATE = Ids.build(PROTOCOL, CrudConstants.UPDATE, Random.name());
+    static final String PROTOCOL_DELETE = Ids.build(PROTOCOL, CrudConstants.DELETE, Random.name());
 
     static Address protocolAddress(String stack, String protocol) {
         return stackAddress(stack).and(PROTOCOL, protocol);
@@ -72,7 +72,7 @@ public final class JGroupsFixtures {
 
     // ------------------------------------------------------ stack / transport
 
-    static String TRANSPORT_CREATE = Ids.build(TRANSPORT, CrudConstants.CREATE, Random.name());
+    static final String TRANSPORT_CREATE = Ids.build(TRANSPORT, CrudConstants.CREATE, Random.name());
 
     static Address transportAddress(String stack, String name) {
         return stackAddress(stack).and(TRANSPORT, name);
@@ -84,9 +84,9 @@ public final class JGroupsFixtures {
 
     // ------------------------------------------------------ channel
 
-    static String CHANNEL_CREATE = Ids.build(CHANNEL, CrudConstants.CREATE, Random.name());
-    static String CHANNEL_UPDATE = Ids.build(CHANNEL, CrudConstants.UPDATE, Random.name());
-    static String CHANNEL_DELETE = Ids.build(CHANNEL, CrudConstants.DELETE, Random.name());
+    static final String CHANNEL_CREATE = Ids.build(CHANNEL, CrudConstants.CREATE, Random.name());
+    static final String CHANNEL_UPDATE = Ids.build(CHANNEL, CrudConstants.UPDATE, Random.name());
+    static final String CHANNEL_DELETE = Ids.build(CHANNEL, CrudConstants.DELETE, Random.name());
 
     static Address channelAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CHANNEL, name);
@@ -94,8 +94,8 @@ public final class JGroupsFixtures {
 
     // ------------------------------------------------------ channel / fork
 
-    static String FORK_CREATE = Ids.build(FORK, CrudConstants.CREATE, Random.name());
-    static String FORK_DELETE = Ids.build(FORK, CrudConstants.DELETE, Random.name());
+    static final String FORK_CREATE = Ids.build(FORK, CrudConstants.CREATE, Random.name());
+    static final String FORK_DELETE = Ids.build(FORK, CrudConstants.DELETE, Random.name());
 
     static Address forkAddress(String channel, String name) {
         return channelAddress(channel).and(FORK, name);
@@ -104,9 +104,9 @@ public final class JGroupsFixtures {
     // ------------------------------------------------------ channel / fork / protocol
 
     // protocol names are specific to jgroups domain
-    static String FORK_PROTOCOL_CREATE = "COUNTER";
-    static String FORK_PROTOCOL_UPDATE = "CENTRAL_LOCK";
-    static String FORK_PROTOCOL_DELETE = "S3_PING";
+    static final String FORK_PROTOCOL_CREATE = "COUNTER";
+    static final String FORK_PROTOCOL_UPDATE = "CENTRAL_LOCK";
+    static final String FORK_PROTOCOL_DELETE = "S3_PING";
 
     static Address forkProtocolAddress(String channel, String fork, String protocol) {
         return forkAddress(channel, fork).and(PROTOCOL, protocol);

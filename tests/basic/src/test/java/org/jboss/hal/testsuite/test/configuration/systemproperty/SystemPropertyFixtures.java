@@ -28,14 +28,14 @@ public final class SystemPropertyFixtures {
     private static final String NAME = "name";
     private static final String VALUE = "value";
 
-    static String CREATE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.CREATE, NAME, Random.name());
-    static String CREATE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.CREATE, VALUE, Random.name());
-    static String READ_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.READ, NAME, Random.name());
-    static String READ_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.READ, VALUE, Random.name());
-    static String UPDATE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.UPDATE, NAME, Random.name());
-    static String UPDATE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.UPDATE, VALUE, Random.name());
-    static String DELETE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.DELETE, NAME, Random.name());
-    static String DELETE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.DELETE, VALUE, Random.name());
+    static final String CREATE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.CREATE, NAME, Random.name());
+    static final String CREATE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.CREATE, VALUE, Random.name());
+    static final String READ_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.READ, NAME, Random.name());
+    static final String READ_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.READ, VALUE, Random.name());
+    static final String UPDATE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.UPDATE, NAME, Random.name());
+    static final String UPDATE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.UPDATE, VALUE, Random.name());
+    static final String DELETE_NAME = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.DELETE, NAME, Random.name());
+    static final String DELETE_VALUE = Ids.build(SYSTEM_PROPERTY_PREFIX, CrudConstants.DELETE, VALUE, Random.name());
 
     public static Address systemPropertyAddress(String name) {
         return Address.of(SYSTEM_PROPERTY, name);

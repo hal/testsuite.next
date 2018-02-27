@@ -20,12 +20,15 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONFIGURATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMX;
 
-public interface JmxFixtures {
+public final class JmxFixtures {
 
-    String NON_CORE_MBEAN_SENSITIVITY = "non-core-mbean-sensitivity";
-    String USE_MANAGEMENT_ENDPOINT = "use-management-endpoint";
+    static final String NON_CORE_MBEAN_SENSITIVITY = "non-core-mbean-sensitivity";
+    static final String USE_MANAGEMENT_ENDPOINT = "use-management-endpoint";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(JMX);
-    Address AUDIT_LOG_ADDRESS = SUBSYSTEM_ADDRESS.and(CONFIGURATION, "audit-log");
-    Address REMOTING_CONNECTOR_ADDRESS = SUBSYSTEM_ADDRESS.and("remoting-connector", JMX);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(JMX);
+    static final Address AUDIT_LOG_ADDRESS = SUBSYSTEM_ADDRESS.and(CONFIGURATION, "audit-log");
+    static final Address REMOTING_CONNECTOR_ADDRESS = SUBSYSTEM_ADDRESS.and("remoting-connector", JMX);
+
+    private JmxFixtures() {
+    }
 }

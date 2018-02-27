@@ -19,23 +19,26 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IIOP_OPENJDK;
 
-public interface IIOPFixtures {
+public final class IIOPFixtures {
 
-    String PERSISTENT_SERVER_ID = "persistent-server-id";
-    String EXPORT_CORBALOC = "export-corbaloc";
-    String ROOT_CONTEXT = "root-context";
-    String SPEC = "spec";
-    String IDENTITY = "identity";
-    String AUTH_METHOD = "auth-method";
-    String USERNAME_PASSWORD = "username_password";
-    String CALLER_PROPAGATION = "caller-propagation";
-    String SUPPORTED = "supported";
-    String HIGH_WATER_MARK = "high-water-mark";
-    String NUMBER_TO_RECLAIM = "number-to-reclaim";
-    String DEFAULT_ROOT_CONTEXT = "JBoss/Naming/root";
-    String SUPPORT_SSL = "support-ssl";
-    String IIOP = "iiop";
+    static final String PERSISTENT_SERVER_ID = "persistent-server-id";
+    static final String EXPORT_CORBALOC = "export-corbaloc";
+    static final String ROOT_CONTEXT = "root-context";
+    static final String SPEC = "spec";
+    static final String IDENTITY = "identity";
+    static final String AUTH_METHOD = "auth-method";
+    static final String USERNAME_PASSWORD = "username_password";
+    static final String CALLER_PROPAGATION = "caller-propagation";
+    static final String SUPPORTED = "supported";
+    static final String HIGH_WATER_MARK = "high-water-mark";
+    static final String NUMBER_TO_RECLAIM = "number-to-reclaim";
+    static final String DEFAULT_ROOT_CONTEXT = "JBoss/Naming/root";
+    static final String SUPPORT_SSL = "support-ssl";
+    static final String IIOP = "iiop";
 
-    Address SUBSYSTEM_ADDRESS = Address.subsystem(IIOP_OPENJDK);
+    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(IIOP_OPENJDK);
+
+    private IIOPFixtures() {
+    }
 
 }
