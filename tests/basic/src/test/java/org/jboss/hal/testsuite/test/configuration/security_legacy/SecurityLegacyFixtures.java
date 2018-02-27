@@ -15,52 +15,55 @@
  */
 package org.jboss.hal.testsuite.test.configuration.security_legacy;
 
-import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONFIGURATION;
-import static org.jboss.hal.resources.Ids.*;
+import static org.jboss.hal.resources.Ids.ELYTRON_KEY_MANAGER;
+import static org.jboss.hal.resources.Ids.ELYTRON_KEY_STORE;
+import static org.jboss.hal.resources.Ids.ELYTRON_TRUST_MANAGER;
+import static org.jboss.hal.resources.Ids.ITEM;
 
 public interface SecurityLegacyFixtures {
 
     String ANY_STRING = Random.name();
-    String SAMPLE_PASSWORD = "admin123";
-    String SAMPLE_KEYSTORE_FILENAME = "keystore-" + ANY_STRING + ".jks";
-    String SAMPLE_TRUSTSTORE_FILENAME = "truststore-" + ANY_STRING + ".jks";
-    String JBOSS_SERVER_CONFIG_DIR = "jboss.server.config.dir";
-
-    String ELYTRON_REALM = "elytron-realm";
-    String ELYTRON_TRUST_STORE = "elytron-trust-store";
-    String LEGACY_JSSE_CONFIG = "legacy-jsse-config";
-    String LEGACY_JAAS_CONFIG = "legacy-jaas-config";
-    String CLIENT_AUTH = "client-auth";
-    String TRUSTSTORE = "truststore";
-    String KEYSTORE = "keystore";
-    String INITIALIZE_JACC = "initialize-jacc";
-    String VAULT = "vault";
-    String CLASSIC = "classic";
-    String AUTHENTICATION = "authentication";
-    String AUTHORIZATION = "authorization";
     String ACL = "acl";
     String AUDIT = "audit";
-    String IDENTITY_TRUST = "identity-trust";
-    String MAPPING = "mapping";
-    String CODE = "code";
+    String AUTHENTICATION = "authentication";
+    String AUTHORIZATION = "authorization";
     String CACHE_TYPE = "cache-type";
+    String CLASSIC = "classic";
+    String CLIENT_AUTH = "client-auth";
+    String CREATE = "create";
+    String CODE = "code";
+    String DELETE = "delete";
+    String ELYTRON_REALM = "elytron-realm";
+    String ELYTRON_TRUST_STORE = "elytron-trust-store";
     String FLAG = "flag";
+    String IDENTITY_TRUST = "identity-trust";
+    String INITIALIZE_JACC = "initialize-jacc";
+    String JBOSS_SERVER_CONFIG_DIR = "jboss.server.config.dir";
+    String KEYSTORE = "keystore";
+    String LEGACY_JAAS_CONFIG = "legacy-jaas-config";
+    String LEGACY_JSSE_CONFIG = "legacy-jsse-config";
+    String MAPPING = "mapping";
+    String SAMPLE_KEYSTORE_FILENAME = "keystore-" + ANY_STRING + ".jks";
+    String SAMPLE_PASSWORD = "admin123";
+    String SAMPLE_TRUSTSTORE_FILENAME = "truststore-" + ANY_STRING + ".jks";
+    String TRUSTSTORE = "truststore";
+    String UPDATE = "update";
+    String VAULT = "vault";
 
     Address SUBSYSTEM_ADDRESS = Address.subsystem(SECURITY);
 
-    String CONFIGURATION_ITEM = SECURITY + "-" + CONFIGURATION + "-" + ITEM;
-    String KEY_MANAGER_ITEM = SECURITY + "-" + ELYTRON_KEY_MANAGER + "-" + ITEM;
-    String KEY_STORE_ITEM = SECURITY + "-" + ELYTRON_KEY_STORE + "-" + ITEM;
-    String REALM_ITEM = SECURITY + "-elytron-realm-" + ITEM;
-    String TRUST_MANAGER_ITEM = SECURITY + "-" + ELYTRON_TRUST_MANAGER + "-" + ITEM;
-    String TRUST_STORE_ITEM = SECURITY + "-" + ELYTRON_TRUST_STORE + "-" + ITEM;
-    String VAULT_ITEM = SECURITY + "-vault-" + ITEM;
+    String CONFIGURATION_ITEM = Ids.build(SECURITY, CONFIGURATION, ITEM);
+    String KEY_MANAGER_ITEM = Ids.build(SECURITY, ELYTRON_KEY_MANAGER, ITEM);
+    String KEY_STORE_ITEM = Ids.build(SECURITY, ELYTRON_KEY_STORE, ITEM);
+    String REALM_ITEM = Ids.build(SECURITY, ELYTRON_REALM, ITEM);
+    String TRUST_MANAGER_ITEM = Ids.build(SECURITY, ELYTRON_TRUST_MANAGER, ITEM);
+    String TRUST_STORE_ITEM = Ids.build(SECURITY, ELYTRON_TRUST_STORE, ITEM);
+    String VAULT_ITEM = Ids.build(SECURITY, VAULT, ITEM);
 
     String SEC_DOMAIN_CONFIGURATION_ITEM = "security-domain-configuration-item";
     String SEC_DOMAIN_AUTHENTICATION_ITEM = "security-domain-authentication-item";
@@ -73,7 +76,7 @@ public interface SecurityLegacyFixtures {
 
     // -------------- elytron-key-manager
 
-    String EKM_CREATE = Ids.build("ekm", "create", Random.name());
+    String EKM_CREATE = Ids.build("ekm", CREATE, Random.name());
     String EKM_UPDATE = Ids.build("ekm", "update", Random.name());
     String EKM_DELETE = Ids.build("ekm", "delete", Random.name());
 
@@ -83,9 +86,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- elytron-key-store
 
-    String EKS_CREATE = Ids.build("eks", "create", Random.name());
-    String EKS_UPDATE = Ids.build("eks", "update", Random.name());
-    String EKS_DELETE = Ids.build("eks", "delete", Random.name());
+    String EKS_CREATE = Ids.build("eks", CREATE, Random.name());
+    String EKS_UPDATE = Ids.build("eks", UPDATE, Random.name());
+    String EKS_DELETE = Ids.build("eks", DELETE, Random.name());
 
     static Address elytronKeyStoreAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(ELYTRON_KEY_STORE, name);
@@ -93,9 +96,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- elytron-realm
 
-    String REALM_CREATE = Ids.build("realm", "create", Random.name());
-    String REALM_UPDATE = Ids.build("realm", "update", Random.name());
-    String REALM_DELETE = Ids.build("realm", "delete", Random.name());
+    String REALM_CREATE = Ids.build("realm", CREATE, Random.name());
+    String REALM_UPDATE = Ids.build("realm", UPDATE, Random.name());
+    String REALM_DELETE = Ids.build("realm", DELETE, Random.name());
 
     static Address elytronRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(ELYTRON_REALM, name);
@@ -103,9 +106,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- elytron-trust-manager
 
-    String ETM_CREATE = Ids.build("etm", "create", Random.name());
-    String ETM_UPDATE = Ids.build("etm", "update", Random.name());
-    String ETM_DELETE = Ids.build("etm", "delete", Random.name());
+    String ETM_CREATE = Ids.build("etm", CREATE, Random.name());
+    String ETM_UPDATE = Ids.build("etm", UPDATE, Random.name());
+    String ETM_DELETE = Ids.build("etm", DELETE, Random.name());
 
     static Address elytronTrustManagerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(ELYTRON_TRUST_MANAGER, name);
@@ -113,9 +116,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- elytron-trust-store
 
-    String ETS_CREATE = Ids.build("ets", "create", Random.name());
-    String ETS_UPDATE = Ids.build("ets", "update", Random.name());
-    String ETS_DELETE = Ids.build("ets", "delete", Random.name());
+    String ETS_CREATE = Ids.build("ets", CREATE, Random.name());
+    String ETS_UPDATE = Ids.build("ets", UPDATE, Random.name());
+    String ETS_DELETE = Ids.build("ets", DELETE, Random.name());
 
     static Address elytronTrustStoreAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(ELYTRON_TRUST_STORE, name);
@@ -129,13 +132,13 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain
 
-    String SEC_DOM_CREATE = Ids.build("sec-domain", "create", Random.name());
-    String SEC_DOM_READ = Ids.build("sec-domain", "read", Random.name());
-    String SEC_DOM_UPDATE = Ids.build("sec-domain", "update", Random.name());
-    String SEC_DOM_DELETE = Ids.build("sec-domain", "delete", Random.name());
+    String SEC_DOM_CREATE = Ids.build(SECURITY_DOMAIN, CREATE, Random.name());
+    String SEC_DOM_READ = Ids.build(SECURITY_DOMAIN, "read", Random.name());
+    String SEC_DOM_UPDATE = Ids.build(SECURITY_DOMAIN, UPDATE, Random.name());
+    String SEC_DOM_DELETE = Ids.build(SECURITY_DOMAIN, DELETE, Random.name());
 
     static Address securityDomainAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(ModelDescriptionConstants.SECURITY_DOMAIN, name);
+        return SUBSYSTEM_ADDRESS.and(SECURITY_DOMAIN, name);
     }
 
     // -------------- security-domain / jsse
@@ -146,9 +149,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / authentication
 
-    String AUTHENT_CREATE = Ids.build("authent", "create", Random.name());
-    String AUTHENT_UPDATE = Ids.build("authent", "update", Random.name());
-    String AUTHENT_DELETE = Ids.build("authent", "delete", Random.name());
+    String AUTHENT_CREATE = Ids.build("authent", CREATE, Random.name());
+    String AUTHENT_UPDATE = Ids.build("authent", UPDATE, Random.name());
+    String AUTHENT_DELETE = Ids.build("authent", DELETE, Random.name());
 
     static Address authenticationLoginModuleAddress(String securityDomain, String loginModule) {
         return securityDomainAddress(securityDomain).and(AUTHENTICATION, CLASSIC).and(LOGIN_MODULE, loginModule);
@@ -156,9 +159,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / authorization
 
-    String AUTHOR_CREATE = Ids.build("author", "create", Random.name());
-    String AUTHOR_UPDATE = Ids.build("author", "update", Random.name());
-    String AUTHOR_DELETE = Ids.build("author", "delete", Random.name());
+    String AUTHOR_CREATE = Ids.build("author", CREATE, Random.name());
+    String AUTHOR_UPDATE = Ids.build("author", UPDATE, Random.name());
+    String AUTHOR_DELETE = Ids.build("author", DELETE, Random.name());
 
     static Address authorizationPolicyModuleAddress(String securityDomain, String policyModule) {
         return securityDomainAddress(securityDomain).and(AUTHORIZATION, CLASSIC).and(POLICY_MODULE, policyModule);
@@ -166,9 +169,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / acl
 
-    String ACL_CREATE = Ids.build("acl", "create", Random.name());
-    String ACL_UPDATE = Ids.build("acl", "update", Random.name());
-    String ACL_DELETE = Ids.build("acl", "delete", Random.name());
+    String ACL_CREATE = Ids.build(ACL, CREATE, Random.name());
+    String ACL_UPDATE = Ids.build(ACL, UPDATE, Random.name());
+    String ACL_DELETE = Ids.build(ACL, DELETE, Random.name());
 
     static Address aclModuleAddress(String securityDomain, String aclModule) {
         return securityDomainAddress(securityDomain).and(ACL, CLASSIC).and(ACL_MODULE, aclModule);
@@ -176,9 +179,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / audit
 
-    String AUDIT_CREATE = Ids.build("audit", "create", Random.name());
-    String AUDIT_UPDATE = Ids.build("audit", "update", Random.name());
-    String AUDIT_DELETE = Ids.build("audit", "delete", Random.name());
+    String AUDIT_CREATE = Ids.build(AUDIT, CREATE, Random.name());
+    String AUDIT_UPDATE = Ids.build(AUDIT, UPDATE, Random.name());
+    String AUDIT_DELETE = Ids.build(AUDIT, DELETE, Random.name());
 
     static Address auditProviderModuleAddress(String securityDomain, String providerModule) {
         return securityDomainAddress(securityDomain).and(AUDIT, CLASSIC).and(PROVIDER_MODULE, providerModule);
@@ -186,9 +189,9 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / identity-trust
 
-    String IDENT_CREATE = Ids.build("iden", "create", Random.name());
-    String IDENT_UPDATE = Ids.build("iden", "update", Random.name());
-    String IDENT_DELETE = Ids.build("iden", "delete", Random.name());
+    String IDENT_CREATE = Ids.build("iden", CREATE, Random.name());
+    String IDENT_UPDATE = Ids.build("iden", UPDATE, Random.name());
+    String IDENT_DELETE = Ids.build("iden", DELETE, Random.name());
 
     static Address identityTrustModuleAddress(String securityDomain, String trustModule) {
         return securityDomainAddress(securityDomain).and(IDENTITY_TRUST, CLASSIC).and(TRUST_MODULE, trustModule);
@@ -196,13 +199,11 @@ public interface SecurityLegacyFixtures {
 
     // -------------- security-domain / mapping
 
-    String MAPPING_CREATE = Ids.build("mapping", "create", Random.name());
-    String MAPPING_UPDATE = Ids.build("mapping", "update", Random.name());
-    String MAPPING_DELETE = Ids.build("mapping", "delete", Random.name());
+    String MAPPING_CREATE = Ids.build(MAPPING, CREATE, Random.name());
+    String MAPPING_UPDATE = Ids.build(MAPPING, UPDATE, Random.name());
+    String MAPPING_DELETE = Ids.build(MAPPING, DELETE, Random.name());
 
     static Address mappingAddress(String securityDomain, String mappingModule) {
         return securityDomainAddress(securityDomain).and(MAPPING, CLASSIC).and(MAPPING_MODULE, mappingModule);
     }
-
-
 }

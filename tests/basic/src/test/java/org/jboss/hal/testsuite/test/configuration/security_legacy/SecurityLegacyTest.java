@@ -73,8 +73,8 @@ public class SecurityLegacyTest {
         operations.invoke("generate-key-pair", keyStoreAddress(KEY_ST_UPDATE), keyPairParam);
         operations.invoke("store", keyStoreAddress(KEY_ST_UPDATE));
 
-        String keystoreFile = "${"+ JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_KEYSTORE_FILENAME;
-        String truststoreFile = "${"+ JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_TRUSTSTORE_FILENAME;
+        String keystoreFile = "${" + JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_KEYSTORE_FILENAME;
+        String truststoreFile = "${" + JBOSS_SERVER_CONFIG_DIR + "}/" + SAMPLE_TRUSTSTORE_FILENAME;
         operations.add(securityDomainAddress(SEC_DOM_CREATE));
         operations.add(securityDomainAddress(SEC_DOM_UPDATE));
         Values jsseParams = Values.of(CLIENT_AUTH, true)
@@ -209,7 +209,7 @@ public class SecurityLegacyTest {
         console.verticalNavigation().selectPrimary(REALM_ITEM);
         console.waitNoNotification();
         table.select(REALM_UPDATE);
-        crud.update(elytronRealmAddress(REALM_UPDATE), form,LEGACY_JAAS_CONFIG, SEC_DOM_UPDATE);
+        crud.update(elytronRealmAddress(REALM_UPDATE), form, LEGACY_JAAS_CONFIG, SEC_DOM_UPDATE);
     }
 
     @Test
@@ -226,7 +226,8 @@ public class SecurityLegacyTest {
 
     @Test
     public void trustManagerUpdate() throws Exception {
-        templateUpdate(TRUST_MANAGER_ITEM, page.getElytronTrustManagerTable(), page.getElytronTrustManagerForm(), ETM_UPDATE,
+        templateUpdate(TRUST_MANAGER_ITEM, page.getElytronTrustManagerTable(), page.getElytronTrustManagerForm(),
+                ETM_UPDATE,
                 elytronTrustManagerAddress(ETM_UPDATE));
     }
 
@@ -284,7 +285,8 @@ public class SecurityLegacyTest {
 
     // ---------------- crud templates
 
-    public void templateCreate(String item, TableFragment table, String resourceName, Address address) throws Exception {
+    public void templateCreate(String item, TableFragment table, String resourceName, Address address)
+            throws Exception {
         console.verticalNavigation().selectPrimary(item);
         crud.create(address, table, f -> {
             f.text(NAME, resourceName);

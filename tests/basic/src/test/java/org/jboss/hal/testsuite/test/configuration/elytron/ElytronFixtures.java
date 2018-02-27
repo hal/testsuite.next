@@ -27,282 +27,292 @@ import static org.jboss.hal.resources.Ids.*;
 
 public final class ElytronFixtures {
 
-    private static final String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "agg-http";
-    private static final String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "conf-http";
-    private static final String HTTP_AUTHENTICATION_FACTORY_PREFIX = "http-auth";
-    private static final String MECHANISM_CONFIGURATION_PREFIX = "mech-conf";
-    private static final String MECHANISM_REALM_CONFIGURATION_PREFIX = "mech-re-conf";
-    private static final String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "prov-http";
-    private static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "svc-loa-http";
-    private static final String AGGREGATE_SASL_SERVER_FACTORY_PREFIX = "agg-sasl";
-    private static final String CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX = "conf-sasl";
-    private static final String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX = "mech-sasl";
-    private static final String SASL_AUTHENTICATION_FACTORY_PREFIX = "sasl-auth";
-    private static final String SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX = "svc-loa-sasl";
-    private static final String KERBEROS_SECURITY_PREFIX = "kerb";
-    private static final String AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX = "agg-pri-trans";
-    private static final String CHAINED_PRINCIPAL_TRANSFORMER_PREFIX = "cha-pri-trans";
-    private static final String CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX = "cons-pri-trans";
-    private static final String CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX = "cust-pri-trans";
-    private static final String REGEX_PRINCIPAL_TRANSFORMER_PREFIX = "reg-pri-trans";
-    private static final String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX = "regv-pri-trans";
-    private static final String PROVIDER_SASL_SERVER_FACTORY_PREFIX = "prov-sasl";
     private static final String ADD_PREFIX_ROLE_MAPPER_PREFIX = "add-pre";
     private static final String ADD_SUFFIX_ROLE_MAPPER_PREFIX = "add-suf";
-    private static final String AGGREGATE_ROLE_MAPPER_PREFIX = "agg-role";
-    private static final String CONSTANT_ROLE_MAPPER_PREFIX = "con-role";
-    private static final String LOGICAL_ROLE_MAPPER_PREFIX = "log-role";
-    private static final String LOGICAL_PERMISSION_MAPPER_PREFIX = "log-perm";
-    private static final String CONSTANT_PERMISSION_MAPPER_PREFIX = "con-perm";
-    private static final String PERMISSION_MAPPER_PREFIX = "perm";
-    private static final String SIMPLE_PERMISSION_MAPPER_PREFIX = "sim-perm";
-    private static final String PERMISSION_MAPPINGS_PREFIX = "perm-map";
+    private static final String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "agg-http";
     private static final String AGGREGATE_PRINCIPAL_DECODER_PREFIX = "agg-pri";
-    private static final String CONCATENATING_PRINCIPAL_DECODER_PREFIX = "conc-pri";
-    private static final String CONSTANT_PRINCIPAL_DECODER_PREFIX = "cons-pri";
-    private static final String X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX = "x500-pri";
-    private static final String SIMPLE_ROLE_DECODER_PREFIX = "simp-role";
-    private static final String CREDENTIAL_STORE_PREFIX = "cred-store";
-    private static final String FILTERING_KEY_STORE_PREFIX = "filt-store";
-    private static final String KEY_STORE_PREFIX = "ks";
-    private static final String LDAP_KEY_STORE_PREFIX = "ldap-ks";
+    private static final String AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX = "agg-pri-trans";
     private static final String AGGREGATE_PROVIDERS_PREFIX = "agg-prv";
-    private static final String CLIENT_SSL_CONTEXT_PREFIX = "cli-ssl";
-    private static final String KEY_MANANAGER_PREFIX = "key-man";
-    private static final String PROVIDER_LOADER_PREFIX = "prov-load";
-    private static final String SEREVR_SSL_CONTEXT_PREFIX = "srv-ssl";
-    private static final String SECURITY_DOMAIN_PREFIX = "sec-dom";
-    private static final String TRUST_MANAGER_PREFIX = "tru-man";
-    private static final String TRUST_MANAGER_CRL_PREFIX = "tru-man-crl";
-    private static final String AUTHENTICATION_CONFIGURATION_PREFIX = "auth-conf";
-    private static final String AUTHENTICATION_CONFIGURATION_CR_PREFIX = "auth-conf-cr";
-    private static final String AUTHENTICATION_CONTEXT_PREFIX = "auth-ct";
-    private static final String AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX = "auth-ct-match-rule";
-    private static final String FILE_AUDIT_LOG_PREFIX = "file-log";
-    private static final String PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX = "per-log";
-    private static final String SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX = "siz-log";
-    private static final String SYSLOG_AUDIT_LOG_PREFIX = "sys-log";
-    private static final String AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX = "agg-sec";
-    private static final String DIR_CONTEXT_PREFIX = "dir";
-    private static final String DIR_CONTEXT_CR_PREFIX = "dir-cr";
     private static final String AGGREGATE_REALM_PREFIX = "agg-rlm";
+    private static final String AGGREGATE_ROLE_MAPPER_PREFIX = "agg-role";
+    private static final String AGGREGATE_SASL_SERVER_FACTORY_PREFIX = "agg-sasl";
+    private static final String AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX = "agg-sec";
+    private static final String AUTHENTICATION_CONFIGURATION_CR_PREFIX = "auth-conf-cr";
+    private static final String AUTHENTICATION_CONFIGURATION_PREFIX = "auth-conf";
+    private static final String AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX = "auth-ct-match-rule";
+    private static final String AUTHENTICATION_CONTEXT_PREFIX = "auth-ct";
     private static final String CACHING_REALM_PREFIX = "cac-rlm";
+    private static final String CHAINED_PRINCIPAL_TRANSFORMER_PREFIX = "cha-pri-trans";
+    private static final String CLIENT_SSL_CONTEXT_PREFIX = "cli-ssl";
+    private static final String CONCATENATING_PRINCIPAL_DECODER_PREFIX = "conc-pri";
+    private static final String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "conf-http";
+    private static final String CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX = "conf-sasl";
+    private static final String CONSTANT_PERMISSION_MAPPER_PREFIX = "con-perm";
+    private static final String CONSTANT_PRINCIPAL_DECODER_PREFIX = "cons-pri";
+    private static final String CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX = "cons-pri-trans";
+    private static final String CONSTANT_REALM_MAPPER_PREFIX = "con-rm";
+    private static final String CONSTANT_ROLE_MAPPER_PREFIX = "con-role";
+    private static final String CREDENTIAL_STORE_PREFIX = "cred-store";
     private static final String CUSTOM_MODIFIABLE_REALM_PREFIX = "cmo-rlm";
+    private static final String CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX = "cust-pri-trans";
+    private static final String CUSTOM_REALM_MAPPER_PREFIX = "cus-rm";
     private static final String CUSTOM_REALM_PREFIX = "cst-rlm";
+    private static final String DIR_CONTEXT_CR_PREFIX = "dir-cr";
+    private static final String DIR_CONTEXT_PREFIX = "dir";
+    private static final String FILE_AUDIT_LOG_PREFIX = "file-log";
     private static final String FILESYSTEM_REALM_PREFIX = "filesys-rlm";
+    private static final String FILTER_PREFIX = "filt";
+    private static final String FILTERING_KEY_STORE_PREFIX = "filt-store";
+    private static final String HTTP_AUTHENTICATION_FACTORY_PREFIX = "http-auth";
     private static final String IDENTITY_REALM_PREFIX = "iden-rlm";
     private static final String JDBC_REALM_PREFIX = "jdbc-rlm";
-    private static final String SQL_PREFIX = "sql";
-    private static final String SQL_CPM_PREFIX = "sql-cpm";
-    private static final String SQL_BCM_PREFIX = "sql-bcm";
-    private static final String SQL_SSDM_PREFIX = "sql-ssdm";
-    private static final String SQL_SDM_PREFIX = "sql-sdm";
-    private static final String SQL_SM_PREFIX = "sql-sm";
+    private static final String KERBEROS_SECURITY_PREFIX = "kerb";
+    private static final String KEY_MANANAGER_PREFIX = "key-man";
+    private static final String KEY_STORE_PREFIX = "ks";
     private static final String KEY_STORE_REALM_PREFIX = "ks-rlm";
+    private static final String LDAP_KEY_STORE_PREFIX = "ldap-ks";
+    private static final String LDAP_REALM_AM_FROM_PREFIX = "ldap-rlm-am-from";
+    private static final String LDAP_REALM_AM_PREFIX = "ldap-rlm-am";
+    private static final String LDAP_REALM_OTP_MAP_PREFIX = "ldap-rlm-otp-map";
     private static final String LDAP_REALM_PREFIX = "ldap-rlm";
     private static final String LDAP_REALM_USER_MAP_PREFIX = "ldap-rlm-user-map";
-    private static final String LDAP_REALM_OTP_MAP_PREFIX = "ldap-rlm-otp-map";
     private static final String LDAP_REALM_X509_MAP_PREFIX = "ldap-rlm-x509-map";
-    private static final String LDAP_REALM_AM_PREFIX = "ldap-rlm-am";
-    private static final String LDAP_REALM_AM_FROM_PREFIX = "ldap-rlm-am-from";
-    private static final String PROPERTIES_REALM_PREFIX = "prop-rlm";
+    private static final String LOGICAL_PERMISSION_MAPPER_PREFIX = "log-perm";
+    private static final String LOGICAL_ROLE_MAPPER_PREFIX = "log-role";
+    private static final String MAPPED_REGEX_REALM_MAPPER_PREFIX = "mapp-rm";
+    private static final String MECHANISM_CONFIGURATION_PREFIX = "mech-conf";
+    private static final String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX = "mech-sasl";
+    private static final String MECHANISM_REALM_CONFIGURATION_PREFIX = "mech-re-conf";
+    private static final String PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX = "per-log";
+    private static final String PERMISSION_MAPPER_PREFIX = "perm";
+    private static final String PERMISSION_MAPPINGS_PREFIX = "perm-map";
     private static final String PROPERTIES_REALM_GP_PREFIX = "prop-rlm-gp";
-    private static final String TOKEN_REALM_PREFIX = "token-rlm";
+    private static final String PROPERTIES_REALM_PREFIX = "prop-rlm";
+    private static final String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "prov-http";
+    private static final String PROVIDER_LOADER_PREFIX = "prov-load";
+    private static final String PROVIDER_SASL_SERVER_FACTORY_PREFIX = "prov-sasl";
+    private static final String REGEX_PRINCIPAL_TRANSFORMER_PREFIX = "reg-pri-trans";
+    private static final String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX = "regv-pri-trans";
+    private static final String SASL_AUTHENTICATION_FACTORY_PREFIX = "sasl-auth";
+    private static final String SECURITY_DOMAIN_PREFIX = "sec-dom";
+    private static final String SEREVR_SSL_CONTEXT_PREFIX = "srv-ssl";
+    private static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX = "svc-loa-http";
+    private static final String SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX = "svc-loa-sasl";
+    private static final String SIMPLE_PERMISSION_MAPPER_PREFIX = "sim-perm";
+    private static final String SIMPLE_REGEX_REALM_MAPPER_PREFIX = "simp-rm";
+    private static final String SIMPLE_ROLE_DECODER_PREFIX = "simp-role";
+    private static final String SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX = "siz-log";
+    private static final String SQL_BCM_PREFIX = "sql-bcm";
+    private static final String SQL_CPM_PREFIX = "sql-cpm";
+    private static final String SQL_PREFIX = "sql";
+    private static final String SQL_SDM_PREFIX = "sql-sdm";
+    private static final String SQL_SM_PREFIX = "sql-sm";
+    private static final String SQL_SSDM_PREFIX = "sql-ssdm";
+    private static final String SYSLOG_AUDIT_LOG_PREFIX = "sys-log";
     private static final String TOKEN_REALM_JWT_PREFIX = "token-rlm-jwt";
     private static final String TOKEN_REALM_OAU_PREFIX = "token-rlm-oau";
-    private static final String CONSTANT_REALM_MAPPER_PREFIX = "con-rm";
-    private static final String CUSTOM_REALM_MAPPER_PREFIX = "cus-rm";
-    private static final String MAPPED_REGEX_REALM_MAPPER_PREFIX = "mapp-rm";
-    private static final String SIMPLE_REGEX_REALM_MAPPER_PREFIX = "simp-rm";
-    private static final String FILTER_PREFIX = "filt";
+    private static final String TOKEN_REALM_PREFIX = "token-rlm";
+    private static final String TRUST_MANAGER_CRL_PREFIX = "tru-man-crl";
+    private static final String TRUST_MANAGER_PREFIX = "tru-man";
     private static final String TRY_UPDATE = "try-update";
+    private static final String X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX = "x500-pri";
 
-    static final String ANY_STRING = Random.name();
-    static final String INITIAL_PROVIDERS = "initial-providers";
-    static final String HTTP_SERVER_MECH_FACTORIES = "http-server-mechanism-factories";
-    static final String SASL_SERVER_FACTORIES = "sasl-server-factories";
-    static final String SASL_SERVER_FACTORY = "sasl-server-factory";
-    static final String HTTP_SERVER_MECH_FACTORY = "http-server-mechanism-factory";
-    static final String HTTP_FACTORIES_ITEM = "http-factories-item";
-    static final String SASL_FACTORIES_ITEM = "sasl-factories-item";
-    static final String OTHER_FACTORIES_ITEM = "other-factories-item";
-    static final String TRANSFORMERS_ITEM = "transformers-item";
-    static final String PRINCIPAL_TRANSFORMERS = "principal-transformers";
-    static final String PROVIDERS = "providers";
-    static final String PRINCIPAL = "principal";
-    static final String CONSTANT = "constant";
-    static final String REPLACEMENT = "replacement";
-    static final String ENABLING = "enabling";
-    static final String HASH_SHA = "HASH_SHA";
-    static final String PREDEFINED_FILTER = "predefined-filter";
-    static final String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
-    static final String PERMISSION_MAPPER_ITEM = "mappers-decoders-permission-mapper-item";
-    static final String PRINCIPAL_DECODER_ITEM = "mappers-decoders-principal-decoder-item";
-    static final String ROLE_DECODER_ITEM = "mappers-decoders-role-decoder-item";
-    static final String ADD_PREFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-prefix-role-mapper-item";
-    static final String ADD_SUFFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-suffix-role-mapper-item";
-    static final String AGGREGATE_ROLE_MAPPER_ITEM = "mappers-decoders-aggregate-role-mapper-item";
-    static final String CONSTANT_ROLE_MAPPER_ITEM = "mappers-decoders-constant-role-mapper-item";
-    static final String CUSTOM_ROLE_MAPPER_ITEM = "mappers-decoders-custom-role-mapper-item";
-    static final String LOGICAL_ROLE_MAPPER_ITEM = "mappers-decoders-logical-role-mapper-item";
-    static final String CUSTOM_PERMISSION_MAPPER_ITEM = "mappers-decoders-custom-permission-mapper-item";
-    static final String LOGICAL_PERMISSION_MAPPER_ITEM = "mappers-decoders-logical-permission-mapper-item";
-    static final String CONSTANT_PERMISSION_MAPPER_ITEM = "elytron-constant-permission-mapper-item";
-    static final String SIMPLE_PERMISSION_MAPPER_ITEM = "elytron-simple-permission-mapper-item";
-    static final String AGGREGATE_PRINCIPAL_DECODER_ITEM = "mappers-decoders-aggregate-principal-decoder-item";
-    static final String CONCATENATING_PRINCIPAL_DECODER_ITEM = "mappers-decoders-concatenating-principal-decoder-item";
-    static final String CONSTANT_PRINCIPAL_DECODER_ITEM = "mappers-decoders-constant-principal-decoder-item";
-    static final String CUSTOM_PRINCIPAL_DECODER_ITEM = "mappers-decoders-custom-principal-decoder-item";
-    static final String X500_PRINCIPAL_DECODER_ITEM = "mappers-decoders-x500-attribute-principal-decoder-item";
-    static final String CUSTOM_ROLE_DECODER_ITEM = "mappers-decoders-custom-role-decoder-item";
-    static final String SIMPLE_ROLE_DECODER_ITEM = "mappers-decoders-simple-role-decoder-item";
-    static final String PREFIX = "prefix";
-    static final String SUFFIX = "suffix";
-    static final String ROLE_MAPPERS = "role-mappers";
-    static final String LOGICAL_OPERATION = "logical-operation";
-    static final String AND = "and";
-    static final String OR = "or";
-    static final String LEFT = "left";
-    static final String RIGHT = "right";
-    static final String MAPPING_MODE = "mapping-mode";
-    static final String PRINCIPAL_DECODERS = "principal-decoders";
-    static final String JOINER = "joiner";
-    static final String OID = "oid";
-    static final String ATTRIBUTE = "attribute";
-    static final String JKS = "JKS";
-    static final String ALIAS_FILTER = "alias-filter";
-    static final String FILTER_ALIAS = "filter-alias";
-    static final String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
-    static final String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
-    static final String REALMS = "Realms";
-    static final String PRINCIPAL_TRANSFORMER = "principal-transformer";
-    static final String AUTHENTICATION_NAME = "authentication-name";
-    static final String EXTENDS = "extends";
-    static final String MATCH_RULES_TITLE = "Match Rules";
-    static final String MATCH_RULES = "match-rules";
-    static final String MATCH_HOST = "match-host";
-    static final String MATCH_ABSTRACT_TYPE = "match-abstract-type";
-    static final String SUFFIX_LOG = "yy-mm";
-    static final String HOSTNAME = "host-name";
-    static final String SERVER_ADDRESS = "server-address";
-    static final String LOCALHOST = "127.0.0.1";
-    static final String SECURITY_EVENT_LISTENERS = "security-event-listeners";
     static final String ADD_CUSTOM_POLICY = "Add Custom Policy";
     static final String ADD_JACC_POLICY = "Add JACC Policy";
-    static final String AUTHENTICATION_REALM = "authentication-realm";
-    static final String AUTHORIZATION_REALM = "authorization-realm";
-    static final String MAXIMUM_AGE = "maximum-age";
-    static final String LEVELS = "levels";
-    static final String IDENTITY = "identity";
-    static final String ATTRIBUTE_NAME = "attribute-name";
-    static final String PQ_LABEL = "Principal Query";
-    static final String CLEAR_PASSWORD_MAPPER_TAB = "elytron-jdbc-realm-principal-query-clear-password-mapper-tab";
-    static final String BCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-bcrypt-mapper-tab";
-    static final String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
-    static final String SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-simple-digest-mapper-tab";
-    static final String SCRAM_MAPPER_TAB = "elytron-jdbc-realm-principal-query-scram-mapper-tab";
-    static final String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
-    static final String BCRYPT_MAPPER = "bcrypt-mapper";
-    static final String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
-    static final String SIMPLE_DIGEST_MAPPER = "simple-digest-mapper";
-    static final String SCRAM_MAPPER = "scram-mapper";
-    static final String PASSWORD_INDEX = "password-index";
-    static final String ITERATION_COUNT_INDEX = "iteration-count-index";
-    static final String SALT_INDEX = "salt-index";
-    static final String ALGORITHM_FROM = "algorithm-from";
-    static final String HASH_FROM = "hash-from";
-    static final String SEED_FROM = "seed-from";
-    static final String SEQUENCE_FROM = "sequence-from";
-    static final String CERTIFICATE_FROM = "certificate-from";
-    static final String FILTER_NAME = "filter-name";
-    static final String IDENTITY_ATTRIBUTES_MAPPING_LB = "Identity Attribute Mapping";
-    static final String APP_USERS_PROPS = "application-users.properties";
-    static final String APP_ROLES_PROPS = "application-roles.properties";
-    static final String JBOSS_SRV_CONFIG_DIR = "jboss.server.config.dir";
-    static final String GROUPS_PROPERTIES = "groups-properties";
-    static final String DIGEST_REALM_NAME = "digest-realm-name";
-    static final String PRINCIPAL_CLAIM = "principal-claim";
-    static final String AUDIENCE = "audience";
-    static final String JWT = "jwt";
-    static final String OAUTH2_INTROSPECTION = "oauth2-introspection";
-    static final String CLIENT_ID = "client-id";
-    static final String CLIENT_SECRET = "client-secret";
-    static final String INTROSPECTION_URL = "introspection-url";
-    static final String PUBLIC_KEY = "public-key";
-    static final String REALM_MAP = "realm-map";
-    static final String REGEX_PATTERN = "[a-z]@([a-z])";
-    static final String DELEGATE_REALM_MAPPER = "delegate-realm-mapper";
-    static final String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    static final String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    static final String HTTP_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_HTTP_AUTHENTICATION_FACTORY, ITEM);
-    static final String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
-    static final String AGGREGATE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_SASL_SERVER_FACTORY, ITEM);
-    static final String CONFIGURABLE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY, ITEM);
-    static final String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, ITEM);
-    static final String PROVIDER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_SASL_SERVER_FACTORY, ITEM);
-    static final String SASL_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_SASL_AUTHENTICATION_FACTORY, ITEM);
-    static final String SERVICE_LOADER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY, ITEM);
-    static final String KERBEROS_SECURITY_FACTORY_ITEM = Ids.build(ELYTRON_KERBEROS_SECURITY_FACTORY, ITEM);
+    static final String ADD_PREFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-prefix-role-mapper-item";
+    static final String ADD_SUFFIX_ROLE_MAPPER_ITEM = "mappers-decoders-add-suffix-role-mapper-item";
+    static final String AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    static final String AGGREGATE_PRINCIPAL_DECODER_ITEM = "mappers-decoders-aggregate-principal-decoder-item";
     static final String AGGREGATE_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_AGGREGATE_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String CONSTANT_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CONSTANT_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String CUSTOM_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CUSTOM_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String REGEX_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, ITEM);
-    static final String STORES_ITEM = "stores-item";
-    static final String CREDENTIAL_STORE_ITEM = "elytron-credential-store-item";
-    static final String FILTERING_KEY_STORE_ITEM = "elytron-filtering-key-store-item";
-    static final String KEY_STORE_ITEM = "elytron-key-store-item";
-    static final String LDAP_KEY_STORE_ITEM = "elytron-ldap-key-store";
-    static final String SSL_ITEM = "ssl-item";
     static final String AGGREGATE_PROVIDERS_ITEM = "elytron-aggregate-providers-item";
-    static final String CLIENT_SSL_CONTEXT_ITEM = "elytron-client-ssl-context-item";
-    static final String KEY_MANAGER_ITEM = "elytron-key-manager-item";
-    static final String PROVIDER_LOADER_ITEM = "elytron-provider-loader-item";
-    static final String SERVER_SSL_CONTEXT_ITEM = "elytron-server-ssl-context-item";
-    static final String SECURITY_DOMAIN_ITEM = "elytron-security-domain-item";
-    static final String TRUST_MANAGER_ITEM = "elytron-trust-manager-item";
-    static final String AUTHENTICATION_ITEM = "authentication-item";
+    static final String AGGREGATE_REALM_ITEM = "elytron-aggregate-realm-item";
+    static final String AGGREGATE_ROLE_MAPPER_ITEM = "mappers-decoders-aggregate-role-mapper-item";
+    static final String AGGREGATE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_AGGREGATE_SASL_SERVER_FACTORY, ITEM);
+    static final String AGGREGATE_SECURITY_EVENT_LISTENER_ITEM = "elytron-aggregate-security-event-listener-item";
+    static final String ALGORITHM_FROM = "algorithm-from";
+    static final String ALIAS_FILTER = "alias-filter";
+    static final String AND = "and";
+    static final String ANY_STRING = Random.name();
+    static final String APP_ROLES_PROPS = "application-roles.properties";
+    static final String APP_USERS_PROPS = "application-users.properties";
+    static final String ATTRIBUTE = "attribute";
+    static final String ATTRIBUTE_NAME = "attribute-name";
+    static final String AUDIENCE = "audience";
     static final String AUTHENTICATION_CONFIGURATION_ITEM = "elytron-authentication-configuration-item";
     static final String AUTHENTICATION_CONTEXT_ITEM = "elytron-authentication-context-item";
-    static final String LOGS_ITEM = "logs-item";
-    static final String FILE_AUDIT_LOG_ITEM = "elytron-file-audit-log-item";
-    static final String PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-periodic-rotating-file-audit-log-item";
-    static final String SIZE_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-size-rotating-file-audit-log-item";
-    static final String SYSLOG_AUDIT_LOG_ITEM = "elytron-syslog-audit-log-item";
-    static final String AGGREGATE_SECURITY_EVENT_LISTENER_ITEM = "elytron-aggregate-security-event-listener-item";
-    static final String OTHER_ITEM = "other-item";
-    static final String POLICY_ITEM = "elytron-policy";
-    static final String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
-
-    static final String SECURITY_REALM_ITEM = "security-realm-item";
-    static final String REALM_MAPPER_ITEM = "realm-mapper-item";
-    static final String AGGREGATE_REALM_ITEM = "elytron-aggregate-realm-item";
+    static final String AUTHENTICATION_ITEM = "authentication-item";
+    static final String AUTHENTICATION_NAME = "authentication-name";
+    static final String AUTHENTICATION_REALM = "authentication-realm";
+    static final String AUTHORIZATION_REALM = "authorization-realm";
+    static final String BCRYPT_MAPPER = "bcrypt-mapper";
+    static final String BCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-bcrypt-mapper-tab";
     static final String CACHING_REALM_ITEM = "elytron-caching-realm-item";
-    static final String CUSTOM_MODIFIABLE_REALM_ITEM = "elytron-custom-modifiable-realm-item";
-    static final String CUSTOM_REALM_ITEM = "elytron-custom-realm-item";
-    static final String FILESYSTEM_REALM_ITEM = "elytron-filesystem-realm-item";
-    static final String IDENTITY_REALM_ITEM = "elytron-identity-realm-item";
-    static final String JDBC_REALM_ITEM = "elytron-jdbc-realm-item";
-    static final String KEYSTORE_REALM_ITEM = "elytron-key-store-realm-item";
-    static final String LDAP_REALM_ITEM = "elytron-ldap-realm-item";
-    static final String PROPERTIES_REALM_ITEM = "elytron-properties-realm-item";
-    static final String TOKEN_REALM_ITEM = "elytron-token-realm-item";
+    static final String CERTIFICATE_FROM = "certificate-from";
+    static final String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
+    static final String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
+    static final String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
+    static final String CLEAR_PASSWORD_MAPPER_TAB = "elytron-jdbc-realm-principal-query-clear-password-mapper-tab";
+    static final String CLIENT_ID = "client-id";
+    static final String CLIENT_SECRET = "client-secret";
+    static final String CLIENT_SSL_CONTEXT_ITEM = "elytron-client-ssl-context-item";
+    static final String CONCATENATING_PRINCIPAL_DECODER_ITEM = "mappers-decoders-concatenating-principal-decoder-item";
+    static final String CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    static final String CONFIGURABLE_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_CONFIGURABLE_SASL_SERVER_FACTORY,
+            ITEM);
+    static final String CONSTANT = "constant";
+    static final String CONSTANT_PERMISSION_MAPPER_ITEM = "elytron-constant-permission-mapper-item";
+    static final String CONSTANT_PRINCIPAL_DECODER_ITEM = "mappers-decoders-constant-principal-decoder-item";
+    static final String CONSTANT_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CONSTANT_PRINCIPAL_TRANSFORMER, ITEM);
     static final String CONSTANT_REALM_MAPPER_ITEM = "elytron-constant-realm-mapper-item";
+    static final String CONSTANT_ROLE_MAPPER_ITEM = "mappers-decoders-constant-role-mapper-item";
+    static final String CREDENTIAL_STORE_ITEM = "elytron-credential-store-item";
+    static final String CUSTOM_MODIFIABLE_REALM_ITEM = "elytron-custom-modifiable-realm-item";
+    static final String CUSTOM_PERMISSION_MAPPER_ITEM = "mappers-decoders-custom-permission-mapper-item";
+    static final String CUSTOM_PRINCIPAL_DECODER_ITEM = "mappers-decoders-custom-principal-decoder-item";
+    static final String CUSTOM_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CUSTOM_PRINCIPAL_TRANSFORMER, ITEM);
+    static final String CUSTOM_REALM_ITEM = "elytron-custom-realm-item";
     static final String CUSTOM_REALM_MAPPER_ITEM = "elytron-custom-realm-mapper-item";
+    static final String CUSTOM_ROLE_DECODER_ITEM = "mappers-decoders-custom-role-decoder-item";
+    static final String CUSTOM_ROLE_MAPPER_ITEM = "mappers-decoders-custom-role-mapper-item";
+    static final String DELEGATE_REALM_MAPPER = "delegate-realm-mapper";
+    static final String DIGEST_REALM_NAME = "digest-realm-name";
+    static final String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
+    static final String ENABLING = "enabling";
+    static final String EXTENDS = "extends";
+    static final String FILE_AUDIT_LOG_ITEM = "elytron-file-audit-log-item";
+    static final String FILESYSTEM_REALM_ITEM = "elytron-filesystem-realm-item";
+    static final String FILTER_ALIAS = "filter-alias";
+    static final String FILTER_NAME = "filter-name";
+    static final String FILTERING_KEY_STORE_ITEM = "elytron-filtering-key-store-item";
+    static final String GROUPS_PROPERTIES = "groups-properties";
+    static final String HASH_FROM = "hash-from";
+    static final String HASH_SHA = "HASH_SHA";
+    static final String HOSTNAME = "host-name";
+    static final String HTTP_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_HTTP_AUTHENTICATION_FACTORY, ITEM);
+    static final String HTTP_FACTORIES_ITEM = "http-factories-item";
+    static final String HTTP_SERVER_MECH_FACTORIES = "http-server-mechanism-factories";
+    static final String HTTP_SERVER_MECH_FACTORY = "http-server-mechanism-factory";
+    static final String IDENTITY = "identity";
+    static final String IDENTITY_ATTRIBUTES_MAPPING_LB = "Identity Attribute Mapping";
+    static final String IDENTITY_REALM_ITEM = "elytron-identity-realm-item";
+    static final String INITIAL_PROVIDERS = "initial-providers";
+    static final String INTROSPECTION_URL = "introspection-url";
+    static final String ITERATION_COUNT_INDEX = "iteration-count-index";
+    static final String JBOSS_SRV_CONFIG_DIR = "jboss.server.config.dir";
+    static final String JDBC_REALM_ITEM = "elytron-jdbc-realm-item";
+    public static final String JKS = "JKS";
+    static final String JOINER = "joiner";
+    static final String JWT = "jwt";
+    static final String KERBEROS_SECURITY_FACTORY_ITEM = Ids.build(ELYTRON_KERBEROS_SECURITY_FACTORY, ITEM);
+    static final String KEY_MANAGER_ITEM = "elytron-key-manager-item";
+    static final String KEY_STORE_ITEM = "elytron-key-store-item";
+    static final String KEYSTORE_REALM_ITEM = "elytron-key-store-realm-item";
+    static final String LDAP_KEY_STORE_ITEM = "elytron-ldap-key-store";
+    static final String LDAP_REALM_ITEM = "elytron-ldap-realm-item";
+    static final String LEFT = "left";
+    static final String LEVELS = "levels";
+    static final String LOCALHOST = "127.0.0.1";
+    static final String LOGICAL_OPERATION = "logical-operation";
+    static final String LOGICAL_PERMISSION_MAPPER_ITEM = "mappers-decoders-logical-permission-mapper-item";
+    static final String LOGICAL_ROLE_MAPPER_ITEM = "mappers-decoders-logical-role-mapper-item";
+    static final String LOGS_ITEM = "logs-item";
     static final String MAPPED_REGEX_REALM_MAPPER_ITEM = "elytron-mapped-regex-realm-mapper-item";
+    static final String MAPPING_MODE = "mapping-mode";
+    static final String MATCH_ABSTRACT_TYPE = "match-abstract-type";
+    static final String MATCH_HOST = "match-host";
+    static final String MATCH_RULES = "match-rules";
+    static final String MATCH_RULES_TITLE = "Match Rules";
+    static final String MAXIMUM_AGE = "maximum-age";
+    static final String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM = Ids.build(
+            ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, ITEM);
+    static final String OAUTH2_INTROSPECTION = "oauth2-introspection";
+    static final String OID = "oid";
+    static final String OR = "or";
+    static final String OTHER_FACTORIES_ITEM = "other-factories-item";
+    static final String OTHER_ITEM = "other-item";
+    static final String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
+    static final String PASSWORD_INDEX = "password-index";
+    static final String PERIODIC_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-periodic-rotating-file-audit-log-item";
+    static final String PERMISSION_MAPPER_ITEM = "mappers-decoders-permission-mapper-item";
+    static final String POLICY_ITEM = "elytron-policy";
+    static final String PQ_LABEL = "Principal Query";
+    static final String PREDEFINED_FILTER = "predefined-filter";
+    static final String PREFIX = "prefix";
+    static final String PRINCIPAL = "principal";
+    static final String PRINCIPAL_CLAIM = "principal-claim";
+    static final String PRINCIPAL_DECODER_ITEM = "mappers-decoders-principal-decoder-item";
+    static final String PRINCIPAL_DECODERS = "principal-decoders";
+    static final String PRINCIPAL_TRANSFORMER = "principal-transformer";
+    static final String PRINCIPAL_TRANSFORMERS = "principal-transformers";
+    static final String PROPERTIES_REALM_ITEM = "elytron-properties-realm-item";
+    static final String PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_PROVIDER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    static final String PROVIDER_LOADER_ITEM = "elytron-provider-loader-item";
+    static final String PROVIDER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_PROVIDER_SASL_SERVER_FACTORY, ITEM);
+    static final String PROVIDERS = "providers";
+    static final String PUBLIC_KEY = "public-key";
+    static final String REALM_MAP = "realm-map";
+    static final String REALM_MAPPER_ITEM = "realm-mapper-item";
+    static final String REALMS = "Realms";
+    static final String REGEX_PATTERN = "[a-z]@([a-z])";
+    static final String REGEX_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_REGEX_PRINCIPAL_TRANSFORMER, ITEM);
+    static final String REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(
+            ELYTRON_REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, ITEM);
+    static final String REPLACEMENT = "replacement";
+    static final String RIGHT = "right";
+    static final String ROLE_DECODER_ITEM = "mappers-decoders-role-decoder-item";
+    static final String ROLE_MAPPERS = "role-mappers";
+    static final String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
+    static final String SALT_INDEX = "salt-index";
+    static final String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
+    static final String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
+    static final String SASL_AUTHENTICATION_FACTORY_ITEM = Ids.build(ELYTRON_SASL_AUTHENTICATION_FACTORY, ITEM);
+    static final String SASL_FACTORIES_ITEM = "sasl-factories-item";
+    static final String SASL_SERVER_FACTORIES = "sasl-server-factories";
+    static final String SASL_SERVER_FACTORY = "sasl-server-factory";
+    static final String SCRAM_MAPPER = "scram-mapper";
+    static final String SCRAM_MAPPER_TAB = "elytron-jdbc-realm-principal-query-scram-mapper-tab";
+    static final String SECURITY_DOMAIN_ITEM = "elytron-security-domain-item";
+    static final String SECURITY_EVENT_LISTENERS = "security-event-listeners";
+    static final String SECURITY_REALM_ITEM = "security-realm-item";
+    static final String SEED_FROM = "seed-from";
+    static final String SEQUENCE_FROM = "sequence-from";
+    static final String SERVER_ADDRESS = "server-address";
+    static final String SERVER_SSL_CONTEXT_ITEM = "elytron-server-ssl-context-item";
+    static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
+            ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
+    static final String SERVICE_LOADER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY,
+            ITEM);
+    static final String SIMPLE_DIGEST_MAPPER = "simple-digest-mapper";
+    static final String SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-simple-digest-mapper-tab";
+    static final String SIMPLE_PERMISSION_MAPPER_ITEM = "elytron-simple-permission-mapper-item";
     static final String SIMPLE_REGEX_REALM_MAPPER_ITEM = "elytron-simple-regex-realm-mapper-item";
-
+    static final String SIMPLE_ROLE_DECODER_ITEM = "mappers-decoders-simple-role-decoder-item";
+    static final String SIZE_ROTATING_FILE_AUDIT_LOG_ITEM = "elytron-size-rotating-file-audit-log-item";
+    static final String SSL_ITEM = "ssl-item";
+    static final String STORES_ITEM = "stores-item";
+    static final String SUFFIX = "suffix";
+    static final String SUFFIX_LOG = "yy-mm";
+    static final String SYSLOG_AUDIT_LOG_ITEM = "elytron-syslog-audit-log-item";
+    static final String TOKEN_REALM_ITEM = "elytron-token-realm-item";
+    static final String TRANSFORMERS_ITEM = "transformers-item";
+    static final String TRUST_MANAGER_ITEM = "elytron-trust-manager-item";
+    static final String X500_PRINCIPAL_DECODER_ITEM = "mappers-decoders-x500-attribute-principal-decoder-item";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(ELYTRON);
 
     // -------------- aggregate-http-server-mechanism-factory
 
-    static final String AGG_HTTP_CREATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AGG_HTTP_UPDATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AGG_HTTP_TRY_UPDATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, TRY_UPDATE, Random.name());
-    static final String AGG_HTTP_DELETE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AGG_HTTP_CREATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String AGG_HTTP_UPDATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String AGG_HTTP_TRY_UPDATE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String AGG_HTTP_DELETE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address aggregateHttpServerMechanismFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, name);
@@ -310,10 +320,14 @@ public final class ElytronFixtures {
 
     // -------------- configurable-http-server-mechanism-factory
 
-    static final String CONF_HTTP_CREATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CONF_HTTP_UPDATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CONF_HTTP_TRY_UPDATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, TRY_UPDATE, Random.name());
-    static final String CONF_HTTP_DELETE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONF_HTTP_CREATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String CONF_HTTP_UPDATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String CONF_HTTP_TRY_UPDATE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String CONF_HTTP_DELETE = Ids.build(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address configurableHttpServerMechanismFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONFIGURABLE_HTTP_SERVER_MECHANISM_FACTORY, name);
@@ -328,10 +342,13 @@ public final class ElytronFixtures {
 
     // -------------- http-authentication-factory
 
-    static final String HTTP_AUTH_CREATE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String HTTP_AUTH_UPDATE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String HTTP_AUTH_CREATE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String HTTP_AUTH_UPDATE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String HTTP_AUTH_TRY_UPDATE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, TRY_UPDATE, Random.name());
-    static final String HTTP_AUTH_DELETE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String HTTP_AUTH_DELETE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address httpAuthenticationFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(HTTP_AUTHENTICATION_FACTORY, name);
@@ -339,26 +356,35 @@ public final class ElytronFixtures {
 
     // -------------- http-authentication-factory - mechanism configurations
 
-    static final String MECH_CONF_CREATE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String MECH_CONF_UPDATE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String MECH_CONF_CREATE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String MECH_CONF_UPDATE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String MECH_CONF_UPDATE2 = Ids.build("mech-conf2", CrudConstants.UPDATE, Random.name());
-    static final String MECH_CONF_DELETE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String MECH_CONF_DELETE = Ids.build(MECHANISM_CONFIGURATION_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     // -------------- http-authentication-factory - mechanism configurations - mechanism realm configurations
 
-    static final String MECH_RE_CONF_CREATE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String MECH_RE_CONF_UPDATE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String MECH_RE_CONF_CREATE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String MECH_RE_CONF_UPDATE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String MECH_RE_CONF_UPDATE2 = Ids.build("mech-re-conf2", CrudConstants.UPDATE, Random.name());
-    static final String MECH_RE_CONF_DELETE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String MECH_RE_CONF_DELETE = Ids.build(MECHANISM_REALM_CONFIGURATION_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     // -------------- provider-http-server-mechanism-factory
 
-    static final String PROV_HTTP_CREATE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String PROV_HTTP_UPDATE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String PROV_HTTP_CREATE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String PROV_HTTP_UPDATE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
     static final String PROV_HTTP_UPDATE2 = Ids.build("prov-http2", CrudConstants.UPDATE, Random.name());
     static final String PROV_HTTP_UPDATE3 = Ids.build("prov-http3", CrudConstants.UPDATE, Random.name());
     static final String PROV_HTTP_UPDATE4 = Ids.build("prov-http4", CrudConstants.UPDATE, Random.name());
-    static final String PROV_HTTP_DELETE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String PROV_HTTP_DELETE = Ids.build(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address providerHttpServerMechanismFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PROVIDER_HTTP_SERVER_MECHANISM_FACTORY, name);
@@ -366,9 +392,12 @@ public final class ElytronFixtures {
 
     // -------------- service-loader-http-server-mechanism-factory
 
-    static final String SVC_LOAD_HTTP_CREATE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SVC_LOAD_HTTP_UPDATE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SVC_LOAD_HTTP_DELETE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SVC_LOAD_HTTP_CREATE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String SVC_LOAD_HTTP_UPDATE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String SVC_LOAD_HTTP_DELETE = Ids.build(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address serviceLoaderHttpServerMechanismFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, name);
@@ -376,9 +405,12 @@ public final class ElytronFixtures {
 
     // -------------- aggregate-sasl-server-factory
 
-    static final String AGG_SASL_CREATE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AGG_SASL_UPDATE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AGG_SASL_DELETE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AGG_SASL_CREATE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AGG_SASL_UPDATE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AGG_SASL_DELETE = Ids.build(AGGREGATE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address aggregateSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_SASL_SERVER_FACTORY, name);
@@ -386,9 +418,12 @@ public final class ElytronFixtures {
 
     // -------------- configurable-sasl-server-factory
 
-    static final String CONF_SASL_CREATE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CONF_SASL_UPDATE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CONF_SASL_DELETE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONF_SASL_CREATE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CONF_SASL_UPDATE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String CONF_SASL_DELETE = Ids.build(CONFIGURABLE_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address configurableSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONFIGURABLE_SASL_SERVER_FACTORY, name);
@@ -396,10 +431,14 @@ public final class ElytronFixtures {
 
     // -------------- mechanism-provider-filtering-sasl-server-factory
 
-    static final String MECH_SASL_CREATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String MECH_SASL_UPDATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String MECH_SASL_TRY_UPDATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX, TRY_UPDATE, Random.name());
-    static final String MECH_SASL_DELETE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String MECH_SASL_CREATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String MECH_SASL_UPDATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String MECH_SASL_TRY_UPDATE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX,
+            TRY_UPDATE, Random.name());
+    static final String MECH_SASL_DELETE = Ids.build(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address mechanismProviderFilteringSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, name);
@@ -407,9 +446,12 @@ public final class ElytronFixtures {
 
     // -------------- sasl-authentication-factory
 
-    static final String SASL_AUTH_CREATE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SASL_AUTH_UPDATE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SASL_AUTH_DELETE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SASL_AUTH_CREATE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String SASL_AUTH_UPDATE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String SASL_AUTH_DELETE = Ids.build(SASL_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address saslAuthenticationFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SASL_AUTHENTICATION_FACTORY, name);
@@ -417,9 +459,12 @@ public final class ElytronFixtures {
 
     // -------------- service-loader-sasl-server-factory
 
-    static final String SVC_LOAD_SASL_CREATE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SVC_LOAD_SASL_UPDATE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SVC_LOAD_SASL_DELETE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SVC_LOAD_SASL_CREATE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String SVC_LOAD_SASL_UPDATE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String SVC_LOAD_SASL_DELETE = Ids.build(SERVICE_LOADER_SASL_SERVER_FACTORY_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address serviceLoaderSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SERVICE_LOADER_SASL_SERVER_FACTORY, name);
@@ -439,10 +484,14 @@ public final class ElytronFixtures {
 
     // -------------- aggregate-principal-transformer
 
-    static final String AGG_PRI_TRANS_CREATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AGG_PRI_TRANS_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AGG_PRI_TRANS_TRY_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE, Random.name());
-    static final String AGG_PRI_TRANS_DELETE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AGG_PRI_TRANS_CREATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AGG_PRI_TRANS_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AGG_PRI_TRANS_TRY_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String AGG_PRI_TRANS_DELETE = Ids.build(AGGREGATE_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address aggregatePrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_PRINCIPAL_TRANSFORMER, name);
@@ -450,9 +499,12 @@ public final class ElytronFixtures {
 
     // -------------- chained-principal-transformer
 
-    static final String CHA_PRI_TRANS_CREATE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CHA_PRI_TRANS_UPDATE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CHA_PRI_TRANS_DELETE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CHA_PRI_TRANS_CREATE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CHA_PRI_TRANS_UPDATE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String CHA_PRI_TRANS_DELETE = Ids.build(CHAINED_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address chainedPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CHAINED_PRINCIPAL_TRANSFORMER, name);
@@ -460,8 +512,10 @@ public final class ElytronFixtures {
 
     // -------------- constant-principal-transformer
 
-    static final String CONS_PRI_TRANS_CREATE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CONS_PRI_TRANS_UPDATE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CONS_PRI_TRANS_CREATE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CONS_PRI_TRANS_UPDATE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String CONS_PRI_TRANS_UPDATE2 = Ids.build("cons-pri-trans2", CrudConstants.UPDATE, Random.name());
     static final String CONS_PRI_TRANS_UPDATE3 = Ids.build("cons-pri-trans3", CrudConstants.UPDATE, Random.name());
     static final String CONS_PRI_TRANS_UPDATE4 = Ids.build("cons-pri-trans4", CrudConstants.UPDATE, Random.name());
@@ -469,7 +523,8 @@ public final class ElytronFixtures {
     static final String CONS_PRI_TRANS_UPDATE6 = Ids.build("cons-pri-trans6", CrudConstants.UPDATE, Random.name());
     static final String CONS_PRI_TRANS_UPDATE7 = Ids.build("cons-pri-trans7", CrudConstants.UPDATE, Random.name());
     static final String CONS_PRI_TRANS_UPDATE8 = Ids.build("cons-pri-trans8", CrudConstants.UPDATE, Random.name());
-    static final String CONS_PRI_TRANS_DELETE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONS_PRI_TRANS_DELETE = Ids.build(CONSTANT_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address constantPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONSTANT_PRINCIPAL_TRANSFORMER, name);
@@ -477,9 +532,12 @@ public final class ElytronFixtures {
 
     // -------------- custom-principal-transformer
 
-    static final String CUST_PRI_TRANS_CREATE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CUST_PRI_TRANS_UPDATE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CUST_PRI_TRANS_DELETE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CUST_PRI_TRANS_CREATE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CUST_PRI_TRANS_UPDATE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String CUST_PRI_TRANS_DELETE = Ids.build(CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     public static Address customPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CUSTOM_PRINCIPAL_TRANSFORMER, name);
@@ -487,10 +545,14 @@ public final class ElytronFixtures {
 
     // -------------- regex-principal-transformer
 
-    static final String REG_PRI_TRANS_CREATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String REG_PRI_TRANS_UPDATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String REG_PRI_TRANS_TRY_UPDATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE, Random.name());
-    static final String REG_PRI_TRANS_DELETE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String REG_PRI_TRANS_CREATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String REG_PRI_TRANS_UPDATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String REG_PRI_TRANS_TRY_UPDATE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String REG_PRI_TRANS_DELETE = Ids.build(REGEX_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address regexPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(REGEX_PRINCIPAL_TRANSFORMER, name);
@@ -498,10 +560,14 @@ public final class ElytronFixtures {
 
     // -------------- regex-validating-principal-transformer
 
-    static final String REGV_PRI_TRANS_CREATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String REGV_PRI_TRANS_UPDATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String REGV_PRI_TRANS_TRY_UPDATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE, Random.name());
-    static final String REGV_PRI_TRANS_DELETE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String REGV_PRI_TRANS_CREATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX,
+            CrudConstants.CREATE, Random.name());
+    static final String REGV_PRI_TRANS_UPDATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX,
+            CrudConstants.UPDATE, Random.name());
+    static final String REGV_PRI_TRANS_TRY_UPDATE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String REGV_PRI_TRANS_DELETE = Ids.build(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER_PREFIX,
+            CrudConstants.DELETE, Random.name());
 
     static Address regexValidatingPrincipalTransformerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(REGEX_VALIDATING_PRINCIPAL_TRANSFORMER, name);
@@ -509,12 +575,15 @@ public final class ElytronFixtures {
 
     // -------------- provider-sasl-server-factory
 
-    static final String PROV_SASL_CREATE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String PROV_SASL_UPDATE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String PROV_SASL_CREATE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String PROV_SASL_UPDATE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String PROV_SASL_UPDATE2 = Ids.build("prov-sasl2", CrudConstants.UPDATE, Random.name());
     static final String PROV_SASL_UPDATE3 = Ids.build("prov-sasl3", CrudConstants.UPDATE, Random.name());
     static final String PROV_SASL_UPDATE4 = Ids.build("prov-sasl4", CrudConstants.UPDATE, Random.name());
-    static final String PROV_SASL_DELETE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String PROV_SASL_DELETE = Ids.build(PROVIDER_SASL_SERVER_FACTORY_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address providerSaslServerFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PROVIDER_SASL_SERVER_FACTORY, name);
@@ -572,9 +641,12 @@ public final class ElytronFixtures {
 
     // -------------- logical-permission-mapper
 
-    static final String LOG_PERM_CREATE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String LOG_PERM_UPDATE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LOG_PERM_DELETE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String LOG_PERM_CREATE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String LOG_PERM_UPDATE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String LOG_PERM_DELETE = Ids.build(LOGICAL_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address logicalPermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(LOGICAL_PERMISSION_MAPPER, name);
@@ -582,10 +654,13 @@ public final class ElytronFixtures {
 
     // -------------- constant-permission-mapper
 
-    static final String CON_PERM_CREATE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CON_PERM_UPDATE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CON_PERM_CREATE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CON_PERM_UPDATE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String CON_PERM_UPDATE2 = Ids.build("con-perm2", CrudConstants.UPDATE, Random.name());
-    static final String CON_PERM_DELETE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CON_PERM_DELETE = Ids.build(CONSTANT_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address constantPermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONSTANT_PERMISSION_MAPPER, name);
@@ -597,9 +672,12 @@ public final class ElytronFixtures {
 
     // -------------- simple-permission-mapper
 
-    static final String SIM_PERM_CREATE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SIM_PERM_UPDATE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SIM_PERM_DELETE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SIM_PERM_CREATE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String SIM_PERM_UPDATE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String SIM_PERM_DELETE = Ids.build(SIMPLE_PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address simplePermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_PERMISSION_MAPPER, name);
@@ -611,9 +689,12 @@ public final class ElytronFixtures {
 
     // -------------- aggregate-principal-decoder
 
-    static final String AGG_PRI_CREATE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AGG_PRI_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AGG_PRI_DELETE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AGG_PRI_CREATE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AGG_PRI_UPDATE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AGG_PRI_DELETE = Ids.build(AGGREGATE_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address aggregatePrincipalDecoderAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_PRINCIPAL_DECODER, name);
@@ -621,9 +702,12 @@ public final class ElytronFixtures {
 
     // -------------- concatenating-principal-decoder
 
-    static final String CONC_PRI_CREATE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CONC_PRI_UPDATE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CONC_PRI_DELETE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONC_PRI_CREATE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CONC_PRI_UPDATE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String CONC_PRI_DELETE = Ids.build(CONCATENATING_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address concatenatingPrincipalDecoderAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONCATENATING_PRINCIPAL_DECODER, name);
@@ -631,11 +715,14 @@ public final class ElytronFixtures {
 
     // -------------- constant-principal-decoder
 
-    static final String CONS_PRI_CREATE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CONS_PRI_UPDATE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String CONS_PRI_CREATE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String CONS_PRI_UPDATE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
     static final String CONS_PRI_UPDATE2 = Ids.build("cons-pri2", CrudConstants.UPDATE, Random.name());
     static final String CONS_PRI_UPDATE3 = Ids.build("cons-pri3", CrudConstants.UPDATE, Random.name());
-    static final String CONS_PRI_DELETE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String CONS_PRI_DELETE = Ids.build(CONSTANT_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address constantPrincipalDecoderAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONSTANT_PRINCIPAL_DECODER, name);
@@ -643,9 +730,12 @@ public final class ElytronFixtures {
 
     // -------------- x500-attribute-principal-decoder
 
-    static final String X500_PRI_CREATE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String X500_PRI_UPDATE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String X500_PRI_DELETE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String X500_PRI_CREATE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String X500_PRI_UPDATE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String X500_PRI_DELETE = Ids.build(X500_ATTRIBUTE_PRINCIPAL_DECODER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address x500PrincipalDecoderAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(X500_ATTRIBUTE_PRINCIPAL_DECODER, name);
@@ -683,12 +773,12 @@ public final class ElytronFixtures {
 
     // -------------- key-store
 
-    static final String KEY_ST_CREATE = Ids.build(KEY_STORE_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String KEY_ST_UPDATE = Ids.build(KEY_STORE_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String KEY_ST_CR_UPDATE = Ids.build(KEY_STORE_PREFIX, "cr-update", Random.name());
-    static final String KEY_ST_DELETE = Ids.build(KEY_STORE_PREFIX, CrudConstants.DELETE, Random.name());
+    public static final String KEY_ST_CREATE = Ids.build(KEY_STORE_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String KEY_ST_UPDATE = Ids.build(KEY_STORE_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String KEY_ST_CR_UPDATE = Ids.build(KEY_STORE_PREFIX, "cr-update", Random.name());
+    public static final String KEY_ST_DELETE = Ids.build(KEY_STORE_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address keyStoreAddress(String name) {
+    public static Address keyStoreAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(KEY_STORE, name);
     }
 
@@ -787,13 +877,19 @@ public final class ElytronFixtures {
 
     // -------------- authentication-configuration
 
-    static final String AUT_CF_CREATE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AUT_CF_UPDATE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AUT_CF_DELETE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AUT_CF_CREATE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AUT_CF_UPDATE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AUT_CF_DELETE = Ids.build(AUTHENTICATION_CONFIGURATION_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
-    static final String AUT_CF_CR_CRT = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AUT_CF_CR_UPD = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AUT_CF_CR_DEL = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AUT_CF_CR_CRT = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AUT_CF_CR_UPD = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AUT_CF_CR_DEL = Ids.build(AUTHENTICATION_CONFIGURATION_CR_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address authenticationConfigurationAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONFIGURATION, name);
@@ -807,9 +903,12 @@ public final class ElytronFixtures {
     static final String AUT_CT_DELETE = Ids.build(AUTHENTICATION_CONTEXT_PREFIX, CrudConstants.DELETE, Random.name());
 
     // authentication-context match-rules
-    static final String AUT_CT_MR_CREATE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AUT_CT_MR_UPDATE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AUT_CT_MR_DELETE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AUT_CT_MR_CREATE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AUT_CT_MR_UPDATE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AUT_CT_MR_DELETE = Ids.build(AUTHENTICATION_CONTEXT_MATCH_RULE_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address authenticationContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AUTHENTICATION_CONTEXT, name);
@@ -828,10 +927,14 @@ public final class ElytronFixtures {
 
     // -------------- periodic-rotating-file-audit-log
 
-    static final String PER_LOG_CREATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String PER_LOG_UPDATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String PER_LOG_TRY_UPDATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, TRY_UPDATE, Random.name());
-    static final String PER_LOG_DELETE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String PER_LOG_CREATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String PER_LOG_UPDATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String PER_LOG_TRY_UPDATE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, TRY_UPDATE,
+            Random.name());
+    static final String PER_LOG_DELETE = Ids.build(PERIODIC_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address periodicRotatingFileAuditLogAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_AUDIT_LOG, name);
@@ -839,9 +942,12 @@ public final class ElytronFixtures {
 
     // -------------- size-rotating-file-audit-log
 
-    static final String SIZ_LOG_CREATE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SIZ_LOG_UPDATE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SIZ_LOG_DELETE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SIZ_LOG_CREATE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String SIZ_LOG_UPDATE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String SIZ_LOG_DELETE = Ids.build(SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address sizeRotatingFileAuditLogAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_AUDIT_LOG, name);
@@ -860,9 +966,12 @@ public final class ElytronFixtures {
 
     // -------------- aggregate-security-event-listener
 
-    static final String AGG_SEC_CREATE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String AGG_SEC_UPDATE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String AGG_SEC_DELETE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String AGG_SEC_CREATE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String AGG_SEC_UPDATE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String AGG_SEC_DELETE = Ids.build(AGGREGATOR_SECURITY_EVENT_LISTENER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address aggregateSecurityEventListenerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_SECURITY_EVENT_LISTENER, name);
@@ -1011,22 +1120,33 @@ public final class ElytronFixtures {
     static final String LDAP_RLM_UPDATE = Ids.build(LDAP_REALM_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String LDAP_RLM_DELETE = Ids.build(LDAP_REALM_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static final String LDAP_RLM_USER_MAPPER_CRT = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String LDAP_RLM_USER_MAPPER_UPD = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LDAP_RLM_USER_MAPPER_DEL = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.DELETE, Random.name());
-    static final String LDAP_RLM_OTP_MAPPER_CRT = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String LDAP_RLM_OTP_MAPPER_UPD = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LDAP_RLM_OTP_MAPPER_DEL = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.DELETE, Random.name());
-    static final String LDAP_RLM_X509_MAPPER_CRT = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String LDAP_RLM_X509_MAPPER_UPD = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LDAP_RLM_X509_MAPPER_DEL = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String LDAP_RLM_USER_MAPPER_CRT = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String LDAP_RLM_USER_MAPPER_UPD = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String LDAP_RLM_USER_MAPPER_DEL = Ids.build(LDAP_REALM_USER_MAP_PREFIX, CrudConstants.DELETE,
+            Random.name());
+    static final String LDAP_RLM_OTP_MAPPER_CRT = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String LDAP_RLM_OTP_MAPPER_UPD = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String LDAP_RLM_OTP_MAPPER_DEL = Ids.build(LDAP_REALM_OTP_MAP_PREFIX, CrudConstants.DELETE,
+            Random.name());
+    static final String LDAP_RLM_X509_MAPPER_CRT = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String LDAP_RLM_X509_MAPPER_UPD = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String LDAP_RLM_X509_MAPPER_DEL = Ids.build(LDAP_REALM_X509_MAP_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static final String LDAP_RLM_AM_CRT = Ids.build(LDAP_REALM_AM_PREFIX, CrudConstants.CREATE, Random.name());
     static final String LDAP_RLM_AM_UPD = Ids.build(LDAP_REALM_AM_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String LDAP_RLM_AM_DEL = Ids.build(LDAP_REALM_AM_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static final String LDAP_RLM_AM_FROM_UPD = Ids.build(LDAP_REALM_AM_FROM_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LDAP_RLM_AM_FROM_DEL = Ids.build(LDAP_REALM_AM_FROM_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String LDAP_RLM_AM_FROM_UPD = Ids.build(LDAP_REALM_AM_FROM_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String LDAP_RLM_AM_FROM_DEL = Ids.build(LDAP_REALM_AM_FROM_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address ldapRealmAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(LDAP_REALM, name);
@@ -1086,9 +1206,12 @@ public final class ElytronFixtures {
 
     // -------------- mapped-regex-realm-mapper
 
-    static final String MAPP_RM_CREATE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String MAPP_RM_UPDATE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String MAPP_RM_DELETE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String MAPP_RM_CREATE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String MAPP_RM_UPDATE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String MAPP_RM_DELETE = Ids.build(MAPPED_REGEX_REALM_MAPPER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address mappedRegexRealmMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(MAPPED_REGEX_REALM_MAPPER, name);
@@ -1096,9 +1219,12 @@ public final class ElytronFixtures {
 
     // -------------- simple-regex-realm-mapper
 
-    static final String SIMP_RM_CREATE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String SIMP_RM_UPDATE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String SIMP_RM_DELETE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
+    static final String SIMP_RM_CREATE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.CREATE,
+            Random.name());
+    static final String SIMP_RM_UPDATE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.UPDATE,
+            Random.name());
+    static final String SIMP_RM_DELETE = Ids.build(SIMPLE_REGEX_REALM_MAPPER_PREFIX, CrudConstants.DELETE,
+            Random.name());
 
     static Address simpleRegexRealmMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_REGEX_REALM_MAPPER, name);
