@@ -35,7 +35,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.runtimeMonitorPath;
+import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.runtimeSubsystemPath;
 
 @RunWith(Arquillian.class)
 public class BatchFinderTest {
@@ -109,7 +109,7 @@ public class BatchFinderTest {
     @Before
     public void initializeColumn() throws IOException {
         batchRuntimeColumn = console.finder(NameTokens.RUNTIME,
-            runtimeMonitorPath(serverEnvironmentUtils.getServerHostName(), BATCH_MONITOR_NAME))
+            runtimeSubsystemPath(serverEnvironmentUtils.getServerHostName(), BATCH_MONITOR_NAME))
             .column(Ids.JOB);
     }
 

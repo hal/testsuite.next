@@ -35,10 +35,10 @@ public class FinderFragment {
                 .append(Ids.CONFIGURATION_SUBSYSTEM, subsystem);
     }
 
-    public static FinderPath runtimeMonitorPath(String hostName, String monitorName) {
+    public static FinderPath runtimeSubsystemPath(String server, String subsystem) {
         return new FinderPath()
-            .append(Ids.STANDALONE_SERVER, "standalone-host-" + hostName)
-            .append(Ids.RUNTIME_SUBSYSTEM, monitorName);
+            .append(Ids.STANDALONE_SERVER, "standalone-host-" + server)
+            .append(Ids.RUNTIME_SUBSYSTEM, subsystem);
     }
 
     @Drone private WebDriver browser;
