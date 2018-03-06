@@ -35,6 +35,12 @@ public class FinderFragment {
                 .append(Ids.CONFIGURATION_SUBSYSTEM, subsystem);
     }
 
+    public static FinderPath runtimeSubsystemPath(String server, String subsystem) {
+        return new FinderPath()
+            .append(Ids.STANDALONE_SERVER, "standalone-host-" + server)
+            .append(Ids.RUNTIME_SUBSYSTEM, subsystem);
+    }
+
     @Drone private WebDriver browser;
 
     /** Returns the specified column. */

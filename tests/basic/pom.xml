@@ -29,6 +29,15 @@
     <name>HAL Testsuite :: Tests :: Basic</name>
     <description>Basic tests</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>javax.batch</groupId>
+            <artifactId>javax.batch-api</artifactId>
+            <version>1.0.1</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>
