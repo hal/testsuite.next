@@ -65,7 +65,7 @@ public class ApplicationSecurityDomainFinderTest {
     private static void createApplicationSecurityDomain(String applicationSecurityDomainNameRemove) throws IOException {
         operations.add(
             ApplicationSecurityDomainFixtures.applicationSecurityDomain(applicationSecurityDomainNameRemove),
-            Values.of("http-authentication-factory", "application-http-authentication"));
+            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication"));
     }
 
     @AfterClass
@@ -93,7 +93,7 @@ public class ApplicationSecurityDomainFinderTest {
         AddResourceDialogFragment addResourceDialogFragment = applicationSecurityColumn.add();
         FormFragment formFragment = addResourceDialogFragment.getForm();
         formFragment.text(NAME, APPLICATION_SECURITY_DOMAIN_NAME_CREATE);
-        formFragment.text("http-authentication-factory", "application-http-authentication");
+        formFragment.text(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication");
         addResourceDialogFragment.add();
         console.verifySuccess();
         Assert.assertTrue("Newly added application security domain should be present in the column",
