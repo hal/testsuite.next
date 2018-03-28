@@ -22,6 +22,7 @@ import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.DropdownFragment;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -43,7 +44,25 @@ public class ItemFragment {
 
     /** Executes the standard view action on this item and returns the current browser URL. */
     public String view() {
-        By selector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder + contains("View"));
+        WebElement viewActionElement;
+        By viewInDropdownSelector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder + contains("View"));
+        By viewInAnchorSelector = ByJQuery.selector("a" + contains("View"));
+        try {
+            viewActionElement = root.findElement(viewInDropdownSelector);
+        } catch (NoSuchElementException notInButtonGroup) {
+            try {
+                viewActionElement = root.findElement(viewInAnchorSelector);
+            } catch (NoSuchElementException notInAnchor) {
+                throw new NoSuchElementException("Could not invoke \"View\" action, as the element doesn't exist");
+            }
+        }
+        viewActionElement.click();
+        waitModel().until().element(By.id(Ids.FINDER)).is().not().present();
+        return browser.getCurrentUrl();
+    }
+
+    public String viewDefault() {
+        By selector = ByJQuery.selector("a" + contains("View"));
         root.findElement(selector).click();
         waitModel().until().element(By.id(Ids.FINDER)).is().not().present();
         return browser.getCurrentUrl();
