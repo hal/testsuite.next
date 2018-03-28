@@ -111,7 +111,7 @@ public class TableFragment {
 
     /** Clicks on the &lt;action&gt; column in the row which contains "&lt;value&gt;". */
     public void action(String value, String action) {
-        By selector = ByJQuery.selector("td" + contains(value) + " ~ td > a." + columnAction + contains(action));
+        By selector = ByJQuery.selector("td" + contains(value) + " ~ td button." + columnAction + contains(action));
         goToPageWithElement(selector);
         root.findElement(selector).click();
     }
