@@ -72,7 +72,7 @@ public class SecurityRealmsTest {
 
         ModelNode credRef = new ModelNode();
         credRef.get(CLEAR_TEXT).set(ANY_STRING);
-        Values ksParams = Values.of(TYPE, JKS).and(CREDENTIAL_REFERENCE, credRef);
+        Values ksParams = Values.of(TYPE, JKS).and(ElytronFixtures.CREDENTIAL_REFERENCE, credRef);
         operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams);
         operations.add(keyStoreAddress(KEY_ST_CREATE), ksParams);
 

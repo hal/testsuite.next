@@ -20,8 +20,11 @@ public class UndertowApplicationSecurityDomainPage extends BasePage {
     @FindBy(id = "undertow-single-sign-on-table")
     private TableFragment singleSignOnTable;
 
-    @FindBy(id = Ids.UNDERTOW_APP_SECURITY_DOMAIN + "-credential-reference-tab")
-    private FormFragment credentialReferenceTab;
+    @FindBy(id = Ids.UNDERTOW_SINGLE_SIGN_ON_FORM)
+    private FormFragment singleSignOnForm;
+
+    @FindBy(id = Ids.UNDERTOW_APP_SECURITY_DOMAIN + "-credential-reference-form")
+    private FormFragment credentialReferenceForm;
 
     public TabsFragment getTab() {
         return tab;
@@ -32,12 +35,13 @@ public class UndertowApplicationSecurityDomainPage extends BasePage {
         return attributesForm;
     }
 
-    public TableFragment getSingleSignOnTable() {
+    public FormFragment getSingleSignOnForm() {
         getTab().select("undertow-single-sign-on-table");
-        return singleSignOnTable;
+        return singleSignOnForm;
     }
 
-    public FormFragment getCredentialReferenceTab() {
-        return credentialReferenceTab;
+    public FormFragment getCredentialReferenceForm() {
+        getTab().select("undertow-application-security-domain-credential-reference-tab");
+        return credentialReferenceForm;
     }
 }

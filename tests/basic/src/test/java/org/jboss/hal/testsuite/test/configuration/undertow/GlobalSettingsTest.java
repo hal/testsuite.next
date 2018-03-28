@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.undertow;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -17,7 +18,6 @@ import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 @RunWith(Arquillian.class)
 public class GlobalSettingsTest {
@@ -42,10 +42,8 @@ public class GlobalSettingsTest {
 
     private static final Operations operations = new Operations(client);
 
-    private static final Administration administration = new Administration(client);
-
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void setUp() throws IOException, TimeoutException, InterruptedException {
         operations.add(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
         operations.add(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
         operations.add(
@@ -54,12 +52,8 @@ public class GlobalSettingsTest {
 
     @AfterClass
     public static void tearDown() throws IOException {
-        try {
-            operations.remove(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
-            operations.remove(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
-        } finally {
-            client.close();
-        }
+        operations.remove(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
+        operations.remove(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
     }
 
     @Test

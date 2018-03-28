@@ -53,6 +53,12 @@ public final class ElytronFixtures {
     private static final String CONSTANT_REALM_MAPPER_PREFIX = "con-rm";
     private static final String CONSTANT_ROLE_MAPPER_PREFIX = "con-role";
     private static final String CREDENTIAL_STORE_PREFIX = "cred-store";
+    public static final String CREDENTIAL_STORE_CREATE = "create";
+    public static final String CREDENTIAL_REFERENCE = "credential-reference";
+    public static final String CREDENTIAL_REFERENCE_ALIAS = "alias";
+    public static final String CREDENTIAL_REFERENCE_CLEAR_TEXT = "clear-text";
+    public static final String CREDENTIAL_REFERENCE_STORE = "store";
+    public static final String CREDENTIAL_REFERENCE_TYPE = "type";
     private static final String CUSTOM_MODIFIABLE_REALM_PREFIX = "cmo-rlm";
     private static final String CUSTOM_PRINCIPAL_TRANSFORMER_PREFIX = "cust-pri-trans";
     private static final String CUSTOM_REALM_MAPPER_PREFIX = "cus-rm";
@@ -757,7 +763,7 @@ public final class ElytronFixtures {
     static final String CRED_ST_UPDATE = Ids.build(CREDENTIAL_STORE_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String CRED_ST_DELETE = Ids.build(CREDENTIAL_STORE_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address credentialStoreAddress(String name) {
+    public static Address credentialStoreAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CREDENTIAL_STORE, name);
     }
 
@@ -812,7 +818,7 @@ public final class ElytronFixtures {
     static final String CLI_SSL_UPDATE = Ids.build(CLIENT_SSL_CONTEXT_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String CLI_SSL_DELETE = Ids.build(CLIENT_SSL_CONTEXT_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address clientSslContextAddress(String name) {
+    public static Address clientSslContextAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CLIENT_SSL_CONTEXT, name);
     }
 
