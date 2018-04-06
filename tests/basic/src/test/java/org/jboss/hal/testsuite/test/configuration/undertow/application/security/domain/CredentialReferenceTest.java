@@ -28,6 +28,8 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCATION;
+
 @RunWith(Arquillian.class)
 public class CredentialReferenceTest {
 
@@ -49,6 +51,8 @@ public class CredentialReferenceTest {
     private static final String KEY_STORE_TO_BE_ADDED =
         "key_store_to_be_added_" + RandomStringUtils.randomAlphanumeric(7);
 
+    private static final String LOCATION_SUFFIX = "_location";
+
     private static final String CREDENTIAL_STORE_TO_BE_ADDED =
         "credential_store_to_be_added_" + RandomStringUtils.randomAlphanumeric(7);
 
@@ -67,11 +71,13 @@ public class CredentialReferenceTest {
         operations.add(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_ADDED),
             Values.of(ElytronFixtures.CREDENTIAL_STORE_CREATE, true)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
-                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build()));
+                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())
+                .and(LOCATION, CREDENTIAL_STORE_TO_BE_ADDED + LOCATION_SUFFIX));
         operations.add(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_EDITED),
             Values.of(ElytronFixtures.CREDENTIAL_STORE_CREATE, true)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
-                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build()));
+                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())
+                .and(LOCATION, CREDENTIAL_STORE_TO_BE_EDITED + LOCATION_SUFFIX));
         operations.add(
             ApplicationSecurityDomainFixtures.applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
             Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication"));
