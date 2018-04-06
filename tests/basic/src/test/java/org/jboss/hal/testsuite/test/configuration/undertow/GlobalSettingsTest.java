@@ -17,7 +17,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_HOST;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_WEB_MODULE;
 
 @RunWith(Arquillian.class)
 public class GlobalSettingsTest {
@@ -44,10 +49,13 @@ public class GlobalSettingsTest {
 
     @BeforeClass
     public static void setUp() throws IOException, TimeoutException, InterruptedException {
-        operations.add(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
+        Address serverAddress = UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED);
+        operations.add(serverAddress);
         operations.add(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
         operations.add(
-            UndertowFixtures.virtualHostAddress(DEFAULT_SERVER_TO_BE_EDITED, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED));
+            UndertowFixtures.virtualHostAddress(DEFAULT_SERVER_TO_BE_EDITED, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED),
+            Values.of(DEFAULT_WEB_MODULE, "module_" + RandomStringUtils.randomAlphanumeric(7) + ".war"));
+        operations.writeAttribute(serverAddress, DEFAULT_HOST, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED);
     }
 
     @AfterClass
