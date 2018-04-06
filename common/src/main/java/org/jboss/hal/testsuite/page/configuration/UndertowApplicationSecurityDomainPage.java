@@ -11,7 +11,7 @@ import org.openqa.selenium.support.FindBy;
 @Place(Ids.UNDERTOW_APP_SECURITY_DOMAIN)
 public class UndertowApplicationSecurityDomainPage extends BasePage {
 
-    @FindBy(id = Ids.UNDERTOW_APP_SECURITY_DOMAIN_TAB)
+    @FindBy(id = Ids.UNDERTOW_APP_SECURITY_DOMAIN_TAB_CONTAINER)
     private TabsFragment tab;
 
     @FindBy(id = Ids.UNDERTOW_APP_SECURITY_DOMAIN_FORM)
