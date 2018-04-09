@@ -17,7 +17,14 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_HOST;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_WEB_MODULE;
+import static org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures.*;
 
 @RunWith(Arquillian.class)
 public class GlobalSettingsTest {
@@ -42,18 +49,31 @@ public class GlobalSettingsTest {
 
     private static final Operations operations = new Operations(client);
 
+    private static final Administration adminOps = new Administration(client);
+
     @BeforeClass
     public static void setUp() throws IOException, TimeoutException, InterruptedException {
-        operations.add(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
+        Address serverAddress = UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED);
+        operations.add(serverAddress);
         operations.add(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
         operations.add(
-            UndertowFixtures.virtualHostAddress(DEFAULT_SERVER_TO_BE_EDITED, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED));
+            UndertowFixtures.virtualHostAddress(DEFAULT_SERVER_TO_BE_EDITED, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED),
+            Values.of(DEFAULT_WEB_MODULE, "module_" + RandomStringUtils.randomAlphanumeric(7) + ".war"));
+        operations.writeAttribute(serverAddress, DEFAULT_HOST, DEFAULT_VIRTUAL_HOST_TO_BE_EDITED);
     }
 
     @AfterClass
-    public static void tearDown() throws IOException {
+    public static void tearDown() throws IOException, InterruptedException, TimeoutException {
+        operations.undefineAttribute(UNDERTOW_ADDRESS, DEFAULT_SERVER);
+        operations.undefineAttribute(UNDERTOW_ADDRESS, DEFAULT_VIRTUAL_HOST);
+        operations.undefineAttribute(UNDERTOW_ADDRESS, DEFAULT_SERVLET_CONTAINER);
+        operations.undefineAttribute(UNDERTOW_ADDRESS, INSTANCE_ID);
+        operations.undefineAttribute(UNDERTOW_ADDRESS, DEFAULT_SECURITY_DOMAIN);
+        operations.undefineAttribute(UNDERTOW_ADDRESS, STATISTICS_ENABLED);
+        adminOps.reloadIfRequired();
         operations.remove(UndertowFixtures.serverAddress(DEFAULT_SERVER_TO_BE_EDITED));
         operations.remove(UndertowFixtures.servletContainerAddress(DEFAULT_SERVLET_CONTAINER_TO_BE_EDITED));
+        adminOps.reloadIfRequired();
     }
 
     @Test
