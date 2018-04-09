@@ -174,8 +174,8 @@ public class FormFragment {
         WebElement inputElement = inputElement(name);
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
-            WebElement switchContainer = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name)));
-            switchContainer.click();
+            WebElement switchElement = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
+            console.scrollIntoView(switchElement).click();
             if (value) {
                 waitGui().until().element(inputElement).is().selected();
             } else {
