@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.fragment.finder;
 
 import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
@@ -38,7 +37,7 @@ public class FinderFragment {
 
     public static FinderPath runtimeSubsystemPath(String server, String subsystem) {
         return new FinderPath()
-            .append(NameTokens.STANDALONE_SERVER, "standalone-host-" + server)
+            .append(Ids.STANDALONE_SERVER_COLUMN, "standalone-host-" + server)
             .append(Ids.RUNTIME_SUBSYSTEM, subsystem);
     }
 
