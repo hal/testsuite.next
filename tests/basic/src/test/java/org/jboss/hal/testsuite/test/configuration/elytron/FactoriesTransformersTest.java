@@ -37,6 +37,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT_REALM;
@@ -207,6 +208,7 @@ public class FactoriesTransformersTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final Administration adminOps = new Administration(client);
     private static final String ANY_STRING = Random.name();
     private static final ModelNode FILTER_CREATE_MODEL = new ModelNode();
     private static final ModelNode FILTER_UPDATE2_MODEL = new ModelNode();
@@ -472,6 +474,8 @@ public class FactoriesTransformersTest {
         operations.remove(providerLoaderAddress(PROV_LOAD_DELETE));
         operations.remove(securityDomainAddress(SEC_DOM_UPDATE));
 
+        adminOps.reloadIfRequired();
+
     }
 
     @Page private ElytronFactoriesTransformersPage page;
@@ -480,6 +484,7 @@ public class FactoriesTransformersTest {
 
     @Before
     public void setUp() throws Exception {
+        adminOps.reloadIfRequired();
         page.navigate();
     }
 
