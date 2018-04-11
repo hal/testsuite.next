@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.fragment;
 import com.google.common.base.Strings;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
@@ -26,6 +27,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
@@ -220,11 +222,19 @@ public class FormFragment {
 
     /** Clicks on the remove link and confirms the confirmation dialog */
     public void remove() {
+        WebElement removeLink = root.findElement(ByJQuery.selector("a[data-operation=remove]:visible"));
+
+        // getting rid of possible tooltips hiding links
+        By tooltipSelector = By.className("tooltip");
+        if (!root.findElements(tooltipSelector).isEmpty()) {
+            new Actions(browser).moveToElement(removeLink).perform();
+            waitGui().until().element(root, tooltipSelector).is().not().present();
+        }
+
         removeLink.click();
         console.confirmationDialog().confirm();
         waitGui().until().element(blankSlate).is().visible();
     }
-
 
     // ------------------------------------------------------ properties
 
