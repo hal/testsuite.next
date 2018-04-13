@@ -15,6 +15,8 @@
  */
 package org.jboss.hal.testsuite.test.configuration.datasource;
 
+import java.util.function.Consumer;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
@@ -34,6 +36,8 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidElementStateException;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -47,6 +51,7 @@ import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFi
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class DataSourceCreateTest {
@@ -198,7 +203,8 @@ public class DataSourceCreateTest {
 
         browser.findElement(By.id(Ids.DATA_SOURCE_TEST_CONNECTION)).click();
         wizard.verifySuccess(waitModel());
-        wizard.cancel();
+        handlePossibleException(wizard -> wizard.cancel(),
+                "not possible to click Cancel button in the wizard!");
 
         String itemId = Ids.dataSourceConfiguration(DATA_SOURCE_CREATE_TEST_CANCEL, false);
         assertFalse(column.containsItem(itemId));
@@ -222,7 +228,12 @@ public class DataSourceCreateTest {
 
         browser.findElement(By.id(Ids.DATA_SOURCE_TEST_CONNECTION)).click();
         wizard.verifySuccess(waitModel());
-        wizard.next(Ids.DATA_SOURCE_REVIEW_FORM);
+        try {
+            wizard.next(Ids.DATA_SOURCE_REVIEW_FORM);
+        } catch (TimeoutException e) {
+            fail("HAL-1440: the Review page of the wizard didn't appear!");
+            e.printStackTrace();
+        }
 
         FormFragment reviewForm = wizard.getForm(Ids.DATA_SOURCE_REVIEW_FORM);
         reviewForm.showSensitive(USER_NAME);
@@ -261,7 +272,8 @@ public class DataSourceCreateTest {
 
         browser.findElement(By.id(Ids.DATA_SOURCE_TEST_CONNECTION)).click();
         wizard.verifySuccess(waitModel());
-        wizard.back(Ids.DATA_SOURCE_CONNECTION_FORM);
+        handlePossibleException(wizard -> wizard.back(Ids.DATA_SOURCE_CONNECTION_FORM),
+                "not possible to click Back button in the wizard!");
 
         FormFragment connectionForm = wizard.getForm(Ids.DATA_SOURCE_CONNECTION_FORM);
         connectionForm.clear(USER_NAME);
@@ -290,5 +302,18 @@ public class DataSourceCreateTest {
         new ResourceVerifier(dataSourceAddress(DATA_SOURCE_CREATE_TEST_CHANGE), client)
                 .verifyExists()
                 .verifyAttribute(USER_NAME, "changed");
+    }
+
+    private void handlePossibleException(Consumer<WizardFragment> action, String failMessage) {
+        try {
+            action.accept(wizard);
+        } catch (InvalidElementStateException e) {
+            // clean up opened wizard first
+            if (wizard.getRoot().isDisplayed()) {
+                wizard.close();
+            }
+            fail("HAL-1440: " + failMessage);
+            e.printStackTrace();
+        }
     }
 }
