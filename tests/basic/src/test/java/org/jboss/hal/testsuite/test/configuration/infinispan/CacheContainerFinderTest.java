@@ -27,10 +27,12 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.page.Places;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.TimeoutException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -99,7 +101,11 @@ public class CacheContainerFinderTest {
 
     @Test
     public void view() {
-        column.selectItem(Ids.cacheContainer(CC_READ)).view();
+        try {
+            column.selectItem(Ids.cacheContainer(CC_READ)).view();
+        } catch (TimeoutException e) {
+            Assert.fail("Not possible to open Cache container detail probably due to https://issues.jboss.org/browse/HAL-1442");
+        }
 
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(NameTokens.CACHE_CONTAINER)
                 .with(NAME, CC_READ)
