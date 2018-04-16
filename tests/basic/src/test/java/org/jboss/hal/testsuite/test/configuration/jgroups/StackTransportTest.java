@@ -32,6 +32,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -123,6 +124,7 @@ public class StackTransportTest {
         crud.reset(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), transportTPDefaultForm);
     }
 
+    @Ignore("HAL-1443: internal thread pool is deprecated")
     @Test()
     public void threadPoolInternalEdit() throws Exception {
         stackTable.action(STACK_CREATE, Names.TRANSPORT);
@@ -134,6 +136,7 @@ public class StackTransportTest {
                 KEEPALIVE_TIME, 5123L);
     }
 
+    @Ignore("HAL-1443: internal thread pool is deprecated")
     @Test()
     public void threadPoolInternalReset() throws Exception {
         stackTable.action(STACK_CREATE, Names.TRANSPORT);
