@@ -55,6 +55,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.DIR_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JACC_POLICY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_MANAGER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_ATTRIBUTES;
@@ -103,7 +104,7 @@ public class OtherSettingsTest {
         // Stores
         ModelNode credRef = new ModelNode();
         credRef.get(CLEAR_TEXT).set(ANY_STRING);
-        Values credParams = Values.of(CREATE, true).and(CREDENTIAL_REFERENCE, credRef);
+        Values credParams = Values.of(CREATE, true).and(CREDENTIAL_REFERENCE, credRef).and(LOCATION, ANY_STRING);
         operations.add(credentialStoreAddress(CRED_ST_UPDATE), credParams);
         operations.add(credentialStoreAddress(CRED_ST_DELETE), credParams);
 
@@ -362,6 +363,7 @@ public class OtherSettingsTest {
         crud.create(credentialStoreAddress(CRED_ST_CREATE), table, f -> {
             f.text(NAME, CRED_ST_CREATE);
             f.flip(CREATE, true);
+            f.text(LOCATION, ANY_STRING);
             f.text(CLEAR_TEXT, ANY_STRING);
         });
     }
