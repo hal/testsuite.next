@@ -47,6 +47,7 @@ public class MappersDecodersTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
     private static final String ANY_STRING = Random.name();
+    private static final String ACTION = "action";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
