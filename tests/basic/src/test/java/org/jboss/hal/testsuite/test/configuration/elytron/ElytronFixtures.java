@@ -356,7 +356,7 @@ public final class ElytronFixtures {
     static final String HTTP_AUTH_DELETE = Ids.build(HTTP_AUTHENTICATION_FACTORY_PREFIX, CrudConstants.DELETE,
             Random.name());
 
-    static Address httpAuthenticationFactoryAddress(String name) {
+    public static Address httpAuthenticationFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(HTTP_AUTHENTICATION_FACTORY, name);
     }
 

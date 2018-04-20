@@ -24,6 +24,7 @@ import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
+import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -167,8 +168,15 @@ public class FormFragment {
         console.waitNoNotification();
         WebElement formGroup = formGroup(name);
         WebElement selectElement = formGroup.findElement(By.cssSelector(DOT + bootstrapSelect + DOT + formControl));
-        SelectFragment select = createPageFragment(SelectFragment.class, selectElement);
-        select.select(value);
+        try {
+            console.scrollIntoView(selectElement);
+            SelectFragment select = createPageFragment(SelectFragment.class, selectElement);
+            select.select(value);
+        } catch (ElementClickInterceptedException e) {
+            console.scrollIntoView(selectElement, "{block: \"center\"}");
+            SelectFragment select = createPageFragment(SelectFragment.class, selectElement);
+            select.select(value);
+        }
     }
 
     /** Changes the specified bootstrap switch element. */
@@ -177,7 +185,11 @@ public class FormFragment {
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
             WebElement switchElement = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
-            console.scrollIntoView(switchElement).click();
+            try {
+                console.scrollIntoView(switchElement).click();
+            } catch (ElementClickInterceptedException e) {
+                console.scrollIntoView(switchElement, "{block: \"center\"}").click();
+            }
             if (value) {
                 waitGui().until().element(inputElement).is().selected();
             } else {

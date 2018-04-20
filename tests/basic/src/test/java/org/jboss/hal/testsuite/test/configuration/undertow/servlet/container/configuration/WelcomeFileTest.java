@@ -1,4 +1,4 @@
-package org.jboss.hal.testsuite.test.configuration.undertow;
+package org.jboss.hal.testsuite.test.configuration.undertow.servlet.container.configuration;
 
 import java.io.IOException;
 
@@ -7,10 +7,13 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.page.configuration.UndertowApplicationSecurityDomainPage;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.page.configuration.UndertowServletContainerPage;
+import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -20,47 +23,50 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 
 @RunWith(Arquillian.class)
-public class ApplicationSecurityDomainTest {
+public class WelcomeFileTest {
 
     @Inject
     private Console console;
 
-    @Page
-    private UndertowApplicationSecurityDomainPage page;
+    @Inject
+    private CrudOperations crudOperations;
 
     @Drone
     private WebDriver browser;
 
-    @Inject
-    private CrudOperations crudOperations;
+    @Page
+    private UndertowServletContainerPage page;
 
-    private static final String APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED =
-        "application-security-domain-to-be-tested-" + RandomStringUtils.randomAlphanumeric(7);
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+
     private static final Operations operations = new Operations(client);
+
+    private static final String SERVLET_CONTAINER_EDIT =
+        "servlet-container-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(
-            ApplicationSecurityDomainFixtures.applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED),
-            Values.of("http-authentication-factory", "application-http-authentication"));
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT));
     }
 
     @AfterClass
     public static void tearDown() throws IOException, OperationException {
-        operations.removeIfExists(ApplicationSecurityDomainFixtures.applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED));
+        operations.removeIfExists(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT));
     }
 
     @Before
     public void initPage() {
-        page.navigate("name", APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED);
+        page.navigate("name", SERVLET_CONTAINER_EDIT);
+        console.verticalNavigation()
+            .selectPrimary(Ids.UNDERTOW_SERVLET_CONTAINER_CONFIGURATION_ITEM);
     }
 
     @Test
-    public void something() {
-        System.out.println("Hello");
+    public void editWelcomeFile() throws Exception {
+        crudOperations.update(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT).and("welcome-file","aaa"),
+            page.getWelcomeFileForm(),
+            formFragment -> formFragment.list("welcome-file").add("aaa"), ResourceVerifier::verifyExists);
     }
 }

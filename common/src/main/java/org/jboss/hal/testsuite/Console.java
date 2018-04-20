@@ -202,11 +202,15 @@ public class Console {
 
     // ------------------------------------------------------ elements
 
+    public WebElement scrollIntoView(WebElement element, String scrollIntoViewOptions) {
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("arguments[0].scrollIntoView(" + scrollIntoViewOptions + ");", element);
+        return element;
+    }
+
     /** Makes sure that the element is visible and returns the element. */
     public WebElement scrollIntoView(WebElement element) {
-        JavascriptExecutor js = (JavascriptExecutor) browser;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
-        return element;
+        return scrollIntoView(element, "true");
     }
 
 
