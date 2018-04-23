@@ -107,7 +107,7 @@ public class CookiesTest {
     @Test
     public void toggleHttpOnly() throws Exception {
         navigateToCookiesForm(SERVLET_CONTAINER_EDIT);
-        boolean httpOnly = operations.readAttribute(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, "http-only").booleanValue();
+        boolean httpOnly = operations.readAttribute(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, "http-only").booleanValue(false);
         crudOperations.update(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, page.getCookiesForm(), "http-only", !httpOnly);
     }
 
@@ -126,7 +126,7 @@ public class CookiesTest {
     @Test
     public void toggleSecure() throws Exception {
         navigateToCookiesForm(SERVLET_CONTAINER_EDIT);
-        boolean secure = operations.readAttribute(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, "secure").booleanValue();
+        boolean secure = operations.readAttribute(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, "secure").booleanValue(false);
         crudOperations.update(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, page.getCookiesForm(), "secure", !secure);
     }
 

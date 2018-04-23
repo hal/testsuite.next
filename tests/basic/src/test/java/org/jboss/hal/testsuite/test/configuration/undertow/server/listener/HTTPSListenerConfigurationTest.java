@@ -30,7 +30,6 @@ import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.ReadAttributeOption;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 @RunWith(Arquillian.class)
@@ -423,8 +422,8 @@ public class HTTPSListenerConfigurationTest {
     public void toggleTCPKeepAlive() throws Exception {
         ModelNodeResult modelNodeResult = operations.readAttribute(
             UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
-            "tcp-keep-alive", ReadAttributeOption.NOT_INCLUDE_DEFAULTS);
-        boolean tcpKeepAlive = modelNodeResult.booleanValue();
+            "tcp-keep-alive");
+        boolean tcpKeepAlive = modelNodeResult.booleanValue(false);
         crudOperations.update(
             UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
             page.getHttpsListenerForm(), "tcp-keep-alive", !tcpKeepAlive);

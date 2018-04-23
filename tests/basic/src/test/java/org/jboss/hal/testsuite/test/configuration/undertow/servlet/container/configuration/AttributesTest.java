@@ -103,7 +103,7 @@ public class AttributesTest {
     public void toggleDirectoryListing() throws Exception {
         boolean directoryListing =
             operations.readAttribute(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT),
-                "directory-listing").booleanValue();
+                "directory-listing").booleanValue(false);
         crudOperations.update(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT), page.getAttributesForm(),
             "directory-listing", !directoryListing);
     }

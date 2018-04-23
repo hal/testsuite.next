@@ -15,10 +15,12 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.UndertowFiltersPage;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFiltersFixtures;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -73,21 +75,31 @@ public class ResponseHeaderTest {
     public void create() throws Exception {
         String headerName = Random.name();
         String headerValue = Random.name();
-        crudOperations.create(UndertowFiltersFixtures.responseHeaderAddress(RESPONSE_HEADER_CREATE), page.getResponseHeaderTable(),
-            formFragment -> {
-                formFragment.text("name", RESPONSE_HEADER_CREATE);
-                formFragment.text(UndertowFiltersFixtures.HEADER_NAME, headerName);
-                formFragment.text(UndertowFiltersFixtures.HEADER_VALUE, headerValue);
-            }, resourceVerifier -> {
-                resourceVerifier.verifyExists();
-                resourceVerifier.verifyAttribute(UndertowFiltersFixtures.HEADER_NAME, headerName);
-                resourceVerifier.verifyAttribute(UndertowFiltersFixtures.HEADER_VALUE, headerValue);
-            });
+        try {
+            crudOperations.create(UndertowFiltersFixtures.responseHeaderAddress(RESPONSE_HEADER_CREATE),
+                page.getResponseHeaderTable(),
+                formFragment -> {
+                    formFragment.text("name", RESPONSE_HEADER_CREATE);
+                    formFragment.text(UndertowFiltersFixtures.HEADER_NAME, headerName);
+                    formFragment.text(UndertowFiltersFixtures.HEADER_VALUE, headerValue);
+                }, resourceVerifier -> {
+                    resourceVerifier.verifyExists();
+                    resourceVerifier.verifyAttribute(UndertowFiltersFixtures.HEADER_NAME, headerName);
+                    resourceVerifier.verifyAttribute(UndertowFiltersFixtures.HEADER_VALUE, headerValue);
+                });
+        } catch (NoSuchElementException e) {
+            Assert.fail("HAL-1448");
+        }
     }
 
     @Test
     public void delete() throws Exception {
-        crudOperations.delete(UndertowFiltersFixtures.responseHeaderAddress(RESPONSE_HEADER_DELETE), page.getResponseHeaderTable(),
-            RESPONSE_HEADER_DELETE);
+        try {
+            crudOperations.delete(UndertowFiltersFixtures.responseHeaderAddress(RESPONSE_HEADER_DELETE),
+                page.getResponseHeaderTable(),
+                RESPONSE_HEADER_DELETE);
+        } catch (NoSuchElementException e) {
+            Assert.fail("HAL-1448");
+        }
     }
 }

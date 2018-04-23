@@ -22,10 +22,12 @@ import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.commands.deployments.Deploy;
 import org.wildfly.extras.creaper.commands.deployments.Undeploy;
@@ -61,6 +63,9 @@ public class FileHandlerAttributesTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
 
     private static final Operations operations = new Operations(client);
+
+    private static final String ERROR_HAL_1449 = "HAL-1449";
+
 
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException {
@@ -100,14 +105,22 @@ public class FileHandlerAttributesTest {
 
     @Test
     public void updateCacheBufferSize() throws Exception {
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
-            page.getFileHandlerForm(), "cache-buffer-size", Random.number());
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(), "cache-buffer-size", Random.number());
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 
     @Test
     public void updateCacheBuffers() throws Exception {
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
-            page.getFileHandlerForm(), "cache-buffers", Random.number());
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(), "cache-buffers", Random.number());
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 
     @Test
@@ -115,8 +128,13 @@ public class FileHandlerAttributesTest {
         boolean caseSensitive =
             operations.readAttribute(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), "case-sensitive")
                 .booleanValue();
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), page.getFileHandlerForm(),
-            "case-sensitive", !caseSensitive);
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(),
+                "case-sensitive", !caseSensitive);
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 
     @Test
@@ -124,8 +142,13 @@ public class FileHandlerAttributesTest {
         boolean directoryListing =
             operations.readAttribute(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), "directory-listing")
                 .booleanValue();
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), page.getFileHandlerForm(),
-            "directory-listing", !directoryListing);
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(),
+                "directory-listing", !directoryListing);
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 
     @Test
@@ -133,8 +156,13 @@ public class FileHandlerAttributesTest {
         boolean followSymlink =
             operations.readAttribute(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), "follow-symlink")
                 .booleanValue();
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), page.getFileHandlerForm(),
-            "follow-symlink", !followSymlink);
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(),
+                "follow-symlink", !followSymlink);
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 
     @Test
@@ -149,8 +177,13 @@ public class FileHandlerAttributesTest {
     @Test
     public void editSafeSymlinkPaths() throws Exception {
         String[] symlinks = {Random.name(), Random.name(), Random.name()};
-        crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT), page.getFileHandlerForm(),
-            "safe-symlink-paths",
-            Arrays.asList(symlinks));
+        try {
+            crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
+                page.getFileHandlerForm(),
+                "safe-symlink-paths",
+                Arrays.asList(symlinks));
+        } catch (TimeoutException e) {
+            Assert.fail(ERROR_HAL_1449);
+        }
     }
 }
