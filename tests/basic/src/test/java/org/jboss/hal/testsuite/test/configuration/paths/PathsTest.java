@@ -2,7 +2,6 @@ package org.jboss.hal.testsuite.test.configuration.paths;
 
 import java.io.IOException;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -21,8 +20,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-
 @RunWith(Arquillian.class)
 public class PathsTest {
 
@@ -38,16 +35,11 @@ public class PathsTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
-    private static final String PATH_CREATE = "path-to-be-created-" + RandomStringUtils.randomAlphanumeric(7);
-    private static final String PATH_DELETE = "path-to-be-removed-" + RandomStringUtils.randomAlphanumeric(7);
-    private static final String PATH_EDIT = "path-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);
-    private static final String RELATIVE_TO_PATH = "relative-to-path-" + RandomStringUtils.randomAlphanumeric(7);
-
     @BeforeClass
     public static void beforeClass() throws Exception {
-        createPathWithRandomPathValue(PATH_EDIT);
-        createPathWithRandomPathValue(PATH_DELETE);
-        createPathWithRandomPathValue(RELATIVE_TO_PATH);
+        createPathWithRandomPathValue(PathsFixtures.PATH_EDIT);
+        createPathWithRandomPathValue(PathsFixtures.PATH_DELETE);
+        createPathWithRandomPathValue(PathsFixtures.RELATIVE_TO_PATH);
     }
 
     private static void createPathWithRandomPathValue(String pathName) throws IOException {
@@ -56,10 +48,10 @@ public class PathsTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(PathsFixtures.pathAddress(PATH_CREATE));
-        operations.removeIfExists(PathsFixtures.pathAddress(PATH_EDIT));
-        operations.removeIfExists(PathsFixtures.pathAddress(PATH_DELETE));
-        operations.removeIfExists(PathsFixtures.pathAddress(RELATIVE_TO_PATH));
+        operations.removeIfExists(PathsFixtures.pathAddress(PathsFixtures.PATH_CREATE));
+        operations.removeIfExists(PathsFixtures.pathAddress(PathsFixtures.PATH_EDIT));
+        operations.removeIfExists(PathsFixtures.pathAddress(PathsFixtures.PATH_DELETE));
+        operations.removeIfExists(PathsFixtures.pathAddress(PathsFixtures.RELATIVE_TO_PATH));
     }
 
     @Before
@@ -70,8 +62,8 @@ public class PathsTest {
     @Test
     public void create() throws Exception {
         String path = Random.name();
-        crud.create(PathsFixtures.pathAddress(PATH_CREATE), page.getPathsTable(), form -> {
-            form.text(NAME, PATH_CREATE);
+        crud.create(PathsFixtures.pathAddress(PathsFixtures.PATH_CREATE), page.getPathsTable(), form -> {
+            form.text("name", PathsFixtures.PATH_CREATE);
             form.text(PathsFixtures.PATH, path);
         }, resourceVerifier -> {
             resourceVerifier.verifyExists();
@@ -82,20 +74,20 @@ public class PathsTest {
     @Test
     public void editPath() throws Exception {
         String path = Random.name();
-        page.getPathsTable().select(PATH_EDIT);
-        crud.update(PathsFixtures.pathAddress(PATH_EDIT), page.getPathsForm(), PathsFixtures.PATH, path);
+        page.getPathsTable().select(PathsFixtures.PATH_EDIT);
+        crud.update(PathsFixtures.pathAddress(PathsFixtures.PATH_EDIT), page.getPathsForm(), PathsFixtures.PATH, path);
     }
 
     @Test
     public void editRelativeTo() throws Exception {
-        page.getPathsTable().select(PATH_EDIT);
-        crud.update(PathsFixtures.pathAddress(PATH_EDIT), page.getPathsForm(), "relative-to", RELATIVE_TO_PATH);
+        page.getPathsTable().select(PathsFixtures.PATH_EDIT);
+        crud.update(PathsFixtures.pathAddress(PathsFixtures.PATH_EDIT), page.getPathsForm(), "relative-to", PathsFixtures.RELATIVE_TO_PATH);
     }
 
 
     @Test
     public void delete() throws Exception {
-        crud.delete(PathsFixtures.pathAddress(PATH_DELETE), page.getPathsTable(), PATH_DELETE);
+        crud.delete(PathsFixtures.pathAddress(PathsFixtures.PATH_DELETE), page.getPathsTable(), PathsFixtures.PATH_DELETE);
     }
 
 }
