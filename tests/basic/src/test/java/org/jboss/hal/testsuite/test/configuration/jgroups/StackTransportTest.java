@@ -32,7 +32,6 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
@@ -44,7 +43,6 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 import static java.util.Arrays.asList;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.INTERNAL;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_THREADS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.testsuite.test.configuration.jgroups.JGroupsFixtures.*;
@@ -77,7 +75,6 @@ public class StackTransportTest {
     private TableFragment transportTable;
     private FormFragment transportAttributesForm;
     private FormFragment transportTPDefaultForm;
-    private FormFragment transportTPInternalForm;
     private TabsFragment threadPoolTab;
 
     @Before
@@ -90,8 +87,7 @@ public class StackTransportTest {
         transportTable = page.getTransportTable();
         transportAttributesForm = page.getTransportAttributesForm();
         transportTPDefaultForm = page.getTransportThreadPoolDefaultForm();
-        transportTPInternalForm = page.getTransportThreadPoolInternalForm();
-        transportTable.bind(asList(transportAttributesForm, transportTPDefaultForm, transportTPInternalForm));
+        transportTable.bind(asList(transportAttributesForm, transportTPDefaultForm));
     }
 
     @Test()
@@ -122,28 +118,5 @@ public class StackTransportTest {
         transportTable.select(TRANSPORT_CREATE);
         threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_DEFAULT_TAB));
         crud.reset(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, DEFAULT), transportTPDefaultForm);
-    }
-
-    @Ignore("HAL-1443: internal thread pool is deprecated")
-    @Test()
-    public void threadPoolInternalEdit() throws Exception {
-        stackTable.action(STACK_CREATE, Names.TRANSPORT);
-        waitGui().until().element(transportTable.getRoot()).is().visible();
-
-        transportTable.select(TRANSPORT_CREATE);
-        threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_INTERNAL_TAB));
-        crud.update(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), transportTPInternalForm,
-                KEEPALIVE_TIME, 5123L);
-    }
-
-    @Ignore("HAL-1443: internal thread pool is deprecated")
-    @Test()
-    public void threadPoolInternalReset() throws Exception {
-        stackTable.action(STACK_CREATE, Names.TRANSPORT);
-        waitGui().until().element(transportTable.getRoot()).is().visible();
-
-        transportTable.select(TRANSPORT_CREATE);
-        threadPoolTab.select(Ids.build(Ids.JGROUPS_TRANSPORT_THREADPOOL_INTERNAL_TAB));
-        crud.reset(transportThreadPoolAddress(STACK_CREATE, TRANSPORT_CREATE, INTERNAL), transportTPInternalForm);
     }
 }

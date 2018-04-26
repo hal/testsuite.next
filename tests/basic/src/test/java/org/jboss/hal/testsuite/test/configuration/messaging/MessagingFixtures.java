@@ -74,6 +74,7 @@ public final class MessagingFixtures {
     static final String GLOBAL_MAX_SIZE = "global-client-scheduled-thread-pool-max-size";
     static final String GROUPING_HANDLER_ADDRESS = "grouping-handler-address";
     static final String JGROUPS_CHANNEL = "jgroups-channel";
+    static final String JGROUPS_CLUSTER = "jgroups-cluster";
     static final String JMX_DOMAIN = "jmx-domain";
     static final String JOURNAL_BINDING_TABLE = "journal-bindings-table";
     static final String JOURNAL_DIRECTORY = "journal-directory";
