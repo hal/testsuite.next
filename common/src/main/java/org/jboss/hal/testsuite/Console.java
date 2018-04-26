@@ -224,6 +224,7 @@ public class Console {
         return scrollIntoView(element, "true");
     }
 
+
     /**
      * The bottom of the element will be aligned as much as possible to the bottom of the visible area of the scrollable ancestor.
      * @param element to scroll to
@@ -232,7 +233,6 @@ public class Console {
     public WebElement scrollToBottom(WebElement element) {
         return scrollIntoView(element, "false");
     }
-
     // ------------------------------------------------------ inner classes
 
 

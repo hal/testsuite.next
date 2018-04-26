@@ -36,7 +36,7 @@ public final class IOFixtures {
     static final String WORKER_UPDATE = Ids.build(WORKER_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String WORKER_DELETE = Ids.build(WORKER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address workerAddress(String name) {
+    public static Address workerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(WORKER_PREFIX, name);
     }
 
@@ -52,7 +52,7 @@ public final class IOFixtures {
     static final String BP_UPDATE = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String BP_DELETE = Ids.build(BUFFER_POOL_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address bufferPoolAddress(String name) {
+    public static Address bufferPoolAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("buffer-pool", name);
     }
 
