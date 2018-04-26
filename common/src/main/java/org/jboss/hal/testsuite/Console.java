@@ -202,13 +202,36 @@ public class Console {
 
     // ------------------------------------------------------ elements
 
-    /** Makes sure that the element is visible and returns the element. */
-    public WebElement scrollIntoView(WebElement element) {
+    /**
+     * Scrolls the specified element into the visible area of the browser window.
+     * @param element to scroll to
+     * @param scrollIntoViewOptions - see
+     * <a href="https://developer.mozilla.org/en-US/docs/Web/API/Element/scrollIntoView#Parameters">related js documentation</a>
+     * @return provided element
+     */
+    public WebElement scrollIntoView(WebElement element, String scrollIntoViewOptions) {
         JavascriptExecutor js = (JavascriptExecutor) browser;
-        js.executeScript("arguments[0].scrollIntoView(true);", element);
+        js.executeScript("arguments[0].scrollIntoView(" + scrollIntoViewOptions + ");", element);
         return element;
     }
 
+    /**
+     * The top of the element will be aligned to the top of the visible area of the scrollable ancestor.
+     * @param element to scroll to
+     * @return provided element
+     */
+    public WebElement scrollIntoView(WebElement element) {
+        return scrollIntoView(element, "true");
+    }
+
+    /**
+     * The bottom of the element will be aligned as much as possible to the bottom of the visible area of the scrollable ancestor.
+     * @param element to scroll to
+     * @return provided element
+     */
+    public WebElement scrollToBottom(WebElement element) {
+        return scrollIntoView(element, "false");
+    }
 
     // ------------------------------------------------------ inner classes
 
