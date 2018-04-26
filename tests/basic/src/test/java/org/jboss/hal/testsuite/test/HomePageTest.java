@@ -50,7 +50,7 @@ public class HomePageTest {
     public void topLevelCategories() {
         HeaderFragment header = console.header();
         List<WebElement> topLevelCategories = header.getTopLevelCategories();
-        assertEquals(7, topLevelCategories.size());
+        assertEquals(6, topLevelCategories.size());
         assertEquals(Ids.TLC_HOMEPAGE, header.getSelectedTopLevelCategory().getAttribute("id"));
 
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_HOMEPAGE));
@@ -58,7 +58,7 @@ public class HomePageTest {
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_RUNTIME));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_PATCHING));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_ACCESS_CONTROL));
-        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_MANAGEMENT));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_CONFIGURATION));
     }
 
     @Test

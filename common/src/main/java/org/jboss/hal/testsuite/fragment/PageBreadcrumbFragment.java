@@ -15,8 +15,10 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
@@ -27,6 +29,7 @@ import org.openqa.selenium.WebElement;
 public class PageBreadcrumbFragment {
 
     @Root private WebElement root;
+    @Inject private Console console;
 
     public String lastValue() {
         return root.findElement(By.cssSelector("li:last-child")).getText();
@@ -40,7 +43,7 @@ public class PageBreadcrumbFragment {
      * Get back to the main page from the nested detail
      */
     public void getBackToMainPage() {
-        firstElement().click();
+        console.scrollToBottom(firstElement()).click();
         Graphene.waitAjax().until().element(root).is().not().visible();
     }
 }

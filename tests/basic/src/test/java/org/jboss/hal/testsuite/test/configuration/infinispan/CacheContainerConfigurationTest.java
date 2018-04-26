@@ -27,10 +27,12 @@ import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.HeaderBreadcrumbFragment;
 import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.TimeoutException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
@@ -64,7 +66,11 @@ public class CacheContainerConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, CC_UPDATE);
+        try {
+            page.navigate(NAME, CC_UPDATE);
+        } catch (TimeoutException e) {
+            Assert.fail("Not possible to open Cache container detail probably due to https://issues.jboss.org/browse/HAL-1442");
+        }
         console.verticalNavigation().selectPrimary(Ids.CACHE_CONTAINER_ITEM);
         form = page.getConfigurationForm();
     }

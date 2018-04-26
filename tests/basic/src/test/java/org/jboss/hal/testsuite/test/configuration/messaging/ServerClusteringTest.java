@@ -122,9 +122,10 @@ public class ServerClusteringTest {
         table.bind(form);
         table.select(BG_UPDATE);
         crudOperations.updateWithError(form, f -> {
+            f.text(JGROUPS_CLUSTER, EE);
             f.text(JGROUPS_CHANNEL, EE);
             f.text(SOCKET_BINDING, HTTP);
-        }, SOCKET_BINDING);
+        }, JGROUPS_CLUSTER, SOCKET_BINDING);
     }
 
     @Test
@@ -167,9 +168,10 @@ public class ServerClusteringTest {
         table.bind(form);
         table.select(DG_UPDATE_ALTERNATIVES);
         crudOperations.updateWithError(form, f -> {
+            f.text(JGROUPS_CLUSTER, EE);
             f.text(JGROUPS_CHANNEL, EE);
             f.text(SOCKET_BINDING, HTTP);
-        }, SOCKET_BINDING);
+        }, JGROUPS_CLUSTER, SOCKET_BINDING);
     }
 
     @Test

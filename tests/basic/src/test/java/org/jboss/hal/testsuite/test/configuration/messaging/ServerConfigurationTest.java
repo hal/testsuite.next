@@ -291,7 +291,9 @@ public class ServerConfigurationTest {
                         Ids.build(MESSAGING_SERVER_JOURNAL_DIRECTORY, Ids.ITEM));
 
         FormFragment form = page.getJournalDirectoryForm();
-        form.remove();
+        if (!form.isBlank()) {
+            form.remove();
+        }
         crudOperations.createSingleton(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), form);
     }
 
