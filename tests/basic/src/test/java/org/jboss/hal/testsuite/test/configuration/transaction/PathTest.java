@@ -55,9 +55,14 @@ public class PathTest {
 
     @AfterClass
     public static void tearDown() throws IOException, OperationException {
-        operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS, TransactionFixtures.OBJECT_STORE_RELATIVE_TO,
-            defaultObjectStoreRelativeTo);
-        operations.removeIfExists(PathsFixtures.pathAddress(TransactionFixtures.PATH_EDIT));
+        try {
+            operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS,
+                TransactionFixtures.OBJECT_STORE_RELATIVE_TO,
+                defaultObjectStoreRelativeTo);
+            operations.removeIfExists(PathsFixtures.pathAddress(TransactionFixtures.PATH_EDIT));
+        } finally {
+            client.close();
+        }
     }
 
     @Before

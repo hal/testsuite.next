@@ -1,5 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.transaction;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -10,6 +12,7 @@ import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.TransactionPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,6 +37,11 @@ public class ConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        client.close();
+    }
 
     @Before
     public void initPage() {

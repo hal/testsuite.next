@@ -57,11 +57,16 @@ public class RecoveryTest {
 
     @AfterClass
     public static void tearDown() throws CommandFailedException, IOException {
-        client.apply(new RemoveLocalSocketBinding(TransactionFixtures.RECOVERY_SOCKET_BINDING_CREATE));
-        client.apply(new RemoveLocalSocketBinding(TransactionFixtures.RECOVERY_STATUS_SOCKET_BINDING));
-        operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS, TransactionFixtures.SOCKET_BINDING, defaultSocketBinding);
-        operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS, TransactionFixtures.STATUS_SOCKET_BINDING,
-            defaultStatusSocketBinding);
+        try {
+            client.apply(new RemoveLocalSocketBinding(TransactionFixtures.RECOVERY_SOCKET_BINDING_CREATE));
+            client.apply(new RemoveLocalSocketBinding(TransactionFixtures.RECOVERY_STATUS_SOCKET_BINDING));
+            operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS, TransactionFixtures.SOCKET_BINDING,
+                defaultSocketBinding);
+            operations.writeAttribute(TransactionFixtures.TRANSACTIONS_ADDRESS, TransactionFixtures.STATUS_SOCKET_BINDING,
+                defaultStatusSocketBinding);
+        } finally {
+            client.close();
+        }
     }
 
     @Before

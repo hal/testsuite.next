@@ -68,8 +68,12 @@ public class JDBCTest {
 
     @AfterClass
     public static void tearDown() throws IOException, CommandFailedException, TimeoutException, InterruptedException {
-        client.apply(snapshotBackup.restore());
-        administration.restartIfRequired();
+        try {
+            client.apply(snapshotBackup.restore());
+            administration.restartIfRequired();
+        } finally {
+            client.close();
+        }
     }
 
     @Before

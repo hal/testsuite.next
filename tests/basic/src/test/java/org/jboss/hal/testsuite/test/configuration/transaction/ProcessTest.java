@@ -52,9 +52,13 @@ public class ProcessTest {
     }
 
     @AfterClass
-    public static void tearDown() throws CommandFailedException {
-        client.apply(new RemoveLocalSocketBinding(TransactionFixtures.PROCESS_SOCKET_BINDING_CREATE));
-        client.apply(new RemoveLocalSocketBinding(TransactionFixtures.PROCESS_SOCKET_BINDING_WITH_PROCESS_ID_UUID));
+    public static void tearDown() throws CommandFailedException, IOException {
+        try {
+            client.apply(new RemoveLocalSocketBinding(TransactionFixtures.PROCESS_SOCKET_BINDING_CREATE));
+            client.apply(new RemoveLocalSocketBinding(TransactionFixtures.PROCESS_SOCKET_BINDING_WITH_PROCESS_ID_UUID));
+        } finally {
+            client.close();
+        }
     }
 
     @Before
