@@ -5,6 +5,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 public class WebServicesFixtures {
 
     public static final Address WEB_SERVICES_ADDRESS = Address.subsystem("webservices");
+    public static final String CLASS = "class";
 
     public static Address clientConfigurationAddress(String clientConfigurationAddressName) {
         return WEB_SERVICES_ADDRESS.and("client-config", clientConfigurationAddressName);
@@ -57,6 +58,14 @@ public class WebServicesFixtures {
             this.handlerChainType = builder.handlerChainType;
         }
 
+        public String getHandlerChainName() {
+            return handlerChainName;
+        }
+
+        public Address handlerChainAddress() {
+            return WEB_SERVICES_ADDRESS.and(configurationType.type, configurationName).and(handlerChainType.type, handlerChainName);
+        }
+
         public static class Builder {
 
             private final String configurationName;
@@ -97,13 +106,55 @@ public class WebServicesFixtures {
                 return new HandlerChain(this);
             }
         }
+    }
 
-        public String getHandlerChainName() {
-            return handlerChainName;
+    public static class Handler {
+
+        private final String name;
+        private final String className;
+        private final HandlerChain handlerChain;
+
+        private Handler(Builder builder) {
+            this.name = builder.name;
+            this.className = builder.className;
+            this.handlerChain = builder.handlerChain;
         }
 
-        public Address handlerChainAddress() {
-            return WEB_SERVICES_ADDRESS.and(configurationType.type, configurationName).and(handlerChainType.type, handlerChainName);
+        public Address handlerAddress() {
+            return handlerChain.handlerChainAddress().and("handler", name);
+        }
+
+        public String getName() {
+            return name;
+        }
+
+        public String getClassName() {
+            return className;
+        }
+
+        public static class Builder {
+
+            private final String name;
+            private String className;
+            private HandlerChain handlerChain;
+
+            public Builder(String name) {
+                this.name = name;
+            }
+
+            public Builder className(String className) {
+                this.className = className;
+                return this;
+            }
+
+            public Builder handlerChain(HandlerChain handlerChain) {
+                this.handlerChain = handlerChain;
+                return this;
+            }
+
+            public Handler build() {
+                return new Handler(this);
+            }
         }
     }
 }

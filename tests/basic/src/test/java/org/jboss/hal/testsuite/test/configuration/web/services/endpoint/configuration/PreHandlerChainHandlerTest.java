@@ -1,4 +1,4 @@
-package org.jboss.hal.testsuite.test.configuration.web.services.client.configuration;
+package org.jboss.hal.testsuite.test.configuration.web.services.endpoint.configuration;
 
 import java.io.IOException;
 
@@ -44,22 +44,22 @@ public class PreHandlerChainHandlerTest {
 
     private static final Operations operations = new Operations(client);
 
-    private static final String CLIENT_CONFIGURATION_EDIT =
-        "client-configuration-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);
+    private static final String END_POINT_CONFIGURATION_EDIT =
+        "endpoint-configuration-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);
 
     private static final WebServicesFixtures.HandlerChain PRE_HANDLER_CHAIN_EDIT =
-        new WebServicesFixtures.HandlerChain.Builder(CLIENT_CONFIGURATION_EDIT)
+        new WebServicesFixtures.HandlerChain.Builder(END_POINT_CONFIGURATION_EDIT)
             .handlerChainName("pre-handler-chain-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7))
-            .clientConfiguration()
+            .endpointConfiguration()
             .preHandlerChain()
             .build();
 
     private static final WebServicesFixtures.Handler PRE_HANDLER_CHAIN_HANDLER_CREATE =
         new WebServicesFixtures.Handler.Builder(
             "pre-handler-chain-handler-to-be-created-" + RandomStringUtils.randomAlphanumeric(7))
-        .className(Random.name())
-        .handlerChain(PRE_HANDLER_CHAIN_EDIT)
-        .build();
+            .className(Random.name())
+            .handlerChain(PRE_HANDLER_CHAIN_EDIT)
+            .build();
 
     private static final WebServicesFixtures.Handler PRE_HANDLER_CHAIN_HANDLER_DELETE =
         new WebServicesFixtures.Handler.Builder(
@@ -77,7 +77,7 @@ public class PreHandlerChainHandlerTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(WebServicesFixtures.clientConfigurationAddress(CLIENT_CONFIGURATION_EDIT));
+        operations.add(WebServicesFixtures.endpointConfigurationAddress(END_POINT_CONFIGURATION_EDIT));
         operations.add(PRE_HANDLER_CHAIN_EDIT.handlerChainAddress());
         createHandler(PRE_HANDLER_CHAIN_HANDLER_DELETE);
         createHandler(PRE_HANDLER_CHAIN_HANDLER_EDIT);
@@ -90,7 +90,7 @@ public class PreHandlerChainHandlerTest {
     @AfterClass
     public static void tearDown() throws IOException, OperationException {
         try {
-            operations.removeIfExists(WebServicesFixtures.clientConfigurationAddress(CLIENT_CONFIGURATION_EDIT));
+            operations.removeIfExists(WebServicesFixtures.endpointConfigurationAddress(END_POINT_CONFIGURATION_EDIT));
         } finally {
             client.close();
         }
@@ -99,16 +99,16 @@ public class PreHandlerChainHandlerTest {
     @Before
     public void initPage() {
         page.navigate();
-        console.verticalNavigation().selectPrimary(Ids.WEBSERVICES_CLIENT_CONFIG_ITEM);
-        page.getClientConfigurationTable().action(CLIENT_CONFIGURATION_EDIT, "Pre");
-        page.getClientConfigurationHandlerChainTable().action(PRE_HANDLER_CHAIN_EDIT.getHandlerChainName(), "Handler");
+        console.verticalNavigation().selectPrimary(Ids.WEBSERVICES_ENDPOINT_CONFIG_ITEM);
+        page.getEndpointConfigurationTable().action(END_POINT_CONFIGURATION_EDIT, "Pre");
+        page.getEndpointConfigurationHandlerChainTable().action(PRE_HANDLER_CHAIN_EDIT.getHandlerChainName(), "Handler");
     }
 
     @Test
     public void create() throws Exception {
         crudOperations.create(
             PRE_HANDLER_CHAIN_HANDLER_CREATE.handlerAddress(),
-            page.getClientConfigurationHandlerTable(), formFragment -> {
+            page.getEndpointConfigurationHandlerTable(), formFragment -> {
                 formFragment.text("name", PRE_HANDLER_CHAIN_HANDLER_CREATE.getName());
                 formFragment.text(WebServicesFixtures.CLASS, PRE_HANDLER_CHAIN_HANDLER_CREATE.getClassName());
             }, resourceVerifier -> {
@@ -120,13 +120,14 @@ public class PreHandlerChainHandlerTest {
     @Test
     public void remove() throws Exception {
         crudOperations.delete(PRE_HANDLER_CHAIN_HANDLER_DELETE.handlerAddress(),
-            page.getClientConfigurationHandlerTable(), PRE_HANDLER_CHAIN_HANDLER_DELETE.getName());
+            page.getEndpointConfigurationHandlerTable(), PRE_HANDLER_CHAIN_HANDLER_DELETE.getName());
     }
 
     @Test
     public void editClass() throws Exception {
-        page.getClientConfigurationHandlerTable().select(PRE_HANDLER_CHAIN_HANDLER_EDIT.getName());
+        page.getEndpointConfigurationHandlerTable().select(PRE_HANDLER_CHAIN_HANDLER_EDIT.getName());
         crudOperations.update(PRE_HANDLER_CHAIN_HANDLER_EDIT.handlerAddress(),
-            page.getClientConfigurationHandlerForm(), WebServicesFixtures.CLASS);
+            page.getEndpointConfigurationHandlerForm(), WebServicesFixtures.CLASS);
     }
+
 }

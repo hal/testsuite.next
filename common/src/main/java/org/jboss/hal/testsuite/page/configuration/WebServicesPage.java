@@ -26,10 +26,10 @@ public class WebServicesPage extends BasePage {
     @FindBy(id = Ids.WEBSERVICES_CLIENT_CONFIG + "-handler-chain-form")
     private FormFragment clientConfigurationHandlerChainForm;
 
-    @FindBy(id = Ids.WEBSERVICES_CLIENT_CONFIG + "handler-table_wrapper")
+    @FindBy(id = Ids.WEBSERVICES_CLIENT_CONFIG + "-handler-table_wrapper")
     private TableFragment clientConfigurationHandlerTable;
 
-    @FindBy(id = Ids.WEBSERVICES_CLIENT_CONFIG + "handler-form")
+    @FindBy(id = Ids.WEBSERVICES_CLIENT_CONFIG + "-handler-form")
     private FormFragment clientConfigurationHandlerForm;
 
     @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "-table_wrapper")
@@ -44,10 +44,10 @@ public class WebServicesPage extends BasePage {
     @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "-handler-chain-form")
     private FormFragment endpointConfigurationHandlerChainForm;
 
-    @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "handler-table_wrapper")
+    @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "-handler-table_wrapper")
     private TableFragment endpointConfigurationHandlerTable;
 
-    @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "handler-form")
+    @FindBy(id = Ids.WEBSERVICES_ENDPOINT_CONFIG + "-handler-form")
     private FormFragment endpointConfigurationHandlerForm;
 
     public FormFragment getWebServicesConfigurationForm() {

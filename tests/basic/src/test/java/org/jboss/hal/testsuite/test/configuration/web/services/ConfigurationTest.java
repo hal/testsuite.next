@@ -3,6 +3,7 @@ package org.jboss.hal.testsuite.test.configuration.web.services;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.stream.Collectors;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;

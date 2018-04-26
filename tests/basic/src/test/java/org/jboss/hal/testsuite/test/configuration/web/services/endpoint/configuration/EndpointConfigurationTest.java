@@ -3,6 +3,7 @@ package org.jboss.hal.testsuite.test.configuration.web.services.endpoint.configu
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
