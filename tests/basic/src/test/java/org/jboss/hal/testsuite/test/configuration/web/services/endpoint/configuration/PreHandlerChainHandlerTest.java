@@ -28,18 +28,6 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 @RunWith(Arquillian.class)
 public class PreHandlerChainHandlerTest {
 
-    @Inject
-    private Console console;
-
-    @Inject
-    private CrudOperations crudOperations;
-
-    @Drone
-    private WebDriver browser;
-
-    @Page
-    private WebServicesPage page;
-
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
 
     private static final Operations operations = new Operations(client);
@@ -95,6 +83,18 @@ public class PreHandlerChainHandlerTest {
             client.close();
         }
     }
+
+    @Inject
+    private Console console;
+
+    @Inject
+    private CrudOperations crudOperations;
+
+    @Drone
+    private WebDriver browser;
+
+    @Page
+    private WebServicesPage page;
 
     @Before
     public void initPage() {

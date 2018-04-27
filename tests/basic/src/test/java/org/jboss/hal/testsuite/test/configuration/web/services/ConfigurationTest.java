@@ -25,6 +25,15 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 @RunWith(Arquillian.class)
 public class ConfigurationTest {
 
+    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+
+    private static final Operations operations = new Operations(client);
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        client.close();
+    }
+
     @Inject
     private Console console;
 
@@ -36,15 +45,6 @@ public class ConfigurationTest {
 
     @Page
     private WebServicesPage page;
-
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-
-    private static final Operations operations = new Operations(client);
-
-    @AfterClass
-    public static void tearDown() throws IOException {
-        client.close();
-    }
 
     @Before
     public void initPage() {
