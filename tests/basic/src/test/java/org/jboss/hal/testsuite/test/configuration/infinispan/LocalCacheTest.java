@@ -28,12 +28,10 @@ import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
 import org.junit.AfterClass;
-import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.TimeoutException;
 import org.wildfly.extras.creaper.commands.infinispan.cache.AddLocalCache;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -52,7 +50,6 @@ public class LocalCacheTest {
         operations.add(cacheContainerAddress(CC_UPDATE));
         client.apply(new AddLocalCache.Builder(LC_UPDATE).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_UPDATE_ATTRIBUTES).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_UPDATE_EVICTION).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_RESET).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_RESET_TRANSACTION).cacheContainer(CC_UPDATE).build());
         client.apply(new AddLocalCache.Builder(LC_REMOVE).cacheContainer(CC_UPDATE).build());
@@ -62,7 +59,6 @@ public class LocalCacheTest {
     public static void tearDown() throws Exception {
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE_ATTRIBUTES));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE_EVICTION));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET_TRANSACTION));
         operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_REMOVE));
@@ -77,11 +73,7 @@ public class LocalCacheTest {
 
     @Before
     public void setUp() throws Exception {
-        try {
-            page.navigate(NAME, CC_UPDATE);
-        } catch (TimeoutException e) {
-            Assert.fail("Not possible to open Cache container detail probably due to https://issues.jboss.org/browse/HAL-1442");
-        }
+        page.navigate(NAME, CC_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.LOCAL_CACHE + "-" + Ids.ITEM);
 
         page.bindForms();
@@ -121,41 +113,6 @@ public class LocalCacheTest {
         tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
         FormFragment form = page.getLocalCacheForm();
         crud.reset(localCacheAddress(CC_UPDATE, LC_RESET), form);
-    }
-
-    // ------------------------------------------------------ eviction
-
-    @Test
-    public void updateEviction() throws Exception {
-        table.select(LC_UPDATE_EVICTION);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        FormFragment form = page.getEvictionForm();
-
-        crud.update(componentAddress(CC_UPDATE, LC_UPDATE_EVICTION, EVICTION), form,
-                f -> {
-                    f.number(MAX_ENTRIES, 23);
-                    f.select(STRATEGY, "LRU");
-                },
-                resourceVerifier -> {
-                    resourceVerifier.verifyAttribute(MAX_ENTRIES, 23L);
-                    resourceVerifier.verifyAttribute(STRATEGY, "LRU");
-                });
-    }
-
-    @Test
-    public void resetEviction() throws Exception {
-        table.select(LC_RESET);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        FormFragment form = page.getEvictionForm();
-        crud.reset(componentAddress(CC_UPDATE, LC_RESET, EVICTION), form);
-    }
-
-    @Test
-    public void removeEviction() throws Exception {
-        table.select(LC_REMOVE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EVICTION, Ids.TAB));
-        FormFragment form = page.getEvictionForm();
-        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, EVICTION), form);
     }
 
     // ------------------------------------------------------ expiration

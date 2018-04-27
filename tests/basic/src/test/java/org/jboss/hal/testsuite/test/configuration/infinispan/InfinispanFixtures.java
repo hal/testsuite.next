@@ -56,7 +56,6 @@ public final class InfinispanFixtures {
     static final String LC_CREATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.CREATE, Random.name());
     static final String LC_UPDATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String LC_UPDATE_ATTRIBUTES = Ids.build(LOCAL_CACHE_PREFIX, "update-attributes", Random.name());
-    static final String LC_UPDATE_EVICTION = Ids.build(LOCAL_CACHE_PREFIX, "update-eviction", Random.name());
     static final String LC_RESET = Ids.build(LOCAL_CACHE_PREFIX, "reset", Random.name());
     static final String LC_RESET_TRANSACTION = Ids.build(LOCAL_CACHE_PREFIX, "reset-transaction", Random.name());
     static final String LC_REMOVE = Ids.build(LOCAL_CACHE_PREFIX, "remove", Random.name());

@@ -40,7 +40,6 @@ public class CacheContainerPage extends BasePage {
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.FORM) private FormFragment localCacheForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.PAGES) private PagesFragment localCachePages;
 
-    @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_EVICTION + "-" + Ids.FORM) private FormFragment evictionForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_EXPIRATION + "-" + Ids.FORM) private FormFragment expirationForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_LOCKING + "-" + Ids.FORM) private FormFragment lockingForm;
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_COMPONENT_TRANSACTION + "-" + Ids.FORM) private FormFragment transactionForm;
@@ -50,7 +49,7 @@ public class CacheContainerPage extends BasePage {
     @FindBy(id = Ids.LOCAL_CACHE + "-" + Ids.CACHE_STORE_FILE + "-" + Ids.FORM) private TabsFragment fileStoreForm;
 
     public void bindForms() {
-        localCacheTable.bind(asList(localCacheForm, evictionForm, expirationForm, lockingForm, transactionForm));
+        localCacheTable.bind(asList(localCacheForm, expirationForm, lockingForm, transactionForm));
     }
 
     public FormFragment getConfigurationForm() {
@@ -71,10 +70,6 @@ public class CacheContainerPage extends BasePage {
 
     public PagesFragment getLocalCachePages() {
         return localCachePages;
-    }
-
-    public FormFragment getEvictionForm() {
-        return evictionForm;
     }
 
     public FormFragment getExpirationForm() {
