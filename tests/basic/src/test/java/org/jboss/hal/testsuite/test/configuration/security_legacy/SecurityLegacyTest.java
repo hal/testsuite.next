@@ -27,6 +27,7 @@ import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.SecurityLegacyPage;
+import org.jboss.hal.testsuite.util.Library;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -65,6 +66,9 @@ public class SecurityLegacyTest {
                 .and(PATH, SAMPLE_TRUSTSTORE_FILENAME)
                 .and(RELATIVE_TO, JBOSS_SERVER_CONFIG_DIR)
                 .and(TYPE, JKS));
+        // Elytron needs some time to notice new key stores with not yet existing paths
+        Library.letsSleep(200);
+
         Values keyPairParam = Values.of("alias", "jboss")
                 .and("distinguished-name", "c=US,CN=Wildfly,O=Red Hat,OU=Eng,ST=AZ");
         operations.invoke("generate-key-pair", keyStoreAddress(KEY_ST_CREATE), keyPairParam);
