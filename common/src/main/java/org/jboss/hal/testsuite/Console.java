@@ -69,6 +69,8 @@ import static org.junit.Assert.assertEquals;
  */
 public class Console {
 
+    private static final String DOT = ".";
+
     @Drone private WebDriver browser;
     @ArquillianResource private URL baseUrl;
     private TokenFormatter tokenFormatter;
@@ -115,7 +117,14 @@ public class Console {
 
     /** Waits until all notifications are gone. */
     public void waitNoNotification() {
-        waitModel().until().element(By.cssSelector("." + toastNotificationsListPf + ":empty")).is().present();
+        List<WebElement> dismissibleNotifications = By.cssSelector(DOT + alertDismissable).findElements(browser);
+        for (WebElement notification : dismissibleNotifications) {
+            WebElement button = notification.findElement(By.cssSelector("button.close"));
+            if (button != null) {
+                button.click();
+            }
+        }
+        waitModel().until().element(By.cssSelector(DOT + toastNotificationsListPf + ":empty")).is().present();
     }
 
     /** Verifies that a success notification is visible */
@@ -130,7 +139,7 @@ public class Console {
 
     private void verifyNotification(String css) {
         waitModel().until() // use waitModel() since it might take some time until the notification is visible
-                .element(By.cssSelector("." + toastNotificationsListPf + " ." + css))
+                .element(By.cssSelector(DOT + toastNotificationsListPf + " ." + css))
                 .is().visible();
     }
 
@@ -189,7 +198,7 @@ public class Console {
 
     public VerticalNavigationFragment verticalNavigation() {
         return createPageFragment(VerticalNavigationFragment.class,
-                browser.findElement(By.cssSelector("." + navPfVerticalHal)));
+                browser.findElement(By.cssSelector(DOT + navPfVerticalHal)));
     }
 
     public WizardFragment wizard() {
