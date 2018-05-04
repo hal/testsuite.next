@@ -42,6 +42,10 @@ public class UndertowFixtures {
         return UNDERTOW_ADDRESS.and("buffer-cache", bufferCacheName);
     }
 
+    public static Address byteBufferPoolAddress(String byteBuffer) {
+        return UNDERTOW_ADDRESS.and("byte-buffer-pool", byteBuffer);
+    }
+
     private UndertowFixtures() {
 
     }
