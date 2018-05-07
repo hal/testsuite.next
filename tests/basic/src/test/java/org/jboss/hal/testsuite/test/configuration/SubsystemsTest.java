@@ -36,8 +36,10 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static java.util.Arrays.asList;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SUBSYSTEM;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
 @RunWith(Arquillian.class)
 public class SubsystemsTest {
@@ -45,6 +47,9 @@ public class SubsystemsTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
     private static List<String> subsystems = new ArrayList<>();
+    // this is from org.jboss.hal.client.configuration.subsystem.SubsystemColumn
+    private static final List<String> EMPTY_SUBSYSTEMS = asList("bean-validation", "core-management", "ee-security",
+            "jaxrs", "jdr", "jsr77", "pojo", "sar");
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -63,7 +68,14 @@ public class SubsystemsTest {
 
     @Test
     public void numberOfSubsystems() {
-        assertEquals(subsystems.size(), column.getItems().size());
+        assertEquals(subsystems.size() - EMPTY_SUBSYSTEMS.size(), column.getItems().size());
+    }
+
+    @Test
+    public void emptySubsystemsNotDisplayed() {
+        for (String subsys: EMPTY_SUBSYSTEMS) {
+            assertFalse(column.containsItem(subsys));
+        }
     }
 
     @Test
@@ -72,7 +84,8 @@ public class SubsystemsTest {
         column.filter(filter);
 
         long filtered = subsystems.stream()
-                .filter(subsystem -> subsystem.toLowerCase().contains(filter))
+                .filter(subsystem -> subsystem.toLowerCase().contains(filter)
+                        && EMPTY_SUBSYSTEMS.indexOf(subsystem) < 0)
                 .count();
         long visible = column.getItems().stream()
                 .filter(WebElement::isDisplayed)
