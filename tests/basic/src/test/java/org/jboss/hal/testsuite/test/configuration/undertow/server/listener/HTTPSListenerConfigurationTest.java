@@ -15,6 +15,7 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.AddLocalSocketBinding;
 import org.jboss.hal.testsuite.creaper.command.RemoveLocalSocketBinding;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowServerPage;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.jboss.hal.testsuite.test.configuration.io.IOFixtures;
@@ -28,9 +29,12 @@ import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+
+import static org.wildfly.extras.creaper.core.online.operations.ReadAttributeOption.NOT_INCLUDE_DEFAULTS;
 
 @RunWith(Arquillian.class)
 public class HTTPSListenerConfigurationTest {
@@ -56,6 +60,9 @@ public class HTTPSListenerConfigurationTest {
 
     private static final String HTTPS_LISTENER_TO_BE_EDITED =
         "https-listener-to-be-added-" + RandomStringUtils.randomAlphanumeric(7);
+
+    private static final Address HTTPS_LISTENER_ADDRESS =
+            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED);
 
     private static final String CLIENT_SSL_CONTEXT = "client-ssl-context-" + RandomStringUtils.randomAlphanumeric(7);
 
@@ -87,7 +94,7 @@ public class HTTPSListenerConfigurationTest {
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING_TO_BE_EDITED));
         client.apply(new AddLocalSocketBinding(SOCKET_REDIRECT_TO_BE_EDITED));
         operations.add(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             Values
                 .of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref")
                 .and("ssl-context", CLIENT_SSL_CONTEXT));
@@ -116,229 +123,244 @@ public class HTTPSListenerConfigurationTest {
     @Test
     public void toggleAllowEncodedSlash() throws Exception {
         boolean allowEncodedSlash = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "allow-encoded-slash").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "allow-encoded-slash", !allowEncodedSlash);
     }
 
     @Test
     public void toggleAllowEqualsInCookieValue() throws Exception {
         boolean allowEqualsInCookieValue = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "allow-equals-in-cookie-value").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "allow-equals-in-cookie-value", !allowEqualsInCookieValue);
     }
 
     @Test
     public void toggleAllowUnescapedCharactersInURL() throws Exception {
         boolean allowUnescapedCharactersInURL = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "allow-unescaped-characters-in-url").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "allow-unescaped-characters-in-url", !allowUnescapedCharactersInURL);
     }
 
     @Test
     public void toggleAwaysSetKeepAlive() throws Exception {
         boolean alwaysSetKeepAlive = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "always-set-keep-alive").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "always-set-keep-alive", !alwaysSetKeepAlive);
     }
 
     @Test
     public void toggleBufferPipelinedData() throws Exception {
         boolean bufferPipelinedData = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "buffer-pipelined-data").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "buffer-pipelined-data", !bufferPipelinedData);
     }
 
     @Test
     public void editBufferPool() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "buffer-pool", BUFFER_POOL_TO_BE_EDITED);
     }
 
     @Test
     public void toggleCertificateForwarding() throws Exception {
         boolean certificateForwarding = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "certificate-forwarding").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "certificate-forwarding", !certificateForwarding);
     }
 
     @Test
     public void toggleDecodeURL() throws Exception {
         boolean decodeURL = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "decode-url").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "decode-url", !decodeURL);
     }
 
     @Test
     public void editDisallowedMethods() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "disallowed-methods", Collections.singletonList("DISALLOWED-METHOD"));
     }
 
     @Test
     public void toggleCEnableHTTP2() throws Exception {
         boolean enableHTTP2 = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "enable-http2").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "enable-http2", !enableHTTP2);
     }
 
     @Test
     public void toggleHTTP2EnablePush() throws Exception {
         boolean enableHTTP2 = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "http2-enable-push").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-enable-push", !enableHTTP2);
     }
 
     @Test
     public void editHTTP2HeaderTableSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-header-table-size", Random.number());
     }
 
     @Test
     public void editHTTP2InitialWindowSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-initial-window-size", Random.number());
     }
 
     @Test
     public void editHTTP2MaxConcurrentStreams() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-max-concurrent-streams", Random.number());
     }
 
     @Test
     public void editHTTP2MaxFrameSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-max-frame-size", Random.number());
     }
 
     @Test
     public void editHTTP2MaxHeaderListSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "http2-max-header-list-size", Random.number());
     }
 
     @Test
     public void editMaxBufferedRequestSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-buffered-request-size", Random.number());
     }
 
     @Test
     public void editMaxConnections() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-connections", Random.number());
     }
 
     @Test
     public void editMaxCookies() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-cookies", Random.number());
     }
 
     @Test
     public void editMaxHeaderSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-header-size", Random.number());
     }
 
     @Test
     public void editMaxHeaders() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-headers", Random.number());
     }
 
     @Test
     public void editMaxParameters() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-parameters", Random.number());
     }
 
     @Test
     public void editMaxPostSize() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "max-post-size", Long.valueOf(Random.number()));
     }
 
     @Test
     public void editNoRequestTimeout() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "no-request-timeout", Random.number());
     }
 
     @Test
     public void toggleProxyAddressForwarding() throws Exception {
         boolean proxyAddressForwarding = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "proxy-address-forwarding").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "proxy-address-forwarding", !proxyAddressForwarding);
+    }
+
+    @Test
+    public void toggleProxyProtocol() throws Exception {
+        final String proxyProtocolAttributeName = "proxy-protocol";
+        final ModelNodeResult originalModelNodeResult =
+                operations.readAttribute(HTTPS_LISTENER_ADDRESS, proxyProtocolAttributeName, NOT_INCLUDE_DEFAULTS);
+        originalModelNodeResult.assertSuccess();
+        final FormFragment form = page.getHttpsListenerForm();
+        try {
+            crudOperations.update(HTTPS_LISTENER_ADDRESS, form, proxyProtocolAttributeName, true);
+            crudOperations.update(HTTPS_LISTENER_ADDRESS, form, proxyProtocolAttributeName, false);
+        } finally {
+            operations.writeAttribute(HTTPS_LISTENER_ADDRESS, proxyProtocolAttributeName, originalModelNodeResult.value());
+        }
     }
 
     @Test
     public void editReadTimeout() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "read-timeout", Random.number());
     }
 
     @Test
     public void editReceiveBuffer() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "receive-buffer");
     }
 
     @Test
     public void toggleRecordRequestStartTime() throws Exception {
         boolean recordRequestStartTime = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "record-request-start-time").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "record-request-start-time", !recordRequestStartTime);
     }
 
@@ -346,107 +368,107 @@ public class HTTPSListenerConfigurationTest {
     @Test
     public void editRequestParseTimeout() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "request-parse-timeout", Random.number());
     }
 
     @Test
     public void toggleRequireHostHttp11() throws Exception {
         boolean requireHostHttp11 = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "require-host-http11").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "require-host-http11", !requireHostHttp11);
     }
 
     @Test
     public void toggleResolvePeerAddress() throws Exception {
         boolean resolvePeerAddress = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "resolve-peer-address").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "resolve-peer-address", !resolvePeerAddress);
     }
 
     @Test
     public void toggleRfc6265CookieValidation() throws Exception {
         boolean rfc6265CookieValidation = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "rfc6265-cookie-validation").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "rfc6265-cookie-validation", !rfc6265CookieValidation);
     }
 
     @Test
     public void toggleSecure() throws Exception {
         boolean secure = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "secure").booleanValue();
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "secure", !secure);
     }
 
     @Test
     public void editSendBuffer() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "send-buffer");
     }
 
     @Test
     public void editSocketBinding() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "socket-binding", SOCKET_BINDING_TO_BE_EDITED.toLowerCase() + "ref");
     }
 
     @Test
     public void editSSLContext() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "ssl-context", CLIENT_SSL_CONTEXT_TO_BE_EDITED);
     }
 
     @Test
     public void editTCPBacklog() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "tcp-backlog", Random.number());
     }
 
     @Test
     public void toggleTCPKeepAlive() throws Exception {
         ModelNodeResult modelNodeResult = operations.readAttribute(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             "tcp-keep-alive");
         boolean tcpKeepAlive = modelNodeResult.booleanValue(false);
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "tcp-keep-alive", !tcpKeepAlive);
     }
 
     @Test
     public void editURLCharset() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "url-charset");
     }
 
     @Test
     public void editWorker() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "worker", WORKER_TO_BE_EDITED);
     }
 
     @Test
     public void editWriteTimeout() throws Exception {
         crudOperations.update(
-            UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_EDITED),
+            HTTPS_LISTENER_ADDRESS,
             page.getHttpsListenerForm(), "write-timeout", Random.number());
     }
 }
