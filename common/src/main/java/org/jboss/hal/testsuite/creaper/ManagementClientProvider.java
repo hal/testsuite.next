@@ -23,6 +23,11 @@ import org.wildfly.extras.creaper.core.online.OnlineOptions;
 /** Provider for Creaper's OnlineManagementClient */
 public class ManagementClientProvider {
 
+    private static final String AS_MANAGEMENT_ADDRESS = "as.managementAddress";
+    private static final String AS_MANAGEMENT_PORT = "as.managementPort";
+    private static final String AS_MANAGEMENT_PORT_NUMBER = "9990";
+    private static final String LOCALHOST = "localhost";
+
     /**
      * Creates default OnlineManagementClient for domain for the specified profile
      *
@@ -33,8 +38,24 @@ public class ManagementClientProvider {
     public static OnlineManagementClient withProfile(String profile) {
         return ManagementClient.onlineLazy(OnlineOptions.domain()
                 .forHost(ConfigUtils.getDefaultHost()).forProfile(profile).build()
-                .hostAndPort(System.getProperty("as.managementAddress", "localhost"),
-                        Integer.parseInt(System.getProperty("as.managementPort", "9990")))
+                .hostAndPort(System.getProperty(AS_MANAGEMENT_ADDRESS, LOCALHOST),
+                        Integer.parseInt(System.getProperty(AS_MANAGEMENT_PORT, AS_MANAGEMENT_PORT_NUMBER)))
+                .build());
+    }
+
+    /**
+     * Creates default OnlineManagementClient for domain without default host specified.
+     * This allows to call /core-service without /host=default-host-name prefix.
+     *
+     * @see <a href="https://github.com/wildfly-extras/creaper/issues/72">related Creaper issue</a>
+     *
+     * @return Initialized domain OnlineManagementClient for specified profile, don't forget to close it
+     */
+    public static OnlineManagementClient withoutDefaultHost() {
+        String profile = ConfigUtils.getDefaultProfile();
+        return ManagementClient.onlineLazy(OnlineOptions.domain().forProfile(profile).build()
+                .hostAndPort(System.getProperty(AS_MANAGEMENT_ADDRESS, LOCALHOST),
+                        Integer.parseInt(System.getProperty(AS_MANAGEMENT_PORT, AS_MANAGEMENT_PORT_NUMBER)))
                 .build());
     }
 
@@ -51,13 +72,13 @@ public class ManagementClientProvider {
             String host = ConfigUtils.getDefaultHost();
             managementClient = ManagementClient.onlineLazy(OnlineOptions.domain()
                     .forHost(host).forProfile(profile).build()
-                    .hostAndPort(System.getProperty("as.managementAddress", "localhost"),
-                            Integer.parseInt(System.getProperty("as.managementPort", "9990")))
+                    .hostAndPort(System.getProperty(AS_MANAGEMENT_ADDRESS, LOCALHOST),
+                            Integer.parseInt(System.getProperty(AS_MANAGEMENT_PORT, AS_MANAGEMENT_PORT_NUMBER)))
                     .build());
         } else {
             managementClient = ManagementClient.onlineLazy(OnlineOptions.standalone().
-                    hostAndPort(System.getProperty("as.managementAddress", "localhost"),
-                            Integer.parseInt(System.getProperty("as.managementPort", "9990")))
+                    hostAndPort(System.getProperty(AS_MANAGEMENT_ADDRESS, LOCALHOST),
+                            Integer.parseInt(System.getProperty(AS_MANAGEMENT_PORT, AS_MANAGEMENT_PORT_NUMBER)))
                     .build());
         }
 

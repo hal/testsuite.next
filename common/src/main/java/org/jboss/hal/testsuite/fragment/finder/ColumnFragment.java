@@ -88,8 +88,8 @@ public class ColumnFragment {
 
     public ItemFragment selectItem(String itemId) {
         By selector = By.id(itemId);
-        ItemFragment item = createPageFragment(ItemFragment.class, browser.findElement(selector));
         waitGui().until().element(selector).is().visible();
+        ItemFragment item = createPageFragment(ItemFragment.class, browser.findElement(selector));
         item.getRoot().click();
         item.initItemId(itemId);
         return item;

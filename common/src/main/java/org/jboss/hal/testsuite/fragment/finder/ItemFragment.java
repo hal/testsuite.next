@@ -19,6 +19,7 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.fragment.DropdownFragment;
 import org.openqa.selenium.By;
@@ -84,6 +85,15 @@ public class ItemFragment {
 
     public WebElement getRoot() {
         return root;
+    }
+
+    /**
+     * Useful to determine icon type.
+     * @return content of class attribute
+     * @throws NoSuchElementException if there is no icon in the item
+     */
+    public String getIconClasses() {
+        return root.findElement(By.className(CSS.itemIcon)).getAttribute("class");
     }
 
 

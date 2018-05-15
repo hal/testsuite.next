@@ -338,6 +338,12 @@
             </modules>
         </profile>
         <profile>
+            <id>multihosts</id>
+            <modules>
+                <module>tests/multihosts</module>
+            </modules>
+        </profile>
+        <profile>
             <id>standalone</id>
             <properties>
                 <suite.mode>standalone</suite.mode>
