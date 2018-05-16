@@ -16,21 +16,10 @@
 package org.jboss.hal.testsuite.page;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
-import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
-import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 
-public abstract class BasePage {
+public abstract class BasePage extends AbstractPage {
 
-    @Drone private WebDriver browser;
-    @Inject private Console console;
-    @FindBy(id = Ids.ROOT_CONTAINER) private WebElement rootContainer;
-
-    /** Navigates to the name token specified in the {@code @Place} annotation. */
+    @Override
     public void navigate() {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value()).build();
         browser.navigate().refresh();
@@ -56,19 +45,5 @@ public abstract class BasePage {
     public void navigateAgain(String name, String value) {
         browser.navigate().refresh();
         navigate(name, value);
-    }
-
-    public WebElement getRootContainer() {
-        return rootContainer;
-    }
-
-    private Place assertPlace() {
-        Place place = this.getClass().getAnnotation(Place.class);
-        if (place == null) {
-            throw new IllegalArgumentException(
-                    String.format("The page object '%s' that you are navigating to is not annotated with @Place",
-                            this.getClass().getSimpleName()));
-        }
-        return place;
     }
 }
