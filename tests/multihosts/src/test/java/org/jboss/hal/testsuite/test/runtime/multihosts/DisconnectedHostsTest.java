@@ -15,36 +15,43 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.category.Domain;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
+import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderPath;
 import org.jboss.hal.testsuite.fragment.finder.TopologyPreviewFragment;
 import org.jboss.hal.testsuite.page.runtime.TopologyPage;
 import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.junit.AfterClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.resources.Ids.DOMAIN_BROWSE_BY;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Verifies disconnected host info shown in web console.
  * Requires domain containing disconnected host named 'disconnected-slave'.
  */
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 @Category(Domain.class)
 @RunWith(Arquillian.class)
 public class DisconnectedHostsTest {
 
+    private static final Address MANAGEMENT_ADDRESS = Address.of(CORE_SERVICE, ModelDescriptionConstants.MANAGEMENT);
     @Inject private Console console;
     @Page private TopologyPage topologyPage;
     private static final OnlineManagementClient client = ManagementClientProvider.withoutDefaultHost();
@@ -87,6 +94,35 @@ public class DisconnectedHostsTest {
         assertTrue(topologyTable.containsDisconnectedHostNamed(DISCONNECTED_HOST_NAME));
     }
 
+    @Test
+    public void testPruneDisconnected() throws Exception {
+        ColumnFragment hostColumn = navigateToRuntimeHostColumn();
+        String disconnectedSlaveId = HOST + "-" + DISCONNECTED_HOST_NAME;
+        assertTrue(hostColumn.containsItem(disconnectedSlaveId));
+        assertTrue(getCountOfDisconnectedHostsFromModel() > 0);
+
+        // Select 'Prune Disconnected' action in console
+        hostColumn.dropdownAction(Ids.HOST_PRUNE_ACTIONS, Ids.HOST_PRUNE_DISCONNECTED);
+        console.confirmationDialog().confirm();
+        console.verifySuccess();
+        assertFalse(hostColumn.containsItem(disconnectedSlaveId));
+        assertEquals(0, getCountOfDisconnectedHostsFromModel());
+    }
+
+    private int getCountOfDisconnectedHostsFromModel() throws IOException {
+        ModelNode connectedIsFalse = new ModelNodeGenerator.ModelNodePropertiesBuilder()
+                .addProperty(CONNECTED, new ModelNode(false)).build();
+        ModelNodeResult queryResult = ops.invoke(QUERY, MANAGEMENT_ADDRESS.and(HOST_CONNECTION, "*"),
+                Values.of(WHERE, connectedIsFalse));
+        queryResult.assertSuccess();
+        queryResult.assertDefinedValue();
+        return queryResult.value().asList().size();
+    }
+
+    private ColumnFragment navigateToRuntimeHostColumn() {
+        return console.finder(NameTokens.RUNTIME, new FinderPath().append(DOMAIN_BROWSE_BY, HOSTS)).column(HOST);
+    }
+
     private FinderFragment selectHostAssertIconClassReturnFinder(String hostName, String expectedIconClass) {
         FinderFragment finder = console.finder(NameTokens.RUNTIME, new FinderPath().append(DOMAIN_BROWSE_BY, HOSTS));
         String hostIconClasses = finder.column(HOST).selectItem(HOST + "-" + hostName).getIconClasses();
@@ -96,7 +132,7 @@ public class DisconnectedHostsTest {
     }
 
     private List<ModelNode> getSlaveConnectionEventList() throws IOException {
-        ModelNodeResult eventsResult = ops.readAttribute(Address.of(CORE_SERVICE, ModelDescriptionConstants.MANAGEMENT)
+        ModelNodeResult eventsResult = ops.readAttribute(MANAGEMENT_ADDRESS
                 .and(HOST_CONNECTION, DISCONNECTED_HOST_NAME), EVENTS);
         eventsResult.assertSuccess();
         List<ModelNode> eventList = eventsResult.value().asList();
