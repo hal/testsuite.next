@@ -53,8 +53,12 @@ public class FinderFragment {
     }
 
     public FinderPreviewFragment preview() {
+        return preview(FinderPreviewFragment.class);
+    }
+
+    public <T> T preview(Class<T> returningFragmentType) {
         By selector = By.id(Ids.PREVIEW_ID);
         waitGui().until().element(selector).is().present();
-        return createPageFragment(FinderPreviewFragment.class, browser.findElement(selector));
+        return createPageFragment(returningFragmentType, browser.findElement(selector));
     }
 }

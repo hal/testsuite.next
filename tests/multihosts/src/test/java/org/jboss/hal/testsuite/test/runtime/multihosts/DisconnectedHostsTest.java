@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
@@ -19,6 +20,8 @@ import org.jboss.hal.testsuite.category.Domain;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderPath;
+import org.jboss.hal.testsuite.fragment.finder.TopologyPreviewFragment;
+import org.jboss.hal.testsuite.page.runtime.TopologyPage;
 import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -43,8 +46,9 @@ import static org.junit.Assert.assertTrue;
 public class DisconnectedHostsTest {
 
     @Inject private Console console;
+    @Page private TopologyPage topologyPage;
     private static final OnlineManagementClient client = ManagementClientProvider.withoutDefaultHost();
-    private Operations ops = new Operations(client);
+    private final Operations ops = new Operations(client);
 
     private static final String
         CONNECTED_HOST_NAME = ConfigUtils.getDefaultHost(),
@@ -58,7 +62,7 @@ public class DisconnectedHostsTest {
     }
 
     @Test
-    public void showDisconnectedTest() throws IOException {
+    public void showDisconnectedInHosts() throws IOException {
 
         // verify connected icon for master
         selectHostAssertIconClassReturnFinder(CONNECTED_HOST_NAME, CONNECTED_ICON_CLASS);
@@ -74,6 +78,13 @@ public class DisconnectedHostsTest {
 
         assertEquals(lastRegisteredDatetimeFromModel, mainAttributesMap.get("Last Connected"));
         assertEquals(lastUnregisteredDatetimeFromModel, mainAttributesMap.get("Disconnected"));
+    }
+
+    @Test
+    public void showDisconnectedInTopology() throws Exception {
+        TopologyPreviewFragment topologyTable = topologyPage.navigateToTopologyFragment();
+        assertTrue(topologyTable.containsConnectedHostNamed(CONNECTED_HOST_NAME));
+        assertTrue(topologyTable.containsDisconnectedHostNamed(DISCONNECTED_HOST_NAME));
     }
 
     private FinderFragment selectHostAssertIconClassReturnFinder(String hostName, String expectedIconClass) {
