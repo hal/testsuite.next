@@ -25,7 +25,6 @@ public final class IIOPFixtures {
     static final String EXPORT_CORBALOC = "export-corbaloc";
     static final String ROOT_CONTEXT = "root-context";
     static final String SPEC = "spec";
-    static final String IDENTITY = "identity";
     static final String AUTH_METHOD = "auth-method";
     static final String USERNAME_PASSWORD = "username_password";
     static final String CALLER_PROPAGATION = "caller-propagation";

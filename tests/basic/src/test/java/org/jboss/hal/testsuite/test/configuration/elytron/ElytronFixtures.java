@@ -200,7 +200,6 @@ public final class ElytronFixtures {
     public static final String HTTP_FACTORIES_ITEM = "http-factories-item";
     public static final String HTTP_SERVER_MECH_FACTORIES = "http-server-mechanism-factories";
     public static final String HTTP_SERVER_MECH_FACTORY = "http-server-mechanism-factory";
-    public static final String IDENTITY = "identity";
     public static final String IDENTITY_ATTRIBUTES_MAPPING_LB = "Identity Attribute Mapping";
     public static final String IDENTITY_REALM_ITEM = "elytron-identity-realm-item";
     public static final String INITIAL_PROVIDERS = "initial-providers";
