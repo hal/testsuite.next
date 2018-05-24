@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.logging;
+package org.jboss.hal.testsuite.test.configuration.logging.subsystem;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -23,37 +23,44 @@ import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ROOT_LOGGER_ADDRESS;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ADD_LOGGING_API_DEPENDENCIES;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class RootLoggerTest {
+public class LoggingSubsystemAttributeConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    private static final Administration adminOps = new Administration(client);
     private static BackupAndRestoreAttributes backup;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        backup = new BackupAndRestoreAttributes.Builder(ROOT_LOGGER_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        client.apply(backup.restore());
+        try {
+            client.apply(backup.restore());
+            adminOps.reloadIfRequired();
+        } finally {
+            client.close();
+        }
     }
 
     @Inject private Console console;
     @Inject private CrudOperations crud;
-    @Page private LoggingConfigurationPage page;
+    @Page private LoggingSubsystemConfigurationPage page;
     private FormFragment form;
 
     @Before
@@ -62,18 +69,16 @@ public class RootLoggerTest {
     }
 
     @Test
-    public void updateRootLogger() throws Exception {
-        console.verticalNavigation().selectPrimary("logging-root-logger-item");
-        form = page.getRootLoggerForm();
-        crud.update(ROOT_LOGGER_ADDRESS, form,
-                f -> f.select(LEVEL, "ERROR"),
-                resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "ERROR"));
+    public void updateConfiguration() throws Exception {
+        console.verticalNavigation().selectPrimary("logging-config-item");
+        form = page.getConfigurationForm();
+        crud.update(SUBSYSTEM_ADDRESS, form, ADD_LOGGING_API_DEPENDENCIES, false);
     }
 
     @Test
-    public void resetRootLogger() throws Exception {
-        console.verticalNavigation().selectPrimary("logging-root-logger-item");
-        form = page.getRootLoggerForm();
-        crud.reset(ROOT_LOGGER_ADDRESS, form);
+    public void resetConfiguration() throws Exception {
+        console.verticalNavigation().selectPrimary("logging-config-item");
+        form = page.getConfigurationForm();
+        crud.reset(SUBSYSTEM_ADDRESS, form);
     }
 }

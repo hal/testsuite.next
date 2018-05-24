@@ -15,126 +15,69 @@
  */
 package org.jboss.hal.testsuite.page.configuration;
 
-import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.BasePage;
-import org.jboss.hal.testsuite.page.Place;
-import org.openqa.selenium.support.FindBy;
+import org.openqa.selenium.WebElement;
 
-import static org.jboss.hal.testsuite.Selectors.WRAPPER;
+public interface LoggingConfigurationPage {
 
-@Place(NameTokens.LOGGING_CONFIGURATION)
-public class LoggingConfigurationPage extends BasePage {
+     FormFragment getRootLoggerForm();
 
-    @FindBy(id = "logging-config-form") private FormFragment configurationForm;
-    @FindBy(id = "logging-root-logger-form") private FormFragment rootLoggerForm;
-    @FindBy(id = "logging-category-table" + WRAPPER) private TableFragment categoryTable;
-    @FindBy(id = "logging-category-form") private FormFragment categoryForm;
-    @FindBy(id = "logging-handler-console-table" + WRAPPER) private TableFragment consoleHandlerTable;
-    @FindBy(id = "logging-handler-console-form") private FormFragment consoleHandlerForm;
-    @FindBy(id = "logging-handler-file-table" + WRAPPER) private TableFragment fileHandlerTable;
-    @FindBy(id = "logging-handler-file-form") private FormFragment fileHandlerForm;
-    @FindBy(id = "logging-handler-periodic-rotating-file-table" + WRAPPER) private TableFragment periodicHandlerTable;
-    @FindBy(id = "logging-handler-periodic-rotating-file-form") private FormFragment periodicHandlerForm;
-    @FindBy(id = "logging-handler-periodic-size-rotating-file-table" + WRAPPER) private TableFragment periodicSizeHandlerTable;
-    @FindBy(id = "logging-handler-periodic-size-rotating-file-form") private FormFragment periodicSizeHandlerForm;
-    @FindBy(id = "logging-handler-size-rotating-file-table" + WRAPPER) private TableFragment sizeHandlerTable;
-    @FindBy(id = "logging-handler-size-rotating-file-form") private FormFragment sizeHandlerForm;
-    @FindBy(id = "logging-handler-async-table" + WRAPPER) private TableFragment asyncHandlerTable;
-    @FindBy(id = "logging-handler-async-form") private FormFragment asyncHandlerForm;
-    @FindBy(id = "logging-handler-custom-table" + WRAPPER) private TableFragment customHandlerTable;
-    @FindBy(id = "logging-handler-custom-form") private FormFragment customHandlerForm;
-    @FindBy(id = "logging-handler-syslog-table" + WRAPPER) private TableFragment syslogHandlerTable;
-    @FindBy(id = "logging-handler-syslog-form") private FormFragment syslogHandlerForm;
-    @FindBy(id = "logging-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
-    @FindBy(id = "logging-formatter-pattern-form") private FormFragment patternFormatterForm;
+     TableFragment getCategoryTable();
 
-    public FormFragment getConfigurationForm() {
-        return configurationForm;
-    }
+     FormFragment getCategoryForm();
 
-    public FormFragment getRootLoggerForm() {
-        return rootLoggerForm;
-    }
+     TableFragment getConsoleHandlerTable();
 
-    public TableFragment getCategoryTable() {
-        return categoryTable;
-    }
+     FormFragment getConsoleHandlerForm();
 
-    public FormFragment getCategoryForm() {
-        return categoryForm;
-    }
+     TableFragment getFileHandlerTable();
 
-    public TableFragment getConsoleHandlerTable() {
-        return consoleHandlerTable;
-    }
+     WebElement getNewFileInputElement();
 
-    public FormFragment getConsoleHandlerForm() {
-        return consoleHandlerForm;
-    }
+     FormFragment getFileHandlerForm();
 
-    public TableFragment getFileHandlerTable() {
-        return fileHandlerTable;
-    }
+     WebElement getReadFileInputElement();
 
-    public FormFragment getFileHandlerForm() {
-        return fileHandlerForm;
-    }
+     TableFragment getPeriodicHandlerTable();
 
-    public TableFragment getPeriodicHandlerTable() {
-        return periodicHandlerTable;
-    }
+     WebElement getNewPeriodicFileInputElement();
 
-    public FormFragment getPeriodicHandlerForm() {
-        return periodicHandlerForm;
-    }
+     FormFragment getPeriodicHandlerForm();
 
-    public TableFragment getPeriodicSizeHandlerTable() {
-        return periodicSizeHandlerTable;
-    }
+     WebElement getReadPeriodicFileInputElement();
 
-    public FormFragment getPeriodicSizeHandlerForm() {
-        return periodicSizeHandlerForm;
-    }
+     TableFragment getPeriodicSizeHandlerTable();
 
-    public TableFragment getSizeHandlerTable() {
-        return sizeHandlerTable;
-    }
+     WebElement getNewPeriodicSizeFileInputElement();
 
-    public FormFragment getSizeHandlerForm() {
-        return sizeHandlerForm;
-    }
+     FormFragment getPeriodicSizeHandlerForm();
 
-    public TableFragment getAsyncHandlerTable() {
-        return asyncHandlerTable;
-    }
+     WebElement getReadPeriodicSizeFileInputElement();
 
-    public FormFragment getAsyncHandlerForm() {
-        return asyncHandlerForm;
-    }
+     TableFragment getSizeHandlerTable();
 
-    public TableFragment getCustomHandlerTable() {
-        return customHandlerTable;
-    }
+     WebElement getNewSizeFileInputElement();
 
-    public FormFragment getCustomHandlerForm() {
-        return customHandlerForm;
-    }
+     FormFragment getSizeHandlerForm();
 
-    public TableFragment getSyslogHandlerTable() {
-        return syslogHandlerTable;
-    }
+     WebElement getReadSizeFileInputElement();
 
-    public FormFragment getSyslogHandlerForm() {
-        return syslogHandlerForm;
-    }
+     TableFragment getAsyncHandlerTable();
 
-    public TableFragment getPatternFormatterTable() {
-        return patternFormatterTable;
-    }
+     FormFragment getAsyncHandlerForm();
 
-    public FormFragment getPatternFormatterForm() {
-        return patternFormatterForm;
-    }
+     TableFragment getCustomHandlerTable();
+
+     FormFragment getCustomHandlerForm();
+
+     TableFragment getSyslogHandlerTable();
+
+     FormFragment getSyslogHandlerForm();
+
+     TableFragment getPatternFormatterTable();
+
+     FormFragment getPatternFormatterForm();
+
+     void navigate();
 }

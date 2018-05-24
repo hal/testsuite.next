@@ -16,23 +16,14 @@
 package org.jboss.hal.testsuite.test.configuration.logging;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.graphene.page.Page;
-import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
-import org.junit.AfterClass;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
-
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLASS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
@@ -40,49 +31,29 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 import static org.junit.Assert.assertEquals;
 
-@RunWith(Arquillian.class)
-public class CustomHandlerTest {
+public abstract class CustomHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations operations = new Operations(client);
-
-    @BeforeClass
-    public static void beforeClass() throws Exception {
-        operations.add(customHandlerAddress(CUSTOM_HANDLER_READ),
-                Values.of(MODULE, MODULE_VALUE).and(CLASS, CLASS_VALUE));
-        operations.add(customHandlerAddress(CUSTOM_HANDLER_UPDATE),
-                Values.of(MODULE, MODULE_VALUE).and(CLASS, CLASS_VALUE));
-        operations.add(customHandlerAddress(CUSTOM_HANDLER_DELETE),
-                Values.of(MODULE, MODULE_VALUE).and(CLASS, CLASS_VALUE));
-    }
-
-    @AfterClass
-    public static void tearDown() throws Exception {
-        operations.removeIfExists(customHandlerAddress(CUSTOM_HANDLER_CREATE));
-        operations.removeIfExists(customHandlerAddress(CUSTOM_HANDLER_READ));
-        operations.removeIfExists(customHandlerAddress(CUSTOM_HANDLER_UPDATE));
-        operations.removeIfExists(customHandlerAddress(CUSTOM_HANDLER_DELETE));
-    }
-
-    @Inject private Console console;
+    @Inject protected Console console;
     @Inject private CrudOperations crud;
-    @Page private LoggingConfigurationPage page;
     private TableFragment table;
     private FormFragment form;
+    protected abstract LoggingConfigurationPage getPage();
+    protected abstract Address getHandlerAddress(String name);
+    protected abstract TableFragment getHandlerTable();
+    protected abstract FormFragment getHandlerForm();
+    protected abstract void navigateToPage();
 
     @Before
-    public void setUp() throws Exception {
-        page.navigate();
-        console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-custom-item");
-        table = page.getCustomHandlerTable();
-        form = page.getCustomHandlerForm();
+    public void navigate() throws Exception {
+        navigateToPage();
+        table = getPage().getCustomHandlerTable();
+        form = getPage().getCustomHandlerForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        crud.create(customHandlerAddress(CUSTOM_HANDLER_CREATE), table, form -> {
+        crud.create(getHandlerAddress(CUSTOM_HANDLER_CREATE), table, form -> {
         form.text(NAME, CUSTOM_HANDLER_CREATE);
         form.text(MODULE, MODULE_VALUE);
         form.text(CLASS, CLASS_VALUE);
@@ -99,7 +70,7 @@ public class CustomHandlerTest {
     @Test
     public void update() throws Exception {
         table.select(CUSTOM_HANDLER_UPDATE);
-        crud.update(customHandlerAddress(CUSTOM_HANDLER_UPDATE), form,
+        crud.update(getHandlerAddress(CUSTOM_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
@@ -107,11 +78,11 @@ public class CustomHandlerTest {
     @Test
     public void reset() throws Exception {
         table.select(CUSTOM_HANDLER_UPDATE);
-        crud.reset(customHandlerAddress(CUSTOM_HANDLER_UPDATE), form);
+        crud.reset(getHandlerAddress(CUSTOM_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(customHandlerAddress(CUSTOM_HANDLER_DELETE), table, CUSTOM_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(CUSTOM_HANDLER_DELETE), table, CUSTOM_HANDLER_DELETE);
     }
 }
