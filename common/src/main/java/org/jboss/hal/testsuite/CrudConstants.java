@@ -6,6 +6,7 @@ public final class CrudConstants {
     public static String READ = "read";
     public static String DELETE = "delete";
     public static String UPDATE = "update";
+    public static String RESET = "reset";
 
     private CrudConstants() {
 
