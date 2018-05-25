@@ -79,5 +79,13 @@ public interface LoggingConfigurationPage {
 
      FormFragment getPatternFormatterForm();
 
+     TableFragment getJsonFormatterTable();
+
+     FormFragment getJsonFormatterForm();
+
+     TableFragment getXmlFormatterTable();
+
+     FormFragment getXmlFormatterForm();
+
      void navigate();
 }
