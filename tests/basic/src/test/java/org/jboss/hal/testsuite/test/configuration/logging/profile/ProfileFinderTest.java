@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.logging;
+package org.jboss.hal.testsuite.test.configuration.logging.profile;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -34,6 +34,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
@@ -49,6 +50,7 @@ public class ProfileFinderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final Administration adminOps = new Administration(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -58,9 +60,14 @@ public class ProfileFinderTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(profileAddress(PROFILE_CREATE));
-        operations.removeIfExists(profileAddress(PROFILE_READ));
-        operations.removeIfExists(profileAddress(PROFILE_DELETE));
+        try {
+            operations.removeIfExists(profileAddress(PROFILE_CREATE));
+            operations.removeIfExists(profileAddress(PROFILE_READ));
+            operations.removeIfExists(profileAddress(PROFILE_DELETE));
+            adminOps.reloadIfRequired();
+        } finally {
+            client.close();
+        }
     }
 
     @Inject private Console console;
