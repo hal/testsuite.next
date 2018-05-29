@@ -15,7 +15,6 @@
  */
 package org.jboss.hal.testsuite.fragment.finder;
 
-import java.util.List;
 import java.util.Map;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -37,18 +36,25 @@ import static org.jboss.hal.resources.CSS.value;
 /** Fragment for the finder preview. Use {@link FinderFragment#preview()} to get an instance. */
 public class FinderPreviewFragment {
 
-    @Drone private WebDriver browser;
-    @Root private WebElement root;
-    @Inject private Console console;
+    @Drone
+    private WebDriver browser;
+    @Root
+    private WebElement root;
+    @Inject
+    private Console console;
 
     public Map<String, String> getMainAttributes() {
-        By attributeSelector = ByJQuery.selector("h2:contains('Main Attributes'):visible ~ ul." + listGroup + " > li:visible");
+        return getMainAttributesElements().entrySet()
+            .stream()
+            .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getText()));
+    }
+
+    public Map<String, WebElement> getMainAttributesElements() {
+        By attributeSelector =
+            ByJQuery.selector("h2:contains('Main Attributes'):visible ~ ul." + listGroup + " > li:visible");
         waitGui().until().element(root, attributeSelector).is().present();
-        List<WebElement> attributeElementList = root.findElements(attributeSelector);
-        return attributeElementList.stream().collect(toMap(attributeElement -> {
+        return root.findElements(attributeSelector).stream().collect(toMap(attributeElement -> {
             return attributeElement.findElement(By.className(key)).getText();
-        }, attributeElement -> {
-            return attributeElement.findElement(By.className(value)).getText();
-        }));
+        }, attributeElement -> attributeElement.findElement(By.className(value))));
     }
 }
