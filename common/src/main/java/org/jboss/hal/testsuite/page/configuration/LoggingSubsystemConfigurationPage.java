@@ -43,6 +43,8 @@ public class LoggingSubsystemConfigurationPage extends BasePage implements Loggi
     @FindBy(id = "logging-handler-syslog-form") private FormFragment syslogHandlerForm;
     @FindBy(id = "logging-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
     @FindBy(id = "logging-formatter-pattern-form") private FormFragment patternFormatterForm;
+    @FindBy(id = "logging-formatter-custom-table" + WRAPPER) private TableFragment customFormatterTable;
+    @FindBy(id = "logging-formatter-custom-form") private FormFragment customFormatterForm;
     @FindBy(id = "logging-json-formatter-table" + WRAPPER) private TableFragment jsonFormatterTable;
     @FindBy(id = "logging-json-formatter-form") private FormFragment jsonFormatterForm;
     @FindBy(id = "logging-xml-formatter-table" + WRAPPER) private TableFragment xmlFormatterTable;
@@ -170,6 +172,14 @@ public class LoggingSubsystemConfigurationPage extends BasePage implements Loggi
     @Override
     public FormFragment getPatternFormatterForm() {
         return patternFormatterForm;
+    }
+
+    public TableFragment getCustomFormatterTable() {
+        return customFormatterTable;
+    }
+
+    public FormFragment getCustomFormatterForm() {
+        return customFormatterForm;
     }
 
     public TableFragment getJsonFormatterTable() {

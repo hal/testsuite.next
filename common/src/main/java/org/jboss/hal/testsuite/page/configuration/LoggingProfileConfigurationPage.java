@@ -42,6 +42,8 @@ public class LoggingProfileConfigurationPage extends BasePage implements Logging
     @FindBy(id = "logging-profile-handler-syslog-form") private FormFragment syslogHandlerForm;
     @FindBy(id = "logging-profile-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
     @FindBy(id = "logging-profile-formatter-pattern-form") private FormFragment patternFormatterForm;
+    @FindBy(id = "logging-profile-formatter-custom-table" + WRAPPER) private TableFragment customFormatterTable;
+    @FindBy(id = "logging-profile-formatter-custom-form") private FormFragment customFormatterForm;
     @FindBy(id = "logging-profile-json-formatter-table" + WRAPPER) private TableFragment jsonFormatterTable;
     @FindBy(id = "logging-profile-json-formatter-form") private FormFragment jsonFormatterForm;
     @FindBy(id = "logging-profile-xml-formatter-table" + WRAPPER) private TableFragment xmlFormatterTable;
@@ -165,6 +167,14 @@ public class LoggingProfileConfigurationPage extends BasePage implements Logging
     @Override
     public FormFragment getPatternFormatterForm() {
         return patternFormatterForm;
+    }
+
+    public TableFragment getCustomFormatterTable() {
+        return customFormatterTable;
+    }
+
+    public FormFragment getCustomFormatterForm() {
+        return customFormatterForm;
     }
 
     public TableFragment getJsonFormatterTable() {

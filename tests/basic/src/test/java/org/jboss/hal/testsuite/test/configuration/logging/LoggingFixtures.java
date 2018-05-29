@@ -33,6 +33,7 @@ public final class LoggingFixtures {
     private static final String ASYNC_HANDLER_PREFIX = "ah";
     private static final String CUSTOM_HANDLER_PREFIX = "ch";
     private static final String SYSLOG_HANDLER_PREFIX = "sh";
+    private static final String CUSTOM_FORMATTER_PREFIX = "cf";
     private static final String PATTERN_FORMATTER_PREFIX = "pf";
     private static final String JSON_FORMATTER_PREFIX = "jf";
     private static final String XML_FORMATTER_PREFIX = "xf";
@@ -43,6 +44,9 @@ public final class LoggingFixtures {
     public static final String CLASS_VALUE = "org.jboss.as.logging.logmanager.Log4jAppenderHandler";
     public static final String COLOR_MAP = "color-map";
     public static final String COLOR_MAP_VALUE = "error:red";
+    public static final String CUSTOM_FORMATTER_MODULE_VALUE = "org.jboss.logmanager";
+    public static final String CUSTOM_FORMATTER_CLASS_1_VALUE = "org.jboss.logmanager.formatters.JsonFormatter";
+    public static final String CUSTOM_FORMATTER_CLASS_2_VALUE = "org.jboss.logmanager.formatters.XmlFormatter";
     public static final String LOGGING_FORMATTER_ITEM = "logging-formatter-item";
     public static final String LOGGING_PROFILE_FORMATTER_ITEM = "logging-profile-formatter-item";
     public static final String LOGGING_HANDLER_ITEM = "logging-handler-item";
@@ -51,6 +55,7 @@ public final class LoggingFixtures {
     public static final String NAMESPACE_URI = "namespace-uri";
     public static final String PATH_VALUE = "pa/th";
     public static final String RECORD_DELIMITER = "record-delimiter";
+    public static final String RECORD_DELIMITER_PROPERTY_NAME = "recordDelimiter";
     public static final String SUFFIX = "suffix";
     public static final String SUFFIX_VALUE = "yyyy-MM-dd-HH-mm";
     public static final String NAME = "name";
@@ -178,6 +183,13 @@ public final class LoggingFixtures {
     public static final String XML_FORMATTER_UPDATE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
     public static final String XML_FORMATTER_RESET = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
     public static final String XML_FORMATTER_DELETE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+
+    // ------------------------------------------------------ custom formatter
+
+    public static final String CUSTOM_FORMATTER_CREATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String CUSTOM_FORMATTER_UPDATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String CUSTOM_FORMATTER_RESET = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
+    public static final String CUSTOM_FORMATTER_DELETE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
 
     // ------------------------------------------------------ profiles
 
