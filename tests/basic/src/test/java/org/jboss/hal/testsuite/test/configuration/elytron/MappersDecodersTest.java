@@ -24,6 +24,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ElytronMappersDecodersPage;
@@ -35,6 +36,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
@@ -48,111 +50,116 @@ public class MappersDecodersTest {
     private static final Operations operations = new Operations(client);
     private static final String ANY_STRING = Random.name();
     private static final String ACTION = "action";
+    private static final String PERM_CREATE_CLASS = "org.wildfly.security.auth.permission.LoginPermission";
+    private static final String PERM_UPDATE_CLASS = "org.wildfly.security.auth.permission.ChangeRoleMapperPermission";
+    private static final String PERM_DELETE_CLASS = "org.wildfly.security.auth.permission.RunAsPrincipalPermission";
+    private static final String ASTERISK = "*";
+
 
     @BeforeClass
     public static void beforeTests() throws Exception {
 
         // role mappers
-        operations.add(addPrefixRoleMapperAddress(ADD_PRE_UPDATE), Values.of(PREFIX, ANY_STRING));
-        operations.add(addPrefixRoleMapperAddress(ADD_PRE_DELETE), Values.of(PREFIX, ANY_STRING));
-        operations.add(addSuffixRoleMapperAddress(ADD_SUF_UPDATE), Values.of(SUFFIX, ANY_STRING));
-        operations.add(addSuffixRoleMapperAddress(ADD_SUF_DELETE), Values.of(SUFFIX, ANY_STRING));
-        operations.add(aggregateRoleMapperAddress(AGG_ROLE_UPDATE), Values.ofList(ROLE_MAPPERS, ADD_PRE_UPDATE, ADD_SUF_UPDATE));
-        operations.add(aggregateRoleMapperAddress(AGG_ROLE_DELETE), Values.ofList(ROLE_MAPPERS, ADD_PRE_UPDATE, ADD_SUF_UPDATE));
-        operations.add(constantRoleMapperAddress(CON_ROLE_UPDATE), Values.ofList(ROLES, ANY_STRING));
-        operations.add(constantRoleMapperAddress(CON_ROLE_DELETE), Values.ofList(ROLES, ANY_STRING));
-        operations.add(logicalRoleMapperAddress(LOG_ROLE_DELETE), Values.of(LOGICAL_OPERATION, AND));
-        operations.add(logicalRoleMapperAddress(LOG_ROLE_UPDATE), Values.of(LOGICAL_OPERATION, AND));
+        operations.add(addPrefixRoleMapperAddress(ADD_PRE_UPDATE), Values.of(PREFIX, ANY_STRING)).assertSuccess();
+        operations.add(addPrefixRoleMapperAddress(ADD_PRE_DELETE), Values.of(PREFIX, ANY_STRING)).assertSuccess();
+        operations.add(addSuffixRoleMapperAddress(ADD_SUF_UPDATE), Values.of(SUFFIX, ANY_STRING)).assertSuccess();
+        operations.add(addSuffixRoleMapperAddress(ADD_SUF_DELETE), Values.of(SUFFIX, ANY_STRING)).assertSuccess();
+        operations.add(aggregateRoleMapperAddress(AGG_ROLE_UPDATE), Values.ofList(ROLE_MAPPERS, ADD_PRE_UPDATE, ADD_SUF_UPDATE)).assertSuccess();
+        operations.add(aggregateRoleMapperAddress(AGG_ROLE_DELETE), Values.ofList(ROLE_MAPPERS, ADD_PRE_UPDATE, ADD_SUF_UPDATE)).assertSuccess();
+        operations.add(constantRoleMapperAddress(CON_ROLE_UPDATE), Values.ofList(ROLES, ANY_STRING)).assertSuccess();
+        operations.add(constantRoleMapperAddress(CON_ROLE_DELETE), Values.ofList(ROLES, ANY_STRING)).assertSuccess();
+        operations.add(logicalRoleMapperAddress(LOG_ROLE_DELETE), Values.of(LOGICAL_OPERATION, AND)).assertSuccess();
+        operations.add(logicalRoleMapperAddress(LOG_ROLE_UPDATE), Values.of(LOGICAL_OPERATION, AND)).assertSuccess();
 
         // permission mappers
-        ModelNode permissionDelete = new ModelNode();
-        permissionDelete.get(CLASS_NAME).set(PERM_DELETE);
-        ModelNode permissionUpdate = new ModelNode();
-        permissionUpdate.get(CLASS_NAME).set(PERM_UPDATE);
+        ModelNode permissionDelete = new ModelNodeGenerator.ModelNodePropertiesBuilder()
+                .addProperty(CLASS_NAME, PERM_DELETE_CLASS).addProperty(TARGET_NAME, ASTERISK).build();
+        ModelNode permissionUpdate = new ModelNodeGenerator.ModelNodePropertiesBuilder()
+                .addProperty(CLASS_NAME, PERM_UPDATE_CLASS).addProperty(TARGET_NAME, ASTERISK).build();
         Values constantParams = Values.ofList(PERMISSIONS, permissionUpdate, permissionDelete);
-        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE), constantParams);
-        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE2));
-        operations.add(constantPermissionMapperAddress(CON_PERM_DELETE));
+        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE), constantParams).assertSuccess();
+        operations.add(constantPermissionMapperAddress(CON_PERM_UPDATE2)).assertSuccess();
+        operations.add(constantPermissionMapperAddress(CON_PERM_DELETE)).assertSuccess();
         Values logicalParams = Values.of(LEFT, CON_PERM_UPDATE).and(LOGICAL_OPERATION, AND).and(RIGHT, CON_PERM_UPDATE2);
-        operations.add(logicalPermissionMapperAddress(LOG_PERM_UPDATE), logicalParams);
-        operations.add(logicalPermissionMapperAddress(LOG_PERM_DELETE), logicalParams);
-        operations.add(simplePermissionMapperAddress(SIM_PERM_UPDATE));
-        operations.add(simplePermissionMapperAddress(SIM_PERM_DELETE));
+        operations.add(logicalPermissionMapperAddress(LOG_PERM_UPDATE), logicalParams).assertSuccess();
+        operations.add(logicalPermissionMapperAddress(LOG_PERM_DELETE), logicalParams).assertSuccess();
+        operations.add(simplePermissionMapperAddress(SIM_PERM_UPDATE)).assertSuccess();
+        operations.add(simplePermissionMapperAddress(SIM_PERM_DELETE)).assertSuccess();
 
         // principal decoder
         Values consPriDecoderParam = Values.of(CONSTANT, ANY_STRING);
-        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE), consPriDecoderParam);
-        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2), consPriDecoderParam);
-        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3), consPriDecoderParam);
-        operations.add(constantPrincipalDecoderAddress(CONS_PRI_DELETE), consPriDecoderParam);
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE), consPriDecoderParam).assertSuccess();
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2), consPriDecoderParam).assertSuccess();
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3), consPriDecoderParam).assertSuccess();
+        operations.add(constantPrincipalDecoderAddress(CONS_PRI_DELETE), consPriDecoderParam).assertSuccess();
         Values aggPriDecoderParam = Values.ofList(PRINCIPAL_DECODERS, CONS_PRI_UPDATE, CONS_PRI_UPDATE2);
-        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE), aggPriDecoderParam);
-        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE), aggPriDecoderParam);
-        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE), aggPriDecoderParam);
-        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE), aggPriDecoderParam);
-        operations.add(x500PrincipalDecoderAddress(X500_PRI_UPDATE), Values.of(OID, ANY_STRING));
-        operations.add(x500PrincipalDecoderAddress(X500_PRI_DELETE), Values.of(OID, ANY_STRING));
+        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE), aggPriDecoderParam).assertSuccess();
+        operations.add(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE), aggPriDecoderParam).assertSuccess();
+        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE), aggPriDecoderParam).assertSuccess();
+        operations.add(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE), aggPriDecoderParam).assertSuccess();
+        operations.add(x500PrincipalDecoderAddress(X500_PRI_UPDATE), Values.of(OID, ANY_STRING)).assertSuccess();
+        operations.add(x500PrincipalDecoderAddress(X500_PRI_DELETE), Values.of(OID, ANY_STRING)).assertSuccess();
 
         // role decoder
-        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE), Values.of(ATTRIBUTE, ANY_STRING));
-        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_DELETE), Values.of(ATTRIBUTE, ANY_STRING));
+        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE), Values.of(ATTRIBUTE, ANY_STRING)).assertSuccess();
+        operations.add(simpleRoleDecoderAddress(SIMP_ROLE_DELETE), Values.of(ATTRIBUTE, ANY_STRING)).assertSuccess();
 
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        // role mappers
-        operations.remove(aggregateRoleMapperAddress(AGG_ROLE_CREATE));
-        operations.remove(aggregateRoleMapperAddress(AGG_ROLE_UPDATE));
-        operations.remove(aggregateRoleMapperAddress(AGG_ROLE_DELETE));
-        operations.remove(addPrefixRoleMapperAddress(ADD_PRE_CREATE));
-        operations.remove(addPrefixRoleMapperAddress(ADD_PRE_UPDATE));
-        operations.remove(addPrefixRoleMapperAddress(ADD_PRE_DELETE));
-        operations.remove(addSuffixRoleMapperAddress(ADD_SUF_CREATE));
-        operations.remove(addSuffixRoleMapperAddress(ADD_SUF_UPDATE));
-        operations.remove(addSuffixRoleMapperAddress(ADD_SUF_DELETE));
-        operations.remove(constantRoleMapperAddress(CON_ROLE_CREATE));
-        operations.remove(constantRoleMapperAddress(CON_ROLE_UPDATE));
-        operations.remove(constantRoleMapperAddress(CON_ROLE_DELETE));
-        operations.remove(logicalRoleMapperAddress(LOG_ROLE_DELETE));
-        operations.remove(logicalRoleMapperAddress(LOG_ROLE_UPDATE));
-        operations.remove(logicalRoleMapperAddress(LOG_ROLE_CREATE));
+        try {
+            // role mappers
+            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_CREATE));
+            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_UPDATE));
+            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_DELETE));
+            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_CREATE));
+            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_UPDATE));
+            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_DELETE));
+            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_CREATE));
+            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_UPDATE));
+            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_DELETE));
+            operations.remove(constantRoleMapperAddress(CON_ROLE_CREATE));
+            operations.remove(constantRoleMapperAddress(CON_ROLE_UPDATE));
+            operations.remove(constantRoleMapperAddress(CON_ROLE_DELETE));
+            operations.remove(logicalRoleMapperAddress(LOG_ROLE_DELETE));
+            operations.remove(logicalRoleMapperAddress(LOG_ROLE_UPDATE));
+            operations.remove(logicalRoleMapperAddress(LOG_ROLE_CREATE));
+            // permission mappers
+            operations.remove(logicalPermissionMapperAddress(LOG_PERM_UPDATE));
+            operations.remove(logicalPermissionMapperAddress(LOG_PERM_DELETE));
+            operations.remove(logicalPermissionMapperAddress(LOG_PERM_CREATE));
+            operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE));
+            operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE2));
+            operations.remove(constantPermissionMapperAddress(CON_PERM_DELETE));
+            operations.remove(constantPermissionMapperAddress(CON_PERM_CREATE));
+            operations.remove(simplePermissionMapperAddress(SIM_PERM_UPDATE));
+            operations.remove(simplePermissionMapperAddress(SIM_PERM_DELETE));
+            operations.remove(simplePermissionMapperAddress(SIM_PERM_CREATE));
+            // principal decoder
+            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE));
+            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE));
+            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE));
+            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE));
+            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE));
+            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE));
+            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_DELETE));
+            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE));
+            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2));
+            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3));
+            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_CREATE));
+            operations.remove(x500PrincipalDecoderAddress(X500_PRI_UPDATE));
+            operations.remove(x500PrincipalDecoderAddress(X500_PRI_DELETE));
+            operations.remove(x500PrincipalDecoderAddress(X500_PRI_CREATE));
+            // role decoder
+            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_DELETE));
+            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_CREATE));
+            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE));
 
-        // permission mappers
-        operations.remove(logicalPermissionMapperAddress(LOG_PERM_UPDATE));
-        operations.remove(logicalPermissionMapperAddress(LOG_PERM_DELETE));
-        operations.remove(logicalPermissionMapperAddress(LOG_PERM_CREATE));
-        operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE));
-        operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE2));
-        operations.remove(constantPermissionMapperAddress(CON_PERM_DELETE));
-        operations.remove(constantPermissionMapperAddress(CON_PERM_CREATE));
-        operations.remove(simplePermissionMapperAddress(SIM_PERM_UPDATE));
-        operations.remove(simplePermissionMapperAddress(SIM_PERM_DELETE));
-        operations.remove(simplePermissionMapperAddress(SIM_PERM_CREATE));
-
-        // principal decoder
-        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE));
-        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE));
-        operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE));
-        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE));
-        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE));
-        operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE));
-
-        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_DELETE));
-        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE));
-        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2));
-        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3));
-        operations.remove(constantPrincipalDecoderAddress(CONS_PRI_CREATE));
-
-        operations.remove(x500PrincipalDecoderAddress(X500_PRI_UPDATE));
-        operations.remove(x500PrincipalDecoderAddress(X500_PRI_DELETE));
-        operations.remove(x500PrincipalDecoderAddress(X500_PRI_CREATE));
-
-        // role decoder
-        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_DELETE));
-        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_CREATE));
-        operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE));
-
+            new Administration(client).reloadIfRequired();
+        } finally {
+            client.close();
+        }
     }
 
     @Page private ElytronMappersDecodersPage page;
@@ -493,8 +500,8 @@ public class MappersDecodersTest {
         waitGui().until().element(permissionsTable.getRoot()).is().visible();
 
         crud.create(constantPermissionMapperAddress(CON_PERM_UPDATE), permissionsTable,
-                f -> f.text(CLASS_NAME, PERM_CREATE),
-                vc -> vc.verifyListAttributeContainsSingleValue(PERMISSIONS, CLASS_NAME, PERM_CREATE));
+                f -> f.text(CLASS_NAME, PERM_CREATE_CLASS),
+                vc -> vc.verifyListAttributeContainsSingleValue(PERMISSIONS, CLASS_NAME, PERM_CREATE_CLASS));
     }
 
     @Test
@@ -508,7 +515,7 @@ public class MappersDecodersTest {
 
         FormFragment form = page.getConstantPermissionMapperPermissionsForm();
         permissionsTable.bind(form);
-        permissionsTable.select(PERM_UPDATE);
+        permissionsTable.select(PERM_UPDATE_CLASS);
 
         crud.update(constantPermissionMapperAddress(CON_PERM_UPDATE), form,
                 f -> f.text(ACTION, ANY_STRING),
@@ -524,8 +531,8 @@ public class MappersDecodersTest {
         table.action(CON_PERM_UPDATE, Names.PERMISSIONS);
         waitGui().until().element(permissionsTable.getRoot()).is().visible();
 
-        crud.delete(constantPermissionMapperAddress(CON_PERM_UPDATE), permissionsTable, PERM_DELETE,
-                vc -> vc.verifyListAttributeDoesNotContainSingleValue(PERMISSIONS, CLASS_NAME, PERM_DELETE));
+        crud.delete(constantPermissionMapperAddress(CON_PERM_UPDATE), permissionsTable, PERM_DELETE_CLASS,
+                vc -> vc.verifyListAttributeDoesNotContainSingleValue(PERMISSIONS, CLASS_NAME, PERM_DELETE_CLASS));
     }
 
     // --------------- simple-permission-mapper
