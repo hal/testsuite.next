@@ -27,6 +27,7 @@ import org.openqa.selenium.support.FindBy;
 @Place(NameTokens.DATA_SOURCE_CONFIGURATION)
 public class DataSourcePage extends BasePage {
 
+    // non xa
     @FindBy(id = Ids.DATA_SOURCE_FORM + "-" + Ids.TAB_CONTAINER) private TabsFragment tabs;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-attributes-form") private FormFragment attributesForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-pool-form") private FormFragment poolForm;
@@ -36,6 +37,11 @@ public class DataSourcePage extends BasePage {
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-validation-form") private FormFragment validationForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-timeouts-form") private FormFragment timeoutsForm;
     @FindBy(id = Ids.DATA_SOURCE_CONFIGURATION + "-statements-tracking-form") private FormFragment statementsTrackingForm;
+
+    // xa
+    @FindBy(id = Ids.XA_DATA_SOURCE_FORM + "-" + Ids.TAB_CONTAINER) private TabsFragment xaTabs;
+    @FindBy(id = Ids.XA_DATA_SOURCE + "-connection-form") private FormFragment xaConnectionForm;
+
 
     public TabsFragment getTabs() {
         return tabs;
@@ -71,5 +77,13 @@ public class DataSourcePage extends BasePage {
 
     public FormFragment getStatementsTrackingForm() {
         return statementsTrackingForm;
+    }
+
+    public TabsFragment getXaTabs() {
+        return xaTabs;
+    }
+
+    public FormFragment getXaConnectionForm() {
+        return xaConnectionForm;
     }
 }

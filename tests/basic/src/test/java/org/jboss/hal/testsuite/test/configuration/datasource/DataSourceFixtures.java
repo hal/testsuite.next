@@ -22,10 +22,12 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DATASOURCES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DATA_SOURCE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.XA_DATA_SOURCE;
 
 public final class DataSourceFixtures {
 
     private static final String DATA_SOURCE_PREFIX = "ds";
+    private static final String XA_DATA_SOURCE_PREFIX = "xa-ds";
 
     static final String H2_NAME = "H2DS";
     static final String H2_JNDI_NAME = "java:/H2DS";
@@ -46,21 +48,26 @@ public final class DataSourceFixtures {
     static final String DATA_SOURCE_READ = Ids.build(DATA_SOURCE_PREFIX, CrudConstants.READ, Random.name());
     static final String DATA_SOURCE_TEST = Ids.build(DATA_SOURCE_PREFIX, "test", Random.name());
     static final String DATA_SOURCE_UPDATE = Ids.build(DATA_SOURCE_PREFIX, CrudConstants.UPDATE, Random.name());
+    static final String XA_DATA_SOURCE_UPDATE = Ids.build(XA_DATA_SOURCE_PREFIX, CrudConstants.UPDATE, Random.name());
 
     static final String URL_DELIMITER = "url-delimiter";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(DATASOURCES);
-    static final String VALID_CONNECTION_CHECKER_CLASS_NAME = "valid-connection-checker-class-name";
     static final String VALID_CONNECTION_CHECKER_PROPERTIES = "valid-connection-checker-properties";
-    static final String BACKGROUND_VALIDATION = "background-validation";
     static final String BACKGROUND_VALIDATION_MILLIS = "background-validation-millis";
     static final String USE_TRY_LOCK = "use-try-lock";
     static final String BLOCKING_TIMEOUT_WAIT_MILLIS = "blocking-timeout-wait-millis";
     static final String SPY = "spy";
     static final String TRACKING = "tracking";
+    static final String CONNECTION_PROPERTIES = "connection-properties";
+    static final String XA_DATASOURCE_PROPERTIES = "xa-datasource-properties";
 
     static Address dataSourceAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(DATA_SOURCE, name);
+    }
+
+    static Address xaDataSourceAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and(XA_DATA_SOURCE, name);
     }
 
     static String h2ConnectionUrl(String name) {

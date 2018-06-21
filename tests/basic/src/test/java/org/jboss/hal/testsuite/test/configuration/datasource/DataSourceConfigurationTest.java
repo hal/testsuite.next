@@ -19,10 +19,13 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.Property;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.DataSourcePage;
@@ -33,21 +36,11 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BACKGROUND_VALIDATION;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BACKGROUND_VALIDATION_MILLIS;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.BLOCKING_TIMEOUT_WAIT_MILLIS;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.DATA_SOURCE_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.SPY;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.TRACKING;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.URL_DELIMITER;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.USE_TRY_LOCK;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.VALID_CONNECTION_CHECKER_CLASS_NAME;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.VALID_CONNECTION_CHECKER_PROPERTIES;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.dataSourceAddress;
-import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.h2ConnectionUrl;
+import static org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures.*;
 
 @RunWith(Arquillian.class)
 public class DataSourceConfigurationTest {
@@ -71,6 +64,7 @@ public class DataSourceConfigurationTest {
 
     @Inject private CrudOperations crud;
     @Page private DataSourcePage page;
+    @Inject private Console console;
     private FormFragment form;
 
     @Before
@@ -94,6 +88,52 @@ public class DataSourceConfigurationTest {
 
         String urlDelimiter = Random.name();
         crud.update(dataSourceAddress(DATA_SOURCE_UPDATE), form, URL_DELIMITER, urlDelimiter);
+    }
+
+    @Test
+    public void connectionAttributesProperties() throws Exception {
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "connection", Ids.TAB));
+        form = page.getConnectionForm();
+
+        ModelNode properties = Random.properties();
+        String urlDelimiter = Random.name();
+
+        // there are two test related to xa-datasource-properties, because the backend uses a composite operation
+        // to write the attribute and add the properties.
+        form.edit();
+        form.text(URL_DELIMITER, urlDelimiter);
+        form.properties(CONNECTION_PROPERTIES).removeTags();
+        form.properties(CONNECTION_PROPERTIES).add(properties);
+        form.save();
+
+        console.verifySuccess();
+        new ResourceVerifier(dataSourceAddress(DATA_SOURCE_UPDATE), client)
+                .verifyAttribute(URL_DELIMITER, urlDelimiter);
+        for (Property key: properties.asPropertyList()) {
+            String value = key.getValue().asString();
+            Address address = dataSourceAddress(DATA_SOURCE_UPDATE).and(CONNECTION_PROPERTIES, key.getName());
+            new ResourceVerifier(address, client).verifyAttribute(VALUE, value);
+        }
+    }
+
+    @Test
+    public void connectionProperties() throws Exception {
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "connection", Ids.TAB));
+        form = page.getConnectionForm();
+
+        ModelNode properties = Random.properties();
+
+        form.edit();
+        form.properties(CONNECTION_PROPERTIES).removeTags();
+        form.properties(CONNECTION_PROPERTIES).add(properties);
+        form.save();
+
+        console.verifySuccess();
+        for (Property key: properties.asPropertyList()) {
+            String value = key.getValue().asString();
+            Address address = dataSourceAddress(DATA_SOURCE_UPDATE).and(CONNECTION_PROPERTIES, key.getName());
+            new ResourceVerifier(address, client).verifyAttribute(VALUE, value);
+        }
     }
 
     @Test

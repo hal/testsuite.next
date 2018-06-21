@@ -15,6 +15,8 @@
  */
 package org.jboss.hal.testsuite.page;
 
+import java.util.Map;
+
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 
 public abstract class BasePage extends AbstractPage {
@@ -32,6 +34,17 @@ public abstract class BasePage extends AbstractPage {
     public void navigate(String name, String value) {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
                 .with(name, value)
+                .build();
+        browser.navigate().refresh();
+        console.navigate(placeRequest);
+    }
+
+    /**
+     * Navigates to the name token specified in the {@code @Place} annotation appending the specified name/value pair.
+     */
+    public void navigate(Map<String, String> params) {
+        PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
+                .with(params)
                 .build();
         browser.navigate().refresh();
         console.navigate(placeRequest);
