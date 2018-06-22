@@ -74,7 +74,7 @@ public class DataSourceConfigurationTest {
 
     @Test
     public void attributes() throws Exception {
-        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "attributes", Ids.TAB));
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, ATTRIBUTES, Ids.TAB));
         form = page.getAttributesForm();
 
         String jndiName = Random.jndiName();
@@ -83,7 +83,7 @@ public class DataSourceConfigurationTest {
 
     @Test
     public void connection() throws Exception {
-        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "connection", Ids.TAB));
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, CONNECTION, Ids.TAB));
         form = page.getConnectionForm();
 
         String urlDelimiter = Random.name();
@@ -92,7 +92,7 @@ public class DataSourceConfigurationTest {
 
     @Test
     public void connectionAttributesProperties() throws Exception {
-        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "connection", Ids.TAB));
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, CONNECTION, Ids.TAB));
         form = page.getConnectionForm();
 
         ModelNode properties = Random.properties();
@@ -118,10 +118,34 @@ public class DataSourceConfigurationTest {
 
     @Test
     public void connectionProperties() throws Exception {
-        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, "connection", Ids.TAB));
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, CONNECTION, Ids.TAB));
         form = page.getConnectionForm();
 
         ModelNode properties = Random.properties();
+
+        form.edit();
+        form.properties(CONNECTION_PROPERTIES).removeTags();
+        form.properties(CONNECTION_PROPERTIES).add(properties);
+        form.save();
+
+        console.verifySuccess();
+        for (Property key: properties.asPropertyList()) {
+            String value = key.getValue().asString();
+            Address address = dataSourceAddress(DATA_SOURCE_UPDATE).and(CONNECTION_PROPERTIES, key.getName());
+            new ResourceVerifier(address, client).verifyAttribute(VALUE, value);
+        }
+    }
+
+    @Test
+    public void connectionPropertiesSpecialCharacters() throws Exception {
+        page.getTabs().select(Ids.build(Ids.DATA_SOURCE_CONFIGURATION, CONNECTION, Ids.TAB));
+        form = page.getConnectionForm();
+
+        ModelNode properties = new ModelNode();
+        properties.get("key1").set("jdbc:sybase:Tds:localhost:5000/mydatabase?JCONNECT_VERSION=6");
+        properties.get("key2").set("jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=MyDatabase");
+        properties.get("key3").set("jdbc:oracle:thin:@localhost:1521:orcalesid");
+        properties.get("key4").set("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
 
         form.edit();
         form.properties(CONNECTION_PROPERTIES).removeTags();

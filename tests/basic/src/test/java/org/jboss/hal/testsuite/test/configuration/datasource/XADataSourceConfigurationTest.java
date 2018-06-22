@@ -122,5 +122,29 @@ public class XADataSourceConfigurationTest {
         }
     }
 
+    @Test
+    public void connectionPropertiesSpecialCharacters() throws Exception {
+        page.getXaTabs().select(Ids.build(Ids.XA_DATA_SOURCE, "connection", Ids.TAB));
+        form = page.getXaConnectionForm();
+
+        ModelNode properties = new ModelNode();
+        properties.get("key1").set("jdbc:sybase:Tds:localhost:5000/mydatabase?JCONNECT_VERSION=6");
+        properties.get("key2").set("jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=MyDatabase");
+        properties.get("key3").set("jdbc:oracle:thin:@localhost:1521:orcalesid");
+        properties.get("key4").set("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+
+        form.edit();
+        form.properties(XA_DATASOURCE_PROPERTIES).removeTags();
+        form.properties(XA_DATASOURCE_PROPERTIES).add(properties);
+        form.save();
+
+        console.verifySuccess();
+        for (Property key: properties.asPropertyList()) {
+            String value = key.getValue().asString();
+            Address address = xaDataSourceAddress(XA_DATA_SOURCE_UPDATE).and(XA_DATASOURCE_PROPERTIES, key.getName());
+            new ResourceVerifier(address, client).verifyAttribute(VALUE, value);
+        }
+    }
+
 
 }

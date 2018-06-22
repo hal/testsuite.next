@@ -53,6 +53,7 @@ public final class DataSourceFixtures {
     static final String URL_DELIMITER = "url-delimiter";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(DATASOURCES);
+    static final String CONNECTION = "connection";
     static final String VALID_CONNECTION_CHECKER_PROPERTIES = "valid-connection-checker-properties";
     static final String BACKGROUND_VALIDATION_MILLIS = "background-validation-millis";
     static final String USE_TRY_LOCK = "use-try-lock";
