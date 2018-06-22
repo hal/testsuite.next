@@ -146,6 +146,7 @@ public class DataSourceConfigurationTest {
         properties.get("key2").set("jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=MyDatabase");
         properties.get("key3").set("jdbc:oracle:thin:@localhost:1521:orcalesid");
         properties.get("key4").set("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        properties.get("key4").set("value!@#$%&-?=man");
 
         form.edit();
         form.properties(CONNECTION_PROPERTIES).removeTags();
