@@ -19,12 +19,14 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.IIOPPage;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -58,6 +60,7 @@ public class IIOPTest {
         operations.undefineAttribute(SUBSYSTEM_ADDRESS, SECURITY_DOMAIN);
     }
 
+    @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private IIOPPage page;
     private FormFragment form;
@@ -192,5 +195,23 @@ public class IIOPTest {
         form = page.getPropertiesForm();
         crud.reset(SUBSYSTEM_ADDRESS, form,
                 resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(PROPERTIES));
+    }
+
+    @Test
+    public void cancelEditTcp() {
+        page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "tcp", Ids.TAB));
+        form = page.getTcpForm();
+        form.edit();
+        form.cancel();
+        Assert.assertTrue(console.verifyNoError());
+    }
+
+    @Test
+    public void cancelEditProperties() {
+        page.getTabs().select(Ids.build(IIOP_OPENJDK, PROPERTIES, Ids.TAB));
+        form = page.getPropertiesForm();
+        form.edit();
+        form.cancel();
+        Assert.assertTrue(console.verifyNoError());
     }
 }

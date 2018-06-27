@@ -12,9 +12,11 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowServletContainerPage;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -129,5 +131,11 @@ public class CookiesTest {
         boolean secure = operations.readAttribute(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, "secure").booleanValue(false);
         crudOperations.update(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, page.getCookiesForm(), "secure", !secure);
     }
-
+    @Test
+    public void cancelEditCookieForm() {
+        FormFragment form = page.getCookiesForm();
+        form.edit();
+        form.cancel();
+        Assert.assertTrue(console.verifyNoError());
+    }
 }

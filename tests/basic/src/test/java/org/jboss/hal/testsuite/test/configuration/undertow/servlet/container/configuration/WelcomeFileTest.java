@@ -12,9 +12,11 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowServletContainerPage;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -68,5 +70,13 @@ public class WelcomeFileTest {
         crudOperations.update(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT).and("welcome-file","aaa"),
             page.getWelcomeFileForm(),
             formFragment -> formFragment.list("welcome-file").add("aaa"), ResourceVerifier::verifyExists);
+    }
+
+    @Test
+    public void cancelEditWelcomeFile() {
+        FormFragment form = page.getWelcomeFileForm();
+        form.edit();
+        form.cancel();
+        Assert.assertTrue(console.verifyNoError());
     }
 }

@@ -11,9 +11,11 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowServletContainerPage;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -72,5 +74,13 @@ public class MimeMappingTest {
                 resourceVerifier.verifyExists();
                 resourceVerifier.verifyAttribute("value", "bbb");
             });
+    }
+
+    @Test
+    public void cancelEditMimeMapping() {
+        FormFragment form = page.getMimeMappingForm();
+        form.edit();
+        form.cancel();
+        Assert.assertTrue(console.verifyNoError());
     }
 }

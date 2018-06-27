@@ -137,6 +137,11 @@ public class Console {
         verifyNotification(alertDanger);
     }
 
+    /** Verify there is no error notification */
+    public boolean verifyNoError() {
+        return By.cssSelector(DOT + toastNotificationsListPf + " ." + alertDanger).findElements(browser).size() < 1;
+    }
+
     private void verifyNotification(String css) {
         waitModel().until() // use waitModel() since it might take some time until the notification is visible
                 .element(By.cssSelector(DOT + toastNotificationsListPf + " ." + css))

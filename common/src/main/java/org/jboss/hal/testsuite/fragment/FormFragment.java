@@ -47,6 +47,7 @@ public class FormFragment {
     @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
     @FindBy(css = "a[data-operation=reset]") private WebElement resetLink;
     @FindBy(css = "a[data-operation=remove]") private WebElement removeLink;
+    @FindBy(css = DOT + formButtons + " ." + btnDefault) private WebElement cancelButton;
     @FindBy(css = DOT + formButtons + " ." + btnPrimary) private WebElement saveButton;
     @FindBy(css = DOT + readonly) private WebElement readOnlySection;
     @FindBy(css = DOT + editing) private WebElement editingSection;
@@ -137,6 +138,14 @@ public class FormFragment {
      */
     public void save() {
         console.scrollIntoView(saveButton).click();
+        waitGui().until().element(readOnlySection).is().visible();
+    }
+
+    /**
+     * Cancels the form and waits until the read-only section is visible. Expects no errors.
+     */
+    public void cancel() {
+        console.scrollIntoView(cancelButton).click();
         waitGui().until().element(readOnlySection).is().visible();
     }
 
