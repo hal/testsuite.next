@@ -44,7 +44,6 @@ public final class RemotingFixtures {
     static final String URI = "uri";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(REMOTING);
-    static final Address ENDPOINT_ADDRESS = SUBSYSTEM_ADDRESS.and(CONFIGURATION, ENDPOINT);
 
     // ------------------------------------------------------ connector
 

@@ -29,10 +29,10 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.REMOTING)
 public class RemotingPage extends BasePage {
 
-    @FindBy(id = "remoting-endpoint-configuration-tab-container") private TabsFragment endpointTabs;
-    @FindBy(id = "remoting-endpoint-configuration-attributes-form") private FormFragment endpointAttributesForm;
-    @FindBy(id = "remoting-endpoint-configuration-security-form") private FormFragment endpointSecurityForm;
-    @FindBy(id = "remoting-endpoint-configuration-channels-form") private FormFragment endpointChannelsForm;
+    @FindBy(id = "remoting-configuration-tab-container") private TabsFragment configurationTabs;
+    @FindBy(id = "remoting-configuration-attributes-form") private FormFragment configurationAttributesForm;
+    @FindBy(id = "remoting-configuration-security-form") private FormFragment configurationSecurityForm;
+    @FindBy(id = "remoting-configuration-channels-form") private FormFragment configurationChannelsForm;
     @FindBy(id = "remoting-connector-table" + WRAPPER) private TableFragment connectorTable;
     @FindBy(id = Ids.REMOTING_CONNECTOR_TAB_CONTAINER) private TabsFragment connectorTabs;
     @FindBy(id = Ids.REMOTING_CONNECTOR_FORM) private FormFragment connectorAttributesForm;
@@ -50,20 +50,20 @@ public class RemotingPage extends BasePage {
     @FindBy(id = "remoting-remote-outbound-table" + WRAPPER) private TableFragment remoteOutboundTable;
     @FindBy(id = "remoting-remote-outbound-form") private FormFragment remoteOutboundForm;
 
-    public TabsFragment getEndpointTabs() {
-        return endpointTabs;
+    public TabsFragment getConfigurationTabs() {
+        return configurationTabs;
     }
 
-    public FormFragment getEndpointAttributesForm() {
-        return endpointAttributesForm;
+    public FormFragment getConfigurationAttributesForm() {
+        return configurationAttributesForm;
     }
 
-    public FormFragment getEndpointSecurityForm() {
-        return endpointSecurityForm;
+    public FormFragment getConfigurationSecurityForm() {
+        return configurationSecurityForm;
     }
 
-    public FormFragment getEndpointChannelsForm() {
-        return endpointChannelsForm;
+    public FormFragment getConfigurationChannelsForm() {
+        return configurationChannelsForm;
     }
 
     public TableFragment getConnectorTable() {

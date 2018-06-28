@@ -34,18 +34,18 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.AUTH_REALM;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.BUFFER_REGION_SIZE;
-import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.ENDPOINT_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.MAX_INBOUND_CHANNELS;
+import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
-public class EndpointTest {
+public class ConfigurationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static BackupAndRestoreAttributes backup;
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        backup = new BackupAndRestoreAttributes.Builder(ENDPOINT_ADDRESS).build();
+        backup = new BackupAndRestoreAttributes.Builder(SUBSYSTEM_ADDRESS).build();
         client.apply(backup.backup());
     }
 
@@ -61,27 +61,27 @@ public class EndpointTest {
     @Before
     public void setUp() throws Exception {
         page.navigate();
-        console.verticalNavigation().selectPrimary("remoting-endpoint-configuration-item");
+        console.verticalNavigation().selectPrimary("remoting-configuration-item");
     }
 
     @Test
     public void updateAttributes() throws Exception {
-        page.getEndpointTabs().select("remoting-endpoint-configuration-attributes-tab");
-        FormFragment form = page.getEndpointAttributesForm();
-        crud.update(ENDPOINT_ADDRESS, form, BUFFER_REGION_SIZE, Random.number());
+        page.getConfigurationTabs().select("remoting-configuration-attributes-tab");
+        FormFragment form = page.getConfigurationAttributesForm();
+        crud.update(SUBSYSTEM_ADDRESS, form, BUFFER_REGION_SIZE, Random.number());
     }
 
     @Test
     public void updateSecurity() throws Exception {
-        page.getEndpointTabs().select("remoting-endpoint-configuration-security-tab");
-        FormFragment form = page.getEndpointSecurityForm();
-        crud.update(ENDPOINT_ADDRESS, form, AUTH_REALM, Random.name());
+        page.getConfigurationTabs().select("remoting-configuration-security-tab");
+        FormFragment form = page.getConfigurationSecurityForm();
+        crud.update(SUBSYSTEM_ADDRESS, form, AUTH_REALM, Random.name());
     }
 
     @Test
     public void updateChannels() throws Exception {
-        page.getEndpointTabs().select("remoting-endpoint-configuration-channels-tab");
-        FormFragment form = page.getEndpointChannelsForm();
-        crud.update(ENDPOINT_ADDRESS, form, MAX_INBOUND_CHANNELS, Random.number());
+        page.getConfigurationTabs().select("remoting-configuration-channels-tab");
+        FormFragment form = page.getConfigurationChannelsForm();
+        crud.update(SUBSYSTEM_ADDRESS, form, MAX_INBOUND_CHANNELS, Random.number());
     }
 }
