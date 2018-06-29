@@ -301,6 +301,7 @@ public final class ElytronFixtures {
     public static final String SUFFIX = "suffix";
     public static final String SUFFIX_LOG = "yy-mm";
     public static final String SYSLOG_AUDIT_LOG_ITEM = "elytron-syslog-audit-log-item";
+    public static final String TARGET_NAME = "target-name";
     public static final String TOKEN_REALM_ITEM = "elytron-token-realm-item";
     public static final String TRANSFORMERS_ITEM = "transformers-item";
     public static final String TRUST_MANAGER_ITEM = "elytron-trust-manager-item";
@@ -670,10 +671,6 @@ public final class ElytronFixtures {
     public static Address constantPermissionMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CONSTANT_PERMISSION_MAPPER, name);
     }
-
-    public static final String PERM_CREATE = Ids.build(PERMISSION_MAPPER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String PERM_UPDATE = Ids.build(PERMISSION_MAPPER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String PERM_DELETE = Ids.build(PERMISSION_MAPPER_PREFIX, CrudConstants.DELETE, Random.name());
 
     // -------------- simple-permission-mapper
 
