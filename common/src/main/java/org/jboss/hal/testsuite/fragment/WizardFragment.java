@@ -15,14 +15,20 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.util.NoSuchElementException;
+
 import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.findby.FindByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.arquillian.graphene.wait.WebDriverWait;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.*;
@@ -30,7 +36,9 @@ import static org.jboss.hal.resources.CSS.*;
 /** Page fragment for wizards. Use {@link Console#wizard()} to get an instance. */
 public class WizardFragment {
 
-    @Root private WebElement root;
+    private static final Logger log = LoggerFactory.getLogger(WizardFragment.class);
+
+    @Root protected WebElement root;
     @FindBy(css = "." + modalFooter + " ." + btnPrimary) private WebElement primaryButton;
     @FindBy(css = "." + modalFooter + " ." + btnCancel) private WebElement cancelButton;
     @FindByJQuery("." + modalFooter + " ." + btnDefault + ":contains('Back')") private WebElement backButton;
@@ -58,13 +66,12 @@ public class WizardFragment {
 
     /** Clicks on next and waits until the specified element (which must be part of this wizard) is visible */
     public void next(By waitFor) {
-        primaryButton.click();
+        root.findElement(ByJQuery.selector("." + modalFooter + " ." + btnPrimary + ":visible")).click();
         verifyStep(waitFor);
     }
 
     private void verifyStep(By by) {
-        WebElement element = root.findElement(by);
-        waitGui().until().element(element).is().visible();
+        waitGui().until().element(root, by).is().visible();
     }
 
     public void cancel() {
@@ -79,8 +86,9 @@ public class WizardFragment {
     }
 
     /** Clicks on finish and expects the wizard is <em>not</em> closed */
-    public void finishStayOpen() {
+    public WizardFragment finishStayOpen() {
         primaryButton.click();
+        return this;
     }
 
     public void close() {
@@ -89,13 +97,25 @@ public class WizardFragment {
     }
 
     /** Waits until the success icon is visible */
-    public void verifySuccess() {
+    public WizardFragment verifySuccess() {
         verifySuccess(waitGui());
+        return this;
     }
 
     /** Waits using the specified wait instance until the success icon is visible */
     public void verifySuccess(WebDriverWait<Void> wait) {
-        wait.until().element(By.cssSelector("." + wizardPfComplete + " ." + wizardPfSuccessIcon)).is().visible();
+        try {
+            wait.until().element(By.cssSelector("." + wizardPfComplete + " ." + wizardPfSuccessIcon)).is().visible();
+        } catch (TimeoutException e) {
+            try {
+                root.findElement(ByJQuery.selector("." + wizardPfComplete + " ." + blankSlatePfSecondaryAction + " a:contains(Details)")).click();
+                String errorText = root.findElement(By.className(wizardHalErrorText)).getText();
+                log.error("Wizard failed with detail error message '{}'.", errorText);
+            } catch (NoSuchElementException e1) {
+                log.warn("Cannot find error Details link.", e1);
+            }
+            throw e;
+        }
     }
 
     public FormFragment getForm(String id) {

@@ -25,6 +25,7 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -159,6 +160,21 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
+    /**
+     * Enters text with firing additional change event if console does not register the original one.
+     * <b> Use only as a dirty workaround when {@link #text(String, String)} is not working properly via Selenium!</b>
+     * @param identifier identifier of element to be written to
+     * @param value a value to be entered
+     */
+    public FormFragment editTextFiringExtraChangeEvent(String identifier, String value) {
+        text(identifier, value);
+        JavascriptExecutor js = (JavascriptExecutor) browser;
+        js.executeScript("var evt = document.createEvent('HTMLEvents');"
+                + "evt.initEvent('change', true, true);"
+                + "arguments[0].dispatchEvent(evt);", inputElement(identifier));
+        return this;
+    }
+
     /** Changes the specified number input element. */
     public void number(String name, long value) {
         text(name, String.valueOf(value));
@@ -196,7 +212,7 @@ public class FormFragment {
     }
 
     /** Changes the specified bootstrap switch element. */
-    public void flip(String name, boolean value) {
+    public FormFragment flip(String name, boolean value) {
         WebElement inputElement = inputElement(name);
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
@@ -212,6 +228,7 @@ public class FormFragment {
                 waitGui().until().element(inputElement).is().not().selected();
             }
         }
+        return this;
     }
 
     public void clear(String name) {
@@ -222,13 +239,14 @@ public class FormFragment {
     }
 
     /** Expects an error for the specified attribute */
-    public void expectError(String name) {
+    public FormFragment expectError(String name) {
         By selector = By.cssSelector(DOT + hasError + "[data-form-item-group=" + editingId(name) + "]");
         WebElement formItemGroup = editingSection.findElement(selector);
         WebElement helpBlock = formItemGroup.findElement(By.cssSelector(DOT + CSS.helpBlock));
 
         waitGui().until().element(formItemGroup).is().visible();
         waitGui().until().element(helpBlock).is().visible();
+        return this;
     }
 
     private WebElement formGroup(String name) {
