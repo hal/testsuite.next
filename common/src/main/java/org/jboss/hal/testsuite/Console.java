@@ -207,12 +207,14 @@ public class Console {
     }
 
     public WizardFragment wizard() {
-        Library.letsSleep(MEDIUM_TIMEOUT);
-        WebElement wizardElement = browser.findElement(By.id(Ids.HAL_WIZARD));
-        waitGui().until().element(wizardElement).is().visible();
-        return createPageFragment(WizardFragment.class, wizardElement);
+        return wizard(WizardFragment.class);
     }
 
+    public <T extends WizardFragment> T wizard(Class<T> clazz) {
+        By wizardSelector = By.id(Ids.HAL_WIZARD);
+        waitGui().until().element(wizardSelector).is().visible();
+        return createPageFragment(clazz, browser.findElement(wizardSelector));
+    }
 
     // ------------------------------------------------------ elements
 

@@ -1,11 +1,15 @@
 package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
+import org.jboss.hal.testsuite.fragment.ssl.EnableSslWizard;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 @Place(Ids.UNDERTOW_SERVER)
@@ -100,5 +104,27 @@ public class UndertowServerPage extends BasePage {
 
     public TableFragment getHttpsListenerTable() {
         return httpsListenerTable;
+    }
+
+    public EnableSslWizard enableSslWizard() {
+        WebElement enableSslButton;
+        try {
+            enableSslButton = httpsListenerTable.button("Enable SSL");
+        } catch (NoSuchElementException e) {
+            throw new IllegalStateException("Enable SSL button is not present. Is a HTTPS listener selected?", e);
+        }
+        enableSslButton.click();
+        return console.wizard(EnableSslWizard.class);
+    }
+
+    public AddResourceDialogFragment disableSslDialog() {
+        WebElement disableSslButton;
+        try {
+            disableSslButton = httpsListenerTable.button("Disable SSL");
+        } catch (NoSuchElementException e) {
+            throw new IllegalStateException("Disable SSL button is not present. Is a HTTPS listener selected?", e);
+        }
+        disableSslButton.click();
+        return console.addResourceDialog();
     }
 }
