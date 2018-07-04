@@ -18,6 +18,7 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.ssl.EnableSslWizard;
 import org.jboss.hal.testsuite.page.runtime.StandaloneServerPage;
+import org.jboss.hal.testsuite.util.Library;
 import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -138,7 +139,7 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
+//            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client).verifyExists()
@@ -159,7 +160,7 @@ public class HttpManagementInterfaceTest {
             sslOps.assertHALisDNOrganizationUnitOf(ISSUER, aliasResult, PRIVATE_KEY_ENTRY)
                     .assertHALisDNOrganizationUnitOf(SUBJECT, aliasResult, PRIVATE_KEY_ENTRY);
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -212,7 +213,7 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
+//            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client).verifyExists()
@@ -230,7 +231,7 @@ public class HttpManagementInterfaceTest {
                     .verifyAttribute(SECURE_SOCKET_BINDING, MANAGEMENT_HTTPS);
 
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -279,7 +280,7 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
+//            reloadOneWaySecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client).verifyExists()
@@ -296,7 +297,7 @@ public class HttpManagementInterfaceTest {
                     .verifyAttribute(SECURE_SOCKET_BINDING, MANAGEMENT_HTTPS);
 
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -382,8 +383,8 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
-                clientKeyStorePathValue, clientKeyStorePasswordValue);
+//            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
+//                clientKeyStorePathValue, clientKeyStorePasswordValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client).verifyExists()
@@ -415,7 +416,7 @@ public class HttpManagementInterfaceTest {
             sslOps.assertHALisDNOrganizationUnitOf(ISSUER, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY)
                     .assertHALisDNOrganizationUnitOf(SUBJECT, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY);
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -498,8 +499,8 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
-                clientKeyStorePathValue, clientKeyStorePasswordValue);
+//            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
+//                clientKeyStorePathValue, clientKeyStorePasswordValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client).verifyExists()
@@ -536,7 +537,7 @@ public class HttpManagementInterfaceTest {
             sslOps.assertHALisDNOrganizationUnitOf(ISSUER, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY)
                     .assertHALisDNOrganizationUnitOf(SUBJECT, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY);
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -615,8 +616,8 @@ public class HttpManagementInterfaceTest {
                 .verifySuccess()
                 .close();
 
-            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
-                clientKeyStorePathValue, clientKeyStorePasswordValue);
+//            reloadMutualSecuredManagementWithClientUpdate(keyStoreNameValue, keyAliasValue, clientCertificateAliasValue,
+//                clientKeyStorePathValue, clientKeyStorePasswordValue);
 
             Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
             new ResourceVerifier(keyStoreAddress, client)
@@ -654,7 +655,7 @@ public class HttpManagementInterfaceTest {
             sslOps.assertHALisDNOrganizationUnitOf(ISSUER, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY)
                     .assertHALisDNOrganizationUnitOf(SUBJECT, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY);
         } finally {
-            disableHttpInterfaceSsl();
+//            disableHttpInterfaceSsl();
         }
 
     }
@@ -740,15 +741,19 @@ public class HttpManagementInterfaceTest {
                         .and(TRUST_CACERTS, false)
                         .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, creaperTrustStorePassword)));
         ops.invoke(STORE, creaperTrustStoreAddress);
+        Library.letsSleep(200);
 
         ops.invoke(RELOAD, Address.root());
         changeClient(sslOptionsCreator.create(creaperTrustStorePath, creaperTrustStorePassword));
         sslOps.waitUntilServerIsRunning();
     }
 
-    private void disableHttpInterfaceSsl() throws IOException, InterruptedException, TimeoutException {
+    private void disableHttpInterfaceSsl() throws Exception {
         ops.undefineAttribute(HTTP_INTERFACE_ADDRESS, SECURE_SOCKET_BINDING).assertSuccess();
         ops.undefineAttribute(HTTP_INTERFACE_ADDRESS, SSL_CONTEXT).assertSuccess();
+        new ResourceVerifier(HTTP_INTERFACE_ADDRESS, client)
+            .verifyAttributeIsUndefined(SECURE_SOCKET_BINDING)
+            .verifyAttributeIsUndefined(SSL_CONTEXT);
         ops.invoke(RELOAD, Address.root());
         changeClientToNonSSL();
         sslOps.waitUntilServerIsRunning();
