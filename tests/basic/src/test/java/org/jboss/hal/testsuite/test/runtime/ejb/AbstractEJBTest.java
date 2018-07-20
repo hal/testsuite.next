@@ -14,6 +14,7 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.WebArchive;
+import org.junit.AfterClass;
 import org.wildfly.extras.creaper.commands.deployments.Deploy;
 import org.wildfly.extras.creaper.commands.deployments.Undeploy;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -43,6 +44,11 @@ public abstract class AbstractEJBTest {
         }
     }
 
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     protected static String deploymentName(String prefix) {
         return prefix + Random.name() + ".war";
     }
@@ -54,6 +60,8 @@ public abstract class AbstractEJBTest {
             runtimeSubsystemPath(serverEnvironmentUtils.getServerHostName(), "ejb3"))
             .column("ejb3");
     }
+
+    protected abstract void invoke(int numberOfInvocations, EJBDeployment ejbDeployment);
 
     protected enum EJBType {
 

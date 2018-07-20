@@ -11,6 +11,8 @@ public class EJBFixtures {
     public static final String ROLE_1 = "role1";
     public static final String ROLE_2 = "role2";
 
+    public static final int SLEEP_TIME = 500;
+
     public static Address singletonEJBAddress(String deploymentName, Class<?> singletonBeanClass) {
         return ejb3SubsystemAddress(deploymentName).and("singleton-bean", singletonBeanClass.getSimpleName());
     }

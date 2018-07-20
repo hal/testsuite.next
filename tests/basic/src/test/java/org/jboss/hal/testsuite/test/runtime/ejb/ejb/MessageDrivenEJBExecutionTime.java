@@ -7,6 +7,7 @@ import javax.jms.Message;
 import javax.jms.MessageListener;
 import javax.jms.TextMessage;
 
+import org.jboss.hal.testsuite.test.runtime.ejb.EJBFixtures;
 import org.jboss.logging.Logger;
 
 @MessageDriven(activationConfig = {
@@ -21,7 +22,7 @@ public class MessageDrivenEJBExecutionTime implements MessageListener {
     public void onMessage(Message message) {
         TextMessage msg;
         try {
-            Thread.sleep(5000);
+            Thread.sleep(EJBFixtures.SLEEP_TIME);
             if (message instanceof TextMessage) {
                 msg = (TextMessage) message;
                 logger.info("Received Message from MessageDrivenExecutionTimeQueue: " + msg.getText());

@@ -87,15 +87,11 @@ public class MessageDrivenEJBTest extends AbstractEJBTest {
 
     @AfterClass
     public static void tearDown() throws IOException, CommandFailedException, OperationException {
-        try {
-            MESSAGE_DRIVEN_EJB_DEPLOYMENT.undeploy();
-            MESSAGE_DRIVEN_EJB_WITH_ROLES_DEPLOYMENT.undeploy();
-            MESSAGE_DRIVEN_EJB_INVOCATIONS_DEPLOYMENT.undeploy();
-            MESSAGE_DRIVEN_EJB_EXECUTION_TIME_DEPLOYMENT.undeploy();
-            MESSAGE_DRIVEN_EJB_PEAK_CONCURRENT_INVOCATIONS_DEPLOYMENT.undeploy();
-        } finally {
-            client.close();
-        }
+        MESSAGE_DRIVEN_EJB_DEPLOYMENT.undeploy();
+        MESSAGE_DRIVEN_EJB_WITH_ROLES_DEPLOYMENT.undeploy();
+        MESSAGE_DRIVEN_EJB_INVOCATIONS_DEPLOYMENT.undeploy();
+        MESSAGE_DRIVEN_EJB_EXECUTION_TIME_DEPLOYMENT.undeploy();
+        MESSAGE_DRIVEN_EJB_PEAK_CONCURRENT_INVOCATIONS_DEPLOYMENT.undeploy();
     }
 
     @Inject
@@ -149,7 +145,7 @@ public class MessageDrivenEJBTest extends AbstractEJBTest {
         console.navigate(MESSAGE_DRIVEN_EJB_EXECUTION_TIME_DEPLOYMENT.getPlaceRequest());
         int actualExecutionTime = page.getMessageDrivenBeanEJBForm().intValue("execution-time");
         Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB deployment",
-            numberOfInvocations * 5000 <= actualExecutionTime);
+            numberOfInvocations * EJBFixtures.SLEEP_TIME <= actualExecutionTime);
         new ResourceVerifier(EJBFixtures.messageDrivenEJBAddress(MESSAGE_DRIVEN_EJB_DEPLOYMENT_EXECUTION_TIME_NAME,
             MessageDrivenEJBExecutionTime.class),
             client)
@@ -204,7 +200,8 @@ public class MessageDrivenEJBTest extends AbstractEJBTest {
             .verifyAttribute("run-as-role", EJBFixtures.ROLE_1);
     }
 
-    private static void invoke(int numberOfInvocations, EJBDeployment ejbDeployment) {
+    @Override
+    protected void invoke(int numberOfInvocations, EJBDeployment ejbDeployment) {
         String deploymentName = ejbDeployment.getDeploymentName().substring(0,
             ejbDeployment.getDeploymentName().indexOf(".war"));
         HttpGet httpGet;

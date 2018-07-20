@@ -14,8 +14,7 @@ public class SingletonEJBWithRoles implements RemoteEJBInterface {
     private int counter = 0;
 
     @Override
-    public String invoke() throws InterruptedException {
-        Thread.sleep(5000);
+    public String invoke() {
         return "The counter is: " + counter++;
     }
 

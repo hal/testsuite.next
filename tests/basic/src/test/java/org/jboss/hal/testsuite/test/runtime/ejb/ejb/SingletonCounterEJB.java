@@ -7,6 +7,8 @@ import javax.ejb.LockType;
 import javax.ejb.Remote;
 import javax.ejb.Singleton;
 
+import org.jboss.hal.testsuite.test.runtime.ejb.EJBFixtures;
+
 @Singleton
 @ConcurrencyManagement(ConcurrencyManagementType.CONTAINER)
 @Lock(LockType.READ)
@@ -17,7 +19,7 @@ public class SingletonCounterEJB implements RemoteEJBInterface {
 
     @Override
     public String invoke() throws InterruptedException {
-        Thread.sleep(5000);
+        Thread.sleep(EJBFixtures.SLEEP_TIME);
         return "The counter is: " + counter++;
     }
 }

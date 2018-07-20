@@ -21,14 +21,13 @@ public class MessageDrivenEJBInvocations implements MessageListener {
     public void onMessage(Message message) {
         TextMessage msg;
         try {
-            Thread.sleep(5000);
             if (message instanceof TextMessage) {
                 msg = (TextMessage) message;
                 logger.info("Received Message from MessageDrivenEJBInvocationsQueue: " + msg.getText());
             } else {
                 logger.warn("Message of wrong type: " + message.getClass().getName());
             }
-        } catch (JMSException | InterruptedException e) {
+        } catch (JMSException e) {
             throw new RuntimeException(e);
         }
     }

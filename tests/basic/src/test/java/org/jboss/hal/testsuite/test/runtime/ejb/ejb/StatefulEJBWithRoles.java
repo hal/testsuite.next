@@ -11,7 +11,7 @@ import org.jboss.hal.testsuite.test.runtime.ejb.EJBFixtures;
 @RunAs(EJBFixtures.ROLE_1)
 public class StatefulEJBWithRoles implements RemoteEJBInterface {
     @Override
-    public String invoke() throws InterruptedException {
+    public String invoke() {
         return "Hello from stateful with roles";
     }
 }
