@@ -27,6 +27,7 @@ public final class InfinispanFixtures {
 
     private static final String CACHE_CONTAINER_PREFIX = "cc";
     private static final String LOCAL_CACHE_PREFIX = "lc";
+    private static final String COMPONENT = "component";
 
     static final String ACQUIRE_TIMEOUT = "acquire-timeout";
     static final String CONCURRENCY_LEVEL = "concurrency-level";
@@ -36,6 +37,7 @@ public final class InfinispanFixtures {
     static final String MAX_ENTRIES = "max-entries";
     static final String MAX_IDLE = "max-idle";
     static final String STRATEGY = "strategy";
+    public static final String CONSISTENT_HASH_STRATEGY = "consistent-hash-strategy";
 
     public static Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
 
@@ -68,8 +70,16 @@ public final class InfinispanFixtures {
         return cacheContainerAddress(cacheContainer).and("scattered-cache", scatteredCache);
     }
 
+    public static Address expirationAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "expiration");
+    }
+
+    public static Address lockingAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "locking");
+    }
+
     static Address componentAddress(String cacheContainer, String localCache, String component) {
-        return localCacheAddress(cacheContainer, localCache).and("component", component);
+        return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }
 
 
