@@ -46,7 +46,7 @@ public final class InfinispanFixtures {
     static final String CC_UPDATE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String CC_DELETE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address cacheContainerAddress(String name) {
+    public static Address cacheContainerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CACHE_CONTAINER, name);
     }
 
@@ -62,6 +62,10 @@ public final class InfinispanFixtures {
 
     static Address localCacheAddress(String cacheContainer, String localCache) {
         return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
+    }
+
+    public static Address scatteredCacheAddress(String cacheContainer, String scatteredCache) {
+        return cacheContainerAddress(cacheContainer).and("scattered-cache", scatteredCache);
     }
 
     static Address componentAddress(String cacheContainer, String localCache, String component) {
