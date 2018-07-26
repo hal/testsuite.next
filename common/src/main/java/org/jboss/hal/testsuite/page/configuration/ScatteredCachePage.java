@@ -25,6 +25,9 @@ public class ScatteredCachePage extends BasePage {
     @FindBy(id = "scattered-cache-cache-component-partition-handling-form")
     private FormFragment partitionHandlingForm;
 
+    @FindBy(id = "scattered-cache-cache-component-state-transfer-form")
+    private FormFragment stateTransferForm;
+
     public FormFragment getConfigurationForm() {
         configurationTab.select("scattered-cache-tab");
         return configurationForm;
@@ -43,5 +46,10 @@ public class ScatteredCachePage extends BasePage {
     public FormFragment getPartitionHandlingForm() {
         configurationTab.select("scattered-cache-cache-component-partition-handling-tab");
         return partitionHandlingForm;
+    }
+
+    public FormFragment getStateTransferForm() {
+        configurationTab.select("scattered-cache-cache-component-state-transfer-tab");
+        return stateTransferForm;
     }
 }

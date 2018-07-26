@@ -82,6 +82,10 @@ public final class InfinispanFixtures {
         return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "partition-handling");
     }
 
+    public static Address stateTransferAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "state-transfer");
+    }
+
     static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }
