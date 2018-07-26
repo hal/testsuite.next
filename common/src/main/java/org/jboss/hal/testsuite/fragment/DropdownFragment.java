@@ -27,9 +27,17 @@ public class DropdownFragment {
 
     @Root private WebElement root;
 
+    /** Returns if the dropdown contains option with the specified title */
+    public boolean containsItem(String title) {
+        return root.findElements(itemSelector(title)).size() > 0;
+    }
+
     /** Clicks on the item with the specified title */
     public void click(String title) {
-        By selector = ByJQuery.selector("li a" + contains(title));
-        root.findElement(selector).click();
+        root.findElement(itemSelector(title)).click();
+    }
+
+    private By itemSelector(String title) {
+        return ByJQuery.selector("li a" + contains(title));
     }
 }
