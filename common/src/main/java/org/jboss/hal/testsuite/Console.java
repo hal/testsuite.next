@@ -166,7 +166,7 @@ public class Console {
         return dialog(DialogFragment.class);
     }
 
-    private <T extends DialogFragment> T dialog(Class<T> dialogClass) {
+    public <T extends DialogFragment> T dialog(Class<T> dialogClass) {
         Library.letsSleep(MEDIUM_TIMEOUT);
         WebElement dialogElement = browser.findElement(By.id(Ids.HAL_MODAL));
         waitGui().until().element(dialogElement).is().visible();
