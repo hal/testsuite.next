@@ -28,6 +28,9 @@ public class ScatteredCachePage extends BasePage {
     @FindBy(id = "scattered-cache-cache-component-state-transfer-form")
     private FormFragment stateTransferForm;
 
+    @FindBy(id = "scattered-cache-cache-component-transaction-form")
+    private FormFragment transactionForm;
+
     public FormFragment getConfigurationForm() {
         configurationTab.select("scattered-cache-tab");
         return configurationForm;
@@ -51,5 +54,10 @@ public class ScatteredCachePage extends BasePage {
     public FormFragment getStateTransferForm() {
         configurationTab.select("scattered-cache-cache-component-state-transfer-tab");
         return stateTransferForm;
+    }
+
+    public FormFragment getTransactionForm() {
+        configurationTab.select("scattered-cache-cache-component-transaction-tab");
+        return transactionForm;
     }
 }
