@@ -22,6 +22,9 @@ public class ScatteredCachePage extends BasePage {
     @FindBy(id = "scattered-cache-cache-component-locking-form")
     private FormFragment lockingForm;
 
+    @FindBy(id = "scattered-cache-cache-component-partition-handling-form")
+    private FormFragment partitionHandlingForm;
+
     public FormFragment getConfigurationForm() {
         configurationTab.select("scattered-cache-tab");
         return configurationForm;
@@ -35,5 +38,10 @@ public class ScatteredCachePage extends BasePage {
     public FormFragment getLockingForm() {
         configurationTab.select("scattered-cache-cache-component-locking-tab");
         return lockingForm;
+    }
+
+    public FormFragment getPartitionHandlingForm() {
+        configurationTab.select("scattered-cache-cache-component-partition-handling-tab");
+        return partitionHandlingForm;
     }
 }
