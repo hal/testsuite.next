@@ -27,10 +27,10 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
 
     @Test
     public void uploadDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
 
-        WizardFragment wizard = page.uploadDeploymentToContentRepository();
+        WizardFragment wizard = deploymentPage.uploadDeploymentToContentRepository();
         wizard.getUploadForm().uploadFile(deployment.getDeploymentFile());
         wizard.next(Ids.UPLOAD_NAMES_FORM);
         wizard.finishStayOpen();
@@ -44,14 +44,14 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
 
     @Test
     public void addUnmanagedDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
         String
             nameValue = deployment.getName(),
             runtimeNameValue = Random.name(),
             pathValue = deployment.getDeploymentFile().getAbsolutePath();
 
-        DialogFragment dialog = page.addUnmanagedDeploymentToContentRepository();
+        DialogFragment dialog = deploymentPage.addUnmanagedDeploymentToContentRepository();
         FormFragment form = dialog.getForm(Ids.UNMANAGED_FORM);
         form.text(NAME, nameValue);
         form.text(RUNTIME_NAME, runtimeNameValue);
@@ -76,9 +76,9 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         client.apply(deployment.deployEnabledCommand(OTHER_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
         deploymentInMainServerGroupVerifier.verifyDoesNotExist();
-        page.navigate();
+        deploymentPage.navigate();
 
-        page.callActionOnDeploymentInContentRepository(deployment.getName(), deployActionName)
+        deploymentPage.callActionOnDeploymentInContentRepository(deployment.getName(), deployActionName)
                 .deployServerGroupDialog()
                 .selectServerGroups(MAIN_SERVER_GROUP)
                 .primaryButton();
@@ -94,9 +94,9 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         client.apply(deployment.deployEnabledCommand(MAIN_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
         deploymentInMainServerGroupVerifier.verifyExists();
-        page.navigate();
+        deploymentPage.navigate();
 
-        page.callActionOnDeploymentInContentRepository(deployment.getName(), "Undeploy")
+        deploymentPage.callActionOnDeploymentInContentRepository(deployment.getName(), "Undeploy")
                 .deployServerGroupDialog()
                 .selectServerGroups(MAIN_SERVER_GROUP)
                 .primaryButton();
@@ -105,7 +105,7 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
 
     @Test
     public void replaceDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment
             originalDeployment = createSimpleDeployment(),
             newDeployment = createAnotherDeployment();
@@ -117,8 +117,8 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         assertFalse("The deployment should not yet contain " + OTHER_HTML + FILE,
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
 
-        page.navigate();
-        page.callActionOnDeploymentInContentRepository(originalDeployment.getName(), "Replace");
+        deploymentPage.navigate();
+        deploymentPage.callActionOnDeploymentInContentRepository(originalDeployment.getName(), "Replace");
 
         DialogFragment uploadDialog = console.dialog();
         UploadFormFragment.getUploadForm(uploadDialog.getRoot()).uploadFile(newDeployment.getDeploymentFile());
@@ -132,7 +132,7 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
 
     @Test
     public void removeDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
         ResourceVerifier deploymentVerifier = new ResourceVerifier(deployment.getAddress(), client);
 
@@ -140,8 +140,8 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         deploymentVerifier.verifyExists();
         deploymentOps.undeployFromServerGroup(deployment.getName(), MAIN_SERVER_GROUP);
 
-        page.navigate();
-        page.callActionOnDeploymentInContentRepository(deployment.getName(), "Remove").confirm();
+        deploymentPage.navigate();
+        deploymentPage.callActionOnDeploymentInContentRepository(deployment.getName(), "Remove").confirm();
         deploymentVerifier.verifyDoesNotExist();
     }
 
