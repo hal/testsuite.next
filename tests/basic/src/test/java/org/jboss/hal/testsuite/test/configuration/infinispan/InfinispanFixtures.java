@@ -37,6 +37,10 @@ public final class InfinispanFixtures {
     static final String MAX_ENTRIES = "max-entries";
     static final String MAX_IDLE = "max-idle";
     static final String STRATEGY = "strategy";
+    public static final String PATH = "path";
+    public static final String WRITE = "write";
+    public static final String BEHIND = "behind";
+    public static final String THROUGH = "through";
     public static final String CONSISTENT_HASH_STRATEGY = "consistent-hash-strategy";
 
     public static Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
@@ -108,6 +112,14 @@ public final class InfinispanFixtures {
 
     static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
+    }
+
+    public static Address fileStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("store", "file");
+    }
+
+    public static Address customStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("store", "custom");
     }
 
 
