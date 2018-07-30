@@ -2,6 +2,7 @@ package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.sc
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -86,9 +87,7 @@ public class AttributesTest {
         String currentHashStrategy =
             operations.readAttribute(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), CONSISTENT_HASH_STRATEGY)
                 .stringValue();
-        List<String> hashStrategies = new ArrayList<>(2);
-        hashStrategies.add("INTER_CACHE");
-        hashStrategies.add("INTRA_CACHE");
+        List<String> hashStrategies = new ArrayList<>(Arrays.asList("INTER_CACHE", "INTRA_CACHE"));
         hashStrategies.remove(currentHashStrategy);
         crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             formFragment -> formFragment.select(CONSISTENT_HASH_STRATEGY, hashStrategies.get(0)),

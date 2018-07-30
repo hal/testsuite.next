@@ -90,6 +90,22 @@ public final class InfinispanFixtures {
         return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "transaction");
     }
 
+    public static Address objectMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "object");
+    }
+
+    public static Address binaryMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "binary");
+    }
+
+    public static Address offHeapMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "off-heap");
+    }
+
+    public static Address backupAddress(String cacheContainer, String scatteredCache, String backup) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "backups").and("backup", backup);
+    }
+
     static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }

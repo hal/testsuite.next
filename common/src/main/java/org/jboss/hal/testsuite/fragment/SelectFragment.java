@@ -44,7 +44,11 @@ public class SelectFragment {
     public void select(String text, String value) {
         button.click();
         waitGui().until().element(menu).is().visible();
-        menu.findElement(ByJQuery.selector("a" + contains(text))).click();
-        waitGui().until().element(select).value().equalTo(value);
+        //try {
+            menu.findElement(ByJQuery.selector("a" + contains(text))).click();
+        //} catch (TimeoutException ex) {
+        //    menu.findElement(ByJQuery.selector("a span" + contains(text))).click();
+        //}
+        waitGui().until().element(select).value().equalToIgnoreCase(value.replace(" ","-"));
     }
 }
