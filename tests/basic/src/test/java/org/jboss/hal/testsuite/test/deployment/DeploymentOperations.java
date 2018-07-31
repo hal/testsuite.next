@@ -24,9 +24,20 @@ public class DeploymentOperations {
         return ops.invoke(BROWSE_CONTENT, Address.deployment(deploymentName), Values.of(PATH, pathValue)).isSuccess();
     }
 
+    public long deploymentPathFileSize(Deployment deployment, String pathValue) throws IOException {
+        ModelNodeResult result = ops.invoke(BROWSE_CONTENT, deployment.getAddress(), Values.of(PATH, pathValue));
+        result.assertDefinedValue();
+        return result.listValue().get(0).get("file-size").asLong();
+    }
+
     public boolean deploymentIsExploded(String deploymentName) throws IOException {
         ModelNode isArchiveNode = getFirstContentNode(deploymentName).get("archive");
         return isArchiveNode.isDefined() && !isArchiveNode.asBoolean();
+    }
+
+    public DeploymentOperations explode(Deployment deployment) throws IOException {
+        ops.invoke(EXPLODE, deployment.getAddress()).assertSuccess();
+        return this;
     }
 
     public String getDeploymentPath(String deploymentName) throws IOException {

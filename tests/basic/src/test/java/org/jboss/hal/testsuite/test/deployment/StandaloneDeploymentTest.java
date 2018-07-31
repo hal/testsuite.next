@@ -19,10 +19,10 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
 
     @Test
     public void uploadDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
 
-        WizardFragment wizard = page.uploadStandaloneDeployment();
+        WizardFragment wizard = deploymentPage.uploadStandaloneDeployment();
         wizard.getUploadForm().uploadFile(deployment.getDeploymentFile());
         wizard.next(Ids.UPLOAD_NAMES_FORM);
         wizard.finishStayOpen();
@@ -36,14 +36,14 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
 
     @Test
     public void addUnmanagedDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
         String
             nameValue = deployment.getName(),
             runtimeNameValue = Random.name(),
             pathValue = deployment.getDeploymentFile().getAbsolutePath();
 
-        DialogFragment dialog = page.addUnmanagedStandaloneDeployment();
+        DialogFragment dialog = deploymentPage.addUnmanagedStandaloneDeployment();
         FormFragment form = dialog.getForm(Ids.UNMANAGED_FORM);
         form.text(NAME, nameValue);
         form.text(RUNTIME_NAME, runtimeNameValue);
@@ -66,15 +66,15 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
 
         client.apply(deployment.deployEnabledCommand());
         deploymentVerifier.verifyExists().verifyAttribute(ENABLED, true);
-        page.navigate();
+        deploymentPage.navigate();
         assertFalse(enableActionName + " action should not be available for already enabled deployment.",
-                page.isActionOnStandaloneDeploymentAvailable(deployment.getName(), enableActionName));
+                deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), enableActionName));
 
         client.apply(deployment.disableCommand());
         deploymentVerifier.verifyExists().verifyAttribute(ENABLED, false);
 
-        page.navigate();
-        page.callActionOnStandaloneDeployment(deployment.getName(), "Enable");
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Enable");
         deploymentVerifier.verifyAttribute(ENABLED, true);
     }
 
@@ -87,13 +87,13 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         client.apply(deployment.deployEnabledCommand());
         deploymentVerifier.verifyExists().verifyAttribute(ENABLED, true);
 
-        page.navigate();
-        page.callActionOnStandaloneDeployment(deployment.getName(), disableActionName);
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), disableActionName);
         deploymentVerifier.verifyAttribute(ENABLED, false);
 
-        page.navigate();
+        deploymentPage.navigate();
         assertFalse(disableActionName + " action should not be available for already disabled deployment.",
-                page.isActionOnStandaloneDeploymentAvailable(deployment.getName(), disableActionName));
+                deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), disableActionName));
     }
 
     @Test
@@ -104,20 +104,20 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         client.apply(deployment.deployEnabledCommand());
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
 
-        page.navigate();
+        deploymentPage.navigate();
         assertFalse(explodeActionName + " action should not be available for enabled deployment.",
-                page.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
+                deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
 
         client.apply(deployment.disableCommand());
         assertFalse("Deployment should not be exploded yet.", deploymentOps.deploymentIsExploded(deployment.getName()));
 
-        page.navigate();
-        page.callActionOnStandaloneDeployment(deployment.getName(), explodeActionName);
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), explodeActionName);
         assertTrue("Deployment should be exploded.", deploymentOps.deploymentIsExploded(deployment.getName()));
 
-        page.navigate();
+        deploymentPage.navigate();
         assertFalse(explodeActionName + " action should not be available for already exploded deployment.",
-                page.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
+                deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
     }
 
     @Test
@@ -128,8 +128,8 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         client.apply(deployment.deployEnabledCommand());
         deploymentVerifier.verifyExists();
 
-        page.navigate();
-        page.callActionOnStandaloneDeployment(deployment.getName(), "Remove");
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Remove");
         console.confirmationDialog().confirm();
 
         deploymentVerifier.verifyDoesNotExist();
@@ -138,8 +138,8 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
     @Test
     public void createEmptyDeployment() throws Exception {
         String deploymentName = createSimpleDeployment().getName();
-        page.navigate();
-        DialogFragment dialog = page.addEmptyStandaloneDeployment();
+        deploymentPage.navigate();
+        DialogFragment dialog = deploymentPage.addEmptyStandaloneDeployment();
         dialog.getForm(Ids.DEPLOYMENT_EMPTY_FORM).text(NAME, deploymentName);
         dialog.primaryButton();
         new ResourceVerifier(Address.deployment(deploymentName), client).verifyExists();

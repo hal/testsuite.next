@@ -24,10 +24,10 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
 
     @Test
     public void uploadDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
 
-        WizardFragment wizard = page.uploadDeploymentToServerGroup(MAIN_SERVER_GROUP);
+        WizardFragment wizard = deploymentPage.uploadDeploymentToServerGroup(MAIN_SERVER_GROUP);
         wizard.getUploadForm().uploadFile(deployment.getDeploymentFile());
         wizard.next(Ids.UPLOAD_NAMES_FORM);
         wizard.finishStayOpen();
@@ -43,14 +43,14 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
 
     @Test
     public void addUnmanagedDeployment() throws Exception {
-        page.navigate();
+        deploymentPage.navigate();
         Deployment deployment = createSimpleDeployment();
         String
             nameValue = deployment.getName(),
             runtimeNameValue = Random.name(),
             pathValue = deployment.getDeploymentFile().getAbsolutePath();
 
-        DialogFragment dialog = page.addUnmanagedDeploymentToServerGroup(MAIN_SERVER_GROUP);
+        DialogFragment dialog = deploymentPage.addUnmanagedDeploymentToServerGroup(MAIN_SERVER_GROUP);
         FormFragment form = dialog.getForm(Ids.UNMANAGED_FORM);
         form.text(NAME, nameValue);
         form.text(RUNTIME_NAME, runtimeNameValue);
@@ -76,9 +76,9 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
         client.apply(deployment.deployEnabledCommand(OTHER_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
         deploymentInMainServerGroupVerifier.verifyDoesNotExist();
-        page.navigate();
+        deploymentPage.navigate();
 
-        page.uploadExistingContentToServerGroup(MAIN_SERVER_GROUP)
+        deploymentPage.uploadExistingContentToServerGroup(MAIN_SERVER_GROUP)
                 .selectServerGroups(deployment.getName())
                 .primaryButton();
         deploymentInMainServerGroupVerifier.verifyExists();
@@ -95,8 +95,8 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
                 .verifyExists()
                 .verifyAttribute(ENABLED, false);
 
-        page.navigate();
-        page.checkAndSelectDefaultActionOnServerGroupDeployment(MAIN_SERVER_GROUP, deployment.getName(), "Enable");
+        deploymentPage.navigate();
+        deploymentPage.checkAndSelectDefaultActionOnServerGroupDeployment(MAIN_SERVER_GROUP, deployment.getName(), "Enable");
         deploymentInMainServerGroupVerifier.verifyAttribute(ENABLED, true);
     }
 
@@ -110,8 +110,8 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
                 .verifyExists()
                 .verifyAttribute(ENABLED, true);
 
-        page.navigate();
-        page.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Disable");
+        deploymentPage.navigate();
+        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Disable");
         deploymentInMainServerGroupVerifier.verifyAttribute(ENABLED, false);
     }
 
@@ -124,8 +124,8 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
                 .and(DEPLOYMENT, deployment.getName()), client)
                 .verifyExists();
 
-        page.navigate();
-        page.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Remove").confirm();
+        deploymentPage.navigate();
+        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Remove").confirm();
         deploymentInMainServerGroupVerifier.verifyDoesNotExist();
     }
 

@@ -1,13 +1,17 @@
 package org.jboss.hal.testsuite.test.deployment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.page.deployment.DeploymentContentPage;
 import org.jboss.hal.testsuite.page.deployment.DeploymentPage;
 import org.junit.AfterClass;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -23,10 +27,15 @@ public abstract class AbstractDeploymentTest {
         INDEX_HTML = "index.html",
         OTHER_HTML = "other.html",
         MAIN_SERVER_GROUP = "main-server-group",
-        OTHER_SERVER_GROUP = "other-server-group";
+        OTHER_SERVER_GROUP = "other-server-group",
+        PATH = "path",
+        TO = "to";
 
     @Page
-    protected DeploymentPage page;
+    protected DeploymentPage deploymentPage;
+
+    @Page
+    protected DeploymentContentPage deploymentContentPage;
 
     @Inject
     protected Console console;
@@ -53,6 +62,16 @@ public abstract class AbstractDeploymentTest {
         deploymentsToBeCleanedUp.add(deploymentName);
         return new Deployment.Builder(deploymentName)
                 .textFile(OTHER_HTML, "<h1>Another HAL to rule them all</h1>")
+                .build();
+    }
+
+    protected Deployment createTreeDeployment() {
+        String
+            path = Stream.of(PATH, TO, INDEX_HTML).collect(Collectors.joining(File.separator)),
+            deploymentName = Random.name() + ".war";
+        deploymentsToBeCleanedUp.add(deploymentName);
+        return new Deployment.Builder(deploymentName)
+                .textFile(path, "<h1>Another HAL to rule them all</h1>")
                 .build();
     }
 

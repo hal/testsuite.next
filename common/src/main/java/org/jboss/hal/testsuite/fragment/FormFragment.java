@@ -160,6 +160,12 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
+    /** @return value of the text input */
+    public String text(String name) {
+        console.waitNoNotification(); // sometime notification interfere with text input
+        return inputElement(name).getAttribute("value");
+    }
+
     /**
      * Enters text with firing additional change event if console does not register the original one.
      * <b> Use only as a dirty workaround when {@link #text(String, String)} is not working properly via Selenium!</b>
