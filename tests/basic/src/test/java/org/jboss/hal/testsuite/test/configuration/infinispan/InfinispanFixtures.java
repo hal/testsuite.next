@@ -164,6 +164,10 @@ public final class InfinispanFixtures {
         return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "mixed-jdbc");
     }
 
+    public static Address hotrodStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "hotrod");
+    }
+
     public static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }

@@ -12,26 +12,36 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.creaper.command.AddRemoteSocketBinding;
+import org.jboss.hal.testsuite.creaper.command.RemoveSocketBinding;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.page.configuration.ScatteredCachePage;
 import org.jboss.hal.testsuite.test.configuration.datasource.DataSourceFixtures;
+import org.jboss.hal.testsuite.util.AvailablePortFinder;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.commands.datasources.AddDataSource;
+import org.wildfly.extras.creaper.commands.datasources.RemoveDataSource;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.SOCKET_BINDINGS;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.binaryJDBCStoreAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.customStoreAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.fileStoreAddress;
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.hotrodStoreAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.jdbcStoreAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.mixedJDBCStoreAddress;
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.remoteCacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
 
 @RunWith(Arquillian.class)
@@ -42,18 +52,24 @@ public class StoreTest {
 
     private static final String CACHE_CONTAINER = "cache-container-" + Random.name();
     private static final String SCATTERED_CACHE_CUSTOM_STORE =
-        "scattered-cache-with-custom-store-to-be-created" + Random.name();
+        "scattered-cache-with-custom-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_FILE_STORE =
-        "scattered-cache-with-file-store-to-be-created" + Random.name();
+        "scattered-cache-with-file-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_JDBC_STORE =
-        "scattered-cache-with-jdbc-store-to-be-created" + Random.name();
+        "scattered-cache-with-jdbc-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_BINARY_JDBC_STORE =
-        "scattered-cache-with-binary-jdbc-store-to-be-created" + Random.name();
+        "scattered-cache-with-binary-jdbc-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_MIXED_JDBC_STORE =
-        "scattered-cache-with-mixed-jdbc-store-to-be-created" + Random.name();
+        "scattered-cache-with-mixed-jdbc-store-to-be-created-" + Random.name();
+    private static final String SCATTERED_CACHE_HOTROD_STORE =
+        "scattered-cache-with-hotrod-store-to-be-created-" + Random.name();
     private static final String DATA_SOURCE_JDBC = "data-source-for-jdbc-store-" + Random.name();
-    private static final String DATA_SOURCE_BINARY_JDBC = "data-source-for-jdbc-store-" + Random.name();
-    private static final String DATA_SOURCE_MIXED_JDBC = "data-source-for-jdbc-store-" + Random.name();
+    private static final String DATA_SOURCE_BINARY_JDBC = "data-source-for-binary-jdbc-store-" + Random.name();
+    private static final String DATA_SOURCE_MIXED_JDBC = "data-source-for-mixed-jdbc-store-" + Random.name();
+    private static final String REMOTE_CACHE_CONTAINER_HOTROD =
+        "remote-cache-container-for-hotrod-store-" + Random.name();
+    private static final String REMOTE_SOCKET_BINDING_HOTROD = "remote-socket-binding-for-hotrod-store-" + Random.name();
+    private static final String REMOTE_CLUSTER_HOTROD = Random.name();
 
     @BeforeClass
     public static void init() throws IOException, CommandFailedException {
@@ -64,6 +80,7 @@ public class StoreTest {
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_JDBC_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_BINARY_JDBC_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_MIXED_JDBC_STORE));
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE));
         client.apply(
             new AddDataSource.Builder<>(DATA_SOURCE_JDBC).driverName("h2").jndiName(Random.jndiName()).connectionUrl(
                 DataSourceFixtures.h2ConnectionUrl(Random.name())).build());
@@ -79,12 +96,24 @@ public class StoreTest {
                 .connectionUrl(
                     DataSourceFixtures.h2ConnectionUrl(Random.name()))
                 .build());
+        client.apply(new AddRemoteSocketBinding(REMOTE_SOCKET_BINDING_HOTROD, "localhost",
+            AvailablePortFinder.getNextAvailableTCPPort()));
+        operations.batch(new Batch().add(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_HOTROD),
+            Values.of("default-remote-cluster", REMOTE_CLUSTER_HOTROD))
+            .add(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_HOTROD).and("remote-cluster", REMOTE_CLUSTER_HOTROD),
+                Values.of(SOCKET_BINDINGS,
+                    new ModelNodeGenerator.ModelNodeListBuilder().addAll(REMOTE_SOCKET_BINDING_HOTROD).build())));
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException {
+    public static void tearDown() throws IOException, OperationException, CommandFailedException {
         try {
             operations.removeIfExists(cacheContainerAddress(CACHE_CONTAINER));
+            operations.removeIfExists(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_HOTROD));
+            client.apply(new RemoveDataSource(DATA_SOURCE_JDBC));
+            client.apply(new RemoveDataSource(DATA_SOURCE_BINARY_JDBC));
+            client.apply(new RemoveDataSource(DATA_SOURCE_MIXED_JDBC));
+            client.apply(new RemoveSocketBinding(REMOTE_SOCKET_BINDING_HOTROD));
         } finally {
             client.close();
         }
@@ -166,5 +195,17 @@ public class StoreTest {
         console.verifySuccess();
         new ResourceVerifier(mixedJDBCStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_MIXED_JDBC_STORE),
             client).verifyExists();
+    }
+
+    @Test
+    public void addHotrodStore() throws Exception {
+        navigate(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE);
+        page.getSelectStoreDropdown().selectExact("Hotrod", "hotrod");
+        page.getEmptyStoreForm().mainAction();
+        AddResourceDialogFragment addResourceDialogFragment = console.addResourceDialog();
+        addResourceDialogFragment.getForm().text("remote-cache-container", REMOTE_CACHE_CONTAINER_HOTROD);
+        addResourceDialogFragment.add();
+        console.verifySuccess();
+        new ResourceVerifier(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE), client).verifyExists();
     }
 }
