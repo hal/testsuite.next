@@ -26,55 +26,87 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 public final class InfinispanFixtures {
 
     private static final String CACHE_CONTAINER_PREFIX = "cc";
+    private static final String REMOTE_CACHE_CONTAINER_PREFIX = "rcc";
     private static final String LOCAL_CACHE_PREFIX = "lc";
 
-    static final String ACQUIRE_TIMEOUT = "acquire-timeout";
-    static final String CONCURRENCY_LEVEL = "concurrency-level";
-    static final String INTERVAL = "interval";
-    static final String ISOLATION = "isolation";
-    static final String LIFESPAN = "lifespan";
-    static final String MAX_ENTRIES = "max-entries";
-    static final String MAX_IDLE = "max-idle";
-    static final String STRATEGY = "strategy";
+    public static final String ACQUIRE_TIMEOUT = "acquire-timeout";
+    public static final String CONCURRENCY_LEVEL = "concurrency-level";
+    public static final String INTERVAL = "interval";
+    public static final String ISOLATION = "isolation";
+    public static final String LIFESPAN = "lifespan";
+    public static final String MAX_ENTRIES = "max-entries";
+    public static final String MAX_IDLE = "max-idle";
+    public static final String STRATEGY = "strategy";
 
     public static Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
 
     // ------------------------------------------------------ cache container
 
-    static final String CC_CREATE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String CC_READ = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.READ, Random.name());
-    static final String CC_UPDATE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String CC_DELETE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.DELETE, Random.name());
+    public static final String CC_CREATE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String CC_READ = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.READ, Random.name());
+    public static final String CC_UPDATE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String CC_DELETE = Ids.build(CACHE_CONTAINER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address cacheContainerAddress(String name) {
+    public static final String REMOTE_CC_CREATE = Ids.build(REMOTE_CACHE_CONTAINER_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String REMOTE_CC_READ = Ids.build(REMOTE_CACHE_CONTAINER_PREFIX, CrudConstants.READ, Random.name());
+    public static final String REMOTE_CC_DELETE = Ids.build(REMOTE_CACHE_CONTAINER_PREFIX, CrudConstants.DELETE, Random.name());
+
+    public static final String SOCKET_BINDINGS = "socket-bindings";
+
+
+    public static Address cacheContainerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CACHE_CONTAINER, name);
+    }
+
+    public static Address remoteCacheContainerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("remote-cache-container", name);
+    }
+
+    public static Address remoteClusterAddress(String remoteCacheName, String remoteClusterName) {
+        return remoteCacheContainerAddress(remoteCacheName).and("remote-cluster", remoteClusterName);
+    }
+
+    public static Address nearCacheAddress(String remoteCacheContainerName) {
+        return remoteCacheContainerAddress(remoteCacheContainerName).and("near-cache", "invalidation");
+    }
+
+    public static Address connectionPoolAddress(String remoteCacheContainerName) {
+        return remoteCacheContainerAddress(remoteCacheContainerName).and("component", "connection-pool");
+    }
+
+    public static Address threadPoolAddress(String remoteCacheContainerName) {
+        return remoteCacheContainerAddress(remoteCacheContainerName).and("thread-pool", "async");
+    }
+
+    public static Address securityAddress(String remoteCacheContainerName) {
+        return remoteCacheContainerAddress(remoteCacheContainerName).and("component", "security");
     }
 
 
     // ------------------------------------------------------ local cache
 
-    static final String LC_CREATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.CREATE, Random.name());
-    static final String LC_UPDATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.UPDATE, Random.name());
-    static final String LC_UPDATE_ATTRIBUTES = Ids.build(LOCAL_CACHE_PREFIX, "update-attributes", Random.name());
-    static final String LC_RESET = Ids.build(LOCAL_CACHE_PREFIX, "reset", Random.name());
-    static final String LC_RESET_TRANSACTION = Ids.build(LOCAL_CACHE_PREFIX, "reset-transaction", Random.name());
-    static final String LC_REMOVE = Ids.build(LOCAL_CACHE_PREFIX, "remove", Random.name());
+    public static final String LC_CREATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String LC_UPDATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String LC_UPDATE_ATTRIBUTES = Ids.build(LOCAL_CACHE_PREFIX, "update-attributes", Random.name());
+    public static final String LC_RESET = Ids.build(LOCAL_CACHE_PREFIX, "reset", Random.name());
+    public static final String LC_RESET_TRANSACTION = Ids.build(LOCAL_CACHE_PREFIX, "reset-transaction", Random.name());
+    public static final String LC_REMOVE = Ids.build(LOCAL_CACHE_PREFIX, "remove", Random.name());
 
-    static Address localCacheAddress(String cacheContainer, String localCache) {
+    public static Address localCacheAddress(String cacheContainer, String localCache) {
         return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
     }
 
-    static Address componentAddress(String cacheContainer, String localCache, String component) {
+    public static Address componentAddress(String cacheContainer, String localCache, String component) {
         return localCacheAddress(cacheContainer, localCache).and("component", component);
     }
 
 
     // ------------------------------------------------------ local cache store
 
-    static final String LC_NO_STORE = Ids.build(LOCAL_CACHE_PREFIX, "no-store", Random.name());
-    static final String LC_FILE_STORE = Ids.build(LOCAL_CACHE_PREFIX, "file-store", Random.name());
+    public static final String LC_NO_STORE = Ids.build(LOCAL_CACHE_PREFIX, "no-store", Random.name());
+    public static final String LC_FILE_STORE = Ids.build(LOCAL_CACHE_PREFIX, "file-store", Random.name());
 
-    static Address storeAddress(String cacheContainer, String localCache, String store) {
+    public static Address storeAddress(String cacheContainer, String localCache, String store) {
         return localCacheAddress(cacheContainer, localCache).and("store", store);
     }
 
