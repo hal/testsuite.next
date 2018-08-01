@@ -36,7 +36,6 @@ public class AttributesTest {
 
     private static final String CACHE_CONTAINER = "cache-container-" + Random.name();
     private static final String SCATTERED_CACHE = "scattered-cache-" + Random.name();
-    private static final String PATH = "path-" + Random.name();
 
     @BeforeClass
     public static void init() throws IOException {
@@ -100,11 +99,8 @@ public class AttributesTest {
 
     @Test
     public void togglePassivation() throws Exception {
-        boolean passivation =
-            operations.readAttribute(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "passivation")
-                .booleanValue(true);
         crudOperations.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getCustomStoreAttributesForm(),
-            "passivation", !passivation);
+            "max-batch-size", Random.number());
     }
 
     @Test

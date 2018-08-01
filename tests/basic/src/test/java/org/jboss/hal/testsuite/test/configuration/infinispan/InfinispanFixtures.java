@@ -25,6 +25,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 
 public final class InfinispanFixtures {
 
+    private static final String STORE = "store";
     private static final String CACHE_CONTAINER_PREFIX = "cc";
     private static final String LOCAL_CACHE_PREFIX = "lc";
     private static final String COMPONENT = "component";
@@ -114,12 +115,25 @@ public final class InfinispanFixtures {
         return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }
 
-    public static Address fileStoreAddress(String cacheContainer, String scatteredCache) {
-        return scatteredCacheAddress(cacheContainer, scatteredCache).and("store", "file");
+    public static Address fileStoreAddress(String cacheContainer, String
+        scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "file");
     }
 
     public static Address customStoreAddress(String cacheContainer, String scatteredCache) {
-        return scatteredCacheAddress(cacheContainer, scatteredCache).and("store", "custom");
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "custom");
+    }
+
+    public static Address jdbcStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "jdbc");
+    }
+
+    public static Address binaryJDBCStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "binary-jdbc");
+    }
+
+    public static Address mixedJDBCStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "mixed-jdbc");
     }
 
 
@@ -129,7 +143,7 @@ public final class InfinispanFixtures {
     static final String LC_FILE_STORE = Ids.build(LOCAL_CACHE_PREFIX, "file-store", Random.name());
 
     static Address storeAddress(String cacheContainer, String localCache, String store) {
-        return localCacheAddress(cacheContainer, localCache).and("store", store);
+        return localCacheAddress(cacheContainer, localCache).and(STORE, store);
     }
 
     private InfinispanFixtures() {

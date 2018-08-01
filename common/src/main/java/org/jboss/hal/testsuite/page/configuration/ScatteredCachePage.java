@@ -2,18 +2,21 @@ package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.SelectFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.resources.CSS.bootstrapSelect;
 import static org.jboss.hal.resources.CSS.btn;
 import static org.jboss.hal.resources.CSS.btnDefault;
+import static org.jboss.hal.resources.CSS.btnGroup;
 import static org.jboss.hal.testsuite.Selectors.contains;
 
 @Place("scattered-cache")
@@ -23,6 +26,15 @@ public class ScatteredCachePage extends BasePage {
     private static final String FILE_STORE_ATTRIBUTES_TAB = "scattered-cache-cache-store-file-attributes-tab";
     public static final String CUSTOM_STORE_WRITE_BEHAVIOUR_TAB = "scattered-cache-cache-store-custom-write-tab";
     private static final String CUSTOM_STORE_ATTRIBUTES_TAB = "scattered-cache-cache-store-custom-attributes-tab";
+    public static final String JDBC_STORE_WRITE_BEHAVIOUR_TAB = "scattered-cache-cache-store-jdbc-write-tab";
+    private static final String JDBC_STORE_ATTRIBUTES_TAB = "scattered-cache-cache-store-jdbc-attributes-tab";
+    private static final String JDBC_STORE_STRING_TABLE_TAB = "scattered-cache-cache-store-jdbc-string-table-tab";
+    public static final String BINARY_JDBC_STORE_WRITE_BEHAVIOUR_TAB =
+        "scattered-cache-cache-store-binary-jdbc-write-tab";
+    private static final String BINARY_JDBC_STORE_ATTRIBUTES_TAB =
+        "scattered-cache-cache-store-binary-jdbc-attributes-tab";
+    private static final String BINARY_JDBC_STORE_BINARY_TABLE_TAB =
+        "scattered-cache-cache-store-binary-jdbc-binary-table-tab";
 
     @FindBy(id = "scattered-cache-tab-container")
     private TabsFragment configurationTab;
@@ -60,6 +72,9 @@ public class ScatteredCachePage extends BasePage {
     @FindBy(css = "label[for='scattered-cache-store-select'] + div." + bootstrapSelect)
     private SelectFragment switchStoreDropdown;
 
+    @FindBy(id = "scattered-cache-store-empty")
+    private EmptyState emptyStoreForm;
+
     @FindBy(id = "scattered-cache-cache-store-file-tab-container")
     private TabsFragment fileStoreTab;
 
@@ -77,6 +92,30 @@ public class ScatteredCachePage extends BasePage {
 
     @FindBy(id = "scattered-cache-cache-store-custom-behind-form")
     private FormFragment customStoreWriteBehindForm;
+
+    @FindBy(id = "scattered-cache-cache-store-jdbc-tab-container")
+    private TabsFragment jdbcStoreTab;
+
+    @FindBy(id = "scattered-cache-cache-store-jdbc-form")
+    private FormFragment jdbcStoreAttributesForm;
+
+    @FindBy(id = "scattered-cache-cache-store-jdbc-behind-form")
+    private FormFragment jdbcStoreWriteBehindForm;
+
+    @FindBy(id = "scattered-cache-cache-store-jdbc-string-table-form")
+    private FormFragment jdbcStoreStringTableForm;
+
+    @FindBy(id = "scattered-cache-cache-store-binary-jdbc-tab-container")
+    private TabsFragment binaryJDBCStoreTab;
+
+    @FindBy(id = "scattered-cache-cache-store-binary-jdbc-form")
+    private FormFragment binaryJDBCStoreAttributesForm;
+
+    @FindBy(id = "scattered-cache-cache-store-binary-jdbc-behind-form")
+    private FormFragment binaryJDBCStoreWriteBehindForm;
+
+    @FindBy(id = "scattered-cache-cache-store-binary-jdbc-binary-table-form")
+    private FormFragment binaryJDBCStoreBinaryTableForm;
 
     @FindBy(id = "scattered-cache-backups-table_wrapper")
     private TableFragment backupsTable;
@@ -127,22 +166,22 @@ public class ScatteredCachePage extends BasePage {
     }
 
     public FormFragment getObjectMemoryForm() {
-        switchMemoryDropdown.select("Object");
+        switchMemoryDropdown.select("Object", "object");
         return objectMemoryForm;
     }
 
     public FormFragment getBinaryMemoryForm() {
-        switchMemoryDropdown.select("Binary");
+        switchMemoryDropdown.select("Binary", "binary");
         return binaryMemoryForm;
     }
 
     public FormFragment getOffHeapMemoryForm() {
-        switchMemoryDropdown.select("Off Heap");
+        switchMemoryDropdown.select("Off Heap", "off-heap");
         return offHeapMemoryForm;
     }
 
     public FormFragment getFileStoreAttributesForm() {
-        switchStoreDropdown.select("File");
+        switchStoreDropdown.select("File", "file");
         fileStoreTab.select(FILE_STORE_ATTRIBUTES_TAB);
         return fileStoreAttributesForm;
     }
@@ -152,7 +191,7 @@ public class ScatteredCachePage extends BasePage {
     }
 
     public FormFragment getFileStoreWriteBehindForm() {
-        switchStoreDropdown.select("File");
+        switchStoreDropdown.select("File", "file");
         fileStoreTab.select(FILE_STORE_WRITE_BEHAVIOUR_TAB);
         return fileStoreWriteBehindForm;
     }
@@ -162,15 +201,59 @@ public class ScatteredCachePage extends BasePage {
     }
 
     public FormFragment getCustomStoreAttributesForm() {
-        switchStoreDropdown.select("Custom");
+        switchStoreDropdown.select("Custom", "custom");
         customStoreTab.select(CUSTOM_STORE_ATTRIBUTES_TAB);
         return customStoreAttributesForm;
     }
 
     public FormFragment getCustomStoreWriteBehindForm() {
-        switchStoreDropdown.select("Custom");
+        switchStoreDropdown.select("Custom", "custom");
         customStoreTab.select(CUSTOM_STORE_WRITE_BEHAVIOUR_TAB);
         return customStoreWriteBehindForm;
+    }
+
+    public TabsFragment getJdbcStoreTab() {
+        return jdbcStoreTab;
+    }
+
+    public FormFragment getJdbcStoreAttributesForm() {
+        switchStoreDropdown.selectExact("JDBC", "jdbc");
+        jdbcStoreTab.select(JDBC_STORE_ATTRIBUTES_TAB);
+        return jdbcStoreAttributesForm;
+    }
+
+    public FormFragment getJdbcStoreWriteBehindForm() {
+        switchStoreDropdown.selectExact("JDBC", "jdbc");
+        jdbcStoreTab.select(JDBC_STORE_WRITE_BEHAVIOUR_TAB);
+        return jdbcStoreWriteBehindForm;
+    }
+
+    public FormFragment getJdbcStoreStringTableForm() {
+        switchStoreDropdown.selectExact("JDBC", "jdbc");
+        jdbcStoreTab.select(JDBC_STORE_STRING_TABLE_TAB);
+        return jdbcStoreStringTableForm;
+    }
+
+    public TabsFragment getBinaryJDBCStoreTab() {
+        return binaryJDBCStoreTab;
+    }
+
+    public FormFragment getBinaryJDBCStoreAttributesForm() {
+        switchStoreDropdown.selectExact("Binary JDBC", "binary-jdbc");
+        binaryJDBCStoreTab.select(BINARY_JDBC_STORE_ATTRIBUTES_TAB);
+        return binaryJDBCStoreAttributesForm;
+    }
+
+    public FormFragment getBinaryJDBCStoreBinaryTableForm() {
+        switchStoreDropdown.selectExact("Binary JDBC", "binary-jdbc");
+        binaryJDBCStoreTab.select(BINARY_JDBC_STORE_BINARY_TABLE_TAB);
+        return binaryJDBCStoreBinaryTableForm;
+    }
+
+    public FormFragment getBinaryJDBCStoreWriteBehindForm() {
+        switchStoreDropdown.selectExact("Binary JDBC", "binary-jdbc");
+        binaryJDBCStoreTab.select(BINARY_JDBC_STORE_WRITE_BEHAVIOUR_TAB);
+        return binaryJDBCStoreWriteBehindForm;
     }
 
     public void switchBehaviour() {
@@ -178,5 +261,16 @@ public class ScatteredCachePage extends BasePage {
             ByJQuery.selector("button." + btn + "." + btnDefault + contains("Switch Behaviour") + ":visible"));
         Graphene.waitGui().until().element(button).is().visible();
         button.click();
+    }
+
+    public SelectFragment getSelectStoreDropdown() {
+        WebElement selectStoreDropdown =
+            emptyStoreForm.getRoot().findElement(By.cssSelector("div." + btnGroup + "." + bootstrapSelect));
+        Graphene.waitGui().until().element(selectStoreDropdown).is().visible();
+        return Graphene.createPageFragment(SelectFragment.class, selectStoreDropdown);
+    }
+
+    public EmptyState getEmptyStoreForm() {
+        return emptyStoreForm;
     }
 }
