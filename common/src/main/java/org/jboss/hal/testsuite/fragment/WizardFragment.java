@@ -124,6 +124,10 @@ public class WizardFragment {
         return Graphene.createPageFragment(FormFragment.class, formElement);
     }
 
+    public UploadFormFragment getUploadForm() {
+        return UploadFormFragment.getUploadForm(root);
+    }
+
     public WebElement getRoot() {
         return root;
     }

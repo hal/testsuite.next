@@ -69,9 +69,27 @@ public class ItemFragment {
         return browser.getCurrentUrl();
     }
 
+    /**
+     * Selects the default action in the dropdown
+     */
     public void defaultAction() {
         By selector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder);
         root.findElement(selector).click();
+    }
+
+    /**
+     * Check the default action name in the dropdown and select this default action
+     * @throws IllegalStateException if actual default action name differs from the expected one
+     */
+    public void defaultAction(String expectedDefaultActionName) {
+        By selector = ByJQuery.selector(DOT + btnGroup + " a." + btnFinder);
+        WebElement defaultButton = root.findElement(selector);
+        String actualDefaultActionName = defaultButton.getText();
+        if (!actualDefaultActionName.contentEquals(expectedDefaultActionName)) {
+            throw new IllegalStateException("Expected '" + expectedDefaultActionName
+                    + "' default action but actually there is '" + actualDefaultActionName + "'.");
+        }
+        defaultButton.click();
     }
 
     public DropdownFragment dropdown() {

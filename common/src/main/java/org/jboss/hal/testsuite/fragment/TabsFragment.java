@@ -33,4 +33,8 @@ public class TabsFragment {
         link.click();
         waitGui().until().element(pane).is().visible();
     }
+
+    public WebElement getRoot() {
+        return root;
+    }
 }

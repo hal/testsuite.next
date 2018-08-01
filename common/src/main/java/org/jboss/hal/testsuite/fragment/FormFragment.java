@@ -172,11 +172,18 @@ public class FormFragment {
     public void textByLabel(String labelContent, String value) {
         console.waitNoNotification();
         WebElement inputElement =
-            browser.findElement(ByJQuery.selector("label[title='" + labelContent + "']:visible + div." + halFormInput + " > input"));
+            browser.findElement(
+                ByJQuery.selector("label[title='" + labelContent + "']:visible + div." + halFormInput + " > input"));
         inputElement.clear();
         waitGui().until().element(inputElement).value().equalTo("");
         inputElement.sendKeys(value);
         waitGui().until().element(inputElement).value().equalTo(value);
+    }
+
+    /** @return value of the text input */
+    public String text(String name) {
+        console.waitNoNotification(); // sometime notification interfere with text input
+        return inputElement(name).getAttribute("value");
     }
 
     /**
