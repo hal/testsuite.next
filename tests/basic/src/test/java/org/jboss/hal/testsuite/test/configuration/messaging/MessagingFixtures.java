@@ -82,7 +82,6 @@ public final class MessagingFixtures {
     static final String MAX_BACKUPS =  "max-backups";
     static final String MAX_BATCH_SIZE = "max-batch-size";
     static final String MAX_BATCH_TIME = "max-batch-time";
-    static final String MAX_RETRIES = "max-retries";
     static final String MESSAGING_SECURITY_SETTING_ROLE = "messaging-security-setting-role";
     static final String PAGING_DIRECTORY = "paging-directory";
     static final String PERSISTENCE_ENABLED = "persistence-enabled";

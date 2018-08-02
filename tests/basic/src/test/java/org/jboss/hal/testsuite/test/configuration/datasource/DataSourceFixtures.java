@@ -60,7 +60,6 @@ public final class DataSourceFixtures {
     static final String BLOCKING_TIMEOUT_WAIT_MILLIS = "blocking-timeout-wait-millis";
     static final String SPY = "spy";
     static final String TRACKING = "tracking";
-    static final String CONNECTION_PROPERTIES = "connection-properties";
     static final String XA_DATASOURCE_PROPERTIES = "xa-datasource-properties";
 
     static Address dataSourceAddress(String name) {

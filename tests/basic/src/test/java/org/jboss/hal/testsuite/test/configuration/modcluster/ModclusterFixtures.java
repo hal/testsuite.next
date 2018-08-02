@@ -15,6 +15,9 @@
  */
 package org.jboss.hal.testsuite.test.configuration.modcluster;
 
+import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.CrudConstants;
+import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONFIGURATION;
@@ -23,13 +26,45 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.MODCLUSTER;
 public final class ModclusterFixtures {
 
     static final String EXCLUDED_CONTEXTS = "excluded-contexts";
+    static final String LOAD_MET = "load-met";
     static final String NODE_TIMEOUT = "node-timeout";
+    static final String PROXY = "proxy";
     static final String PROXY_URL = "proxy-url";
     static final String STICKY_SESSION = "sticky-session";
+    static final String HISTORY = "history";
+    static final String WEIGHT = "weight";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(MODCLUSTER);
-    static final Address CONFIG_ADDRESS = SUBSYSTEM_ADDRESS.and("mod-cluster-config", CONFIGURATION);
-    static final Address SSL_ADDRESS = CONFIG_ADDRESS.and("ssl", CONFIGURATION);
+
+    // ----------------------- proxy
+
+    static final String PROXY_CREATE = Ids.build(PROXY, CrudConstants.CREATE, Random.name());
+    static final String PROXY_CREATE2 = Ids.build(PROXY, "create2", Random.name());
+    static final String PROXY_READ = Ids.build(PROXY, CrudConstants.READ, Random.name());
+    static final String PROXY_UPDATE = Ids.build(PROXY, CrudConstants.UPDATE, Random.name());
+    static final String PROXY_DELETE = Ids.build(PROXY, CrudConstants.DELETE, Random.name());
+
+    static Address proxyAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("proxy", name);
+    }
+
+    static Address dynamicLoadProviderAddress(String proxy) {
+        return SUBSYSTEM_ADDRESS.and("proxy", proxy).and("dynamic-load-provider", CONFIGURATION);
+    }
+
+    static Address customLoadMetricAddress(String proxy, String name) {
+        return dynamicLoadProviderAddress(proxy).and("custom-load-metric", name);
+    }
+
+    // ----------------------- load metric
+
+    static final String LOAD_MET_CREATE = Ids.build(LOAD_MET, CrudConstants.CREATE, Random.name());
+    static final String LOAD_MET_UPDATE = Ids.build(LOAD_MET, CrudConstants.UPDATE, Random.name());
+    static final String LOAD_MET_DELETE = Ids.build(LOAD_MET, CrudConstants.DELETE, Random.name());
+
+    static Address loadMetricAddress(String proxy, String name) {
+        return dynamicLoadProviderAddress(proxy).and("load-metric", name);
+    }
 
     private ModclusterFixtures() {
     }

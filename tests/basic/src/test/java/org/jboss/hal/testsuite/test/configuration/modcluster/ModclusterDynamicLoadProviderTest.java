@@ -20,6 +20,7 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
@@ -31,26 +32,32 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_ALIAS;
-import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.SSL_ADDRESS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.HISTORY;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.PROXY_UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.dynamicLoadProviderAddress;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.proxyAddress;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
-public class ModclusterSslTest {
+public class ModclusterDynamicLoadProviderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.removeIfExists(SSL_ADDRESS);
+        operations.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.removeIfExists(SSL_ADDRESS);
+        operations.remove(proxyAddress(PROXY_UPDATE));
     }
 
     @Inject private Console console;
@@ -60,28 +67,28 @@ public class ModclusterSslTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate();
-        console.verticalNavigation().selectPrimary("modcluster-ssl-item");
-        form = page.getSslForm();
+        page.navigate(NAME, PROXY_UPDATE);
+        console.verticalNavigation().selectPrimary("dynamic-load-provider-item");
+        form = page.getDynamicLoadProviderForm();
     }
 
     @Test
     public void create() throws Exception {
-        crud.createSingleton(SSL_ADDRESS, form);
-    }
-
-    @Test
-    public void update() throws Exception {
-        crud.update(SSL_ADDRESS, form, KEY_ALIAS);
+        crud.createSingleton(dynamicLoadProviderAddress(PROXY_UPDATE), form);
     }
 
     @Test
     public void reset() throws Exception {
-        crud.reset(SSL_ADDRESS, form);
+        crud.reset(dynamicLoadProviderAddress(PROXY_UPDATE), form);
+    }
+
+    @Test
+    public void update() throws Exception {
+        crud.update(dynamicLoadProviderAddress(PROXY_UPDATE), form, HISTORY, Random.number());
     }
 
     @Test
     public void zzzDelete() throws Exception {
-        crud.deleteSingleton(SSL_ADDRESS, form);
+        crud.deleteSingleton(dynamicLoadProviderAddress(PROXY_UPDATE), form);
     }
 }

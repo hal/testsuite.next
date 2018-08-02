@@ -17,6 +17,7 @@ package org.jboss.hal.testsuite.page.configuration;
 
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
@@ -25,13 +26,15 @@ import org.openqa.selenium.support.FindBy;
 @Place(NameTokens.MODCLUSTER)
 public class ModclusterPage extends BasePage {
 
-    @FindBy(id = "modcluster-configuration-tab-container") private TabsFragment tabs;
+    @FindBy(id = "proxy-conf-form-tab-container") private TabsFragment tabs;
     @FindBy(id = "advertising-form") private FormFragment advertisingForm;
     @FindBy(id = "sessions-form") private FormFragment sessionsForm;
     @FindBy(id = "web-contexts-form") private FormFragment webContextsForm;
     @FindBy(id = "proxies-form") private FormFragment proxiesForm;
     @FindBy(id = "networking-form") private FormFragment networkingForm;
-    @FindBy(id = "modcluster-ssl-form") private FormFragment sslForm;
+    @FindBy(id = "dynamic-load-provider-form") private FormFragment dynamicLoadProviderForm;
+    @FindBy(id = "load-metrics-table_wrapper") private TableFragment loadMetricsTable;
+    @FindBy(id = "load-metrics-form") private FormFragment loadMetricsForm;
 
     public TabsFragment getTabs() {
         return tabs;
@@ -57,7 +60,15 @@ public class ModclusterPage extends BasePage {
         return networkingForm;
     }
 
-    public FormFragment getSslForm() {
-        return sslForm;
+    public FormFragment getDynamicLoadProviderForm() {
+        return dynamicLoadProviderForm;
+    }
+
+    public TableFragment getLoadMetricsTable() {
+        return loadMetricsTable;
+    }
+
+    public FormFragment getLoadMetricsForm() {
+        return loadMetricsForm;
     }
 }

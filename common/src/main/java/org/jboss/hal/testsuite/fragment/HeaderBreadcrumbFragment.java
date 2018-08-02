@@ -17,7 +17,7 @@ package org.jboss.hal.testsuite.fragment;
 
 import org.apache.commons.lang3.StringUtils;
 import org.jboss.arquillian.graphene.fragment.Root;
-import org.jboss.hal.core.Strings;
+import org.jboss.hal.resources.Strings;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 
