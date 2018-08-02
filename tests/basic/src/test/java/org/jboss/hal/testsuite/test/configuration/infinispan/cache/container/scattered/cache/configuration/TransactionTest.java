@@ -3,9 +3,7 @@ package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.sc
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -84,10 +82,7 @@ public class TransactionTest {
     }
 
     private void navigateToTransactionForm(String cacheContainer, String scatteredCache) {
-        Map<String, String> params = new HashMap<>();
-        params.put("cache-container", cacheContainer);
-        params.put("name", scatteredCache);
-        page.navigate(params);
+        page.navigate(cacheContainer, scatteredCache);
         console.verticalNavigation().selectPrimary("scattered-cache-item");
     }
 

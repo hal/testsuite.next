@@ -1,8 +1,6 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.scattered.cache.store.custom;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -84,10 +82,7 @@ public class WriteBehaviourTest {
     private ScatteredCachePage page;
 
     private void navigateToWriteBehaviour(String cacheContainer, String scatteredCache) {
-        Map<String, String> params = new HashMap<>();
-        params.put("cache-container", cacheContainer);
-        params.put("name", scatteredCache);
-        page.navigate(params);
+        page.navigate(cacheContainer, scatteredCache);
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
     }
 

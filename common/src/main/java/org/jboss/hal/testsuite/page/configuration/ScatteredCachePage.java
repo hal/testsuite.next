@@ -1,5 +1,8 @@
 package org.jboss.hal.testsuite.page.configuration;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.hal.testsuite.fragment.EmptyState;
@@ -146,6 +149,14 @@ public class ScatteredCachePage extends BasePage {
 
     @FindBy(id = "scattered-cache-backups-form")
     private FormFragment backupsForm;
+
+    @Override
+    public void navigate(String cacheContainer, String scatteredCache) {
+        Map<String, String> params = new HashMap<>();
+        params.put("cache-container", cacheContainer);
+        params.put("name", scatteredCache);
+        navigate(params);
+    }
 
     public FormFragment getConfigurationForm() {
         configurationTab.select("scattered-cache-tab");
