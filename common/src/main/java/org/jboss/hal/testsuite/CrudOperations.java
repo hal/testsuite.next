@@ -161,6 +161,11 @@ public class CrudOperations {
     }
 
     /** Updates the specified form and verifies the changes. */
+    public void update(Address address, FormFragment form, String attribute, double value) throws Exception {
+        update(address, form, f -> f.number(attribute, value), verifier -> verifier.verifyAttribute(attribute, value));
+    }
+
+    /** Updates the specified form and verifies the changes. */
     public void update(Address address, FormFragment form, String attribute, long value) throws Exception {
         update(address, form, f -> f.number(attribute, value), verifier -> verifier.verifyAttribute(attribute, value));
     }

@@ -187,6 +187,11 @@ public class FormFragment {
     }
 
     /** Changes the specified number input element. */
+    public void number(String name, double value) {
+        text(name, String.valueOf(value));
+    }
+
+    /** Changes the specified number input element. */
     public void number(String name, int value) {
         text(name, String.valueOf(value));
     }

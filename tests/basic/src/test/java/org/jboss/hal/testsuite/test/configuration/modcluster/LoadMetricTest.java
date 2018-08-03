@@ -102,6 +102,13 @@ public class LoadMetricTest {
     }
 
     @Test
+    public void updateCapacity() throws Exception {
+        // update an attribute of type DOUBLE
+        table.select(LOAD_MET_UPDATE);
+        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), form, "capacity", Random.numberDouble());
+    }
+
+    @Test
     public void zzzDelete() throws Exception {
         crud.delete(loadMetricAddress(PROXY_UPDATE, LOAD_MET_DELETE), table, LOAD_MET_DELETE);
     }

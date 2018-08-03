@@ -190,6 +190,11 @@ public class ResourceVerifier {
         return verifyAttribute(attributeName, new ModelNode(expectedValue));
     }
 
+    /** Verifies the value of attribute in model. */
+    public ResourceVerifier verifyAttribute(String attributeName, double expectedValue) throws Exception {
+        return verifyAttribute(attributeName, new ModelNode(expectedValue));
+    }
+
     /**
      * Verifies the value of attribute in model.
      *

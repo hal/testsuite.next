@@ -52,6 +52,14 @@ public class Random {
         return RandomUtils.nextInt(0, 100);
     }
 
+    /** Returns a random double between 0.001 and 99.999 */
+    public static double numberDouble() {
+        double v = RandomUtils.nextDouble(0.001, 99.999);
+        String str = Double.toString(v);
+        v = Double.parseDouble(str.substring(0, str.indexOf('.') + 4));
+        return v;
+    }
+
     /**
      * Returns a random integer within the specified range.
      *
