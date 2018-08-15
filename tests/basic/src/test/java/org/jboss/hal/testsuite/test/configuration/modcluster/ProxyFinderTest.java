@@ -51,9 +51,9 @@ public class ProxyFinderTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(proxyAddress(PROXY_READ), Values.of(CONNECTOR, HTTPS));
-        operations.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, HTTPS));
-        operations.add(proxyAddress(PROXY_DELETE), Values.of(CONNECTOR, HTTPS));
+        operations.add(proxyAddress(PROXY_READ), Values.of(LISTENER, HTTPS));
+        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, HTTPS));
+        operations.add(proxyAddress(PROXY_DELETE), Values.of(LISTENER, HTTPS));
     }
 
     @AfterClass
@@ -78,7 +78,7 @@ public class ProxyFinderTest {
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
         dialog.getForm().text(NAME, PROXY_CREATE);
-        dialog.getForm().text(CONNECTOR, HTTPS);
+        dialog.getForm().text(LISTENER, HTTPS);
         dialog.add();
 
         console.verifySuccess();
@@ -93,7 +93,7 @@ public class ProxyFinderTest {
 
     @Test
     public void refresh() throws Exception {
-        operations.add(proxyAddress(PROXY_CREATE2), Values.of(CONNECTOR, HTTPS));
+        operations.add(proxyAddress(PROXY_CREATE2), Values.of(LISTENER, HTTPS));
         console.waitNoNotification();
         column.refresh();
         assertTrue(column.containsItem(Ids.modclusterProxy(PROXY_CREATE2)));

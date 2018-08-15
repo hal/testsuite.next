@@ -32,9 +32,9 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LISTENER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
 
@@ -46,7 +46,7 @@ public class ModclusterConfigurationTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
+        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, DEFAULT));
     }
 
     @AfterClass
@@ -69,7 +69,7 @@ public class ModclusterConfigurationTest {
     public void updateAdvertising() throws Exception {
         page.getTabs().select("advertising-tab");
         form = page.getAdvertisingForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, CONNECTOR, HTTPS);
+        crud.update(proxyAddress(PROXY_UPDATE), form, LISTENER, HTTPS);
     }
 
     @Test

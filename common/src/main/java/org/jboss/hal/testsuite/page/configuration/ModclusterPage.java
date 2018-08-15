@@ -32,7 +32,7 @@ public class ModclusterPage extends BasePage {
     @FindBy(id = "web-contexts-form") private FormFragment webContextsForm;
     @FindBy(id = "proxies-form") private FormFragment proxiesForm;
     @FindBy(id = "networking-form") private FormFragment networkingForm;
-    @FindBy(id = "dynamic-load-provider-form") private FormFragment dynamicLoadProviderForm;
+    @FindBy(id = "load-provider-dynamic-form") private FormFragment loadProviderDynamicForm;
     @FindBy(id = "load-metrics-table_wrapper") private TableFragment loadMetricsTable;
     @FindBy(id = "load-metrics-form") private FormFragment loadMetricsForm;
 
@@ -60,8 +60,8 @@ public class ModclusterPage extends BasePage {
         return networkingForm;
     }
 
-    public FormFragment getDynamicLoadProviderForm() {
-        return dynamicLoadProviderForm;
+    public FormFragment getLoadProviderDynamicForm() {
+        return loadProviderDynamicForm;
     }
 
     public TableFragment getLoadMetricsTable() {

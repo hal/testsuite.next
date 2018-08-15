@@ -54,7 +54,7 @@ public class LoadMetricTest {
     public static void beforeClass() throws Exception {
         Batch proxyAdd = new Batch();
         proxyAdd.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
-        proxyAdd.add(dynamicLoadProviderAddress(PROXY_UPDATE));
+        proxyAdd.add(loadProviderDynamicAddress(PROXY_UPDATE));
         operations.batch(proxyAdd);
         operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_MET_DELETE), Values.of(TYPE, "mem"));
         operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), Values.of(TYPE, "mem"));

@@ -20,7 +20,6 @@ import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONFIGURATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODCLUSTER;
 
 public final class ModclusterFixtures {
@@ -48,12 +47,12 @@ public final class ModclusterFixtures {
         return SUBSYSTEM_ADDRESS.and("proxy", name);
     }
 
-    static Address dynamicLoadProviderAddress(String proxy) {
-        return SUBSYSTEM_ADDRESS.and("proxy", proxy).and("dynamic-load-provider", CONFIGURATION);
+    static Address loadProviderDynamicAddress(String proxy) {
+        return SUBSYSTEM_ADDRESS.and("proxy", proxy).and("load-provider", "dynamic");
     }
 
     static Address customLoadMetricAddress(String proxy, String name) {
-        return dynamicLoadProviderAddress(proxy).and("custom-load-metric", name);
+        return loadProviderDynamicAddress(proxy).and("custom-load-metric", name);
     }
 
     // ----------------------- load metric
@@ -63,7 +62,7 @@ public final class ModclusterFixtures {
     static final String LOAD_MET_DELETE = Ids.build(LOAD_MET, CrudConstants.DELETE, Random.name());
 
     static Address loadMetricAddress(String proxy, String name) {
-        return dynamicLoadProviderAddress(proxy).and("load-metric", name);
+        return loadProviderDynamicAddress(proxy).and("load-metric", name);
     }
 
     private ModclusterFixtures() {
