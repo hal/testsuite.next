@@ -32,6 +32,7 @@ public final class LoggingFixtures {
     private static final String SIZE_HANDLER_PREFIX = "sh";
     private static final String ASYNC_HANDLER_PREFIX = "ah";
     private static final String CUSTOM_HANDLER_PREFIX = "ch";
+    private static final String SOCKET_HANDLER_PREFIX = "soh";
     private static final String SYSLOG_HANDLER_PREFIX = "sh";
     private static final String CUSTOM_FORMATTER_PREFIX = "cf";
     private static final String PATTERN_FORMATTER_PREFIX = "pf";
@@ -53,9 +54,11 @@ public final class LoggingFixtures {
     public static final String LOGGING_PROFILE_HANDLER_ITEM = "logging-profile-handler-item";
     public static final String MODULE_VALUE = "org.jboss.as.logging";
     public static final String NAMESPACE_URI = "namespace-uri";
+    public static final String NAMED_FORMATTER = "named-formatter";
     public static final String PATH_VALUE = "pa/th";
     public static final String RECORD_DELIMITER = "record-delimiter";
     public static final String RECORD_DELIMITER_PROPERTY_NAME = "recordDelimiter";
+    public static final String SOCKET_HANDLER = "socket-handler";
     public static final String SUFFIX = "suffix";
     public static final String SUFFIX_VALUE = "yyyy-MM-dd-HH-mm";
     public static final String NAME = "name";
@@ -147,6 +150,12 @@ public final class LoggingFixtures {
     static Address customHandlerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(CUSTOM_HANDLER, name);
     }
+
+    // ------------------------------------------------------ socket handler
+
+    public static final String SOCKET_HANDLER_CREATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String SOCKET_HANDLER_UPDATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String SOCKET_HANDLER_DELETE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
     // ------------------------------------------------------ syslog handler
 

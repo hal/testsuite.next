@@ -39,6 +39,8 @@ public class LoggingSubsystemConfigurationPage extends BasePage implements Loggi
     @FindBy(id = "logging-handler-size-rotating-file-form-file-readonly") private WebElement readSizeFileInputElement;
     @FindBy(id = "logging-handler-custom-table" + WRAPPER) private TableFragment customHandlerTable;
     @FindBy(id = "logging-handler-custom-form") private FormFragment customHandlerForm;
+    @FindBy(id = "logging-handler-socket-table" + WRAPPER) private TableFragment socketHandlerTable;
+    @FindBy(id = "logging-handler-socket-form") private FormFragment socketHandlerForm;
     @FindBy(id = "logging-handler-syslog-table" + WRAPPER) private TableFragment syslogHandlerTable;
     @FindBy(id = "logging-handler-syslog-form") private FormFragment syslogHandlerForm;
     @FindBy(id = "logging-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
@@ -154,6 +156,16 @@ public class LoggingSubsystemConfigurationPage extends BasePage implements Loggi
 
     public FormFragment getCustomHandlerForm() {
         return customHandlerForm;
+    }
+
+    @Override
+    public TableFragment getSocketHandlerTable() {
+        return socketHandlerTable;
+    }
+
+    @Override
+    public FormFragment getSocketHandlerForm() {
+        return socketHandlerForm;
     }
 
     public TableFragment getSyslogHandlerTable() {

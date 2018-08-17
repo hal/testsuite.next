@@ -38,6 +38,8 @@ public class LoggingProfileConfigurationPage extends BasePage implements Logging
     @FindBy(id = "logging-profile-handler-size-rotating-file-form-file-readonly") private WebElement readSizeFileInputElement;
     @FindBy(id = "logging-profile-handler-custom-table" + WRAPPER) private TableFragment customHandlerTable;
     @FindBy(id = "logging-profile-handler-custom-form") private FormFragment customHandlerForm;
+    @FindBy(id = "logging-profile-handler-socket-table" + WRAPPER) private TableFragment socketHandlerTable;
+    @FindBy(id = "logging-profile-handler-socket-form") private FormFragment socketHandlerForm;
     @FindBy(id = "logging-profile-handler-syslog-table" + WRAPPER) private TableFragment syslogHandlerTable;
     @FindBy(id = "logging-profile-handler-syslog-form") private FormFragment syslogHandlerForm;
     @FindBy(id = "logging-profile-formatter-pattern-table" + WRAPPER) private TableFragment patternFormatterTable;
@@ -149,6 +151,16 @@ public class LoggingProfileConfigurationPage extends BasePage implements Logging
 
     public FormFragment getCustomHandlerForm() {
         return customHandlerForm;
+    }
+
+    @Override
+    public TableFragment getSocketHandlerTable() {
+        return socketHandlerTable;
+    }
+
+    @Override
+    public FormFragment getSocketHandlerForm() {
+        return socketHandlerForm;
     }
 
     public TableFragment getSyslogHandlerTable() {

@@ -71,6 +71,10 @@ public interface LoggingConfigurationPage {
 
      FormFragment getCustomHandlerForm();
 
+     TableFragment getSocketHandlerTable();
+
+     FormFragment getSocketHandlerForm();
+
      TableFragment getSyslogHandlerTable();
 
      FormFragment getSyslogHandlerForm();
