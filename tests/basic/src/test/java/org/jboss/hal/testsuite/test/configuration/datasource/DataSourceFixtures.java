@@ -70,7 +70,7 @@ public final class DataSourceFixtures {
         return SUBSYSTEM_ADDRESS.and(XA_DATA_SOURCE, name);
     }
 
-    static String h2ConnectionUrl(String name) {
+    public static String h2ConnectionUrl(String name) {
         return "jdbc:h2:mem:" + name + ";DB_CLOSE_DELAY=-1";
     }
 

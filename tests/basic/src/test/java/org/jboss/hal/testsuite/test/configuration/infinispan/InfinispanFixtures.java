@@ -25,9 +25,11 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
 
 public final class InfinispanFixtures {
 
+    private static final String STORE = "store";
     private static final String CACHE_CONTAINER_PREFIX = "cc";
     private static final String REMOTE_CACHE_CONTAINER_PREFIX = "rcc";
     private static final String LOCAL_CACHE_PREFIX = "lc";
+    private static final String COMPONENT = "component";
 
     public static final String ACQUIRE_TIMEOUT = "acquire-timeout";
     public static final String CONCURRENCY_LEVEL = "concurrency-level";
@@ -37,6 +39,11 @@ public final class InfinispanFixtures {
     public static final String MAX_ENTRIES = "max-entries";
     public static final String MAX_IDLE = "max-idle";
     public static final String STRATEGY = "strategy";
+    public static final String WRITE = "write";
+    public static final String BEHIND = "behind";
+    public static final String THROUGH = "through";
+    public static final String CONSISTENT_HASH_STRATEGY = "consistent-hash-strategy";
+    public static final String PATH = "path";
 
     public static Address SUBSYSTEM_ADDRESS = Address.subsystem(INFINISPAN);
 
@@ -71,7 +78,7 @@ public final class InfinispanFixtures {
     }
 
     public static Address connectionPoolAddress(String remoteCacheContainerName) {
-        return remoteCacheContainerAddress(remoteCacheContainerName).and("component", "connection-pool");
+        return remoteCacheContainerAddress(remoteCacheContainerName).and(COMPONENT, "connection-pool");
     }
 
     public static Address threadPoolAddress(String remoteCacheContainerName) {
@@ -79,7 +86,7 @@ public final class InfinispanFixtures {
     }
 
     public static Address securityAddress(String remoteCacheContainerName) {
-        return remoteCacheContainerAddress(remoteCacheContainerName).and("component", "security");
+        return remoteCacheContainerAddress(remoteCacheContainerName).and(COMPONENT, "security");
     }
 
 
@@ -96,8 +103,73 @@ public final class InfinispanFixtures {
         return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
     }
 
+    public static Address scatteredCacheAddress(String cacheContainer, String scatteredCache) {
+        return cacheContainerAddress(cacheContainer).and("scattered-cache", scatteredCache);
+    }
+
+    public static Address expirationAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "expiration");
+    }
+
+    public static Address lockingAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "locking");
+    }
+
+    public static Address partitionHandlingAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "partition-handling");
+    }
+
+    public static Address stateTransferAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "state-transfer");
+    }
+
+    public static Address transactionAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "transaction");
+    }
+
+    public static Address objectMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "object");
+    }
+
+    public static Address binaryMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "binary");
+    }
+
+    public static Address offHeapMemoryAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and("memory", "off-heap");
+    }
+
+    public static Address backupAddress(String cacheContainer, String scatteredCache, String backup) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(COMPONENT, "backups").and("backup", backup);
+    }
+
+    public static Address fileStoreAddress(String cacheContainer, String
+        scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "file");
+    }
+
+    public static Address customStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "custom");
+    }
+
+    public static Address jdbcStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "jdbc");
+    }
+
+    public static Address binaryJDBCStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "binary-jdbc");
+    }
+
+    public static Address mixedJDBCStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "mixed-jdbc");
+    }
+
+    public static Address hotrodStoreAddress(String cacheContainer, String scatteredCache) {
+        return scatteredCacheAddress(cacheContainer, scatteredCache).and(STORE, "hotrod");
+    }
+
     public static Address componentAddress(String cacheContainer, String localCache, String component) {
-        return localCacheAddress(cacheContainer, localCache).and("component", component);
+        return localCacheAddress(cacheContainer, localCache).and(COMPONENT, component);
     }
 
 

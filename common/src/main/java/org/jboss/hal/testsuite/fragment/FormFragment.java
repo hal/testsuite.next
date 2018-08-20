@@ -42,18 +42,28 @@ public class FormFragment {
 
     private static final String DOT = ".";
 
-    @Drone private WebDriver browser;
-    @Root private WebElement root;
-    @Inject private Console console;
-    @FindBy(css = "a[data-operation=edit]") private WebElement editLink;
-    @FindBy(css = "a[data-operation=reset]") private WebElement resetLink;
-    @FindBy(css = "a[data-operation=remove]") private WebElement removeLink;
-    @FindBy(css = DOT + formButtons + " ." + btnDefault) private WebElement cancelButton;
-    @FindBy(css = DOT + formButtons + " ." + btnPrimary) private WebElement saveButton;
-    @FindBy(css = DOT + readonly) private WebElement readOnlySection;
-    @FindBy(css = DOT + editing) private WebElement editingSection;
-    @FindBy(css = DOT + blankSlatePf) private WebElement blankSlate;
-
+    @Drone
+    private WebDriver browser;
+    @Root
+    private WebElement root;
+    @Inject
+    private Console console;
+    @FindBy(css = "a[data-operation=edit]")
+    private WebElement editLink;
+    @FindBy(css = "a[data-operation=reset]")
+    private WebElement resetLink;
+    @FindBy(css = "a[data-operation=remove]")
+    private WebElement removeLink;
+    @FindBy(css = DOT + formButtons + " ." + btnDefault)
+    private WebElement cancelButton;
+    @FindBy(css = DOT + formButtons + " ." + btnPrimary)
+    private WebElement saveButton;
+    @FindBy(css = DOT + readonly)
+    private WebElement readOnlySection;
+    @FindBy(css = DOT + editing)
+    private WebElement editingSection;
+    @FindBy(css = DOT + blankSlatePf)
+    private WebElement blankSlate;
 
     // ------------------------------------------------------ empty mode
 
@@ -70,12 +80,12 @@ public class FormFragment {
     }
 
     /**
-    * Waits until the blank section is visible. If this form is part of a tab pane, make sure to {@linkplain
-    * TabsFragment#select(String) select} the tab first!
-    */
-   public void viewBlank() {
-       waitGui().until().element(blankSlate).is().visible();
-   }
+     * Waits until the blank section is visible. If this form is part of a tab pane, make sure to {@linkplain
+     * TabsFragment#select(String) select} the tab first!
+     */
+    public void viewBlank() {
+        waitGui().until().element(blankSlate).is().visible();
+    }
 
     // ------------------------------------------------------ read-only mode
 
@@ -109,7 +119,6 @@ public class FormFragment {
         String expected = Strings.repeat(MASK_CHARACTER, value.length());
         return value.equals(expected);
     }
-
 
     // ------------------------------------------------------ edit mode
 
@@ -160,6 +169,17 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo(value);
     }
 
+    public void textByLabel(String labelContent, String value) {
+        console.waitNoNotification();
+        WebElement inputElement =
+            browser.findElement(
+                ByJQuery.selector("label[title='" + labelContent + "']:visible + div." + halFormInput + " > input"));
+        inputElement.clear();
+        waitGui().until().element(inputElement).value().equalTo("");
+        inputElement.sendKeys(value);
+        waitGui().until().element(inputElement).value().equalTo(value);
+    }
+
     /** @return value of the text input */
     public String text(String name) {
         console.waitNoNotification(); // sometime notification interfere with text input
@@ -169,15 +189,18 @@ public class FormFragment {
     /**
      * Enters text with firing additional change event if console does not register the original one.
      * <b> Use only as a dirty workaround when {@link #text(String, String)} is not working properly via Selenium!</b>
-     * @param identifier identifier of element to be written to
-     * @param value a value to be entered
+     *
+     * @param identifier
+     *     identifier of element to be written to
+     * @param value
+     *     a value to be entered
      */
     public FormFragment editTextFiringExtraChangeEvent(String identifier, String value) {
         text(identifier, value);
         JavascriptExecutor js = (JavascriptExecutor) browser;
         js.executeScript("var evt = document.createEvent('HTMLEvents');"
-                + "evt.initEvent('change', true, true);"
-                + "arguments[0].dispatchEvent(evt);", inputElement(identifier));
+            + "evt.initEvent('change', true, true);"
+            + "arguments[0].dispatchEvent(evt);", inputElement(identifier));
         return this;
     }
 
@@ -227,7 +250,8 @@ public class FormFragment {
         WebElement inputElement = inputElement(name);
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
-            WebElement switchElement = root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
+            WebElement switchElement =
+                root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
             try {
                 console.scrollIntoView(switchElement).click();
             } catch (ElementClickInterceptedException e) {
@@ -268,7 +292,6 @@ public class FormFragment {
         return browser.findElement(By.id(editingId(name)));
     }
 
-
     // ------------------------------------------------------ reset & remove
 
     /** Clicks on the reset link and confirms the confirmation dialog */
@@ -298,7 +321,6 @@ public class FormFragment {
     public WebElement getRoot() {
         return root;
     }
-
 
     // ------------------------------------------------------ helper methods
 

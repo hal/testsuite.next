@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.graphene.findby.ByJQuery;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
@@ -31,9 +32,12 @@ import static org.jboss.hal.testsuite.Selectors.contains;
  */
 public class SelectFragment {
 
-    @FindBy(css = "button." + dropdownToggle) private WebElement button;
-    @FindBy(css = "div." + dropdownMenu) private WebElement menu;
-    @FindBy(css = "select." + selectpicker) private WebElement select;
+    @FindBy(css = "button." + dropdownToggle)
+    private WebElement button;
+    @FindBy(css = "div." + dropdownMenu)
+    private WebElement menu;
+    @FindBy(css = "select." + selectpicker)
+    private WebElement select;
 
     /** Selects the specified text. */
     public void select(String text) {
@@ -44,7 +48,15 @@ public class SelectFragment {
     public void select(String text, String value) {
         button.click();
         waitGui().until().element(menu).is().visible();
+
         menu.findElement(ByJQuery.selector("a" + contains(text))).click();
+        waitGui().until().element(select).value().equalTo(value);
+    }
+
+    public void selectExact(String text, String value) {
+        button.click();
+        waitGui().until().element(menu).is().visible();
+        menu.findElement(By.xpath(".//span[text()=\"" + text + "\"]")).click();
         waitGui().until().element(select).value().equalTo(value);
     }
 }
