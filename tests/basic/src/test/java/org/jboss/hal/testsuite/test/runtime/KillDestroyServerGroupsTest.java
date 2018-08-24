@@ -2,6 +2,7 @@ package org.jboss.hal.testsuite.test.runtime;
 
 import java.io.IOException;
 import java.util.concurrent.TimeUnit;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.junit.Arquillian;
