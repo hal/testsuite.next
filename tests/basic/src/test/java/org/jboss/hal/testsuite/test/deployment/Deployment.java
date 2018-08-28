@@ -1,11 +1,13 @@
 package org.jboss.hal.testsuite.test.deployment;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.jboss.hal.testsuite.util.ConfigUtils;
-import org.jboss.shrinkwrap.api.Archive; //import org.jboss.shrinkwrap.api.Assignable;
+import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.Asset;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -22,6 +24,7 @@ public class Deployment {
     private Deployment(Builder builder) {
         this.archive = (Archive) ShrinkWrap.create(builder.type.archiveType, builder.deploymentName);
         builder.assetMap.forEach((path, asset) -> archive.add(asset, path));
+        builder.classes.forEach(clazz -> ((WebArchive)archive).addClass(clazz));
     }
 
     public File getDeploymentFile() {
@@ -72,6 +75,7 @@ public class Deployment {
         private String deploymentName;
         private Type type = Type.WAR;
         private Map<String, Asset> assetMap = new HashMap<>();
+        private List<Class> classes = new ArrayList<>();
 
         public Builder(String deploymentName) {
             this.deploymentName = deploymentName;
@@ -85,12 +89,20 @@ public class Deployment {
             return this;
         }
 
+        public Builder classFile(Class clazz) {
+            classes.add(clazz);
+            return this;
+        }
+
         public Builder type(Type type) {
             this.type = type;
             return this;
         }
 
         public Deployment build() {
+            if (!classes.isEmpty() && type != Type.WAR) {
+                throw new IllegalArgumentException("Only WAR type is supported for classes at the moment.");
+            }
             return new Deployment(this);
         }
     }
