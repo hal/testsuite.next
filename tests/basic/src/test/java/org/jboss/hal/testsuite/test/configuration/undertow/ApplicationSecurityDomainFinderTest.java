@@ -28,6 +28,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
 
 @RunWith(Arquillian.class)
 public class ApplicationSecurityDomainFinderTest {
@@ -65,7 +66,7 @@ public class ApplicationSecurityDomainFinderTest {
     private static void createApplicationSecurityDomain(String applicationSecurityDomainNameRemove) throws IOException {
         operations.add(
             ApplicationSecurityDomainFixtures.applicationSecurityDomain(applicationSecurityDomainNameRemove),
-            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication"));
+            Values.of(SECURITY_DOMAIN, "ApplicationDomain"));
     }
 
     @AfterClass
@@ -93,7 +94,7 @@ public class ApplicationSecurityDomainFinderTest {
         AddResourceDialogFragment addResourceDialogFragment = applicationSecurityColumn.add();
         FormFragment formFragment = addResourceDialogFragment.getForm();
         formFragment.text(NAME, APPLICATION_SECURITY_DOMAIN_NAME_CREATE);
-        formFragment.text(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication");
+        formFragment.text(SECURITY_DOMAIN, "ApplicationDomain");
         addResourceDialogFragment.add();
         console.verifySuccess();
         Assert.assertTrue("Newly added application security domain should be present in the column",

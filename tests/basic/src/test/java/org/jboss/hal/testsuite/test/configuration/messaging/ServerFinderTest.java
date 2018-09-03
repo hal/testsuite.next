@@ -22,6 +22,7 @@ import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
@@ -34,10 +35,13 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MESSAGING_ACTIVEMQ;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
 import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.configurationSubsystemPath;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
@@ -52,9 +56,30 @@ public class ServerFinderTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(serverAddress(SRV_READ));
-        operations.add(serverAddress(SRV_UPDATE));
-        operations.add(serverAddress(SRV_DELETE));
+        // the path parameters must be all different
+        Batch batchSrvRead = new Batch();
+        batchSrvRead.add(serverAddress(SRV_READ));
+        batchSrvRead.add(serverPathAddress(SRV_READ, BINDINGS_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvRead.add(serverPathAddress(SRV_READ, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvRead.add(serverPathAddress(SRV_READ, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvRead.add(serverPathAddress(SRV_READ, PAGING_DIRECTORY), Values.of(PATH, Random.name()));
+        operations.batch(batchSrvRead);
+
+        Batch batchSrvUpd = new Batch();
+        batchSrvUpd.add(serverAddress(SRV_UPDATE));
+        batchSrvUpd.add(serverPathAddress(SRV_UPDATE, BINDINGS_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvUpd.add(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvUpd.add(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvUpd.add(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), Values.of(PATH, Random.name()));
+        operations.batch(batchSrvUpd);
+
+        Batch batchSrvDel = new Batch();
+        batchSrvDel.add(serverAddress(SRV_DELETE));
+        batchSrvDel.add(serverPathAddress(SRV_DELETE, BINDINGS_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvDel.add(serverPathAddress(SRV_DELETE, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvDel.add(serverPathAddress(SRV_DELETE, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrvDel.add(serverPathAddress(SRV_DELETE, PAGING_DIRECTORY), Values.of(PATH, Random.name()));
+        operations.batch(batchSrvDel);
     }
 
     @AfterClass
@@ -80,6 +105,10 @@ public class ServerFinderTest {
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
         dialog.getForm().text(NAME, SRV_CREATE);
+        dialog.getForm().text(PATH_BINDING_DIRECTORY, Random.name());
+        dialog.getForm().text(PATH_JOURNAL_DIRECTORY, Random.name());
+        dialog.getForm().text(PATH_LARGE_MESSAGES_DIRECTORY, Random.name());
+        dialog.getForm().text(PATH_PAGING_DIRECTORY, Random.name());
         dialog.add();
 
         console.verifySuccess();
@@ -94,7 +123,13 @@ public class ServerFinderTest {
 
     @Test
     public void refresh() throws Exception {
-        operations.add(serverAddress(SRV_CREATE2));
+        Batch batchSrv2 = new Batch();
+        batchSrv2.add(serverAddress(SRV_CREATE2));
+        batchSrv2.add(serverPathAddress(SRV_CREATE2, BINDINGS_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrv2.add(serverPathAddress(SRV_CREATE2, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrv2.add(serverPathAddress(SRV_CREATE2, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
+        batchSrv2.add(serverPathAddress(SRV_CREATE2, PAGING_DIRECTORY), Values.of(PATH, Random.name()));
+        operations.batch(batchSrv2);
         console.waitNoNotification();
         column.refresh();
         assertTrue(column.containsItem(Ids.messagingServer(SRV_CREATE2)));

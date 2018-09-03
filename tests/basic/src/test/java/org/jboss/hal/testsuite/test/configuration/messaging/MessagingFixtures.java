@@ -84,6 +84,10 @@ public final class MessagingFixtures {
     static final String MAX_BATCH_TIME = "max-batch-time";
     static final String MESSAGING_SECURITY_SETTING_ROLE = "messaging-security-setting-role";
     static final String PAGING_DIRECTORY = "paging-directory";
+    static final String PATH_BINDING_DIRECTORY = "path-bindings-directory";
+    static final String PATH_JOURNAL_DIRECTORY = "path-journal-directory";
+    static final String PATH_LARGE_MESSAGES_DIRECTORY = "path-large-messages-directory";
+    static final String PATH_PAGING_DIRECTORY = "path-paging-directory";
     static final String PERSISTENCE_ENABLED = "persistence-enabled";
     static final String QUALITY_OF_SERVICE = "quality-of-service";
     static final String REFRESH_TIMEOUT = "refresh-timeout";
