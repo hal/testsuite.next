@@ -7,12 +7,18 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
+import org.jboss.hal.testsuite.util.Library;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.junit.Assert.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ARCHIVE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ENABLED;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RUNTIME_NAME;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class StandaloneDeploymentTest extends AbstractDeploymentTest {
@@ -49,6 +55,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         form.text(RUNTIME_NAME, runtimeNameValue);
         form.text(PATH, pathValue);
         form.flip(ARCHIVE, true);
+        Library.letsSleep(500);
         dialog.primaryButton();
 
         new ResourceVerifier(deployment.getAddress(), client).verifyExists()
@@ -113,6 +120,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
 
         deploymentPage.navigate();
         deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), explodeActionName);
+        Library.letsSleep(500);
         assertTrue("Deployment should be exploded.", deploymentOps.deploymentIsExploded(deployment.getName()));
 
         deploymentPage.navigate();
@@ -141,6 +149,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         deploymentPage.navigate();
         DialogFragment dialog = deploymentPage.addEmptyStandaloneDeployment();
         dialog.getForm(Ids.DEPLOYMENT_EMPTY_FORM).text(NAME, deploymentName);
+        Library.letsSleep(500);
         dialog.primaryButton();
         new ResourceVerifier(Address.deployment(deploymentName), client).verifyExists();
     }
