@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
@@ -18,11 +17,12 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 @RunWith(Arquillian.class)
 public class CrawlerTest {
@@ -32,9 +32,6 @@ public class CrawlerTest {
 
     @Inject
     private CrudOperations crudOperations;
-
-    @Drone
-    private WebDriver browser;
 
     @Page
     private UndertowServletContainerPage page;
@@ -81,7 +78,9 @@ public class CrawlerTest {
     }
 
     private void navigateToCrawlerForm(String servletContainerName) {
-        page.navigate("name", servletContainerName);
+        page.navigateAgain(NAME, servletContainerName);
+        // necessary to call 2 times as the first navigation doesn't open the view with the correct name parameter
+        page.navigateAgain(NAME, servletContainerName);
         console.verticalNavigation()
             .selectPrimary(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_CRAWLER, "item"));
     }

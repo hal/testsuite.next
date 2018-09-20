@@ -60,12 +60,8 @@ public class ThreadPoolTest {
 
     private static void addWorkmanagerWithThreadPools(String workmanager) throws Exception {
         operations.add(workmanagerAddress(workmanager), Values.of(NAME, workmanager));
-        String lrtName = threadPoolName(workmanager, LRT);
-        String srtName = threadPoolName(workmanager, SRT);
-        operations.add(longRunningAddress(workmanager, lrtName),
-                Values.of(NAME, LRT).and(MAX_THREADS, 10).and(QUEUE_LENGTH, 5));
-        operations.add(shortRunningAddress(workmanager, srtName),
-                Values.of(NAME, SRT).and(MAX_THREADS, 10).and(QUEUE_LENGTH, 5));
+        operations.add(longRunningAddress(workmanager), Values.of(MAX_THREADS, 10).and(QUEUE_LENGTH, 5));
+        operations.add(shortRunningAddress(workmanager), Values.of(MAX_THREADS, 10).and(QUEUE_LENGTH, 5));
     }
 
     @AfterClass
@@ -102,18 +98,14 @@ public class ThreadPoolTest {
         wmTable.action(WM_THREAD_POOL_CREATE, Names.THREAD_POOLS);
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
-        String lrtName = threadPoolName(WM_THREAD_POOL_CREATE, LRT);
-        crud.create(longRunningAddress(WM_THREAD_POOL_CREATE, lrtName), tpTable,
+        crud.create(longRunningAddress(WM_THREAD_POOL_CREATE), tpTable,
                 form -> {
-                    form.text(NAME, lrtName);
                     form.number(MAX_THREADS, 10);
                     form.number(QUEUE_LENGTH, 5);
                 });
 
-        String srtName = threadPoolName(WM_THREAD_POOL_CREATE, SRT);
-        crud.create(shortRunningAddress(WM_THREAD_POOL_CREATE, srtName), tpTable,
+        crud.create(shortRunningAddress(WM_THREAD_POOL_CREATE), tpTable,
                 form -> {
-                    form.text(NAME, srtName);
                     form.number(MAX_THREADS, 10);
                     form.number(QUEUE_LENGTH, 5);
                 });
@@ -124,15 +116,13 @@ public class ThreadPoolTest {
         wmTable.action(WM_THREAD_POOL_READ, Names.THREAD_POOLS);
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
-        String lrtName = threadPoolName(WM_THREAD_POOL_READ, LRT);
-        tpTable.select(lrtName);
+        tpTable.select(LONG_RUNNING);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_ATTRIBUTES_TAB));
-        assertEquals(lrtName, tpAttributesForm.value(NAME));
+        assertEquals(WM_THREAD_POOL_READ, tpAttributesForm.value(NAME));
 
-        String srtName = threadPoolName(WM_THREAD_POOL_READ, SRT);
-        tpTable.select(srtName);
+        tpTable.select(SHORT_RUNNING);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_ATTRIBUTES_TAB));
-        assertEquals(srtName, tpAttributesForm.value(NAME));
+        assertEquals(WM_THREAD_POOL_READ, tpAttributesForm.value(NAME));
     }
 
     @Test
@@ -140,15 +130,13 @@ public class ThreadPoolTest {
         wmTable.action(WM_THREAD_POOL_UPDATE, Names.THREAD_POOLS);
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
-        String lrtName = threadPoolName(WM_THREAD_POOL_UPDATE, LRT);
-        tpTable.select(lrtName);
+        tpTable.select(LONG_RUNNING);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_ATTRIBUTES_TAB));
-        crud.update(longRunningAddress(WM_THREAD_POOL_UPDATE, lrtName), tpAttributesForm, ALLOW_CORE_TIMEOUT, true);
+        crud.update(longRunningAddress(WM_THREAD_POOL_UPDATE), tpAttributesForm, ALLOW_CORE_TIMEOUT, true);
 
-        String srtName = threadPoolName(WM_THREAD_POOL_UPDATE, SRT);
-        tpTable.select(srtName);
+        tpTable.select(SHORT_RUNNING);
         tpTabs.select(Ids.build(Ids.JCA_WORKMANAGER, Ids.JCA_THREAD_POOL_SIZING_TAB));
-        crud.update(shortRunningAddress(WM_THREAD_POOL_UPDATE, srtName), tpSizingForm, MAX_THREADS, 111);
+        crud.update(shortRunningAddress(WM_THREAD_POOL_UPDATE), tpSizingForm, MAX_THREADS, 111);
     }
 
     @Test
@@ -156,10 +144,7 @@ public class ThreadPoolTest {
         wmTable.action(WM_THREAD_POOL_DELETE, Names.THREAD_POOLS);
         waitGui().until().element(tpTable.getRoot()).is().visible();
 
-        String lrtName = threadPoolName(WM_THREAD_POOL_DELETE, LRT);
-        crud.delete(longRunningAddress(WM_THREAD_POOL_DELETE, lrtName), tpTable, lrtName);
-
-        String srtName = threadPoolName(WM_THREAD_POOL_DELETE, SRT);
-        crud.delete(shortRunningAddress(WM_THREAD_POOL_DELETE, srtName), tpTable, srtName);
+        crud.delete(longRunningAddress(WM_THREAD_POOL_DELETE), tpTable, WM_THREAD_POOL_DELETE);
+        crud.delete(shortRunningAddress(WM_THREAD_POOL_DELETE), tpTable, WM_THREAD_POOL_DELETE);
     }
 }

@@ -5,7 +5,6 @@ import java.util.Collections;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
@@ -23,13 +22,15 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures.serverAddress;
 
 @RunWith(Arquillian.class)
 public class AJPListenerConfigurationTest {
@@ -39,9 +40,6 @@ public class AJPListenerConfigurationTest {
 
     @Inject
     private CrudOperations crudOperations;
-
-    @Drone
-    private WebDriver browser;
 
     @Page
     private UndertowServerPage page;
@@ -73,19 +71,17 @@ public class AJPListenerConfigurationTest {
     public static void setUp() throws IOException, CommandFailedException {
         operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED));
         operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED));
-        operations.add(UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED));
+        operations.add(serverAddress(UNDERTOW_SERVER_TO_BE_TESTED));
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING));
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING_TO_BE_EDITED));
         client.apply(new AddLocalSocketBinding(SOCKET_REDIRECT_TO_BE_EDITED));
-        operations.add(
-            UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED).and("ajp-listener", AJP_LISTENER_TO_BE_EDITED),
-            Values
-                .of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref"));
+        operations.add(serverAddress(UNDERTOW_SERVER_TO_BE_TESTED).and("ajp-listener", AJP_LISTENER_TO_BE_EDITED),
+            Values.of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref"));
     }
 
     @AfterClass
     public static void tearDown() throws IOException, OperationException, CommandFailedException {
-        operations.removeIfExists(UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED));
+        operations.removeIfExists(serverAddress(UNDERTOW_SERVER_TO_BE_TESTED));
         operations.removeIfExists(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED));
         operations.removeIfExists(IOFixtures.workerAddress(WORKER_TO_BE_EDITED));
         client.apply(new RemoveLocalSocketBinding(SOCKET_BINDING));
@@ -95,7 +91,7 @@ public class AJPListenerConfigurationTest {
 
     @Before
     public void initPage() {
-        page.navigate("name", UNDERTOW_SERVER_TO_BE_TESTED);
+        page.navigate(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
         console.verticalNavigation()
             .selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, Ids.build(Ids.UNDERTOW_SERVER_AJP_LISTENER, "item"));
         page.getAjpListenerTable().select(AJP_LISTENER_TO_BE_EDITED);
@@ -249,7 +245,7 @@ public class AJPListenerConfigurationTest {
     public void editReceiveBuffer() throws Exception {
         crudOperations.update(
             UndertowFixtures.ajpListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, AJP_LISTENER_TO_BE_EDITED),
-            page.getAjpListenerForm(), "receive-buffer");
+            page.getAjpListenerForm(), "receive-buffer", Random.number());
     }
 
     @Test
@@ -307,7 +303,7 @@ public class AJPListenerConfigurationTest {
     public void editSendBuffer() throws Exception {
         crudOperations.update(
             UndertowFixtures.ajpListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, AJP_LISTENER_TO_BE_EDITED),
-            page.getAjpListenerForm(), "send-buffer");
+            page.getAjpListenerForm(), "send-buffer", Random.number());
     }
 
     @Test

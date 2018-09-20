@@ -104,10 +104,11 @@ public class FileHandlerAttributesTest {
     }
 
     @Test
-    public void updateCacheBufferSize() throws Exception {
+    public void updateCacheBufferSize() throws Exception  {
+        long num = 32L;
         try {
             crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
-                page.getFileHandlerForm(), "cache-buffer-size", Random.number());
+                page.getFileHandlerForm(), "cache-buffer-size", num);
         } catch (TimeoutException e) {
             Assert.fail(ERROR_HAL_1449);
         }
@@ -115,9 +116,10 @@ public class FileHandlerAttributesTest {
 
     @Test
     public void updateCacheBuffers() throws Exception {
+        long num = 24L;
         try {
             crudOperations.update(UndertowHandlersFixtures.fileHandlerAddress(FILE_HANDLER_EDIT),
-                page.getFileHandlerForm(), "cache-buffers", Random.number());
+                page.getFileHandlerForm(), "cache-buffers", num);
         } catch (TimeoutException e) {
             Assert.fail(ERROR_HAL_1449);
         }

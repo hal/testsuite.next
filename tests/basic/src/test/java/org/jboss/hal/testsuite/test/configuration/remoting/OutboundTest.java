@@ -95,7 +95,7 @@ public class OutboundTest {
 
     @Test
     public void update() throws Exception {
-        ModelNode properties = Random.properties("foo", "bar");
+        ModelNode properties = Random.properties(BACKLOG, "15");
 
         table.select(OUTBOUND_UPDATE);
         crud.update(outboundAddress(OUTBOUND_UPDATE), form,
@@ -103,8 +103,8 @@ public class OutboundTest {
                 resourceVerifier -> {
                     // properties are nested resources!
                     ResourceVerifier propertyVerifier = new ResourceVerifier(
-                            outboundAddress(OUTBOUND_UPDATE).and(PROPERTY, "foo"), client);
-                    propertyVerifier.verifyAttribute(VALUE, "bar");
+                            outboundAddress(OUTBOUND_UPDATE).and(PROPERTY, BACKLOG), client);
+                    propertyVerifier.verifyAttribute(VALUE, "15");
                 });
     }
 

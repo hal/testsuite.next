@@ -34,6 +34,7 @@ public final class RemotingFixtures {
 
     static final String AUTH_REALM = "auth-realm";
     static final String AUTHENTICATION_PROVIDER = "authentication-provider";
+    static final String BACKLOG = "BACKLOG";
     static final String BUFFER_REGION_SIZE = "buffer-region-size";
     static final String CONNECTOR_REF = "connector-ref";
     static final String FORWARD_SECRECY = "forward-secrecy";

@@ -23,6 +23,8 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+
 @RunWith(Arquillian.class)
 public class SessionsTest {
 
@@ -80,7 +82,9 @@ public class SessionsTest {
     }
 
     private void navigateToSessionsForm(String servletContainerName) {
-        page.navigate("name", servletContainerName);
+        page.navigateAgain(NAME, servletContainerName);
+        // necessary to call 2 times as the first navigation doesn't open the view with the correct name parameter
+        page.navigateAgain(NAME, servletContainerName);
         console.verticalNavigation()
             .selectPrimary(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_SESSION, "item"));
     }

@@ -8,8 +8,6 @@ public class UndertowFiltersFixtures {
 
     private static final Address FILTERS_ADDRESS = UndertowFixtures.UNDERTOW_ADDRESS.and(CONFIGURATION, "filter");
 
-    public static final String HEADER_NAME = "header-name";
-
     public static final String HEADER_VALUE = "header-value";
 
     public static Address rewriteAddress(String rewriteName) {

@@ -35,17 +35,16 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PROPERTY;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.*;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.LOCALHOST;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.OUTBOUND_REMOTE_PORT;
 import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.OUTBOUND_REMOTE_READ;
+import static org.jboss.hal.testsuite.test.configuration.socketbinding.SocketBindingFixtures.STANDARD_SOCKETS;
 import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
@@ -74,6 +73,9 @@ public class OutboundRemoteTest {
         operations.removeIfExists(outboundRemoteAddress(REMOTE_OUTBOUND_DELETE));
 
         client.apply(new RemoveLocalSocketBinding(OUTBOUND_REMOTE_READ));
+        Address socketBindingAddress = Address.of(SOCKET_BINDING_GROUP, STANDARD_SOCKETS)
+                .and(REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING, OUTBOUND_REMOTE_READ);
+        operations.removeIfExists(socketBindingAddress);
     }
 
     @Inject private Console console;
@@ -109,7 +111,7 @@ public class OutboundRemoteTest {
 
     @Test
     public void update() throws Exception {
-        ModelNode properties = Random.properties("foo", "bar");
+        ModelNode properties = Random.properties(BACKLOG, "34");
 
         table.select(REMOTE_OUTBOUND_UPDATE);
         crud.update(outboundRemoteAddress(REMOTE_OUTBOUND_UPDATE), form,
@@ -117,8 +119,8 @@ public class OutboundRemoteTest {
                 resourceVerifier -> {
                     // properties are nested resources!
                     ResourceVerifier propertyVerifier = new ResourceVerifier(
-                            outboundRemoteAddress(REMOTE_OUTBOUND_UPDATE).and(PROPERTY, "foo"), client);
-                    propertyVerifier.verifyAttribute(VALUE, "bar");
+                            outboundRemoteAddress(REMOTE_OUTBOUND_UPDATE).and(PROPERTY, BACKLOG), client);
+                    propertyVerifier.verifyAttribute(VALUE, "34");
                 });
     }
 

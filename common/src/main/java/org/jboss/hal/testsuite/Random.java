@@ -37,6 +37,10 @@ public class Random {
         return GENERATOR.generate(LENGTH);
     }
 
+    public static String name(int length) {
+        return GENERATOR.generate(length);
+    }
+
     /** Returns a JNDI name starting with "java:jboss/" followed by a random name. */
     public static String jndiName() {
         return jndiName(name());

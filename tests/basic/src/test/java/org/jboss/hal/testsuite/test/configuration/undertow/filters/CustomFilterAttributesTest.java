@@ -7,12 +7,12 @@ import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
-import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.page.configuration.UndertowFiltersPage;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFiltersFixtures;
 import org.junit.AfterClass;
@@ -83,10 +83,10 @@ public class CustomFilterAttributesTest {
     public void editParameters() throws Exception {
         String key = Random.name();
         String value = Random.name();
+        ModelNode exp = new ModelNode();
+        exp.get(key).set(value);
         crudOperations.update(UndertowFiltersFixtures.customFilterAddress(CUSTOM_FILTER_EDIT), page.getCustomFilterForm(),
             form -> form.properties("parameters").add(key, value),
-            resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue("parameters",
-                    new ModelNodeGenerator.ModelNodePropertiesBuilder().addProperty(key, value)
-                        .build()));
+            resourceVerifier -> resourceVerifier.verifyAttribute("parameters", exp));
     }
 }

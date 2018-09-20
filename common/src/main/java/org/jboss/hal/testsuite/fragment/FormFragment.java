@@ -28,6 +28,7 @@ import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
@@ -254,7 +255,7 @@ public class FormFragment {
                 root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
             try {
                 console.scrollIntoView(switchElement).click();
-            } catch (ElementClickInterceptedException e) {
+            } catch (WebDriverException e) {
                 console.scrollIntoView(switchElement, "{block: \"center\"}").click();
             }
             if (value) {

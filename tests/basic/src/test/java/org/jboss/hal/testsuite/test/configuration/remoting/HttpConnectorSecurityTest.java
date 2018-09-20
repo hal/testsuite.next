@@ -54,7 +54,7 @@ public class HttpConnectorSecurityTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(connectorAddress(HTTP_CONNECTOR_SECURITY));
+        operations.removeIfExists(httpConnectorAddress(HTTP_CONNECTOR_SECURITY));
     }
 
     @Inject private Console console;

@@ -12,8 +12,10 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.AddSocketBinding;
 import org.jboss.hal.testsuite.creaper.command.RemoveSocketBinding;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowFiltersPage;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.jboss.hal.testsuite.test.configuration.io.IOFixtures;
@@ -153,8 +155,18 @@ public class ModClusterFilterAttributesTest {
         boolean enableHttp2 =
             operations.readAttribute(UndertowFiltersFixtures.modClusterFilterAdress(MOD_CLUSTER_FILTER_EDIT),
                 "enable-http2").booleanValue();
-        crudOperations.update(UndertowFiltersFixtures.modClusterFilterAdress(MOD_CLUSTER_FILTER_EDIT),
-            page.getModClusterFilterForm(), "enable-http2", !enableHttp2);
+        // crudOperations.update(UndertowFiltersFixtures.modClusterFilterAdress(MOD_CLUSTER_FILTER_EDIT),
+        //     page.getModClusterFilterForm(), "enable-http2", !enableHttp2);
+
+        FormFragment form = page.getModClusterFilterForm();
+        form.edit();
+        form.flip("enable-http2", !enableHttp2);
+        form.save();
+
+        console.verifySuccess();
+
+        new ResourceVerifier(UndertowFiltersFixtures.modClusterFilterAdress(MOD_CLUSTER_FILTER_EDIT), client)
+            .verifyAttribute("enable-http2", !enableHttp2);
     }
 
     @Test

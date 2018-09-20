@@ -4,11 +4,9 @@ import java.io.IOException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -22,25 +20,22 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCATION;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
+import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.HTTP_AUTH_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.HTTP_SERVER_MECH_FACTORY;
+import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.httpAuthenticationFactoryAddress;
 
 @RunWith(Arquillian.class)
 public class CredentialReferenceTest {
 
-    @Inject
-    private Console console;
-
     @Page
     private UndertowApplicationSecurityDomainPage page;
-
-    @Drone
-    private WebDriver browser;
 
     @Inject
     private CrudOperations crudOperations;
@@ -78,9 +73,11 @@ public class CredentialReferenceTest {
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
                     .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())
                 .and(LOCATION, CREDENTIAL_STORE_TO_BE_EDITED + LOCATION_SUFFIX));
+        operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE),
+                Values.of(HTTP_SERVER_MECH_FACTORY, "global").and(SECURITY_DOMAIN, "ApplicationDomain"));
         operations.add(
             ApplicationSecurityDomainFixtures.applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
-            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, "application-http-authentication"));
+            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, HTTP_AUTH_CREATE));
         operations.add(
             ApplicationSecurityDomainFixtures.singleSignOnAddress(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
             Values.of(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_ALIAS, Random.name())
@@ -96,6 +93,7 @@ public class CredentialReferenceTest {
         operations.removeIfExists(ElytronFixtures.keyStoreAddress(KEY_STORE_TO_BE_ADDED));
         operations.removeIfExists(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_ADDED));
         operations.removeIfExists(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_EDITED));
+        operations.removeIfExists(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE));
     }
 
     @Before

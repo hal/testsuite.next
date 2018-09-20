@@ -42,6 +42,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PROPERTY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.VALUE;
+import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.BACKLOG;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.LOCAL_OUTBOUND_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.LOCAL_OUTBOUND_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.remoting.RemotingFixtures.LOCAL_OUTBOUND_READ;
@@ -110,7 +111,7 @@ public class OutboundLocalTest {
 
     @Test
     public void update() throws Exception {
-        ModelNode properties = Random.properties("foo", "bar");
+        ModelNode properties = Random.properties(BACKLOG, "12");
 
         table.select(LOCAL_OUTBOUND_UPDATE);
         crud.update(RemotingFixtures.outboundLocalAddress(LOCAL_OUTBOUND_UPDATE), form,
@@ -118,8 +119,8 @@ public class OutboundLocalTest {
                 resourceVerifier -> {
                     // properties are nested resources!
                     ResourceVerifier propertyVerifier = new ResourceVerifier(
-                            RemotingFixtures.outboundLocalAddress(LOCAL_OUTBOUND_UPDATE).and(PROPERTY, "foo"), client);
-                    propertyVerifier.verifyAttribute(VALUE, "bar");
+                            RemotingFixtures.outboundLocalAddress(LOCAL_OUTBOUND_UPDATE).and(PROPERTY, BACKLOG), client);
+                    propertyVerifier.verifyAttribute(VALUE, "12");
                 });
     }
 

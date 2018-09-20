@@ -15,7 +15,6 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.AddLocalSocketBinding;
 import org.jboss.hal.testsuite.creaper.command.RemoveLocalSocketBinding;
-import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.UndertowServerPage;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.jboss.hal.testsuite.test.configuration.io.IOFixtures;
@@ -33,8 +32,6 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-
-import static org.wildfly.extras.creaper.core.online.operations.ReadAttributeOption.NOT_INCLUDE_DEFAULTS;
 
 @RunWith(Arquillian.class)
 public class HTTPSListenerConfigurationTest {
@@ -327,17 +324,8 @@ public class HTTPSListenerConfigurationTest {
 
     @Test
     public void toggleProxyProtocol() throws Exception {
-        final String proxyProtocolAttributeName = "proxy-protocol";
-        final ModelNodeResult originalModelNodeResult =
-                operations.readAttribute(HTTPS_LISTENER_ADDRESS, proxyProtocolAttributeName, NOT_INCLUDE_DEFAULTS);
-        originalModelNodeResult.assertSuccess();
-        final FormFragment form = page.getHttpsListenerForm();
-        try {
-            crudOperations.update(HTTPS_LISTENER_ADDRESS, form, proxyProtocolAttributeName, true);
-            crudOperations.update(HTTPS_LISTENER_ADDRESS, form, proxyProtocolAttributeName, false);
-        } finally {
-            operations.writeAttribute(HTTPS_LISTENER_ADDRESS, proxyProtocolAttributeName, originalModelNodeResult.value());
-        }
+        boolean boolValue = operations.readAttribute(HTTPS_LISTENER_ADDRESS, "proxy-protocol").booleanValue();
+        crudOperations.update(HTTPS_LISTENER_ADDRESS, page.getHttpsListenerForm(), "proxy-protocol", !boolValue);
     }
 
     @Test
@@ -349,9 +337,7 @@ public class HTTPSListenerConfigurationTest {
 
     @Test
     public void editReceiveBuffer() throws Exception {
-        crudOperations.update(
-            HTTPS_LISTENER_ADDRESS,
-            page.getHttpsListenerForm(), "receive-buffer");
+        crudOperations.update(HTTPS_LISTENER_ADDRESS, page.getHttpsListenerForm(), "receive-buffer", Random.number());
     }
 
     @Test
@@ -414,9 +400,7 @@ public class HTTPSListenerConfigurationTest {
 
     @Test
     public void editSendBuffer() throws Exception {
-        crudOperations.update(
-            HTTPS_LISTENER_ADDRESS,
-            page.getHttpsListenerForm(), "send-buffer");
+        crudOperations.update(HTTPS_LISTENER_ADDRESS, page.getHttpsListenerForm(), "send-buffer", Random.number());
     }
 
     @Test

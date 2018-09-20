@@ -35,6 +35,8 @@ public final class JcaFixtures {
     static final String BOOTSTRAP_CONTEXT = "bootstrap-context";
     static final String CACHED_CONNECTION_MANAGER = "cached-connection-manager";
     static final String DEBUG = "debug";
+    static final String SHORT_RUNNING = "short running";
+    static final String LONG_RUNNING = "long running";
     static final String TRACER = "tracer";
 
     static final Address SUBSYSTEM_ADDRESS = Address.subsystem(JCA);
@@ -72,20 +74,17 @@ public final class JcaFixtures {
 
     // ------------------------------------------------------ wm thread pool
 
-    static final String LRT = "lrt";
-    static final String SRT = "srt";
-
     static final String WM_THREAD_POOL_CREATE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.CREATE, Random.name());
     static final String WM_THREAD_POOL_READ = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.READ, Random.name());
     static final String WM_THREAD_POOL_UPDATE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.UPDATE, Random.name());
     static final String WM_THREAD_POOL_DELETE = Ids.build(WORKMANAGER_THREADPOOL_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address longRunningAddress(String workmanager, String threadPool) {
-        return workmanagerAddress(workmanager).and("long-running-threads", threadPool);
+    static Address longRunningAddress(String workmanager) {
+        return workmanagerAddress(workmanager).and("long-running-threads", workmanager);
     }
 
-    static Address shortRunningAddress(String workmanager, String threadPool) {
-        return workmanagerAddress(workmanager).and("short-running-threads", threadPool);
+    static Address shortRunningAddress(String workmanager) {
+        return workmanagerAddress(workmanager).and("short-running-threads", workmanager);
     }
 
     static String threadPoolName(String workmanager, String threadPool) {
