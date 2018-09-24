@@ -6,7 +6,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
@@ -19,11 +18,13 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSPORT;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.CONSISTENT_HASH_STRATEGY;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
@@ -40,7 +41,7 @@ public class AttributesTest {
     @BeforeClass
     public static void setUp() throws IOException {
         operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups"));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE));
     }
 
@@ -53,17 +54,9 @@ public class AttributesTest {
         }
     }
 
-    @Drone
-    private WebDriver browser;
-
-    @Inject
-    private CrudOperations crudOperations;
-
-    @Inject
-    private Console console;
-
-    @Page
-    private ScatteredCachePage page;
+    @Inject private CrudOperations crud;
+    @Inject private Console console;
+    @Page private ScatteredCachePage page;
 
     @Before
     public void initPage() {
@@ -73,7 +66,7 @@ public class AttributesTest {
 
     @Test
     public void editBiasLifeSpan() throws Exception {
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "bias-lifespan", (long) Random.number());
     }
 
@@ -84,32 +77,31 @@ public class AttributesTest {
                 .stringValue();
         List<String> hashStrategies = new ArrayList<>(Arrays.asList("INTER_CACHE", "INTRA_CACHE"));
         hashStrategies.remove(currentHashStrategy);
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             formFragment -> formFragment.select(CONSISTENT_HASH_STRATEGY, hashStrategies.get(0)),
             resourceVerifier -> resourceVerifier.verifyAttribute(CONSISTENT_HASH_STRATEGY, hashStrategies.get(0)));
     }
 
     @Test
     public void editInvalidationBatchSize() throws Exception {
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "invalidation-batch-size", Random.number());
     }
 
     @Test
     public void editModule() throws Exception {
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
-            "module");
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(), MODULE);
     }
 
     @Test
     public void editRemoteTimeout() throws Exception {
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "remote-timeout", (long) Random.number());
     }
 
     @Test
     public void editSegments() throws Exception {
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "segments", Random.number());
     }
 
@@ -118,7 +110,7 @@ public class AttributesTest {
         boolean statisticsEnabled =
             operations.readAttribute(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), "statistics-enabled")
                 .booleanValue();
-        crudOperations.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "statistics-enabled", !statisticsEnabled);
     }
 }

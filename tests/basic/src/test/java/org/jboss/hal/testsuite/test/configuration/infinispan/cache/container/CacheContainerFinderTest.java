@@ -76,7 +76,8 @@ public class CacheContainerFinderTest {
 
     @Test
     public void create() throws Exception {
-        AddResourceDialogFragment dialog = column.add();
+        column.dropdownAction(Ids.CACHE_CONTAINER_ADD_ACTIONS, Ids.CACHE_CONTAINER_ADD);
+        AddResourceDialogFragment dialog = console.addResourceDialog();
         dialog.getForm().text(NAME, CC_CREATE);
         dialog.add();
 

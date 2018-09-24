@@ -5,6 +5,7 @@ import java.util.Map;
 
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
+import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.SelectFragment;
@@ -16,13 +17,15 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.resources.CSS.bootstrapSelect;
 import static org.jboss.hal.resources.CSS.btn;
 import static org.jboss.hal.resources.CSS.btnDefault;
 import static org.jboss.hal.resources.CSS.btnGroup;
 import static org.jboss.hal.testsuite.Selectors.contains;
 
-@Place("scattered-cache")
+@Place(NameTokens.SCATTERED_CACHE)
 public class ScatteredCachePage extends BasePage {
 
     public static final String FILE_STORE_WRITE_BEHAVIOUR_TAB = "scattered-cache-cache-store-file-write-tab";
@@ -153,8 +156,8 @@ public class ScatteredCachePage extends BasePage {
     @Override
     public void navigate(String cacheContainer, String scatteredCache) {
         Map<String, String> params = new HashMap<>();
-        params.put("cache-container", cacheContainer);
-        params.put("name", scatteredCache);
+        params.put(CACHE_CONTAINER, cacheContainer);
+        params.put(NAME, scatteredCache);
         navigate(params);
     }
 

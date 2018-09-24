@@ -3,50 +3,49 @@ package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.sc
 import java.io.IOException;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ScatteredCachePage;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
+import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSPORT;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.expirationAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
 
 @RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class ExpirationTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     private static final String CACHE_CONTAINER = "cache-container-" + Random.name();
-    private static final String SCATTERED_CACHE_EXPIRATION_CREATE =
-        "scattered-cache-with-expiration-to-be-created-" + Random.name();
-    private static final String SCATTERED_CACHE_EXPIRATION_DELETE =
-        "scattered-cache-with-expiration-to-be-deleted-" + Random.name();
-    private static final String SCATTERED_CACHE_EXPIRATION_EDIT =
-        "scattered-cache-with-expiration-to-be-edited-" + Random.name();
+    private static final String SCATTERED_CACHE_EXP = "scattered-cache-" + Random.name();
 
     @BeforeClass
     public static void setUp() throws IOException, OperationException {
         operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups"));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_CREATE));
-        operations.removeIfExists(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_CREATE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_DELETE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP));
+        // scattered-cache=*/component=expiration is automatically created
+        // remove it to later create it
+        operations.removeIfExists(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP));
     }
 
     @AfterClass
@@ -58,60 +57,40 @@ public class ExpirationTest {
         }
     }
 
-    @Drone
-    private WebDriver browser;
+    @Inject private CrudOperations crud;
+    @Inject private Console console;
+    @Page private ScatteredCachePage page;
+    private FormFragment form;
 
-    @Inject
-    private CrudOperations crudOperations;
-
-    @Inject
-    private Console console;
-
-    @Page
-    private ScatteredCachePage page;
+    @Before
+    public void initPage() {
+        page.navigate(CACHE_CONTAINER, SCATTERED_CACHE_EXP);
+        console.verticalNavigation().selectPrimary("scattered-cache-item");
+        form = page.getExpirationForm();
+    }
 
     @Test
     public void create() throws Exception {
-        navigateToExpirationForm(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_CREATE);
-        crudOperations.createSingleton(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_CREATE),
-            page.getExpirationForm());
-    }
-
-    private void navigateToExpirationForm(String cacheContainer, String scatteredCache) {
-        page.navigate(cacheContainer, scatteredCache);
-        console.verticalNavigation().selectPrimary("scattered-cache-item");
+        crud.createSingleton(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP), form);
     }
 
     @Test
-    public void delete() throws Exception {
-        navigateToExpirationForm(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_DELETE);
-        crudOperations.deleteSingleton(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_DELETE),
-            page.getExpirationForm());
+    public void remove() throws Exception {
+        crud.deleteSingleton(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP), form);
     }
 
     @Test
     public void editInterval() throws Exception {
-        navigateToExpirationForm(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT);
-        crudOperations.update(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT),
-            page.getExpirationForm(), "interval", (long) Random.number());
+        crud.update(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP), form, "interval", 123L);
     }
 
     @Test
     public void editLifespan() throws Exception {
-        navigateToExpirationForm(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT);
-        crudOperations.update(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT),
-            page.getExpirationForm(), "lifespan", (long) Random.number());
+        crud.update(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP), form, "lifespan", 312L);
     }
 
     @Test
     public void editMaxIdle() throws Exception {
-        navigateToExpirationForm(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT);
-        crudOperations.update(
-            expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXPIRATION_EDIT),
-            page.getExpirationForm(), "max-idle", (long) Random.number());
+        crud.update(expirationAddress(CACHE_CONTAINER, SCATTERED_CACHE_EXP), form, "max-idle", 412L);
     }
 }

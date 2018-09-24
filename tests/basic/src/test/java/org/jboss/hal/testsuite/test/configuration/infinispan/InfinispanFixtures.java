@@ -22,11 +22,12 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.INFINISPAN;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
 
 public final class InfinispanFixtures {
 
-    private static final String STORE = "store";
-    private static final String CACHE_CONTAINER_PREFIX = "cc";
+    // there is a bug in infinispan finder column, where the cc prefix is removed from the resource name
+    private static final String CACHE_CONTAINER_PREFIX = "ccl";
     private static final String REMOTE_CACHE_CONTAINER_PREFIX = "rcc";
     private static final String LOCAL_CACHE_PREFIX = "lc";
     private static final String COMPONENT = "component";
@@ -36,6 +37,8 @@ public final class InfinispanFixtures {
     public static final String INTERVAL = "interval";
     public static final String ISOLATION = "isolation";
     public static final String LIFESPAN = "lifespan";
+    public static final String LOCAL_CACHE_ITEM = "local-cache-item";
+    public static final String MAX_BATCH_SIZE = "max-batch-size";
     public static final String MAX_ENTRIES = "max-entries";
     public static final String MAX_IDLE = "max-idle";
     public static final String STRATEGY = "strategy";

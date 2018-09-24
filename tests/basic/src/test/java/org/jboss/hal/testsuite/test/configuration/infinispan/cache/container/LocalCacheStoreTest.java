@@ -15,6 +15,9 @@
  */
 package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.page.Page;
@@ -22,33 +25,37 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.resources.Names;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.EmptyState;
-import org.jboss.hal.testsuite.fragment.PagesFragment;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.SelectFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
+import org.jboss.hal.testsuite.page.configuration.LocalCachePage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.wildfly.extras.creaper.commands.infinispan.cache.AddLocalCache;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
-import org.wildfly.extras.creaper.core.online.operations.Headers;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
 import static org.jboss.hal.resources.CSS.bootstrapSelect;
+import static org.jboss.hal.resources.Ids.LOCAL_CACHE;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.*;
-import static org.junit.Assert.assertEquals;
 
 @RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalCacheStoreTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -58,52 +65,42 @@ public class LocalCacheStoreTest {
     public static void beforeClass() throws Exception {
         operations.add(cacheContainerAddress(CC_UPDATE));
         client.apply(new AddLocalCache.Builder(LC_NO_STORE).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_FILE_STORE).cacheContainer(CC_UPDATE).build());
-        operations.headers(Headers.allowResourceServiceRestart()).add(storeAddress(CC_UPDATE, LC_FILE_STORE, FILE));
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_NO_STORE));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_FILE_STORE));
-        operations.removeIfExists(cacheContainerAddress(CC_UPDATE));
+        // operations.removeIfExists(cacheContainerAddress(CC_UPDATE));
     }
 
     @Inject private Console console;
-    @Page private CacheContainerPage page;
-    private TableFragment table;
+    @Inject private CrudOperations crud;
+    @Page private LocalCachePage page;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, CC_UPDATE);
-        console.verticalNavigation().selectPrimary(Ids.LOCAL_CACHE + "-" + Ids.ITEM);
-
-        page.bindForms();
-        table = page.getLocalCacheTable();
+        Map<String, String> params = new HashMap<>();
+        params.put(CACHE_CONTAINER, CC_UPDATE);
+        params.put(NAME, LC_NO_STORE);
+        page.navigate(params);
+        console.verticalNavigation().selectPrimary(Ids.build(LOCAL_CACHE, STORE, Ids.ITEM));
     }
 
     @Test
-    public void createFileStore() throws Exception {
+    public void fileStoreCreate() throws Exception {
         EmptyState emptyState = page.getLocalCacheNoStore();
         WebElement selectElement = emptyState.getRoot().findElement(By.cssSelector("div." + bootstrapSelect));
         SelectFragment select = Graphene.createPageFragment(SelectFragment.class, selectElement);
-
-        table.action(LC_NO_STORE, Names.STORE);
         waitGui().until().element(emptyState.getRoot()).is().visible();
         select.select(Names.FILE, FILE);
         emptyState.mainAction();
-
         console.verifySuccess();
         new ResourceVerifier(storeAddress(CC_UPDATE, LC_NO_STORE, FILE), client)
                 .verifyExists();
     }
 
     @Test
-    public void readFileStore() {
-        PagesFragment pages = page.getLocalCachePages();
-
-        table.action(LC_FILE_STORE, Names.STORE);
-        waitGui().until().element(pages.getRoot()).is().visible();
-        assertEquals(Names.STORE + ": " + Names.FILE, pages.breadcrumb().lastValue());
+    public void fileStoreUpdate() throws Exception {
+        FormFragment form = page.getFileStoreForm();
+        crud.update(storeAddress(CC_UPDATE, LC_NO_STORE, FILE), form, MAX_BATCH_SIZE, 123);
     }
 }

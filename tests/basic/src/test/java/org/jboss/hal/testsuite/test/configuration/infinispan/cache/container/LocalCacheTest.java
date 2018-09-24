@@ -15,6 +15,9 @@
  */
 package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
@@ -24,14 +27,15 @@ import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.jboss.hal.testsuite.fragment.TabsFragment;
-import org.jboss.hal.testsuite.page.configuration.CacheContainerPage;
+import org.jboss.hal.testsuite.page.configuration.LocalCachePage;
+import org.jboss.hal.testsuite.util.Library;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.commands.infinispan.cache.AddLocalCache;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -40,6 +44,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.*;
 
 @RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class LocalCacheTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -49,53 +54,36 @@ public class LocalCacheTest {
     public static void beforeClass() throws Exception {
         operations.add(cacheContainerAddress(CC_UPDATE));
         client.apply(new AddLocalCache.Builder(LC_UPDATE).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_UPDATE_ATTRIBUTES).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_RESET).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_RESET_TRANSACTION).cacheContainer(CC_UPDATE).build());
-        client.apply(new AddLocalCache.Builder(LC_REMOVE).cacheContainer(CC_UPDATE).build());
     }
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_UPDATE_ATTRIBUTES));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_RESET_TRANSACTION));
-        operations.removeIfExists(localCacheAddress(CC_UPDATE, LC_REMOVE));
         operations.removeIfExists(cacheContainerAddress(CC_UPDATE));
     }
 
     @Inject private Console console;
     @Inject private CrudOperations crud;
-    @Page private CacheContainerPage page;
-    private TableFragment table;
-    private TabsFragment tabs;
+    @Page private LocalCachePage page;
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, CC_UPDATE);
+        Map<String, String> params = new HashMap<>();
+        params.put(CACHE_CONTAINER, CC_UPDATE);
+        params.put(NAME, LC_UPDATE);
+        page.navigate(params);
         console.verticalNavigation().selectPrimary(Ids.LOCAL_CACHE + "-" + Ids.ITEM);
-
-        page.bindForms();
-        table = page.getLocalCacheTable();
-        tabs = page.getLocalCacheTabs();
-    }
-
-    @Test
-    public void create() throws Exception {
-        crud.create(localCacheAddress(CC_UPDATE, LC_CREATE), table, LC_CREATE);
     }
 
     // ------------------------------------------------------ attributes
 
     @Test
-    public void updateAttributes() throws Exception {
-        table.select(LC_UPDATE_ATTRIBUTES);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
-        FormFragment form = page.getLocalCacheForm();
+    public void attributesEdit() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-tab");
+        FormFragment form = page.getConfigurationForm();
 
         String moduleName = Random.name();
-        crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE_ATTRIBUTES), form,
+        crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE), form,
                 f -> {
                     f.text(MODULE, moduleName);
                     f.flip(STATISTICS_ENABLED, true);
@@ -108,19 +96,19 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetAttributes() throws Exception {
-        table.select(LC_RESET);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.TAB));
-        FormFragment form = page.getLocalCacheForm();
-        crud.reset(localCacheAddress(CC_UPDATE, LC_RESET), form);
+    public void attributesReset() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-tab");
+        FormFragment form = page.getConfigurationForm();
+        crud.reset(localCacheAddress(CC_UPDATE, LC_UPDATE), form);
     }
 
     // ------------------------------------------------------ expiration
 
     @Test
-    public void updateExpiration() throws Exception {
-        table.select(LC_UPDATE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
+    public void expiration1Edit() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-expiration-tab");
         FormFragment form = page.getExpirationForm();
 
         crud.update(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), form,
@@ -137,27 +125,27 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetExpiration() throws Exception {
-        table.select(LC_RESET);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
+    public void expiration2Reset() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-expiration-tab");
         FormFragment form = page.getExpirationForm();
-        crud.reset(componentAddress(CC_UPDATE, LC_RESET, EXPIRATION), form);
+        crud.reset(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), form);
     }
 
     @Test
-    public void removeExpiration() throws Exception {
-        table.select(LC_REMOVE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_EXPIRATION, Ids.TAB));
+    public void expiration3Remove() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-expiration-tab");
         FormFragment form = page.getExpirationForm();
-        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, EXPIRATION), form);
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_UPDATE, EXPIRATION), form);
     }
 
     // ------------------------------------------------------ locking
 
     @Test
-    public void updateLocking() throws Exception {
-        table.select(LC_UPDATE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
+    public void locking1Edit() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-locking-tab");
         FormFragment form = page.getLockingForm();
 
         crud.update(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), form,
@@ -174,27 +162,27 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetLocking() throws Exception {
-        table.select(LC_RESET);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
+    public void locking2Reset() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-locking-tab");
         FormFragment form = page.getLockingForm();
-        crud.reset(componentAddress(CC_UPDATE, LC_RESET, LOCKING), form);
+        crud.reset(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), form);
     }
 
     @Test
-    public void removeLocking() throws Exception {
-        table.select(LC_REMOVE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_LOCKING, Ids.TAB));
+    public void locking3Remove() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-locking-tab");
         FormFragment form = page.getLockingForm();
-        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, LOCKING), form);
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_UPDATE, LOCKING), form);
     }
 
     // ------------------------------------------------------ transaction
 
     @Test
-    public void updateTransaction() throws Exception {
-        table.select(LC_UPDATE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
+    public void transaction1Edit() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-transaction-tab");
         FormFragment form = page.getTransactionForm();
 
         crud.update(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), form,
@@ -209,18 +197,18 @@ public class LocalCacheTest {
     }
 
     @Test
-    public void resetTransaction() throws Exception {
-        table.select(LC_RESET_TRANSACTION);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
+    public void transaction2Reset() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-transaction-tab");
         FormFragment form = page.getTransactionForm();
-        crud.reset(componentAddress(CC_UPDATE, LC_RESET_TRANSACTION, TRANSACTION), form);
+        crud.reset(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), form);
     }
 
     @Test
-    public void removeTransaction() throws Exception {
-        table.select(LC_REMOVE);
-        tabs.select(Ids.build(Ids.LOCAL_CACHE, Ids.CACHE_COMPONENT_TRANSACTION, Ids.TAB));
+    public void transaction3Remove() throws Exception {
+        console.verticalNavigation().selectPrimary(LOCAL_CACHE_ITEM);
+        page.getLocalCacheTabs().select("local-cache-cache-component-transaction-tab");
         FormFragment form = page.getTransactionForm();
-        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_REMOVE, TRANSACTION), form);
+        crud.deleteSingleton(componentAddress(CC_UPDATE, LC_UPDATE, TRANSACTION), form);
     }
 }
