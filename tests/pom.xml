@@ -28,6 +28,8 @@
         <module>basic</module>
         <module>rbac</module>
         <module>transaction</module>
+        <module>multihosts</module>
+        <module>keycloak</module>
     </modules>
 
     <artifactId>hal-testsuite-tests</artifactId>

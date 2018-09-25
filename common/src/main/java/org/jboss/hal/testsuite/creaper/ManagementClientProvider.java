@@ -85,6 +85,16 @@ public class ManagementClientProvider {
         return managementClient;
     }
 
+    /**
+     * Useful especially to connect to additional server like Keycloak
+     *
+     * @return Initialized standalone OnlineManagementClient for specified port number, don't forget to close it
+     */
+    public static OnlineManagementClient standaloneWithPort(int port) {
+        return ManagementClient.onlineLazy(OnlineOptions.standalone().
+                hostAndPort(System.getProperty(AS_MANAGEMENT_ADDRESS, LOCALHOST), port).build());
+    }
+
     private ManagementClientProvider() {
     }
 }
