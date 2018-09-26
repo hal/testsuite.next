@@ -3,7 +3,6 @@ package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.sc
 import java.io.IOException;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
@@ -11,51 +10,42 @@ import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ScatteredCachePage;
-import org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
+import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.fileStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ALLOW_RESOURCE_SERVICE_RESTART;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSPORT;
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.*;
 
 @RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class WriteBehaviourTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     private static final String CACHE_CONTAINER = "cache-container-" + Random.name();
-    private static final String SCATTERED_CACHE_WRITE_BEHIND_EDIT =
-        "scattered-cache-with-write-behind-to-be-edited-" + Random.name();
-    private static final String SCATTERED_CACHE_WRITE_THROUGH = "scattered-cache-write-through-" + Random.name();
-    private static final String SCATTERED_CACHE_WRITE_BEHIND = "scattered-cache-write-behind-" + Random.name();
+    private static final String SCATTERED_CACHE = "scattered-cache-" + Random.name();
 
     @BeforeClass
     public static void init() throws IOException {
         operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups"));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_THROUGH));
-        operations.headers(Values.of("allow-resource-service-restart", true))
-            .add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND));
-        operations.headers(Values.of("allow-resource-service-restart", true))
-            .add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_THROUGH));
-        operations.headers(Values.of("allow-resource-service-restart", true))
-            .add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT));
-        operations.add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND).and(InfinispanFixtures.WRITE,
-            InfinispanFixtures.BEHIND));
-        operations.add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT).and(InfinispanFixtures.WRITE,
-            InfinispanFixtures.BEHIND));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE));
+        operations.headers(Values.of(ALLOW_RESOURCE_SERVICE_RESTART, true))
+            .add(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE));
     }
 
     @AfterClass
@@ -67,59 +57,42 @@ public class WriteBehaviourTest {
         }
     }
 
-    @Drone
-    private WebDriver browser;
+    @Inject private CrudOperations crud;
+    @Inject private Console console;
+    @Page private ScatteredCachePage page;
+    private FormFragment form;
 
-    @Inject
-    private Console console;
-
-    @Inject
-    private CrudOperations crudOperations;
-
-    @Page
-    private ScatteredCachePage page;
-
-    private void navigateToWriteBehaviour(String cacheContainer, String scatteredCache) {
-        page.navigate(cacheContainer, scatteredCache);
+    @Before
+    public void initPage() {
+        page.navigate(CACHE_CONTAINER, SCATTERED_CACHE);
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
-    }
-
-    @Test
-    public void switchToWriteBehind() throws Exception {
-        navigateToWriteBehaviour(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_THROUGH);
         page.getFileStoreTab().select(ScatteredCachePage.FILE_STORE_WRITE_BEHAVIOUR_TAB);
+        form = page.getFileStoreWriteBehindForm();
+    }
+
+    @Test
+    public void change1ToWriteBehind() throws Exception {
         page.switchBehaviour();
-        new ResourceVerifier(
-            fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_THROUGH).and(InfinispanFixtures.WRITE,
-                InfinispanFixtures.BEHIND),
-            client).verifyExists();
+        new ResourceVerifier(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND),
+                client).verifyExists();
     }
 
     @Test
-    public void switchToWriteThrough() throws Exception {
-        navigateToWriteBehaviour(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND);
-        page.getFileStoreTab().select(ScatteredCachePage.FILE_STORE_WRITE_BEHAVIOUR_TAB);
+    public void change2ModificationQueueSize() throws Exception {
+        crud.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
+                "modification-queue-size", Random.number());
+    }
+
+    @Test
+    public void change3ThreadPoolSize() throws Exception {
+        crud.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
+                "thread-pool-size", Random.number());
+    }
+
+    @Test
+    public void change4ToWriteThrough() throws Exception {
         page.switchBehaviour();
-        new ResourceVerifier(
-            fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND).and(InfinispanFixtures.WRITE, InfinispanFixtures.THROUGH),
-            client).verifyExists();
-    }
-
-    @Test
-    public void editModificationQueueSize() throws Exception {
-        navigateToWriteBehaviour(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT);
-        crudOperations.update(
-            fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT).and(InfinispanFixtures.WRITE,
-                InfinispanFixtures.BEHIND),
-            page.getFileStoreWriteBehindForm(), "modification-queue-size", Random.number());
-    }
-
-    @Test
-    public void editThreadPoolSize() throws Exception {
-        navigateToWriteBehaviour(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT);
-        crudOperations.update(
-            fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_WRITE_BEHIND_EDIT).and(InfinispanFixtures.WRITE,
-                InfinispanFixtures.BEHIND),
-            page.getFileStoreWriteBehindForm(), "thread-pool-size", Random.number());
+        new ResourceVerifier(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, THROUGH),
+                client).verifyExists();
     }
 }

@@ -95,12 +95,6 @@ public class WorkerTest {
     }
 
     @Test
-    public void reset() throws Exception {
-        table.select(WORKER_UPDATE);
-        crud.reset(workerAddress(WORKER_UPDATE), form);
-    }
-
-    @Test
     public void update() throws Exception {
         table.select(WORKER_UPDATE);
         crud.update(workerAddress(WORKER_UPDATE), form, IO_THREADS, Random.number());

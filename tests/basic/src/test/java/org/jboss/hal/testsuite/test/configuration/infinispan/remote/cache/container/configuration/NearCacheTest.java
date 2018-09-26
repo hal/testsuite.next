@@ -21,6 +21,7 @@ import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.resources.CSS.btnDefault;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.nearCacheAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.remoteCacheContainerAddress;
@@ -91,7 +92,9 @@ public class NearCacheTest extends AbstractRemoteCacheContainerTest {
     }
 
     private void navigateToNearCache(String remoteCacheContainerName) {
-        page.navigate("name", remoteCacheContainerName);
+        page.navigate(NAME, remoteCacheContainerName);
+        // a second navigation is necessary to reload the page
+        page.navigate(NAME, remoteCacheContainerName);
         console.verticalNavigation().selectPrimary("rcc-item");
     }
 

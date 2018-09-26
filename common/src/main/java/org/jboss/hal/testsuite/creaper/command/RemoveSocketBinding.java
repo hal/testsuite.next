@@ -4,6 +4,7 @@ import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING_GROUP;
 
@@ -24,5 +25,9 @@ public class RemoveSocketBinding extends SocketBindingCommand {
         Address socketBindingRefAddress = Address.of(SOCKET_BINDING_GROUP, socketBindingGroup)
             .and(SOCKET_BINDING, name);
         ops.removeIfExists(socketBindingRefAddress);
+
+        Address remoteSocketBindingRefAddress = Address.of(SOCKET_BINDING_GROUP, socketBindingGroup)
+            .and(REMOTE_DESTINATION_OUTBOUND_SOCKET_BINDING, name);
+        ops.removeIfExists(remoteSocketBindingRefAddress);
     }
 }

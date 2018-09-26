@@ -31,16 +31,9 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.SOCKET_BINDINGS;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.binaryJDBCStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.customStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.fileStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.hotrodStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.jdbcStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.mixedJDBCStoreAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.remoteCacheContainerAddress;
-import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSPORT;
+import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.*;
 
 @RunWith(Arquillian.class)
 public class StoreTest {
@@ -57,8 +50,6 @@ public class StoreTest {
         "scattered-cache-with-jdbc-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_BINARY_JDBC_STORE =
         "scattered-cache-with-binary-jdbc-store-to-be-created-" + Random.name();
-    private static final String SCATTERED_CACHE_MIXED_JDBC_STORE =
-        "scattered-cache-with-mixed-jdbc-store-to-be-created-" + Random.name();
     private static final String SCATTERED_CACHE_HOTROD_STORE =
         "scattered-cache-with-hotrod-store-to-be-created-" + Random.name();
     private static final String DATA_SOURCE_JDBC = "data-source-for-jdbc-store-" + Random.name();
@@ -72,12 +63,11 @@ public class StoreTest {
     @BeforeClass
     public static void init() throws IOException, CommandFailedException {
         operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups"));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_FILE_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_CUSTOM_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_JDBC_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_BINARY_JDBC_STORE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_MIXED_JDBC_STORE));
         operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE));
         client.apply(
             new AddDataSource.Builder<>(DATA_SOURCE_JDBC).driverName("h2").jndiName(Random.jndiName()).connectionUrl(
@@ -127,6 +117,7 @@ public class StoreTest {
     private ScatteredCachePage page;
 
     public void navigate(String cacheContainer, String scatteredCache) {
+        page.navigate(cacheContainer, scatteredCache);
         page.navigate(cacheContainer, scatteredCache);
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
     }
@@ -180,22 +171,9 @@ public class StoreTest {
     }
 
     @Test
-    public void addMixedJDBCStore() throws Exception {
-        navigate(CACHE_CONTAINER, SCATTERED_CACHE_MIXED_JDBC_STORE);
-        page.getSelectStoreDropdown().selectExact("Mixed JDBC", "mixed-jdbc");
-        page.getEmptyStoreForm().mainAction();
-        AddResourceDialogFragment addResourceDialogFragment = console.addResourceDialog();
-        addResourceDialogFragment.getForm().text("data-source", DATA_SOURCE_MIXED_JDBC);
-        addResourceDialogFragment.add();
-        console.verifySuccess();
-        new ResourceVerifier(mixedJDBCStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE_MIXED_JDBC_STORE),
-            client).verifyExists();
-    }
-
-    @Test
     public void addHotrodStore() throws Exception {
         navigate(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE);
-        page.getSelectStoreDropdown().selectExact("Hotrod", "hotrod");
+        page.getSelectStoreDropdown().selectExact("Hot Rod", "hotrod");
         page.getEmptyStoreForm().mainAction();
         AddResourceDialogFragment addResourceDialogFragment = console.addResourceDialog();
         addResourceDialogFragment.getForm().text("remote-cache-container", REMOTE_CACHE_CONTAINER_HOTROD);

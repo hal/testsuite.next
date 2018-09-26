@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.LocalCachePage;
-import org.jboss.hal.testsuite.util.Library;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;

@@ -42,8 +42,8 @@ public class ScatteredCachePage extends BasePage {
     private static final String BINARY_JDBC_STORE_BINARY_TABLE_TAB =
         "scattered-cache-cache-store-binary-jdbc-binary-table-tab";
 
-    public static final String HOTROD_STORE_WRITE_BEHAVIOUR_TAB = "scattered-cache-cache-store-hotrod-write-tab";
-    private static final String HOTROD_STORE_ATTRIBUTES_TAB = "scattered-cache-cache-store-hotrod-attributes-tab";
+    public static final String HOTROD_STORE_WRITE_BEHAVIOUR_TAB = "scattered-cache-cache-store-hot-rod-write-tab";
+    private static final String HOTROD_STORE_ATTRIBUTES_TAB = "scattered-cache-cache-store-hot-rod-attributes-tab";
 
     @FindBy(id = "scattered-cache-tab-container")
     private TabsFragment configurationTab;
@@ -138,13 +138,13 @@ public class ScatteredCachePage extends BasePage {
     @FindBy(id = "scattered-cache-cache-store-mixed-jdbc-binary-table-form")
     private FormFragment mixedJDBCStoreBinaryTableForm;
 
-    @FindBy(id = "scattered-cache-cache-store-hotrod-tab-container")
+    @FindBy(id = "scattered-cache-cache-store-hot-rod-tab-container")
     private TabsFragment hotrodStoreTab;
 
-    @FindBy(id = "scattered-cache-cache-store-hotrod-form")
+    @FindBy(id = "scattered-cache-cache-store-hot-rod-form")
     private FormFragment hotrodStoreAttributesForm;
 
-    @FindBy(id = "scattered-cache-cache-store-hotrod-behind-form")
+    @FindBy(id = "scattered-cache-cache-store-hot-rod-behind-form")
     private FormFragment hotrodStoreWriteBehindForm;
 
     @FindBy(id = "scattered-cache-backups-table_wrapper")
@@ -299,13 +299,13 @@ public class ScatteredCachePage extends BasePage {
     }
 
     public FormFragment getHotrodStoreAttributesForm() {
-        switchStoreDropdown.selectExact("Hotrod", "hotrod");
+        switchStoreDropdown.selectExact("Hot Rod", "hotrod");
         hotrodStoreTab.select(HOTROD_STORE_ATTRIBUTES_TAB);
         return hotrodStoreAttributesForm;
     }
 
     public FormFragment getHotrodStoreWriteBehindForm() {
-        switchStoreDropdown.selectExact("Hotrod", "hotrod");
+        switchStoreDropdown.selectExact("Hot Rod", "hotrod");
         hotrodStoreTab.select(HOTROD_STORE_WRITE_BEHAVIOUR_TAB);
         return hotrodStoreWriteBehindForm;
     }
