@@ -1,6 +1,8 @@
 package org.jboss.hal.testsuite.test.runtime;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.concurrent.TimeUnit;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -38,6 +40,8 @@ public class KillDestroyServerGroupsTest {
         new FinderPath().append(Ids.DOMAIN_BROWSE_BY, "server-groups");
     private static final String OTHER_SERVER_GROUP = "other-server-group";
     private static final String OTHER_SERVER_GROUP_ID = Ids.build("sg", OTHER_SERVER_GROUP);
+    private static final String RUNNING = "running";
+    private static final String STOPPED = "STOPPED";
 
     private static String[] SERVERS_IN_OTHER_SERVER_GROUP;
 
@@ -68,12 +72,17 @@ public class KillDestroyServerGroupsTest {
     public void startServersInServerGroupIfNeeded() throws IOException {
         operations.invoke("start-servers",
             Address.root().and("server-group", OTHER_SERVER_GROUP), Values.of("blocking", true));
+        verifyServersAreInState(Arrays.asList(SERVERS_IN_OTHER_SERVER_GROUP), RUNNING, 150000);
     }
 
-    private void verifyServersAreStopped() throws IOException, InterruptedException {
-        for (String serverName : SERVERS_IN_OTHER_SERVER_GROUP) {
-            verifyServerHasState(ConfigUtils.getDefaultHost(), serverName, "STOPPED", 15000);
-        }
+    private void verifyServersAreInState(Collection<String> servers, String state, int timeout) {
+        servers.parallelStream().forEach(server -> {
+            try {
+                verifyServerHasState(ConfigUtils.getDefaultHost(), server, state, timeout);
+            } catch (InterruptedException | IOException e) {
+                throw new RuntimeException(e);
+            }
+        });
     }
 
     private void verifyServerHasState(String host, String server, String state, int timeout)
@@ -92,7 +101,7 @@ public class KillDestroyServerGroupsTest {
     }
 
     @Test
-    public void kill() throws IOException, InterruptedException {
+    public void kill() {
         console.finder(NameTokens.RUNTIME, SERVER_GROUP_FINDER_PATH)
             .column(Ids.SERVER_GROUP)
             .selectItem(OTHER_SERVER_GROUP_ID)
@@ -100,11 +109,11 @@ public class KillDestroyServerGroupsTest {
             .click("Kill");
         console.confirmationDialog().confirm();
         console.verifySuccess();
-        verifyServersAreStopped();
+        verifyServersAreInState(Arrays.asList(SERVERS_IN_OTHER_SERVER_GROUP), STOPPED, 15000);
     }
 
     @Test
-    public void destroy() throws IOException, InterruptedException {
+    public void destroy() {
         console.finder(NameTokens.RUNTIME, SERVER_GROUP_FINDER_PATH)
             .column(Ids.SERVER_GROUP)
             .selectItem(OTHER_SERVER_GROUP_ID)
@@ -112,6 +121,6 @@ public class KillDestroyServerGroupsTest {
             .click("Destroy");
         console.confirmationDialog().confirm();
         console.verifySuccess();
-        verifyServersAreStopped();
+        verifyServersAreInState(Arrays.asList(SERVERS_IN_OTHER_SERVER_GROUP), STOPPED, 15000);
     }
 }
