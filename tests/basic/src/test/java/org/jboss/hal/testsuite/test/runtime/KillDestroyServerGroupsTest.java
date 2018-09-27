@@ -27,14 +27,12 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.DomainAdministration;
 
 @RunWith(Arquillian.class)
 @Category(Domain.class)
 public class KillDestroyServerGroupsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final DomainAdministration domainAdministration = new DomainAdministration(client);
     private static final Operations operations = new Operations(client);
     private static final FinderPath SERVER_GROUP_FINDER_PATH =
         new FinderPath().append(Ids.DOMAIN_BROWSE_BY, "server-groups");
