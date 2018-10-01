@@ -354,6 +354,12 @@
             </modules>
         </profile>
         <profile>
+            <id>keycloak</id>
+            <modules>
+                <module>tests/keycloak</module>
+            </modules>
+        </profile>
+        <profile>
             <id>standalone</id>
             <properties>
                 <suite.mode>standalone</suite.mode>

@@ -89,6 +89,14 @@ public class Console {
 
     /** Navigates to the place request and waits until the selector is present. */
     public void navigate(PlaceRequest request, By selector) {
+        navigate(request, selector, this.baseUrl);
+    }
+
+    /**
+     * Navigates to the place request and waits until the selector is present.
+     * Useful in case we need to overwrite baseUrl from Arquillian e.g. for particular HTTPS test.
+     **/
+    public void navigate(PlaceRequest request, By selector, URL baseUrl) {
         String fragment = tokenFormatter.toPlaceToken(request);
         String hashFragment = fragment.startsWith("#") ? fragment : "#" + fragment;
         try {
