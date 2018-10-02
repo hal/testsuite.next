@@ -155,6 +155,7 @@ public final class ElytronFixtures {
     public static final String BCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-bcrypt-mapper-tab";
     public static final String CACHING_REALM_ITEM = "elytron-caching-realm-item";
     public static final String CERTIFICATE_FROM = "certificate-from";
+    public static final String CERTIFICATE_AUTHORITY_ACCOUNT_ITEM = "elytron-certificate-authority-account-item";
     public static final String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
     public static final String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
     public static final String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
@@ -1230,6 +1231,10 @@ public final class ElytronFixtures {
 
     public static Address simpleRegexRealmMapperAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_REGEX_REALM_MAPPER, name);
+    }
+
+    public static Address certificateAuthorityAccountAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("certificate-authority-account", name);
     }
 
     private ElytronFixtures() {
