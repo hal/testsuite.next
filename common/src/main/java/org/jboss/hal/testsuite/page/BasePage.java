@@ -35,7 +35,6 @@ public abstract class BasePage extends AbstractPage {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
                 .with(name, value)
                 .build();
-        browser.navigate().refresh();
         console.navigate(placeRequest);
     }
 
@@ -46,7 +45,6 @@ public abstract class BasePage extends AbstractPage {
         PlaceRequest placeRequest = new PlaceRequest.Builder().nameToken(assertPlace().value())
                 .with(params)
                 .build();
-        browser.navigate().refresh();
         console.navigate(placeRequest);
     }
 

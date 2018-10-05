@@ -93,8 +93,6 @@ public class NearCacheTest extends AbstractRemoteCacheContainerTest {
 
     private void navigateToNearCache(String remoteCacheContainerName) {
         page.navigate(NAME, remoteCacheContainerName);
-        // a second navigation is necessary to reload the page
-        page.navigate(NAME, remoteCacheContainerName);
         console.verticalNavigation().selectPrimary("rcc-item");
     }
 

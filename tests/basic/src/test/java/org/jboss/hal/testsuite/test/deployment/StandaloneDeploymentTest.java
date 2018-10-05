@@ -129,7 +129,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
     }
 
     @Test
-    public void removeDeployment() throws Exception {
+    public void undeploy() throws Exception {
         Deployment deployment = createSimpleDeployment();
         ResourceVerifier deploymentVerifier = new ResourceVerifier(deployment.getAddress(), client);
 
@@ -137,7 +137,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         deploymentVerifier.verifyExists();
 
         deploymentPage.navigate();
-        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Remove");
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Undeploy");
         console.confirmationDialog().confirm();
 
         deploymentVerifier.verifyDoesNotExist();
