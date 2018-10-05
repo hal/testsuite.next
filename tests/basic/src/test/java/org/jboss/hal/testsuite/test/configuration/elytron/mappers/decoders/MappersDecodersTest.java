@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.elytron;
+package org.jboss.hal.testsuite.test.configuration.elytron.mappers.decoders;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -110,51 +110,51 @@ public class MappersDecodersTest {
     public static void tearDown() throws Exception {
         try {
             // role mappers
-            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_CREATE));
-            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_UPDATE));
-            operations.remove(aggregateRoleMapperAddress(AGG_ROLE_DELETE));
-            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_CREATE));
-            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_UPDATE));
-            operations.remove(addPrefixRoleMapperAddress(ADD_PRE_DELETE));
-            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_CREATE));
-            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_UPDATE));
-            operations.remove(addSuffixRoleMapperAddress(ADD_SUF_DELETE));
-            operations.remove(constantRoleMapperAddress(CON_ROLE_CREATE));
-            operations.remove(constantRoleMapperAddress(CON_ROLE_UPDATE));
-            operations.remove(constantRoleMapperAddress(CON_ROLE_DELETE));
-            operations.remove(logicalRoleMapperAddress(LOG_ROLE_DELETE));
-            operations.remove(logicalRoleMapperAddress(LOG_ROLE_UPDATE));
-            operations.remove(logicalRoleMapperAddress(LOG_ROLE_CREATE));
+            operations.removeIfExists(aggregateRoleMapperAddress(AGG_ROLE_CREATE));
+            operations.removeIfExists(aggregateRoleMapperAddress(AGG_ROLE_UPDATE));
+            operations.removeIfExists(aggregateRoleMapperAddress(AGG_ROLE_DELETE));
+            operations.removeIfExists(addPrefixRoleMapperAddress(ADD_PRE_CREATE));
+            operations.removeIfExists(addPrefixRoleMapperAddress(ADD_PRE_UPDATE));
+            operations.removeIfExists(addPrefixRoleMapperAddress(ADD_PRE_DELETE));
+            operations.removeIfExists(addSuffixRoleMapperAddress(ADD_SUF_CREATE));
+            operations.removeIfExists(addSuffixRoleMapperAddress(ADD_SUF_UPDATE));
+            operations.removeIfExists(addSuffixRoleMapperAddress(ADD_SUF_DELETE));
+            operations.removeIfExists(constantRoleMapperAddress(CON_ROLE_CREATE));
+            operations.removeIfExists(constantRoleMapperAddress(CON_ROLE_UPDATE));
+            operations.removeIfExists(constantRoleMapperAddress(CON_ROLE_DELETE));
+            operations.removeIfExists(logicalRoleMapperAddress(LOG_ROLE_DELETE));
+            operations.removeIfExists(logicalRoleMapperAddress(LOG_ROLE_UPDATE));
+            operations.removeIfExists(logicalRoleMapperAddress(LOG_ROLE_CREATE));
             // permission mappers
-            operations.remove(logicalPermissionMapperAddress(LOG_PERM_UPDATE));
-            operations.remove(logicalPermissionMapperAddress(LOG_PERM_DELETE));
-            operations.remove(logicalPermissionMapperAddress(LOG_PERM_CREATE));
-            operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE));
-            operations.remove(constantPermissionMapperAddress(CON_PERM_UPDATE2));
-            operations.remove(constantPermissionMapperAddress(CON_PERM_DELETE));
-            operations.remove(constantPermissionMapperAddress(CON_PERM_CREATE));
-            operations.remove(simplePermissionMapperAddress(SIM_PERM_UPDATE));
-            operations.remove(simplePermissionMapperAddress(SIM_PERM_DELETE));
-            operations.remove(simplePermissionMapperAddress(SIM_PERM_CREATE));
+            operations.removeIfExists(logicalPermissionMapperAddress(LOG_PERM_UPDATE));
+            operations.removeIfExists(logicalPermissionMapperAddress(LOG_PERM_DELETE));
+            operations.removeIfExists(logicalPermissionMapperAddress(LOG_PERM_CREATE));
+            operations.removeIfExists(constantPermissionMapperAddress(CON_PERM_UPDATE));
+            operations.removeIfExists(constantPermissionMapperAddress(CON_PERM_UPDATE2));
+            operations.removeIfExists(constantPermissionMapperAddress(CON_PERM_DELETE));
+            operations.removeIfExists(constantPermissionMapperAddress(CON_PERM_CREATE));
+            operations.removeIfExists(simplePermissionMapperAddress(SIM_PERM_UPDATE));
+            operations.removeIfExists(simplePermissionMapperAddress(SIM_PERM_DELETE));
+            operations.removeIfExists(simplePermissionMapperAddress(SIM_PERM_CREATE));
             // principal decoder
-            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE));
-            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE));
-            operations.remove(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE));
-            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE));
-            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE));
-            operations.remove(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE));
-            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_DELETE));
-            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE));
-            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2));
-            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3));
-            operations.remove(constantPrincipalDecoderAddress(CONS_PRI_CREATE));
-            operations.remove(x500PrincipalDecoderAddress(X500_PRI_UPDATE));
-            operations.remove(x500PrincipalDecoderAddress(X500_PRI_DELETE));
-            operations.remove(x500PrincipalDecoderAddress(X500_PRI_CREATE));
+            operations.removeIfExists(aggregatePrincipalDecoderAddress(AGG_PRI_DELETE));
+            operations.removeIfExists(aggregatePrincipalDecoderAddress(AGG_PRI_UPDATE));
+            operations.removeIfExists(aggregatePrincipalDecoderAddress(AGG_PRI_CREATE));
+            operations.removeIfExists(concatenatingPrincipalDecoderAddress(CONC_PRI_CREATE));
+            operations.removeIfExists(concatenatingPrincipalDecoderAddress(CONC_PRI_UPDATE));
+            operations.removeIfExists(concatenatingPrincipalDecoderAddress(CONC_PRI_DELETE));
+            operations.removeIfExists(constantPrincipalDecoderAddress(CONS_PRI_DELETE));
+            operations.removeIfExists(constantPrincipalDecoderAddress(CONS_PRI_UPDATE));
+            operations.removeIfExists(constantPrincipalDecoderAddress(CONS_PRI_UPDATE2));
+            operations.removeIfExists(constantPrincipalDecoderAddress(CONS_PRI_UPDATE3));
+            operations.removeIfExists(constantPrincipalDecoderAddress(CONS_PRI_CREATE));
+            operations.removeIfExists(x500PrincipalDecoderAddress(X500_PRI_UPDATE));
+            operations.removeIfExists(x500PrincipalDecoderAddress(X500_PRI_DELETE));
+            operations.removeIfExists(x500PrincipalDecoderAddress(X500_PRI_CREATE));
             // role decoder
-            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_DELETE));
-            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_CREATE));
-            operations.remove(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE));
+            operations.removeIfExists(simpleRoleDecoderAddress(SIMP_ROLE_DELETE));
+            operations.removeIfExists(simpleRoleDecoderAddress(SIMP_ROLE_CREATE));
+            operations.removeIfExists(simpleRoleDecoderAddress(SIMP_ROLE_UPDATE));
 
             new Administration(client).reloadIfRequired();
         } finally {

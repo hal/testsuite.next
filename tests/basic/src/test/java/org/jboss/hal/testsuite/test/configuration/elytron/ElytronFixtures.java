@@ -225,6 +225,7 @@ public final class ElytronFixtures {
     public static final String LOGICAL_ROLE_MAPPER_ITEM = "mappers-decoders-logical-role-mapper-item";
     public static final String LOGS_ITEM = "logs-item";
     public static final String MAPPED_REGEX_REALM_MAPPER_ITEM = "elytron-mapped-regex-realm-mapper-item";
+    public static final String MAPPED_ROLE_MAPPER_ITEM = "mappers-decoders-mapped-role-mapper-item";
     public static final String MAPPING_MODE = "mapping-mode";
     public static final String MATCH_ABSTRACT_TYPE = "match-abstract-type";
     public static final String MATCH_HOST = "match-host";
@@ -271,6 +272,7 @@ public final class ElytronFixtures {
     public static final String ROLE_DECODER_ITEM = "mappers-decoders-role-decoder-item";
     public static final String ROLE_MAPPERS = "role-mappers";
     public static final String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
+    public static final String ROLE_MAP = "role-map";
     public static final String SALT_INDEX = "salt-index";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
@@ -1233,8 +1235,15 @@ public final class ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_REGEX_REALM_MAPPER, name);
     }
 
+    // ------------- certificate-authority-account
     public static Address certificateAuthorityAccountAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("certificate-authority-account", name);
+    }
+
+    // ------------- mapped-role-mapper
+
+    public static Address mappedRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("mapped-role-mapper", name);
     }
 
     private ElytronFixtures() {

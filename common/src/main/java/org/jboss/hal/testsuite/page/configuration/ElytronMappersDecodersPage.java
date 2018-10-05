@@ -84,6 +84,11 @@ public class ElytronMappersDecodersPage extends BasePage {
     @FindBy(id = "elytron-permissions-" + TABLE +  WRAPPER) private TableFragment simplePMPermissionsTable;
     @FindBy(id = "elytron-permissions-" + FORM) private FormFragment simplePMPermissionsForm;
 
+    // Mapped Role Mapper
+
+    @FindBy(id = MAPPERS_DECODERS + "-" + "mapped-role-mapper" + "-" + TABLE + WRAPPER) private TableFragment mappedRoleMapperTable;
+    @FindBy(id = MAPPERS_DECODERS + "-" + "mapped-role-mapper" + "-" + FORM) private FormFragment mappedRoleMapperForm;
+
     // Aggregate Principal Decoder
     @FindBy(id = MAPPERS_DECODERS + "-" + AGGREGATE_PRINCIPAL_DECODER + "-" + TABLE +  WRAPPER) private TableFragment aggregatePrincipalDecoderTable;
     @FindBy(id = MAPPERS_DECODERS + "-" + AGGREGATE_PRINCIPAL_DECODER + "-" + FORM) private FormFragment aggregatePrincipalDecoderForm;
@@ -210,6 +215,14 @@ public class ElytronMappersDecodersPage extends BasePage {
 
     public FormFragment getSimplePMPermissionsForm() {
         return simplePMPermissionsForm;
+    }
+
+    public TableFragment getMappedRoleMapperTable() {
+        return mappedRoleMapperTable;
+    }
+
+    public FormFragment getMappedRoleMapperForm() {
+        return mappedRoleMapperForm;
     }
 
     public TableFragment getAggregatePrincipalDecoderTable() {
