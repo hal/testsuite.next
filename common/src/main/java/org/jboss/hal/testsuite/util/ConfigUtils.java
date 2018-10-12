@@ -29,9 +29,7 @@ public class ConfigUtils {
         // Load default configuration
         try {
             try (InputStream defaultConfig = PropUtils.class.getResourceAsStream("/suite.properties")) {
-                if (defaultConfig != null) {
-                    config.load(defaultConfig);
-                }
+                config.load(defaultConfig);
             }
         } catch (IOException e) {
             throw new RuntimeException("Unable to load suite configuration");
