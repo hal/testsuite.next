@@ -113,7 +113,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <trimStackTrace>false</trimStackTrace>
-                    <systemPropertyVariables>
+                    <systemPropertyVariables combine.children="append">
                         <as.managementAddress>${as.managementAddress}</as.managementAddress>
                         <as.managementPort>${as.managementPort}</as.managementPort>
                         <browser>${browser}</browser>

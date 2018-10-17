@@ -13,6 +13,7 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
+import org.jboss.hal.testsuite.util.TestsuiteEnvironmentUtils;
 import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -51,6 +52,7 @@ public class CertificateAuthorityAccountTest {
         createCertificateAuthorityAccount();
         String serverHome = operations.readAttribute(Address.root().and(PATH, JBOSS_HOME_DIR), PATH).stringValue();
         auditLogFile = new File(serverHome, "audit-log.log");
+        TestsuiteEnvironmentUtils.getJbossHome();
         client.apply(backup.backup());
         Batch batch = new Batch();
         batch.writeAttribute(FILE_HANDLER_ADDRESS, "relative-to", JBOSS_HOME_DIR);
