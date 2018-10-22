@@ -68,6 +68,7 @@
         <suite.url>http://localhost:9990/console/ts.html</suite.url>
         <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
         <test.excluded.category/>
+        <upstream.excluded.category/>
         <test.included.category/>
 
         <!-- dependency versions -->
@@ -81,7 +82,7 @@
         <graphene.version>2.3.2</graphene.version>
         <guava.version>23.5-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
-        <hal.version>3.0.3-SNAPSHOT</hal.version>
+        <hal.version>3.1.0-SNAPSHOT</hal.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.12</junit.version>
@@ -238,6 +239,13 @@
                 <artifactId>logback-classic</artifactId>
                 <version>1.2.3</version>
             </dependency>
+
+            <!-- JDK 9+ -->
+            <dependency>
+                <groupId>org.glassfish.jaxb</groupId>
+                <artifactId>jaxb-runtime</artifactId>
+                <version>2.3.0</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -388,6 +396,19 @@
                     <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
                 </dependency>
             </dependencies>
+        </profile>
+        <profile>
+            <id>upstream</id>
+            <properties>
+                <upstream.excluded.category>
+                    org.jboss.hal.testsuite.category.EAP
+                </upstream.excluded.category>
+            </properties>
+            <activation>
+                <property>
+                    <name>!eap</name>
+                </property>
+            </activation>
         </profile>
         <profile>
             <id>restoreConfig</id>

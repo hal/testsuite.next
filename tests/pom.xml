@@ -84,6 +84,10 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.glassfish.jaxb</groupId>
+            <artifactId>jaxb-runtime</artifactId>
+        </dependency>
     </dependencies>
 
     <build>
@@ -124,7 +128,7 @@
                         <suite.url>${suite.url}</suite.url>
                     </systemPropertyVariables>
                     <groups>${test.included.category}</groups>
-                    <excludedGroups>${test.excluded.category}</excludedGroups>
+                    <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
                 </configuration>
             </plugin>
         </plugins>

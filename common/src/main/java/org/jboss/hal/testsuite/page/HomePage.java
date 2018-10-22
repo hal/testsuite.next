@@ -21,12 +21,19 @@ import java.util.List;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.graphene.Graphene;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.hal.meta.token.NameTokens;
+import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.fragment.TourWizardFragment;
 import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
+
+import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.testsuite.Selectors.contains;
 
 @Place(NameTokens.HOMEPAGE)
 public class HomePage extends BasePage {
@@ -64,5 +71,12 @@ public class HomePage extends BasePage {
         By logoutSelector = By.cssSelector("a[data-element=logout]");
         Graphene.waitGui().until().element(logoutSelector).is().clickable();
         browser.findElement(logoutSelector).click();
+    }
+
+    public TourWizardFragment openTourWizard() {
+        By wizardLinkSelector = ByJQuery.selector("a." + CSS.clickable + contains("Take a Tour"));
+        getRootContainer().findElement(wizardLinkSelector).click();
+        waitGui().until().element(TourWizardFragment.WIZARD_SELECTOR).is().visible();
+        return createPageFragment(TourWizardFragment.class, getRootContainer());
     }
 }

@@ -60,6 +60,12 @@ Domain
 mvn test -P<profiles>
 ```
 
+### Run all tests including product (EAP) specific ones:
+
+```bash
+mvn test -P<profiles> -Deap
+```
+
 ### Run a single test: 
 
 ```bash
