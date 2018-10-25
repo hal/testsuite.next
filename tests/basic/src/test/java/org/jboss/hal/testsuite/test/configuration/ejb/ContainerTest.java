@@ -61,6 +61,7 @@ public class ContainerTest {
 
     @Test
     public void testInvalidDefaultSingletonBeanAccessTimeout() {
+        console.waitNoNotification();
         crud.updateWithError(form, DEFAULT_SINGLETON_BEAN_ACCESS_TIMEOUT, 0);
     }
 

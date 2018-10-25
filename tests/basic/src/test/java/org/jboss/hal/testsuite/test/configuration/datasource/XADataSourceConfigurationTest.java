@@ -61,7 +61,7 @@ public class XADataSourceConfigurationTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.removeIfExists(dataSourceAddress(XA_DATA_SOURCE_UPDATE));
+        operations.removeIfExists(xaDataSourceAddress(XA_DATA_SOURCE_UPDATE));
     }
 
     @Page private DataSourcePage page;

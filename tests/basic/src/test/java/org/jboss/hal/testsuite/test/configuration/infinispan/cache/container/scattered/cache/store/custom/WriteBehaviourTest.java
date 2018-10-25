@@ -67,6 +67,7 @@ public class WriteBehaviourTest {
     @Before
     public void initPage() {
         page.navigate(CACHE_CONTAINER, SCATTERED_CACHE);
+        console.waitNoNotification();
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
         page.getCustomStoreTab().select(ScatteredCachePage.CUSTOM_STORE_WRITE_BEHAVIOUR_TAB);
         form = page.getCustomStoreWriteBehindForm();
@@ -74,6 +75,7 @@ public class WriteBehaviourTest {
 
     @Test
     public void change1ToWriteBehind() throws Exception {
+        console.waitNoNotification();
         page.switchBehaviour();
         new ResourceVerifier(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND),
                 client).verifyExists();
@@ -81,18 +83,21 @@ public class WriteBehaviourTest {
 
     @Test
     public void change2ModificationQueueSize() throws Exception {
+        console.waitNoNotification();
         crud.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
                 "modification-queue-size", Random.number());
     }
 
     @Test
     public void change3ThreadPoolSize() throws Exception {
+        console.waitNoNotification();
         crud.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
                 "thread-pool-size", Random.number());
     }
 
     @Test
     public void change4ToWriteThrough() throws Exception {
+        console.waitNoNotification();
         page.switchBehaviour();
         new ResourceVerifier(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, THROUGH),
                 client).verifyExists();

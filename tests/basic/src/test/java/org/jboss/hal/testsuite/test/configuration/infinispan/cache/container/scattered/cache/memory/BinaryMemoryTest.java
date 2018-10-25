@@ -86,6 +86,7 @@ public class BinaryMemoryTest {
 
     @Test
     public void editSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(binaryMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getBinaryMemoryForm(), "size",
             (long) Random.number());
     }
