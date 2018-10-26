@@ -67,7 +67,10 @@
         <suite.mode/>
         <suite.url>http://localhost:9990/console/ts.html</suite.url>
         <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
-        <test.excluded.category/>
+
+        <!-- Just to avoid 'Invalid group expression' in maven-surefire-plugin due to empty placeholder: -->
+        <test.excluded.category>org.jboss.hal.testsuite.category.DefaultCategory</test.excluded.category>
+
         <upstream.excluded.category/>
         <test.included.category/>
 
@@ -386,9 +389,9 @@
             <id>domain</id>
             <properties>
                 <suite.mode>domain</suite.mode>
-                <test.excluded.category>
-                    org.jboss.hal.testsuite.category.Standalone
-                </test.excluded.category>
+                <test.included.category>
+                    org.jboss.hal.testsuite.category.Domain
+                </test.included.category>
             </properties>
             <dependencies>
                 <dependency>
