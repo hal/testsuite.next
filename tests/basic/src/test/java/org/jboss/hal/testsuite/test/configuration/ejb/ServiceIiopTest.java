@@ -58,6 +58,7 @@ public class ServiceIiopTest {
 
     @Test
     public void update() throws Exception {
+        console.waitNoNotification();
         crud.update(SERVICE_IIOP_ADDRESS, form, USE_QUALIFIED_NAME, true);
     }
 }

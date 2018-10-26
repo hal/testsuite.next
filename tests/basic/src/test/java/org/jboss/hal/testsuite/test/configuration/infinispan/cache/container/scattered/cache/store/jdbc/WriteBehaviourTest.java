@@ -76,6 +76,7 @@ public class WriteBehaviourTest {
     @Before
     public void initPage() {
         page.navigate(CACHE_CONTAINER, SCATTERED_CACHE);
+        console.waitNoNotification();
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
         form = page.getJdbcStoreWriteBehindForm();
     }

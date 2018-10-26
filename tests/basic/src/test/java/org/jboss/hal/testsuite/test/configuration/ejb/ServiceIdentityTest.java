@@ -84,6 +84,7 @@ public class ServiceIdentityTest {
 
     @Test
     public void add() throws Exception {
+        console.waitNoNotification();
         emptyState.mainAction();
 
         console.verifySuccess();
@@ -93,6 +94,7 @@ public class ServiceIdentityTest {
 
     @Test
     public void addOutflow() throws Exception {
+        console.waitNoNotification();
         crud.update(SERVICE_IDENTITY_ADDRESS, form,
                 f -> f.list(OUTFLOW_SECURITY_DOMAINS).add(securityDomain),
                 resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(OUTFLOW_SECURITY_DOMAINS,
@@ -101,6 +103,7 @@ public class ServiceIdentityTest {
 
     @Test
     public void remove() throws Exception {
+        console.waitNoNotification();
         crud.deleteSingleton(SERVICE_IDENTITY_ADDRESS, form);
     }
 }

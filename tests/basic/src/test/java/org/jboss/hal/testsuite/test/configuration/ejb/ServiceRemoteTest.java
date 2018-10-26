@@ -75,11 +75,13 @@ public class ServiceRemoteTest {
 
     @Test
     public void updateThreadPool() throws Exception {
+        console.waitNoNotification();
         crud.update(SERVICE_REMOTE_ADDRESS, form, THREAD_POOL_NAME, TP_CREATE);
     }
 
     @Test
     public void updateCluster() throws Exception {
+        console.waitNoNotification();
         crud.update(SERVICE_REMOTE_ADDRESS, form, CLUSTER, cluster);
     }
 }

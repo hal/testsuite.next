@@ -73,12 +73,14 @@ public class AttributesTest {
 
     @Test
     public void editClass() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getCustomStoreAttributesForm(),
             "class");
     }
 
     @Test
     public void toggleFetchState() throws Exception {
+        console.waitNoNotification();
         boolean fetchState =
             operations.readAttribute(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "fetch-state")
                 .booleanValue(true);
@@ -88,18 +90,21 @@ public class AttributesTest {
 
     @Test
     public void editMaxBatchSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getCustomStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePassivation() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getCustomStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePreload() throws Exception {
+        console.waitNoNotification();
         boolean preload =
             operations.readAttribute(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "preload")
                 .booleanValue(false);
@@ -109,12 +114,14 @@ public class AttributesTest {
 
     @Test
     public void editProperties() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getCustomStoreAttributesForm(),
             "properties", Random.properties());
     }
 
     @Test
     public void togglePurge() throws Exception {
+        console.waitNoNotification();
         boolean purge =
             operations.readAttribute(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "purge")
                 .booleanValue(true);
@@ -124,6 +131,7 @@ public class AttributesTest {
 
     @Test
     public void toggleShared() throws Exception {
+        console.waitNoNotification();
         boolean shared =
             operations.readAttribute(customStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "shared")
                 .booleanValue(false);
