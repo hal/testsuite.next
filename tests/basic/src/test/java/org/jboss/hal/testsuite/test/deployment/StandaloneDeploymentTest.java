@@ -6,6 +6,7 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.UploadFormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.util.Library;
 import org.junit.Test;
@@ -126,6 +127,33 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         deploymentPage.navigate();
         assertFalse(explodeActionName + " action should not be available for already exploded deployment.",
                 deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
+    }
+
+    @Test
+    public void replaceDeployment() throws Exception {
+
+        Deployment
+            originalDeployment = createSimpleDeployment(),
+            modifiedDeployment = createAnotherDeployment();
+
+        client.apply(originalDeployment.deployEnabledCommand());
+        new ResourceVerifier(originalDeployment.getAddress(), client).verifyExists();
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + " original file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
+        assertFalse("The deployment should not yet contain " + OTHER_HTML + " file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
+
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(originalDeployment.getName(), "Replace");
+
+        DialogFragment uploadDialog = console.dialog();
+        UploadFormFragment.getUploadForm(uploadDialog.getRoot()).uploadFile(modifiedDeployment.getDeploymentFile());
+        uploadDialog.primaryButton();
+
+        assertFalse("The deployment should not any more contain " + INDEX_HTML + " file from original deployment.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
+        assertTrue("The deployment does not contain expected " + OTHER_HTML + " file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
     }
 
     @Test
