@@ -5,17 +5,24 @@ import java.io.IOException;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
+import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.page.runtime.elytron.ElytronRuntimeSSLPage;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
+import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
 import org.jboss.hal.testsuite.util.TestsuiteEnvironmentUtils;
+import org.jboss.hal.testsuite.util.audit.log.AuditLog;
+import org.jboss.hal.testsuite.util.audit.log.AuditLogWatcher;
 import org.junit.AfterClass;
-import org.junit.Assert;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -33,6 +40,7 @@ public class CertificateAuthorityAccountTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
     private static final Address AUDIT_ADDRESS = Address.coreService("management").and("access", "audit");
     private static final Address AUDIT_LOG_ADDRESS = AUDIT_ADDRESS.and("logger", "audit-log");
     private static final Address JSON_FORMATTER_ADDRESS = AUDIT_ADDRESS.and("json-formatter", "json-formatter");
@@ -45,14 +53,13 @@ public class CertificateAuthorityAccountTest {
     private static final String CERTIFICATE_AUTHORITY_ACCOUNT = "certificate-authority-account-" + Random.name();
     private static final String PATH = "path";
 
-    private static File auditLogFile;
+    private static File auditLogFile = new File(TestsuiteEnvironmentUtils.getJbossHome(), "audit-log.log");
+    private static final AuditLog auditLog = new AuditLog();
+    private static final AuditLogWatcher auditLogWatcher = new AuditLogWatcher(auditLogFile.toPath(), auditLog);
 
     @BeforeClass
     public static void setUp() throws CommandFailedException, IOException {
         createCertificateAuthorityAccount();
-        String serverHome = operations.readAttribute(Address.root().and(PATH, JBOSS_HOME_DIR), PATH).stringValue();
-        auditLogFile = new File(serverHome, "audit-log.log");
-        TestsuiteEnvironmentUtils.getJbossHome();
         client.apply(backup.backup());
         Batch batch = new Batch();
         batch.writeAttribute(FILE_HANDLER_ADDRESS, "relative-to", JBOSS_HOME_DIR);
@@ -60,6 +67,7 @@ public class CertificateAuthorityAccountTest {
         operations.batch(batch);
         operations.writeAttribute(JSON_FORMATTER_ADDRESS, "include-date", false);
         operations.writeAttribute(AUDIT_LOG_ADDRESS, "enabled", true);
+        new Thread(auditLogWatcher).start();
     }
 
     private static void createCertificateAuthorityAccount() throws IOException {
@@ -77,6 +85,7 @@ public class CertificateAuthorityAccountTest {
     @AfterClass
     public static void tearDown() throws CommandFailedException, IOException, OperationException {
         try {
+            auditLogWatcher.stop();
             removeCertificateAuthorityAccount();
             client.apply(backup.restore());
         } finally {
@@ -95,10 +104,23 @@ public class CertificateAuthorityAccountTest {
     @Inject
     private Console console;
 
+    @Page
+    private ElytronRuntimeSSLPage page;
+
+    @Before
+    public void initPage() throws IOException {
+        page.navigate();
+        console.verticalNavigation().selectPrimary(Ids.ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT);
+    }
+
     @Test
-    public void test() {
-        Assert.assertTrue(true);
-        browser.navigate();
-        Assert.assertTrue(true);
+    public void create() {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT);
+        page.getCertificateAuthorityAccountTable().button("Create").click();
+        AddResourceDialogFragment addResourceDialog = console.addResourceDialog();
+        addResourceDialog.getForm().flip("agree-to-terms-of-service", true);
+        addResourceDialog.getForm().flip("staging", true);
+        addResourceDialog.add();
+        System.out.println("");
     }
 }

@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.util.audit.log;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -165,4 +166,17 @@ public class AuditLog {
         }
     }
 
+    private List<LogEntry> logEntries = new ArrayList<>();
+
+    public void addEntry(LogEntry entry) {
+        this.logEntries.add(entry);
+    }
+
+    public void addEntries(Collection<LogEntry> logEntries) {
+        this.logEntries.addAll(logEntries);
+    }
+
+    public List<LogEntry> getLogEntries() {
+        return Collections.unmodifiableList(logEntries);
+    }
 }
