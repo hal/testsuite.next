@@ -1,19 +1,14 @@
 package org.jboss.hal.testsuite.util.audit.log.deserializer;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.DecimalNode;
-import java.io.IOException;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
-import org.wildfly.extras.creaper.core.online.operations.Address;
 
 public class JsonNodeToModelNodeParser {
 
@@ -26,6 +21,9 @@ public class JsonNodeToModelNodeParser {
         converters.put(JsonNode::isDouble, JsonNodeToModelNodeParser::toDouble);
         converters.put(JsonNode::isInt, JsonNodeToModelNodeParser::toInt);
         converters.put(JsonNode::isLong, JsonNodeToModelNodeParser::toLong);
+        converters.put(JsonNode::isArray, JsonNodeToModelNodeParser::toList);
+        converters.put(JsonNode::isObject, JsonNodeToModelNodeParser::toObject);
+        converters.put(JsonNode::isTextual, JsonNodeToModelNodeParser::toString);
     }
 
     public static ModelNode toBigDecimal(JsonNode jsonNode) {
@@ -70,28 +68,44 @@ public class JsonNodeToModelNodeParser {
         return new ModelNode(jsonNode.longValue());
     }
 
+    public static ModelNode toString(JsonNode jsonNode) {
+        if (!jsonNode.isTextual()) {
+            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to string");
+        }
+        return new ModelNode(jsonNode.textValue());
+    }
+
     public static ModelNode toList(JsonNode jsonNode) {
         if (!jsonNode.isArray()) {
             throw new IllegalArgumentException("Cannot convert " + jsonNode + "to list");
         }
         ModelNodeGenerator.ModelNodeListBuilder listResultBuilder = new ModelNodeGenerator.ModelNodeListBuilder();
-        Function<JsonNode, ModelNode> transformer =
-            converters.entrySet().stream().filter(entry -> entry.getKey().test(jsonNode))
-                .map(Map.Entry::getValue).findFirst().orElse(jsonNode1 -> new ModelNode());
+        Function<JsonNode, ModelNode> transformer = getTransformerFor(jsonNode);
         jsonNode.iterator().forEachRemaining(node -> listResultBuilder.addNode(transformer.apply(node)));
         return listResultBuilder.build();
     }
 
-    /*public static ModelNode toObject(JsonNode jsonNode) {
+    public static Function<JsonNode, ModelNode> getTransformerFor(JsonNode jsonNode) {
+        return converters.entrySet().stream().filter(entry -> entry.getKey().test(jsonNode))
+            .map(Map.Entry::getValue).findFirst().orElse(undefinedNode -> new ModelNode());
+    }
+
+    public static ModelNode toObject(JsonNode jsonNode) {
         if (!jsonNode.isObject()) {
             throw new IllegalArgumentException("Cannot convert" + jsonNode + "to object");
         }
         ModelNodeGenerator.ModelNodePropertiesBuilder modelNodeObjectBuilder =
             new ModelNodeGenerator.ModelNodePropertiesBuilder();
-    }*/
+        jsonNode.fields().forEachRemaining(entry -> {
+            modelNodeObjectBuilder.addProperty(entry.getKey(),
+                getTransformerFor(entry.getValue()).apply(entry.getValue()));
+        });
+        return modelNodeObjectBuilder.build();
+    }
 
     public static void main(String[] args) {
-        String text = "{\n"
+        String text
+            = "{\n"
             + "    \"type\" : \"core\",\n"
             + "    \"r/o\" : false,\n"
             + "    \"booting\" : false,\n"
@@ -102,39 +116,55 @@ public class JsonNodeToModelNodeParser {
             + "    \"remote-address\" : \"/172.80.0.1\",\n"
             + "    \"success\" : true,\n"
             + "    \"ops\" : [{\n"
-            + "        \"operation\" : \"composite\",\n"
-            + "        \"address\" : [],\n"
-            + "        \"steps\" : [{\n"
-            + "            \"name\" : \"connection-listener-property\",\n"
-            + "            \"value\" : {\"some\" : \"prop\"},\n"
-            + "            \"operation\" : \"write-attribute\",\n"
-            + "            \"address\" : [\n"
-            + "                {\n"
-            + "                    \"subsystem\" : \"datasources\"\n"
-            + "                },\n"
-            + "                {\n"
-            + "                    \"data-source\" : \"ExampleDS\"\n"
-            + "                }\n"
-            + "            ]\n"
-            + "        }],\n"
+            + "        \"agree-to-terms-of-service\" : true,\n"
+            + "        \"staging\" : true,\n"
+            + "        \"operation\" : \"create-account\",\n"
+            + "        \"address\" : [\n"
+            + "            {\n"
+            + "                \"subsystem\" : \"elytron\"\n"
+            + "            },\n"
+            + "            {\n"
+            + "                \"certificate-authority-account\" : \"ccc\"\n"
+            + "            }\n"
+            + "        ],\n"
             + "        \"operation-headers\" : {\n"
             + "            \"access-mechanism\" : \"HTTP\",\n"
             + "            \"caller-type\" : \"user\"\n"
             + "        }\n"
             + "    }]\n"
-            + "}";
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            JsonNode node = objectMapper.readTree(text);
-            JsonNode addressesNode = node.get("ops").get(0).get("steps").get(0).get("address");
-            Iterable<JsonNode> iterable = addressesNode::iterator;
-            List<Address> addressList = StreamSupport.stream(iterable.spliterator(), false).flatMap(item -> {
-                Iterable<Map.Entry<String, JsonNode>> keyValue = () -> item.fields();
-                return StreamSupport.stream(keyValue.spliterator(), false);
-            }).map(entry -> Address.of(entry.getKey(), entry.getValue().textValue())).collect(Collectors.toList());
-            System.out.println(addressList);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+            + "}\n"
+            + "{\n"
+            + "    \"type\" : \"core\",\n"
+            + "    \"r/o\" : false,\n"
+            + "    \"booting\" : false,\n"
+            + "    \"version\" : \"14.0.0.CR1-SNAPSHOT\",\n"
+            + "    \"user\" : \"anonymous\",\n"
+            + "    \"domainUUID\" : null,\n"
+            + "    \"access\" : \"HTTP\",\n"
+            + "    \"remote-address\" : \"/172.80.0.1\",\n"
+            + "    \"success\" : true,\n"
+            + "    \"ops\" : [{\n"
+            + "        \"agree-to-terms-of-service\" : true,\n"
+            + "        \"staging\" : true,\n"
+            + "        \"operation\" : \"create-account\",\n"
+            + "        \"address\" : [\n"
+            + "            {\n"
+            + "                \"subsystem\" : \"elytron\"\n"
+            + "            },\n"
+            + "            {\n"
+            + "                \"certificate-authority-account\" : \"ccc\"\n"
+            + "            }\n"
+            + "        ],\n"
+            + "        \"operation-headers\" : {\n"
+            + "            \"access-mechanism\" : \"HTTP\",\n"
+            + "            \"caller-type\" : \"user\"\n"
+            + "        }\n"
+            + "    }]\n"
+            + "}\n";
+        Pattern pattern =
+            Pattern.compile("(^" + Pattern.quote("{") + "$.*?^" + Pattern.quote("}") + "$)",
+                Pattern.MULTILINE | Pattern.DOTALL);
+        Matcher matcher = pattern.matcher(text);
+        System.out.println(matcher.find());
     }
 }

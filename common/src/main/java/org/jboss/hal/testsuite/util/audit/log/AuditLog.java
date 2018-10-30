@@ -26,7 +26,7 @@ public class AuditLog {
 
         private String access;
 
-        private String remoteAccess;
+        private String remoteAdress;
 
         private boolean success;
 
@@ -90,12 +90,12 @@ public class AuditLog {
             this.access = access;
         }
 
-        public String getRemoteAccess() {
-            return remoteAccess;
+        public String getRemoteAddress() {
+            return remoteAdress;
         }
 
-        public void setRemoteAccess(String remoteAccess) {
-            this.remoteAccess = remoteAccess;
+        public void setRemoteAddress(String remoteAddress) {
+            this.remoteAdress = remoteAddress;
         }
 
         public boolean isSuccess() {

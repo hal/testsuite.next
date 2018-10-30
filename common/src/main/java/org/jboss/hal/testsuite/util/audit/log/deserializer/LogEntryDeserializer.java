@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.StreamSupport;
 import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.util.audit.log.AuditLog;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
@@ -28,7 +27,7 @@ public class LogEntryDeserializer extends StdDeserializer<AuditLog.LogEntry> {
 
     @Override
     public AuditLog.LogEntry deserialize(JsonParser p, DeserializationContext ctxt)
-        throws IOException, JsonProcessingException {
+        throws IOException {
         JsonNode logEntryNode = p.getCodec().readTree(p);
         AuditLog.LogEntry logEntry = new AuditLog.LogEntry();
         logEntry.setType(logEntryNode.get("type").asText());
@@ -38,7 +37,7 @@ public class LogEntryDeserializer extends StdDeserializer<AuditLog.LogEntry> {
         logEntry.setUser(logEntryNode.get("user").asText());
         logEntry.setDomainUUID(logEntryNode.get("domainUUID").asText());
         logEntry.setAccess(logEntryNode.get("access").asText());
-        logEntry.setRemoteAccess(logEntryNode.get("remote-access").asText());
+        logEntry.setRemoteAddress(logEntryNode.get("remote-address").asText());
         logEntry.setSuccess(logEntryNode.get("success").asBoolean());
         JsonNode operationsNode = logEntryNode.get("ops").get(0);
         List<AuditLog.Operation> operations = new ArrayList<>();
@@ -61,41 +60,10 @@ public class LogEntryDeserializer extends StdDeserializer<AuditLog.LogEntry> {
         operation.setAddress(addressBuilder.buildAddress());
         Iterable<Map.Entry<String, JsonNode>> fields = operationNode::fields;
         StreamSupport.stream(fields.spliterator(), false)
-            .filter(entry -> !entry.getKey().equals("operation") || !entry.getKey().equals("address"))
-            .forEach(entry -> operation.addArgument(entry.getKey(), JsonNodeToModelNodeParser.toBigDecimal(entry.getValue())));
+            .filter(entry -> !entry.getKey().equals("operation") && !entry.getKey().equals("address"))
+            .forEach(entry -> operation.addArgument(entry.getKey(),
+                JsonNodeToModelNodeParser.getTransformerFor(entry.getValue()).apply(entry.getValue())));
         operations.add(operation);
-    }
-
-    private ModelNode fromJsonNode(JsonNode jsonNode) {
-        if (jsonNode.isTextual()) {
-            return new ModelNode(jsonNode.textValue());
-        }
-        if (jsonNode.isBoolean()) {
-            return new ModelNode(jsonNode.booleanValue());
-        }
-        if (jsonNode.isIntegralNumber()) {
-            if (jsonNode.isInt()) {
-                return new ModelNode(jsonNode.intValue());
-            }
-            if (jsonNode.isLong()) {
-                return new ModelNode(jsonNode.longValue());
-            }
-            if (jsonNode.isBigDecimal()) {
-                return new ModelNode(jsonNode.decimalValue());
-            }
-        }
-        if (jsonNode.isFloatingPointNumber()) {
-            if (jsonNode.isFloat()) {
-                return new ModelNode(jsonNode.floatValue());
-            }
-            if (jsonNode.isDouble()) {
-                return new ModelNode(jsonNode.doubleValue());
-            }
-            if (jsonNode.isBigDecimal()) {
-                return new ModelNode(jsonNode.decimalValue());
-            }
-        }
-        return new ModelNode();
     }
 
     private void parseAndUpdateAddress(JsonNode jsonNode, AddressBuilder builder) {
