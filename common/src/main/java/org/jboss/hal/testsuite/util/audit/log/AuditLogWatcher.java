@@ -9,6 +9,7 @@ import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
 import java.nio.file.WatchKey;
 import java.nio.file.WatchService;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.validation.constraints.NotNull;
 
@@ -18,18 +19,18 @@ public class AuditLogWatcher implements Runnable {
 
     private final AuditLogEntryParser logEntryParser;
 
-    private final AuditLog auditLog;
+    private final BlockingQueue<AuditLog> auditLogQueue;
 
     private final AtomicBoolean stop = new AtomicBoolean(false);
 
-    public AuditLogWatcher(@NotNull Path auditLogPath, @NotNull AuditLog auditLog, @NotNull AuditLogEntryParser parser) {
+    public AuditLogWatcher(@NotNull Path auditLogPath, @NotNull BlockingQueue<AuditLog> auditLogQueue, @NotNull AuditLogEntryParser parser) {
         this.auditLogPath = auditLogPath;
-        this.auditLog = auditLog;
+        this.auditLogQueue = auditLogQueue;
         this.logEntryParser = parser;
     }
 
-    public AuditLogWatcher(@NotNull Path auditLogPath, @NotNull AuditLog auditLog) {
-        this(auditLogPath, auditLog, new NDJSONAuditLogEntryParser());
+    public AuditLogWatcher(@NotNull Path auditLogPath, @NotNull BlockingQueue<AuditLog> auditLogQueue) {
+        this(auditLogPath, auditLogQueue, new NDJSONAuditLogEntryParser());
     }
 
     public boolean isStopped() {
@@ -43,6 +44,7 @@ public class AuditLogWatcher implements Runnable {
     @Override
     public void run() {
         final File auditLogFile = auditLogPath.toFile();
+        final AuditLog auditLog = new AuditLog();
         try {
             RandomAccessFile randomAccessFile = new RandomAccessFile(auditLogFile, "r");
             try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
@@ -54,6 +56,7 @@ public class AuditLogWatcher implements Runnable {
                     StandardWatchEventKinds.ENTRY_MODIFY);
                 while (!isStopped()) {
                     for (WatchEvent<?> event : watchKey.pollEvents()) {
+                        System.out.println("Running");
                         Path changedFile = (Path) event.context();
                         Path changedFileName = changedFile.getFileName();
                         if (changedFileName == null) {
@@ -61,11 +64,12 @@ public class AuditLogWatcher implements Runnable {
                         }
                         if (changedFileName.equals(auditLogPath.getFileName())) {
                             auditLog.addEntries(logEntryParser.parse(newContentToString(randomAccessFile)));
+                            auditLogQueue.put(auditLog);
                         }
                     }
                 }
             }
-        } catch (IOException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }

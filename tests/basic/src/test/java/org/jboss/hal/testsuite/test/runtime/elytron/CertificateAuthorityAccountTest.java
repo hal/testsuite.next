@@ -3,6 +3,11 @@ package org.jboss.hal.testsuite.test.runtime.elytron;
 import java.io.File;
 import java.io.IOException;
 
+import java.nio.file.Files;
+import java.util.List;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.SynchronousQueue;
+import java.util.concurrent.TimeUnit;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -17,11 +22,11 @@ import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.page.runtime.elytron.ElytronRuntimeSSLPage;
 import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
-import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
 import org.jboss.hal.testsuite.util.TestsuiteEnvironmentUtils;
 import org.jboss.hal.testsuite.util.audit.log.AuditLog;
 import org.jboss.hal.testsuite.util.audit.log.AuditLogWatcher;
 import org.junit.AfterClass;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -40,7 +45,6 @@ public class CertificateAuthorityAccountTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
     private static final Address AUDIT_ADDRESS = Address.coreService("management").and("access", "audit");
     private static final Address AUDIT_LOG_ADDRESS = AUDIT_ADDRESS.and("logger", "audit-log");
     private static final Address JSON_FORMATTER_ADDRESS = AUDIT_ADDRESS.and("json-formatter", "json-formatter");
@@ -50,16 +54,30 @@ public class CertificateAuthorityAccountTest {
 
     private static final String JBOSS_HOME_DIR = "jboss.home.dir";
     private static final String KEY_STORE = "key-store-" + Random.name();
-    private static final String CERTIFICATE_AUTHORITY_ACCOUNT = "certificate-authority-account-" + Random.name();
+    private static final String CERTIFICATE_AUTHORITY_ACCOUNT_CREATE = "certificate-authority-account-" + Random.name();
+    private static final String CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE =
+        "certificate-authority-account-deactivate-" + Random.name();
+    private static final String CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE =
+        "certificate-authority-account-update-" + Random.name();
     private static final String PATH = "path";
 
     private static File auditLogFile = new File(TestsuiteEnvironmentUtils.getJbossHome(), "audit-log.log");
-    private static final AuditLog auditLog = new AuditLog();
-    private static final AuditLogWatcher auditLogWatcher = new AuditLogWatcher(auditLogFile.toPath(), auditLog);
+    private static final BlockingQueue<AuditLog> auditLogQueue = new SynchronousQueue<>();
+    private static final AuditLogWatcher auditLogWatcher = new AuditLogWatcher(auditLogFile.toPath(), auditLogQueue);
 
     @BeforeClass
     public static void setUp() throws CommandFailedException, IOException {
-        createCertificateAuthorityAccount();
+        ModelNode credentialReference = new ModelNode();
+        credentialReference.get("clear-text").set(Random.name());
+        operations.add(ElytronFixtures.keyStoreAddress(KEY_STORE), Values.of("type", "JKS")
+            .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
+            .and(PATH, Random.name())
+            .and("relative-to", "jboss.server.config.dir"));
+        createCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_CREATE);
+        createCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE);
+        createCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
+        activateCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE);
+        activateCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
         client.apply(backup.backup());
         Batch batch = new Batch();
         batch.writeAttribute(FILE_HANDLER_ADDRESS, "relative-to", JBOSS_HOME_DIR);
@@ -70,32 +88,33 @@ public class CertificateAuthorityAccountTest {
         new Thread(auditLogWatcher).start();
     }
 
-    private static void createCertificateAuthorityAccount() throws IOException {
-        ModelNode credentialReference = new ModelNode();
-        credentialReference.get("clear-text").set(Random.name());
-        operations.add(ElytronFixtures.keyStoreAddress(KEY_STORE), Values.of("type", "JKS")
-            .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
-            .and(PATH, Random.name())
-            .and("relative-to", "jboss.server.config.dir"));
-        operations.add(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT),
+    private static void createCertificateAuthorityAccount(String name) throws IOException {
+        operations.add(ElytronFixtures.certificateAuthorityAccountAddress(name),
             Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                 .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE));
+    }
+
+    private static void activateCertificateAuthorityAccount(String name) throws IOException {
+        operations.invoke("create-account", ElytronFixtures.certificateAuthorityAccountAddress(name),
+            Values.of("agree-to-terms-of-service", true)).assertSuccess();
     }
 
     @AfterClass
     public static void tearDown() throws CommandFailedException, IOException, OperationException {
         try {
             auditLogWatcher.stop();
-            removeCertificateAuthorityAccount();
+            operations.removeIfExists(
+                ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_CREATE));
+            operations.removeIfExists(
+                ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE));
+            operations.removeIfExists(
+                ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE));
+            operations.removeIfExists(ElytronFixtures.keyStoreAddress(KEY_STORE));
             client.apply(backup.restore());
+            Files.delete(auditLogFile.toPath());
         } finally {
             client.close();
         }
-    }
-
-    private static void removeCertificateAuthorityAccount() throws IOException, OperationException {
-        operations.removeIfExists(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT));
-        operations.removeIfExists(ElytronFixtures.keyStoreAddress(KEY_STORE));
     }
 
     @Drone
@@ -107,6 +126,8 @@ public class CertificateAuthorityAccountTest {
     @Page
     private ElytronRuntimeSSLPage page;
 
+    private AuditLog auditLog;
+
     @Before
     public void initPage() throws IOException {
         page.navigate();
@@ -114,13 +135,48 @@ public class CertificateAuthorityAccountTest {
     }
 
     @Test
-    public void create() {
-        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT);
+    public void create() throws InterruptedException {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_CREATE);
         page.getCertificateAuthorityAccountTable().button("Create").click();
         AddResourceDialogFragment addResourceDialog = console.addResourceDialog();
         addResourceDialog.getForm().flip("agree-to-terms-of-service", true);
         addResourceDialog.getForm().flip("staging", true);
         addResourceDialog.add();
-        System.out.println("");
+        console.verifySuccess();
+        retrieveUpdatedAuditLog();
+        AuditLog.Operation lastOperation = getLastOperation();
+        Assert.assertTrue("The \"create-account\" operation should be successful",
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
+        Assert.assertEquals("The \"create-account\" operation should be called", lastOperation.getOperationName(),
+            "create-account");
+        Assert.assertTrue(lastOperation.getAddress().toString()
+            .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_CREATE).toString()));
+    }
+
+    private void retrieveUpdatedAuditLog() throws InterruptedException {
+        auditLog = auditLogQueue.poll(5, TimeUnit.SECONDS);
+    }
+
+    private AuditLog.Operation getLastOperation() {
+        List<AuditLog.Operation> lastOperations =
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).getOperations();
+        return lastOperations.get(lastOperations.size() - 1);
+    }
+
+    @Test
+    public void deactivate() throws InterruptedException {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE);
+        page.getCertificateAuthorityAccountTable().button("Deactivate").click();
+        AddResourceDialogFragment addResourceDialog = console.addResourceDialog();
+        addResourceDialog.add();
+        console.verifySuccess();
+        retrieveUpdatedAuditLog();
+        AuditLog.Operation lastOperation = getLastOperation();
+        Assert.assertTrue("The \"deactivate-account\" operation should be called succesfully",
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
+        Assert.assertEquals("The \"deactivate-account\" operation should be called", lastOperation.getOperationName(),
+            "deactivate-account");
+        Assert.assertEquals(lastOperation.getAddress().toString(),
+            ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE).toString());
     }
 }
