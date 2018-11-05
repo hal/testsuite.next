@@ -4,7 +4,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 public class UndertowFixtures {
 
-    static final Address UNDERTOW_ADDRESS = Address.subsystem("undertow");
+    public static final Address UNDERTOW_ADDRESS = Address.subsystem("undertow");
 
     static final String DEFAULT_SECURITY_DOMAIN = "default-security-domain";
     public static final String DEFAULT_SERVER = "default-server";
