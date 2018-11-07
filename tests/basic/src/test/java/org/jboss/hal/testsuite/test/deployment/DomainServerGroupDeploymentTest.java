@@ -71,7 +71,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
     public void deployExistingContent() throws Exception {
         Deployment deployment = createSimpleDeployment();
         ResourceVerifier deploymentInMainServerGroupVerifier = new ResourceVerifier(Address.of(SERVER_GROUP, MAIN_SERVER_GROUP)
-                    .and(DEPLOYMENT, deployment.getName()), client);
+                    .and(DEPLOYMENT, deployment.getName()), client, 120000);
 
         client.apply(deployment.deployEnabledCommand(OTHER_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
