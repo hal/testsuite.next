@@ -59,11 +59,18 @@ public class CertificateAuthorityAccountTest {
         "certificate-authority-account-deactivate-" + Random.name();
     private static final String CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE =
         "certificate-authority-account-update-" + Random.name();
+    private static final String CERTIFICATE_AUTHORITY_ACCOUNT_GET_METADATA =
+        "certificate-authority-account-get-metadata-" + Random.name();
     private static final String PATH = "path";
 
     private static File auditLogFile = new File(TestsuiteEnvironmentUtils.getJbossHome(), "audit-log.log");
     private static final BlockingQueue<AuditLog> auditLogQueue = new SynchronousQueue<>();
     private static final AuditLogWatcher auditLogWatcher = new AuditLogWatcher(auditLogFile.toPath(), auditLogQueue);
+
+    private static final String CREATE_ACCOUNT = "create-account";
+    private static final String UPDATE = "update-account";
+    private static final String AGREE_TO_TERMS_OF_SERVICE = "agree-to-terms-of-service";
+    private static final String STAGING = "staging";
 
     @BeforeClass
     public static void setUp() throws CommandFailedException, IOException {
@@ -95,8 +102,8 @@ public class CertificateAuthorityAccountTest {
     }
 
     private static void activateCertificateAuthorityAccount(String name) throws IOException {
-        operations.invoke("create-account", ElytronFixtures.certificateAuthorityAccountAddress(name),
-            Values.of("agree-to-terms-of-service", true)).assertSuccess();
+        operations.invoke(CREATE_ACCOUNT, ElytronFixtures.certificateAuthorityAccountAddress(name),
+            Values.of(AGREE_TO_TERMS_OF_SERVICE, true)).assertSuccess();
     }
 
     @AfterClass
@@ -139,8 +146,8 @@ public class CertificateAuthorityAccountTest {
         page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_CREATE);
         page.getCertificateAuthorityAccountTable().button("Create").click();
         AddResourceDialogFragment addResourceDialog = console.addResourceDialog();
-        addResourceDialog.getForm().flip("agree-to-terms-of-service", true);
-        addResourceDialog.getForm().flip("staging", true);
+        addResourceDialog.getForm().flip(AGREE_TO_TERMS_OF_SERVICE, true);
+        addResourceDialog.getForm().flip(STAGING, true);
         addResourceDialog.add();
         console.verifySuccess();
         retrieveUpdatedAuditLog();
@@ -178,5 +185,38 @@ public class CertificateAuthorityAccountTest {
             "deactivate-account");
         Assert.assertEquals(lastOperation.getAddress().toString(),
             ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE).toString());
+    }
+
+    @Test
+    public void update() throws InterruptedException {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
+        page.getCertificateAuthorityAccountTable().button("Update").click();
+        AddResourceDialogFragment resourceDialogFragment = console.addResourceDialog();
+        resourceDialogFragment.getForm().flip(AGREE_TO_TERMS_OF_SERVICE, true);
+        resourceDialogFragment.add();
+        console.verifySuccess();
+        retrieveUpdatedAuditLog();
+        AuditLog.Operation lastOperation = getLastOperation();
+        Assert.assertTrue("The \"update\" operation should be successful",
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
+        Assert.assertEquals("The \"update\" operation should be called", lastOperation.getOperationName(),
+            UPDATE);
+        Assert.assertTrue(lastOperation.getAddress().toString()
+            .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE).toString()));
+    }
+
+    @Test
+    public void getMetadata() throws InterruptedException {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
+        page.getCertificateAuthorityAccountTable().button("Get Metadata").click();
+        console.verifySuccess();
+        retrieveUpdatedAuditLog();
+        AuditLog.Operation lastOperation = getLastOperation();
+        Assert.assertTrue("The \"get-metadata\" operation should be successful",
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
+        Assert.assertEquals("The \"get-metadata\" operation should be called", lastOperation.getOperationName(),
+            "get-metadata");
+        Assert.assertTrue(lastOperation.getAddress().toString()
+            .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE).toString()));
     }
 }

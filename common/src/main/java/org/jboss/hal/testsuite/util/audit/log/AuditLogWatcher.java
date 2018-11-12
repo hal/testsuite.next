@@ -14,12 +14,21 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 import javax.validation.constraints.NotNull;
 
+/**
+ * Represents an action to watch audit-log changes and provide changes of {@link AuditLog}.
+ */
 public class AuditLogWatcher implements Runnable {
 
+    /**
+     * Path to audit-log file, which is being updated by server
+     */
     private final Path auditLogPath;
 
     private final AuditLogEntryParser logEntryParser;
 
+    /**
+     * Serves as a synchronization mechanism to provide changes created by server.
+     */
     private final BlockingQueue<AuditLog> auditLogQueue;
 
     private final AtomicBoolean stop = new AtomicBoolean(false);

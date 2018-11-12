@@ -15,6 +15,9 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.jboss.hal.testsuite.util.audit.log.AuditLog;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+/**
+ * Class that serves to deserialize JSON output from audit-log into {@link AuditLog} objects
+ */
 public class LogEntryDeserializer extends StdDeserializer<AuditLog.LogEntry> {
 
     public LogEntryDeserializer() {
