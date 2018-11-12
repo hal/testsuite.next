@@ -2,12 +2,12 @@ package org.jboss.hal.testsuite.test.runtime.elytron;
 
 import java.io.File;
 import java.io.IOException;
-
 import java.nio.file.Files;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.SynchronousQueue;
 import java.util.concurrent.TimeUnit;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;

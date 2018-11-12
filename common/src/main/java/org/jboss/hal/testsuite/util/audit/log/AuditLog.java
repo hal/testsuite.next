@@ -6,10 +6,25 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import org.jboss.dmr.ModelNode;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
 public class AuditLog {
+
+    private List<LogEntry> logEntries = new ArrayList<>();
+
+    public void addEntry(LogEntry entry) {
+        this.logEntries.add(entry);
+    }
+
+    public void addEntries(Collection<LogEntry> logEntries) {
+        this.logEntries.addAll(logEntries);
+    }
+
+    public List<LogEntry> getLogEntries() {
+        return Collections.unmodifiableList(logEntries);
+    }
 
     public static class LogEntry {
 
@@ -164,19 +179,5 @@ public class AuditLog {
         public Map<String, ModelNode> getArguments() {
             return Collections.unmodifiableMap(arguments);
         }
-    }
-
-    private List<LogEntry> logEntries = new ArrayList<>();
-
-    public void addEntry(LogEntry entry) {
-        this.logEntries.add(entry);
-    }
-
-    public void addEntries(Collection<LogEntry> logEntries) {
-        this.logEntries.addAll(logEntries);
-    }
-
-    public List<LogEntry> getLogEntries() {
-        return Collections.unmodifiableList(logEntries);
     }
 }

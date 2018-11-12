@@ -57,7 +57,7 @@
         <as.managementPort>9990</as.managementPort>
         <browser>phantomjs</browser>
         <linkXRef>false</linkXRef>
-        <testsuite.config.location>${project.basedir}/testsuite.properties</testsuite.config.location>
+        <testsuite.config.location>${user.dir}/testsuite.properties</testsuite.config.location>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>

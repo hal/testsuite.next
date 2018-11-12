@@ -1,16 +1,20 @@
 package org.jboss.hal.testsuite.util.audit.log.deserializer;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Predicate;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 
 public class JsonNodeToModelNodeParser {
+
+    private JsonNodeToModelNodeParser() { }
 
     private static final Map<Predicate<JsonNode>, Function<JsonNode, ModelNode>> converters = new HashMap<>();
 
@@ -26,58 +30,62 @@ public class JsonNodeToModelNodeParser {
         converters.put(JsonNode::isTextual, JsonNodeToModelNodeParser::toString);
     }
 
+    private static String errorMessage(JsonNode jsonNode, String targetType) {
+        return String.format("Cannot convert %s to %s", jsonNode, targetType);
+    }
+
     public static ModelNode toBigDecimal(JsonNode jsonNode) {
         if (!jsonNode.isBigDecimal()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to big decimal");
+            throw new IllegalArgumentException(errorMessage(jsonNode, BigDecimal.class.getName()));
         }
         return new ModelNode(jsonNode.decimalValue());
     }
 
     public static ModelNode toBigInteger(JsonNode jsonNode) {
         if (!jsonNode.isBigInteger()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to big integer");
+            throw new IllegalArgumentException(errorMessage(jsonNode, BigInteger.class.getName()));
         }
         return new ModelNode(jsonNode.bigIntegerValue());
     }
 
     public static ModelNode toBoolean(JsonNode jsonNode) {
         if (!jsonNode.isBoolean()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to boolean");
+            throw new IllegalArgumentException(errorMessage(jsonNode, Boolean.class.getName()));
         }
         return new ModelNode(jsonNode.booleanValue());
     }
 
     public static ModelNode toDouble(JsonNode jsonNode) {
         if (!jsonNode.isDouble()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to double");
+            throw new IllegalArgumentException(errorMessage(jsonNode, Double.class.getName()));
         }
         return new ModelNode(jsonNode.doubleValue());
     }
 
     public static ModelNode toInt(JsonNode jsonNode) {
         if (!jsonNode.isInt()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to int");
+            throw new IllegalArgumentException(errorMessage(jsonNode, Integer.class.getName()));
         }
         return new ModelNode(jsonNode.intValue());
     }
 
     public static ModelNode toLong(JsonNode jsonNode) {
         if (!jsonNode.isLong()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to long");
+            throw new IllegalArgumentException(errorMessage(jsonNode, Long.class.getName()));
         }
         return new ModelNode(jsonNode.longValue());
     }
 
     public static ModelNode toString(JsonNode jsonNode) {
         if (!jsonNode.isTextual()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to string");
+            throw new IllegalArgumentException(errorMessage(jsonNode, String.class.getName()));
         }
         return new ModelNode(jsonNode.textValue());
     }
 
     public static ModelNode toList(JsonNode jsonNode) {
         if (!jsonNode.isArray()) {
-            throw new IllegalArgumentException("Cannot convert " + jsonNode + "to list");
+            throw new IllegalArgumentException(errorMessage(jsonNode, List.class.getName()));
         }
         ModelNodeGenerator.ModelNodeListBuilder listResultBuilder = new ModelNodeGenerator.ModelNodeListBuilder();
         Function<JsonNode, ModelNode> transformer = getTransformerFor(jsonNode);
@@ -85,14 +93,9 @@ public class JsonNodeToModelNodeParser {
         return listResultBuilder.build();
     }
 
-    public static Function<JsonNode, ModelNode> getTransformerFor(JsonNode jsonNode) {
-        return converters.entrySet().stream().filter(entry -> entry.getKey().test(jsonNode))
-            .map(Map.Entry::getValue).findFirst().orElse(undefinedNode -> new ModelNode());
-    }
-
     public static ModelNode toObject(JsonNode jsonNode) {
         if (!jsonNode.isObject()) {
-            throw new IllegalArgumentException("Cannot convert" + jsonNode + "to object");
+            throw new IllegalArgumentException(errorMessage(jsonNode, Object.class.getName()));
         }
         ModelNodeGenerator.ModelNodePropertiesBuilder modelNodeObjectBuilder =
             new ModelNodeGenerator.ModelNodePropertiesBuilder();
@@ -101,5 +104,10 @@ public class JsonNodeToModelNodeParser {
                 getTransformerFor(entry.getValue()).apply(entry.getValue()));
         });
         return modelNodeObjectBuilder.build();
+    }
+
+    public static Function<JsonNode, ModelNode> getTransformerFor(JsonNode jsonNode) {
+        return converters.entrySet().stream().filter(entry -> entry.getKey().test(jsonNode))
+            .map(Map.Entry::getValue).findFirst().orElse(undefinedNode -> new ModelNode());
     }
 }
