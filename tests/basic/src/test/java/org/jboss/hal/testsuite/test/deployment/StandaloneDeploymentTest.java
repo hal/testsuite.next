@@ -6,6 +6,7 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.UploadFormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
 import org.jboss.hal.testsuite.util.Library;
 import org.junit.Test;
@@ -129,7 +130,34 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
     }
 
     @Test
-    public void removeDeployment() throws Exception {
+    public void replaceDeployment() throws Exception {
+
+        Deployment
+            originalDeployment = createSimpleDeployment(),
+            modifiedDeployment = createAnotherDeployment();
+
+        client.apply(originalDeployment.deployEnabledCommand());
+        new ResourceVerifier(originalDeployment.getAddress(), client).verifyExists();
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + " original file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
+        assertFalse("The deployment should not yet contain " + OTHER_HTML + " file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
+
+        deploymentPage.navigate();
+        deploymentPage.callActionOnStandaloneDeployment(originalDeployment.getName(), "Replace");
+
+        DialogFragment uploadDialog = console.dialog();
+        UploadFormFragment.getUploadForm(uploadDialog.getRoot()).uploadFile(modifiedDeployment.getDeploymentFile());
+        uploadDialog.primaryButton();
+
+        assertFalse("The deployment should not any more contain " + INDEX_HTML + " file from original deployment.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
+        assertTrue("The deployment does not contain expected " + OTHER_HTML + " file.",
+                deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
+    }
+
+    @Test
+    public void undeploy() throws Exception {
         Deployment deployment = createSimpleDeployment();
         ResourceVerifier deploymentVerifier = new ResourceVerifier(deployment.getAddress(), client);
 
@@ -137,7 +165,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         deploymentVerifier.verifyExists();
 
         deploymentPage.navigate();
-        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Remove");
+        deploymentPage.callActionOnStandaloneDeployment(deployment.getName(), "Undeploy");
         console.confirmationDialog().confirm();
 
         deploymentVerifier.verifyDoesNotExist();

@@ -546,6 +546,15 @@ public class ResourceVerifier {
         return verifyListAttributeDoesNotContainValue(attributeName, value, null);
     }
 
+    /**
+     * Verifies that at latest after default timeout {@link PropagationChecker} param produces true.
+     */
+    public ResourceVerifier verifyTrue(String failMessage, PropagationChecker checker) throws Exception {
+        waitFor(checker);
+        assertTrue(failMessage, checker.finallyPropagated());
+        return this;
+    }
+
     private boolean isModelNodePresentInListAttributeValue(String attributeName, ModelNode value) throws IOException {
         final ModelNodeResult modelNodeResult = ops.readAttribute(address, attributeName);
         return ModelNodeUtils.isValuePresentInModelNodeList(modelNodeResult.value(), value);
@@ -662,7 +671,7 @@ public class ResourceVerifier {
     }
 
     @FunctionalInterface
-    private interface PropagationChecker {
+    public static interface PropagationChecker {
 
         boolean finallyPropagated() throws Exception;
     }

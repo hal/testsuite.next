@@ -211,6 +211,7 @@ public class ServerConfigurationTest {
 
     @Test
     public void clusterCredentialReferenceRemove() throws Exception {
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();

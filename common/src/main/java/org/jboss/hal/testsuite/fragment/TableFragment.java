@@ -92,18 +92,26 @@ public class TableFragment {
     public void select(String value) {
         By selector = ByJQuery.selector("td" + contains(value));
         goToPageWithElement(selector);
-        root.findElement(selector).click();
-        if (!forms.isEmpty()) {
-            for (FormFragment form : forms) {
-                if (form.getRoot().isDisplayed()) {
-                    form.view();
+        WebElement rowElement = root.findElement(selector);
+
+        WebElement row = root.findElement(ByJQuery.selector("tbody > tr" + contains(value)));
+        String classAttribute = row.getAttribute("class");
+
+        // only click the row if it is not selected
+        if (classAttribute != null && classAttribute.indexOf("selected") < 0) {
+            rowElement.click();
+            if (!forms.isEmpty()) {
+                for (FormFragment form : forms) {
+                    if (form.getRoot().isDisplayed()) {
+                        form.view();
+                    }
                 }
             }
-        }
-        if (!blankForms.isEmpty()) {
-            for (FormFragment form : blankForms) {
-                if (form.getRoot().isDisplayed()) {
-                    form.viewBlank();
+            if (!blankForms.isEmpty()) {
+                for (FormFragment form : blankForms) {
+                    if (form.getRoot().isDisplayed()) {
+                        form.viewBlank();
+                    }
                 }
             }
         }
@@ -150,6 +158,10 @@ public class TableFragment {
             pager = Graphene.createPageFragment(PagerFragment.class, pagerElement);
         }
         return pager;
+    }
+
+    public void scrollToTop() {
+        console.scrollIntoView(root, "{block: \"start\"}");
     }
 
     private void goToPageWithElement(By selector) {

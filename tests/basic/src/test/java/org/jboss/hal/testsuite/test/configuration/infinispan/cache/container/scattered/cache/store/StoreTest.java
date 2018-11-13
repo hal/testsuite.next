@@ -118,7 +118,6 @@ public class StoreTest {
 
     public void navigate(String cacheContainer, String scatteredCache) {
         page.navigate(cacheContainer, scatteredCache);
-        page.navigate(cacheContainer, scatteredCache);
         console.verticalNavigation().selectPrimary("scattered-cache-store-item");
     }
 

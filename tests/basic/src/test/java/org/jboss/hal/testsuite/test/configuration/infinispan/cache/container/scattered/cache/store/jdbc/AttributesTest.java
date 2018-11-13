@@ -90,12 +90,14 @@ public class AttributesTest {
 
     @Test
     public void editDataSource() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getJdbcStoreAttributesForm(),
             "data-source", DATA_SOURCE_EDIT);
     }
 
     @Test
     public void editDialect() throws Exception {
+        console.waitNoNotification();
         List<String> dialects = new ArrayList<>(
             Arrays.asList("MARIA_DB", "MY_SQL", "POSTGRES", "DERBY", "HSQL", "H2", "SQLITE", "DB2", "DB2_390", "INFORMIX",
                 "INTERBASE", "FIREBIRD", "SQL_SERVER", "ACCESS", "ORACLE", "SYBASE"));
@@ -110,6 +112,7 @@ public class AttributesTest {
 
     @Test
     public void toggleFetchState() throws Exception {
+        console.waitNoNotification();
         boolean fetchState = operations.readAttribute(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "fetch-state")
             .booleanValue(true);
         crudOperations.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getJdbcStoreAttributesForm(),
@@ -118,18 +121,21 @@ public class AttributesTest {
 
     @Test
     public void editMaxBatchSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getJdbcStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePassivation() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getJdbcStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePreload() throws Exception {
+        console.waitNoNotification();
         boolean preload =
             operations.readAttribute(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "preload")
                 .booleanValue(false);
@@ -139,12 +145,14 @@ public class AttributesTest {
 
     @Test
     public void editProperties() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getJdbcStoreAttributesForm(),
             "properties", Random.properties());
     }
 
     @Test
     public void togglePurge() throws Exception {
+        console.waitNoNotification();
         boolean purge =
             operations.readAttribute(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "purge")
                 .booleanValue(true);
@@ -154,6 +162,7 @@ public class AttributesTest {
 
     @Test
     public void toggleShared() throws Exception {
+        console.waitNoNotification();
         boolean shared =
             operations.readAttribute(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "shared")
                 .booleanValue(false);

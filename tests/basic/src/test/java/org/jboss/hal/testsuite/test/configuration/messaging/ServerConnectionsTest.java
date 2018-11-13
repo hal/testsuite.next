@@ -807,6 +807,7 @@ public class ServerConnectionsTest {
 
     @Test
     public void pooledConnectionFactoryTryUpdate() {
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         TableFragment table = page.getPooledConnectionFactoryTable();
         FormFragment form = page.getPooledConnectionFactoryForm();
@@ -831,7 +832,7 @@ public class ServerConnectionsTest {
     public void pooledConnectionFactoryTryAddCredentialReferenceRequires() throws Exception {
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), PASSWORD);
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE);
-
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
 
         TableFragment table = page.getPooledConnectionFactoryTable();
@@ -857,7 +858,7 @@ public class ServerConnectionsTest {
     public void pooledConnectionFactoryTryAddCredentialReferenceEmpty() throws Exception {
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), PASSWORD);
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
 
         TableFragment table = page.getPooledConnectionFactoryTable();
@@ -882,7 +883,7 @@ public class ServerConnectionsTest {
     public void pooledConnectionFactoryTryAddCredentialReferenceAlternatives() throws Exception {
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), PASSWORD);
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
 
         TableFragment table = page.getPooledConnectionFactoryTable();
@@ -910,7 +911,7 @@ public class ServerConnectionsTest {
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), PASSWORD);
         operations.undefineAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
 
         TableFragment table = page.getPooledConnectionFactoryTable();
@@ -938,7 +939,7 @@ public class ServerConnectionsTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
 
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         page.getPooledFormsTab().select(crTab);
@@ -958,7 +959,7 @@ public class ServerConnectionsTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
 
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         page.getPooledFormsTab().select(crTab);
@@ -978,8 +979,7 @@ public class ServerConnectionsTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), CREDENTIAL_REFERENCE, cr);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigate(SERVER, SRV_UPDATE);
-
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, ITEM));
         page.getPooledFormsTab().select(crTab);
 

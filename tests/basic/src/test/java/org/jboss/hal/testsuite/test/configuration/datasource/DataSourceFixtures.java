@@ -62,11 +62,11 @@ public final class DataSourceFixtures {
     static final String TRACKING = "tracking";
     static final String XA_DATASOURCE_PROPERTIES = "xa-datasource-properties";
 
-    static Address dataSourceAddress(String name) {
+    public static Address dataSourceAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(DATA_SOURCE, name);
     }
 
-    static Address xaDataSourceAddress(String name) {
+    public static Address xaDataSourceAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(XA_DATA_SOURCE, name);
     }
 

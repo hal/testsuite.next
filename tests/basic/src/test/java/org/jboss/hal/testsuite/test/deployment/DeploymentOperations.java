@@ -1,9 +1,13 @@
 package org.jboss.hal.testsuite.test.deployment;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 import org.jboss.dmr.ModelNode;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator.ModelNodePropertiesBuilder;
 import org.jboss.hal.testsuite.util.ConfigUtils;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -11,6 +15,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static java.util.concurrent.CompletableFuture.runAsync;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 
 public class DeploymentOperations {
@@ -68,6 +73,32 @@ public class DeploymentOperations {
         for (String deploymentName : deploymentsToBeRemoved) {
             ops.removeIfExists(Address.deployment(deploymentName));
         }
+        return this;
+    }
+
+    public CompletableFuture<Void> deployAsync(Deployment deployment) throws InterruptedException {
+        CompletableFuture<Void> deployFuture = runAsync(() -> {
+            try {
+                addContent(deployment);
+                deploy(deployment);
+            } catch (Exception e) {
+                throw new RuntimeException(e);
+            }
+        });
+        TimeUnit.SECONDS.sleep(2);
+        return deployFuture;
+    }
+
+    private DeploymentOperations addContent(Deployment deployment) throws MalformedURLException, IOException {
+        ops.add(deployment.getAddress(), Values.ofList(CONTENT,
+                new ModelNodePropertiesBuilder().addProperty(URL,
+                        deployment.getDeploymentFile().toURI().toURL().toExternalForm()).build()))
+           .assertSuccess();
+        return this;
+    }
+
+    private DeploymentOperations deploy(Deployment deployment) throws IOException {
+        ops.invoke(DEPLOY, deployment.getAddress());
         return this;
     }
 

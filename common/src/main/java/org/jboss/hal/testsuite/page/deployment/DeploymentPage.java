@@ -108,7 +108,8 @@ public class DeploymentPage extends BasePage {
     }
 
     private DropdownFragment openDropdownOnDeploymentInContentRepository(String deploymentName) {
-        return getContentRepositoryDeploymentColumn().selectItem(deploymentName).dropdown();
+        String deploymentId = deploymentName.replace(".", "");
+        return getContentRepositoryDeploymentColumn().selectItem(deploymentId).dropdown();
     }
 
     private DropdownFragment openDropdownOnDeploymentInServerGroup(String serverGroupName, String deploymentName) {

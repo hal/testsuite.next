@@ -71,7 +71,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
     public void deployExistingContent() throws Exception {
         Deployment deployment = createSimpleDeployment();
         ResourceVerifier deploymentInMainServerGroupVerifier = new ResourceVerifier(Address.of(SERVER_GROUP, MAIN_SERVER_GROUP)
-                    .and(DEPLOYMENT, deployment.getName()), client);
+                    .and(DEPLOYMENT, deployment.getName()), client, 120000);
 
         client.apply(deployment.deployEnabledCommand(OTHER_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
@@ -116,7 +116,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
     }
 
     @Test
-    public void removeDeployment() throws Exception {
+    public void undeployDeployment() throws Exception {
         Deployment deployment = createSimpleDeployment();
         client.apply(deployment.deployEnabledCommand(MAIN_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
@@ -125,7 +125,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
                 .verifyExists();
 
         deploymentPage.navigate();
-        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Remove").confirm();
+        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Undeploy").confirm();
         deploymentInMainServerGroupVerifier.verifyDoesNotExist();
     }
 

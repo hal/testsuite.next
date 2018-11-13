@@ -56,8 +56,8 @@ public class SubsystemsTest {
     private static final Operations operations = new Operations(client);
     private static List<String> subsystems = new ArrayList<>();
     // this is from org.jboss.hal.client.configuration.subsystem.SubsystemColumn
-    private static final List<String> EMPTY_SUBSYSTEMS = asList("bean-validation", "core-management", "ee-security",
-        "jaxrs", "jdr", "jsr77", "pojo", "sar");
+    private static final List<String> EMPTY_SUBSYSTEMS = asList("bean-validation", "ee-security", "jaxrs", "jdr",
+            "microprofile-opentracing-smallrye", "jsr77", "pojo", "sar");
 
     @BeforeClass
     public static void beforeClass() throws Exception {

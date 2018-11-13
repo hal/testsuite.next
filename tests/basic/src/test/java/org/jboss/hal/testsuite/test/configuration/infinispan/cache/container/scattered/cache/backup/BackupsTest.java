@@ -6,29 +6,33 @@ import java.util.Arrays;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ScatteredCachePage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
+import org.junit.runners.MethodSorters;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.ENABLED;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.backupAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFixtures.scatteredCacheAddress;
 
 @RunWith(Arquillian.class)
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class BackupsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -61,9 +65,6 @@ public class BackupsTest {
         }
     }
 
-    @Drone
-    private WebDriver browser;
-
     @Inject
     private CrudOperations crudOperations;
 
@@ -72,41 +73,43 @@ public class BackupsTest {
 
     @Page
     private ScatteredCachePage page;
+    private TableFragment table;
+    private FormFragment form;
 
     @Before
     public void navigateToTransactionForm() {
         page.navigate(CACHE_CONTAINER, SCATTERED_CACHE);
         console.verticalNavigation().selectPrimary("scattered-cache-backup-item");
+        table = page.getBackupsTable();
+        form = page.getBackupsForm();
+        table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        crudOperations.create(
-            backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_CREATE),
-            page.getBackupsTable(), BACKUP_CREATE);
+        crudOperations.create(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_CREATE), table, BACKUP_CREATE);
     }
 
     @Test
     public void delete() throws Exception {
-        crudOperations.delete(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_DELETE), page.getBackupsTable(),
-            BACKUP_DELETE);
+        crudOperations.delete(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_DELETE), table, BACKUP_DELETE);
     }
 
     @Test
     public void editAfterFailures() throws Exception {
-        page.getBackupsTable().select(BACKUP_EDIT);
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
-            "after-failures", Random.number());
+        table.select(BACKUP_EDIT);
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form, "after-failures",
+                Random.number());
     }
 
     @Test
     public void toggleEnabled() throws Exception {
-        page.getBackupsTable().select(BACKUP_EDIT);
+        console.waitNoNotification();
+        table.select(BACKUP_EDIT);
         boolean enabled =
             operations.readAttribute(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), "enabled")
                 .booleanValue();
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
-            "enabled", !enabled);
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form, ENABLED, !enabled);
     }
 
     @Test
@@ -117,17 +120,17 @@ public class BackupsTest {
         List<String> failurePolicies = new ArrayList<>(Arrays.asList("IGNORE", "FAIL", "WARN", "CUSTOM"));
         failurePolicies.remove(currentFailurePolicy);
         String failurePolicy = failurePolicies.get(Random.number(0, failurePolicies.size()));
-        page.getBackupsTable().select(BACKUP_EDIT);
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
+        table.select(BACKUP_EDIT);
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form,
             formFragment -> formFragment.select("failure-policy", failurePolicy),
             resourceVerifier -> resourceVerifier.verifyAttribute("failure-policy", failurePolicy));
     }
 
     @Test
     public void editMinWait() throws Exception {
-        page.getBackupsTable().select(BACKUP_EDIT);
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
-            "min-wait", (long) Random.number());
+        table.select(BACKUP_EDIT);
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form, "min-wait",
+                (long) Random.number());
     }
 
     @Test
@@ -138,16 +141,18 @@ public class BackupsTest {
         List<String> strategies = new ArrayList<>(Arrays.asList("SYNC", "ASYNC"));
         strategies.remove(currentStrategy);
         String strategy = strategies.get(0);
-        page.getBackupsTable().select(BACKUP_EDIT);
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
+        table.select(BACKUP_EDIT);
+        console.waitNoNotification();
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form,
             formFragment -> formFragment.select("strategy", strategy),
             resourceVerifier -> resourceVerifier.verifyAttribute("strategy", strategy));
     }
 
     @Test
     public void editTimeout() throws Exception {
-        page.getBackupsTable().select(BACKUP_EDIT);
-        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), page.getBackupsForm(),
-            "min-wait", (long) Random.number());
+        console.waitNoNotification();
+        table.select(BACKUP_EDIT);
+        crudOperations.update(backupAddress(CACHE_CONTAINER, SCATTERED_CACHE, BACKUP_EDIT), form,
+            "timeout", 123L);
     }
 }

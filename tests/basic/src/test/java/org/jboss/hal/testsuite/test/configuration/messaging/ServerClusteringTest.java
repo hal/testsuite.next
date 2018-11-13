@@ -117,6 +117,7 @@ public class ServerClusteringTest {
         TableFragment table = page.getBroadcastGroupTable();
         FormFragment form = page.getBroadcastGroupForm();
         table.bind(form);
+        table.scrollToTop();
         table.select(BG_UPDATE);
         crudOperations.update(broadcastGroupAddress(SRV_UPDATE, BG_UPDATE), form, BROADCAST_PERIOD, 123L);
     }
@@ -196,10 +197,10 @@ public class ServerClusteringTest {
     @Test
     public void clusterConnectionCreate() throws Exception {
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CLUSTER_CONNECTION, ITEM));
+        console.waitNoNotification();
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
-
         crudOperations.create(clusterConnectionAddress(SRV_UPDATE, CC_CREATE), table, f -> {
             f.text(NAME, CC_CREATE);
             f.text(CLUSTER_CONNECTION_ADDRESS, anyString);
@@ -210,11 +211,11 @@ public class ServerClusteringTest {
 
     @Test
     public void clusterConnectionTryCreate() {
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_CLUSTER_CONNECTION, ITEM));
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
-
         crudOperations.createWithErrorAndCancelDialog(table, f -> f.text(NAME, CC_CREATE), CLUSTER_CONNECTION_ADDRESS);
     }
 
@@ -224,6 +225,7 @@ public class ServerClusteringTest {
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
+        table.scrollToTop();
         table.select(CC_UPDATE);
         crudOperations.update(clusterConnectionAddress(SRV_UPDATE, CC_UPDATE), form, CALL_TIMEOUT, 123L);
     }
@@ -234,7 +236,9 @@ public class ServerClusteringTest {
         TableFragment table = page.getClusterConnectionTable();
         FormFragment form = page.getClusterConnectionForm();
         table.bind(form);
+        table.scrollToTop();
         table.select(CC_UPDATE_ALTERNATIVES);
+
         crudOperations.updateWithError(form, f -> {
             f.text(DISCOVERY_GROUP, anyString);
             f.list(STATIC_CONNECTORS).add(HTTP);
@@ -329,7 +333,7 @@ public class ServerClusteringTest {
     @Test
     public void bridgeUpdate() throws Exception {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
         TableFragment table = page.getBridgeTable();
         FormFragment form = page.getBridgeForm();

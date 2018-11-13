@@ -300,7 +300,7 @@ public class ServerDestinationsTest {
         FormFragment form = page.getDivertForm();
         table.bind(form);
 
-        crudOperations.createWithError(table, DIVERT_CREATE, DIVERT_ADDRESS);
+        crudOperations.createWithErrorAndCancelDialog(table, DIVERT_CREATE, DIVERT_ADDRESS);
     }
 
     @Test
