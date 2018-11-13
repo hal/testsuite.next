@@ -183,6 +183,7 @@ public final class ElytronFixtures {
     public static final String CUSTOM_REALM_MAPPER_ITEM = "elytron-custom-realm-mapper-item";
     public static final String CUSTOM_ROLE_DECODER_ITEM = "mappers-decoders-custom-role-decoder-item";
     public static final String CUSTOM_ROLE_MAPPER_ITEM = "mappers-decoders-custom-role-mapper-item";
+    public static final String CUSTOM_SECURITY_EVENT_LISTENER_ITEM = "elytron-custom-security-event-listener-item";
     public static final String DELEGATE_REALM_MAPPER = "delegate-realm-mapper";
     public static final String DIGEST_REALM_NAME = "digest-realm-name";
     public static final String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
@@ -1249,4 +1250,7 @@ public final class ElytronFixtures {
     private ElytronFixtures() {
     }
 
+    public static Address customSecurityEventListenerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("custom-security-event-listener", name);
+    }
 }

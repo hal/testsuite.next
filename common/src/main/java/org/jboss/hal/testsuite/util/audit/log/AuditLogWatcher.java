@@ -66,7 +66,6 @@ public class AuditLogWatcher implements Runnable {
                     StandardWatchEventKinds.ENTRY_MODIFY);
                 while (!isStopped()) {
                     for (WatchEvent<?> event : watchKey.pollEvents()) {
-                        System.out.println("Running");
                         Path changedFile = (Path) event.context();
                         Path changedFileName = changedFile.getFileName();
                         if (changedFileName == null) {

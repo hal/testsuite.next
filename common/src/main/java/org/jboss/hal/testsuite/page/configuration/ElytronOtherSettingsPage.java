@@ -152,6 +152,12 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + CREDENTIAL_REFERENCE + "-" + FORM)
     private FormFragment certificateAuthorityAccountCredentialReferenceForm;
 
+    @FindBy(id = ELYTRON_CUSTOM_SECURITY_EVENT_LISTENER + "-" + TABLE + WRAPPER)
+    private TableFragment customSecurityEventListenerTable;
+
+    @FindBy(id = ELYTRON_CUSTOM_SECURITY_EVENT_LISTENER + "-" + FORM)
+    private FormFragment customSecurityEventListenerForm;
+
     public TableFragment getCredentialStoreTable() {
         return credentialStoreTable;
     }
@@ -408,5 +414,13 @@ public class ElytronOtherSettingsPage extends BasePage {
     public FormFragment getCertificateAuthorityAccountCredentialReferenceForm() {
         certificateAuthorityTabs.select("elytron-certificate-authority-account-credential-reference-tab");
         return certificateAuthorityAccountCredentialReferenceForm;
+    }
+
+    public TableFragment getCustomSecurityEventListenerTable() {
+        return customSecurityEventListenerTable;
+    }
+
+    public FormFragment getCustomSecurityEventListenerForm() {
+        return customSecurityEventListenerForm;
     }
 }

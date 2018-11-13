@@ -181,8 +181,7 @@ public class CertificateAuthorityAccountTest {
         AuditLog.Operation lastOperation = getLastOperation();
         Assert.assertTrue("The \"deactivate-account\" operation should be called succesfully",
             auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
-        Assert.assertEquals("The \"deactivate-account\" operation should be called", lastOperation.getOperationName(),
-            "deactivate-account");
+        Assert.assertEquals("The \"deactivate-account\" operation should be called", "deactivate-account", lastOperation.getOperationName());
         Assert.assertEquals(lastOperation.getAddress().toString(),
             ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE).toString());
     }
@@ -199,8 +198,7 @@ public class CertificateAuthorityAccountTest {
         AuditLog.Operation lastOperation = getLastOperation();
         Assert.assertTrue("The \"update\" operation should be successful",
             auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
-        Assert.assertEquals("The \"update\" operation should be called", lastOperation.getOperationName(),
-            UPDATE);
+        Assert.assertEquals("The \"update\" operation should be called", UPDATE, lastOperation.getOperationName());
         Assert.assertTrue(lastOperation.getAddress().toString()
             .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE).toString()));
     }
@@ -214,8 +212,23 @@ public class CertificateAuthorityAccountTest {
         AuditLog.Operation lastOperation = getLastOperation();
         Assert.assertTrue("The \"get-metadata\" operation should be successful",
             auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
-        Assert.assertEquals("The \"get-metadata\" operation should be called", lastOperation.getOperationName(),
-            "get-metadata");
+        Assert.assertEquals("The \"get-metadata\" operation should be called", "get-metadata", lastOperation.getOperationName());
+        Assert.assertTrue(lastOperation.getAddress().toString()
+            .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE).toString()));
+    }
+
+    @Test
+    public void changeAccountKey() throws InterruptedException {
+        page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
+        page.getCertificateAuthorityAccountTable().button("Change Account Key").click();
+        AddResourceDialogFragment resourceDialogFragment = console.addResourceDialog();
+        resourceDialogFragment.add();
+        console.verifySuccess();
+        retrieveUpdatedAuditLog();
+        AuditLog.Operation lastOperation = getLastOperation();
+        Assert.assertTrue("The \"change-account-key\" operation should be successful",
+            auditLog.getLogEntries().get(auditLog.getLogEntries().size() - 1).isSuccess());
+        Assert.assertEquals("The \"change-account-key\" operation should be called", "change-account-key",lastOperation.getOperationName());
         Assert.assertTrue(lastOperation.getAddress().toString()
             .equals(ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE).toString()));
     }
