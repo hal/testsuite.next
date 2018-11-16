@@ -31,7 +31,7 @@ import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
-@Place(NameTokens.MICROPROFILE_CONFIG)
+@Place(NameTokens.MICRO_PROFILE_CONFIG)
 public class MicroprofileConfigPage extends BasePage {
 
     @FindBy(id = "microprofile-config-source-table_wrapper")
