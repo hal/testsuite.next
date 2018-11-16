@@ -140,6 +140,24 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment dirContextCredentialReferenceForm;
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + TAB_CONTAINER) private TabsFragment dirContextTabs;
 
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + TABLE + WRAPPER)
+    private TableFragment certificateAuthorityAccountTable;
+
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + FORM)
+    private FormFragment certificateAuthorityAccountForm;
+
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + TAB_CONTAINER)
+    private TabsFragment certificateAuthorityTabs;
+
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + CREDENTIAL_REFERENCE + "-" + FORM)
+    private FormFragment certificateAuthorityAccountCredentialReferenceForm;
+
+    @FindBy(id = ELYTRON_CUSTOM_SECURITY_EVENT_LISTENER + "-" + TABLE + WRAPPER)
+    private TableFragment customSecurityEventListenerTable;
+
+    @FindBy(id = ELYTRON_CUSTOM_SECURITY_EVENT_LISTENER + "-" + FORM)
+    private FormFragment customSecurityEventListenerForm;
+
     public TableFragment getCredentialStoreTable() {
         return credentialStoreTable;
     }
@@ -382,5 +400,27 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public TabsFragment getDirContextTabs() {
         return dirContextTabs;
+    }
+
+    public TableFragment getCertificateAuthorityAccountTable() {
+        return certificateAuthorityAccountTable;
+    }
+
+    public FormFragment getCertificateAuthorityAccountForm() {
+        certificateAuthorityTabs.select("elytron-certificate-authority-account-attributes-tab");
+        return certificateAuthorityAccountForm;
+    }
+
+    public FormFragment getCertificateAuthorityAccountCredentialReferenceForm() {
+        certificateAuthorityTabs.select("elytron-certificate-authority-account-credential-reference-tab");
+        return certificateAuthorityAccountCredentialReferenceForm;
+    }
+
+    public TableFragment getCustomSecurityEventListenerTable() {
+        return customSecurityEventListenerTable;
+    }
+
+    public FormFragment getCustomSecurityEventListenerForm() {
+        return customSecurityEventListenerForm;
     }
 }

@@ -19,3 +19,5 @@ pushd ${TMP_WILDFLY} > /dev/null
   # as they require the server not to be bound to the 0.0.0.0 address
   docker run -p 8080:8080 -p 9990:9990 -d --name ${CONTAINER} --network ${NETWORK} -v $(pwd):/opt/jboss/wildfly ${IMAGE} /opt/jboss/wildfly/bin/standalone.sh -c standalone-full-ha-insecure.xml -b ${IP_ADDRESS} -bmanagement ${IP_ADDRESS} > /dev/null
 popd > /dev/null
+
+echo "JBOSS_HOME=${TMP_WILDFLY}" > testsuite.properties

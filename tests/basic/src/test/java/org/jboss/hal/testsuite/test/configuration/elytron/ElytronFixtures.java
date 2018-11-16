@@ -155,6 +155,7 @@ public final class ElytronFixtures {
     public static final String BCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-bcrypt-mapper-tab";
     public static final String CACHING_REALM_ITEM = "elytron-caching-realm-item";
     public static final String CERTIFICATE_FROM = "certificate-from";
+    public static final String CERTIFICATE_AUTHORITY_ACCOUNT_ITEM = "elytron-certificate-authority-account-item";
     public static final String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
     public static final String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
     public static final String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
@@ -182,6 +183,7 @@ public final class ElytronFixtures {
     public static final String CUSTOM_REALM_MAPPER_ITEM = "elytron-custom-realm-mapper-item";
     public static final String CUSTOM_ROLE_DECODER_ITEM = "mappers-decoders-custom-role-decoder-item";
     public static final String CUSTOM_ROLE_MAPPER_ITEM = "mappers-decoders-custom-role-mapper-item";
+    public static final String CUSTOM_SECURITY_EVENT_LISTENER_ITEM = "elytron-custom-security-event-listener-item";
     public static final String DELEGATE_REALM_MAPPER = "delegate-realm-mapper";
     public static final String DIGEST_REALM_NAME = "digest-realm-name";
     public static final String DIR_CONTEXT_ITEM = "elytron-dir-context-item";
@@ -224,6 +226,7 @@ public final class ElytronFixtures {
     public static final String LOGICAL_ROLE_MAPPER_ITEM = "mappers-decoders-logical-role-mapper-item";
     public static final String LOGS_ITEM = "logs-item";
     public static final String MAPPED_REGEX_REALM_MAPPER_ITEM = "elytron-mapped-regex-realm-mapper-item";
+    public static final String MAPPED_ROLE_MAPPER_ITEM = "mappers-decoders-mapped-role-mapper-item";
     public static final String MAPPING_MODE = "mapping-mode";
     public static final String MATCH_ABSTRACT_TYPE = "match-abstract-type";
     public static final String MATCH_HOST = "match-host";
@@ -270,6 +273,7 @@ public final class ElytronFixtures {
     public static final String ROLE_DECODER_ITEM = "mappers-decoders-role-decoder-item";
     public static final String ROLE_MAPPERS = "role-mappers";
     public static final String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
+    public static final String ROLE_MAP = "role-map";
     public static final String SALT_INDEX = "salt-index";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
@@ -1232,7 +1236,21 @@ public final class ElytronFixtures {
         return SUBSYSTEM_ADDRESS.and(SIMPLE_REGEX_REALM_MAPPER, name);
     }
 
+    // ------------- certificate-authority-account
+    public static Address certificateAuthorityAccountAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("certificate-authority-account", name);
+    }
+
+    // ------------- mapped-role-mapper
+
+    public static Address mappedRoleMapperAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("mapped-role-mapper", name);
+    }
+
     private ElytronFixtures() {
     }
 
+    public static Address customSecurityEventListenerAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("custom-security-event-listener", name);
+    }
 }
