@@ -158,6 +158,18 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_CUSTOM_SECURITY_EVENT_LISTENER + "-" + FORM)
     private FormFragment customSecurityEventListenerForm;
 
+    @FindBy(id = ELYTRON_JASPI + "-" + TABLE + WRAPPER)
+    private TableFragment jaspiConfigurationTable;
+
+    @FindBy(id = ELYTRON_JASPI + "-" + FORM)
+    private FormFragment jaspiConfigurationForm;
+
+    @FindBy(id = ELYTRON_JASPI + "-" + "server-auth-modules" + "-" + TABLE + WRAPPER)
+    private TableFragment jaspiServerAuthModulesTable;
+
+    @FindBy(id = ELYTRON_JASPI + "-" + "server-auth-modules" + "-" + FORM)
+    private FormFragment jaspiServerAuthModulesForm;
+
     public TableFragment getCredentialStoreTable() {
         return credentialStoreTable;
     }
@@ -422,5 +434,21 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getCustomSecurityEventListenerForm() {
         return customSecurityEventListenerForm;
+    }
+
+    public TableFragment getJaspiConfigurationTable() {
+        return jaspiConfigurationTable;
+    }
+
+    public FormFragment getJaspiConfigurationForm() {
+        return jaspiConfigurationForm;
+    }
+
+    public TableFragment getJaspiServerAuthModulesTable() {
+        return jaspiServerAuthModulesTable;
+    }
+
+    public FormFragment getJaspiServerAuthModulesForm() {
+        return jaspiServerAuthModulesForm;
     }
 }
