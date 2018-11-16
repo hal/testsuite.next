@@ -49,7 +49,7 @@ public class CertificateAuthorityAccountTest {
     private static final Address AUDIT_LOG_ADDRESS = AUDIT_ADDRESS.and("logger", "audit-log");
     private static final Address JSON_FORMATTER_ADDRESS = AUDIT_ADDRESS.and("json-formatter", "json-formatter");
     private static final Address FILE_HANDLER_ADDRESS = AUDIT_ADDRESS.and("file-handler", "file");
-    private static final BackupAndRestoreAttributes backup =
+    private static final BackupAndRestoreAttributes auditLogAttributesBackup =
         new BackupAndRestoreAttributes.Builder(AUDIT_ADDRESS).build();
 
     private static final String JBOSS_HOME_DIR = "jboss.home.dir";
@@ -59,8 +59,6 @@ public class CertificateAuthorityAccountTest {
         "certificate-authority-account-deactivate-" + Random.name();
     private static final String CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE =
         "certificate-authority-account-update-" + Random.name();
-    private static final String CERTIFICATE_AUTHORITY_ACCOUNT_GET_METADATA =
-        "certificate-authority-account-get-metadata-" + Random.name();
     private static final String PATH = "path";
 
     private static File auditLogFile = new File(TestsuiteEnvironmentUtils.getJbossHome(), "audit-log.log");
@@ -85,7 +83,7 @@ public class CertificateAuthorityAccountTest {
         createCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
         activateCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE);
         activateCertificateAuthorityAccount(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
-        client.apply(backup.backup());
+        client.apply(auditLogAttributesBackup.backup());
         Batch batch = new Batch();
         batch.writeAttribute(FILE_HANDLER_ADDRESS, "relative-to", JBOSS_HOME_DIR);
         batch.writeAttribute(FILE_HANDLER_ADDRESS, PATH, auditLogFile.getName());
@@ -117,7 +115,7 @@ public class CertificateAuthorityAccountTest {
             operations.removeIfExists(
                 ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_DEACTIVATE));
             operations.removeIfExists(ElytronFixtures.keyStoreAddress(KEY_STORE));
-            client.apply(backup.restore());
+            client.apply(auditLogAttributesBackup.restore());
             Files.delete(auditLogFile.toPath());
         } finally {
             client.close();
