@@ -89,21 +89,21 @@ public class JmsBridgeViewTest {
 
     @Test
     public void editAttribute() throws Exception {
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         FormFragment form = page.getAttributesForm();
         crudOperations.update(jmsBridgeAddress(JMSBRIDGE_UPDATE), form, SELECTOR, anyString);
     }
 
     @Test
     public void tryEditAttribute() {
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         FormFragment form = page.getAttributesForm();
         crudOperations.updateWithError(form, f -> f.clear(FAILURE_RETRY_INTERVAL), FAILURE_RETRY_INTERVAL);
     }
 
     @Test
     public void editSourceAttribute() throws Exception {
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, SOURCE, TAB));
         FormFragment form = page.getSourceForm();
         crudOperations.update(jmsBridgeAddress(JMSBRIDGE_UPDATE), form, "source-user", anyString);
@@ -113,7 +113,7 @@ public class JmsBridgeViewTest {
     public void addSourceCredentialReference() throws Exception {
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_PASSWORD);
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_CREDENTIAL_REFERENCE);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, SOURCE_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getSourceCredentialReferenceForm().emptyState();
         emptyState.mainAction();
@@ -146,7 +146,7 @@ public class JmsBridgeViewTest {
         ModelNode cr = new ModelNode();
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_CREDENTIAL_REFERENCE, cr);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, SOURCE_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getSourceCredentialReferenceForm();
         String randomText = Random.name();
@@ -160,7 +160,7 @@ public class JmsBridgeViewTest {
         ModelNode cr = new ModelNode();
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), SOURCE_CREDENTIAL_REFERENCE, cr);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, SOURCE, TAB));
         FormFragment form = page.getSourceForm();
         form.edit();
@@ -193,7 +193,7 @@ public class JmsBridgeViewTest {
     @Test
     public void addTargetCredentialReference() throws Exception {
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, TARGET_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getTargetCredentialReferenceForm().emptyState();
         emptyState.mainAction();
@@ -209,7 +209,7 @@ public class JmsBridgeViewTest {
     @Test
     public void tryAddTargetCredentialReference() throws Exception {
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, TARGET_CREDENTIAL_REFERENCE, TAB));
         EmptyState emptyState = page.getTargetCredentialReferenceForm().emptyState();
         emptyState.mainAction();
@@ -225,8 +225,7 @@ public class JmsBridgeViewTest {
         cr.get(CLEAR_TEXT).set(anyString);
         operations.undefineAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_PASSWORD);
         operations.writeAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE, cr);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, TARGET_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getTargetCredentialReferenceForm();
         String randomText = Random.name();
@@ -240,7 +239,7 @@ public class JmsBridgeViewTest {
         ModelNode cr = new ModelNode();
         cr.get(CLEAR_TEXT).set(anyString);
         operations.writeAttribute(jmsBridgeAddress(JMSBRIDGE_UPDATE), TARGET_CREDENTIAL_REFERENCE, cr);
-        page.navigate(NAME, JMSBRIDGE_UPDATE);
+        page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         page.getTabs().select(Ids.build(JMS_BRIDGE, TARGET, TAB));
         FormFragment form = page.getTargetForm();
         form.edit();

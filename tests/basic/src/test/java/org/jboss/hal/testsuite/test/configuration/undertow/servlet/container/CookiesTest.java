@@ -82,7 +82,7 @@ public class CookiesTest {
     private void navigateToCookiesForm(String servletContainerName) {
         page.navigate(NAME, servletContainerName);
         // necessary to call 2 times as the first navigation doesn't open the view with the correct name parameter
-        page.navigate(NAME, servletContainerName);
+        // page.navigate(NAME, servletContainerName);
         console.verticalNavigation()
             .selectPrimary(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_COOKIE, "item"));
     }

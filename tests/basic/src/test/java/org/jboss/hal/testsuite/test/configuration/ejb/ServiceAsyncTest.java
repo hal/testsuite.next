@@ -24,7 +24,6 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.EJBConfigurationPage;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -57,17 +56,13 @@ public class ServiceAsyncTest {
     @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private EJBConfigurationPage page;
-    private FormFragment form;
-
-    @Before
-    public void setUp() throws Exception {
-        page.navigate();
-        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-async-item");
-        form = page.getServiceAsyncForm();
-    }
 
     @Test
     public void update() throws Exception {
+        page.navigate();
+        console.verticalNavigation().selectSecondary("ejb3-service-item", "ejb3-service-async-item");
+        FormFragment form = page.getServiceAsyncForm();
+        console.waitNoNotification();
         crud.update(SERVICE_ASYNC_ADDRESS, form, THREAD_POOL_NAME, TP_CREATE);
     }
 }

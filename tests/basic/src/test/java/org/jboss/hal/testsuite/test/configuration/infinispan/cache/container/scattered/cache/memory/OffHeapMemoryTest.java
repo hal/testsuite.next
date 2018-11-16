@@ -79,6 +79,7 @@ public class OffHeapMemoryTest {
 
     @Test
     public void editEvictionType() throws Exception {
+        console.waitNoNotification();
         String currentEvictionType =
             operations.readAttribute(offHeapMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), "eviction-type")
                 .stringValue("COUNT");
@@ -92,6 +93,7 @@ public class OffHeapMemoryTest {
 
     @Test
     public void editSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(offHeapMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getOffHeapMemoryForm(), "size",
             (long) Random.number());
     }

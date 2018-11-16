@@ -108,12 +108,14 @@ public class AttributesTest {
 
     @Test
     public void editCacheConfiguration() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getHotrodStoreAttributesForm(),
             "cache-configuration");
     }
 
     @Test
     public void toggleFetchState() throws Exception {
+        console.waitNoNotification();
         boolean fetchState =
             operations.readAttribute(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "fetch-state")
                 .booleanValue(true);
@@ -123,12 +125,14 @@ public class AttributesTest {
 
     @Test
     public void editMaxBatchSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getHotrodStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePassivation() throws Exception {
+        console.waitNoNotification();
         boolean passivation =
             operations.readAttribute(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "passivation")
                 .booleanValue(true);
@@ -138,6 +142,7 @@ public class AttributesTest {
 
     @Test
     public void togglePreload() throws Exception {
+        console.waitNoNotification();
         boolean preload =
             operations.readAttribute(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "preload")
                 .booleanValue(false);
@@ -147,12 +152,14 @@ public class AttributesTest {
 
     @Test
     public void editProperties() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getHotrodStoreAttributesForm(),
             "properties", Random.properties());
     }
 
     @Test
     public void togglePurge() throws Exception {
+        console.waitNoNotification();
         boolean purge =
             operations.readAttribute(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "purge")
                 .booleanValue(true);
@@ -162,12 +169,14 @@ public class AttributesTest {
 
     @Test
     public void editRemoteCacheContainer() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getHotrodStoreAttributesForm(),
             "remote-cache-container", REMOTE_CACHE_CONTAINER_EDIT);
     }
 
     @Test
     public void toggleShared() throws Exception {
+        console.waitNoNotification();
         boolean shared =
             operations.readAttribute(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "shared")
                 .booleanValue(false);

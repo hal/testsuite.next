@@ -86,11 +86,13 @@ public class StringTableTest {
 
     @Test
     public void editPrefix() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(), "prefix");
     }
 
     @Test
     public void editIDColumnName() throws Exception {
+        console.waitNoNotification();
         String idColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("ID Column Name", idColumnName),
@@ -99,6 +101,7 @@ public class StringTableTest {
 
     @Test
     public void editIDColumnType() throws Exception {
+        console.waitNoNotification();
         String idColumnType = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("ID Column Type", idColumnType),
@@ -107,6 +110,7 @@ public class StringTableTest {
 
     @Test
     public void editDataColumnName() throws Exception {
+        console.waitNoNotification();
         String dataColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("Data Column Name", dataColumnName),
@@ -115,6 +119,7 @@ public class StringTableTest {
 
     @Test
     public void editDataColumnType() throws Exception {
+        console.waitNoNotification();
         String dataColumnType = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("Data Column Type", dataColumnType),
@@ -123,6 +128,7 @@ public class StringTableTest {
 
     @Test
     public void editTimestampColumnName() throws Exception {
+        console.waitNoNotification();
         String timestampColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("Timestamp Column Name", timestampColumnName),
@@ -131,6 +137,7 @@ public class StringTableTest {
 
     @Test
     public void editTimestampColumnType() throws Exception {
+        console.waitNoNotification();
         String timeStampColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
             formFragment -> formFragment.textByLabel("Timestamp Column Type", timeStampColumnName),
@@ -139,6 +146,7 @@ public class StringTableTest {
 
     @Test
     public void editFetchSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(), "fetch-size", Random.number());
     }
 }

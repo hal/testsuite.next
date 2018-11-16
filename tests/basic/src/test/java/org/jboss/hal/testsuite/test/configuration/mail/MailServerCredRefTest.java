@@ -67,6 +67,7 @@ public class MailServerCredRefTest extends CredentialReferenceTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, SESSION_UPDATE);
+        console.waitNoNotification();
         console.verticalNavigation().selectPrimary(Ids.MAIL_SERVER_ITEM);
 
         page.getMailServerTabs().select(Ids.build(Ids.MAIL_SERVER, CREDENTIAL_REFERENCE, Ids.TAB));

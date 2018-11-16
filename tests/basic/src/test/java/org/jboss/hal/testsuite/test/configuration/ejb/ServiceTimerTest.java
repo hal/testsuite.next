@@ -68,6 +68,7 @@ public class ServiceTimerTest {
 
     @Test
     public void updateThreadPool() throws Exception {
+        console.waitNoNotification();
         crud.update(SERVICE_TIMER_ADDRESS, form, THREAD_POOL_NAME, TP_CREATE);
     }
 }

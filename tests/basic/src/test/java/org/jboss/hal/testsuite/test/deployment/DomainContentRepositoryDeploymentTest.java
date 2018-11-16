@@ -109,9 +109,10 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         Deployment
             originalDeployment = createSimpleDeployment(),
             newDeployment = createAnotherDeployment();
+        ResourceVerifier deploymentVerifier = new ResourceVerifier(originalDeployment.getAddress(), client);
 
         client.apply(originalDeployment.deployEnabledCommand(MAIN_SERVER_GROUP));
-        new ResourceVerifier(originalDeployment.getAddress(), client).verifyExists();
+        deploymentVerifier.verifyExists();
         assertTrue("The deployment does not contain expected " + INDEX_HTML + FILE,
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
         assertFalse("The deployment should not yet contain " + OTHER_HTML + FILE,
@@ -124,10 +125,11 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         UploadFormFragment.getUploadForm(uploadDialog.getRoot()).uploadFile(newDeployment.getDeploymentFile());
         uploadDialog.primaryButton();
 
-        assertTrue("The deployment does not contain expected " + OTHER_HTML + FILE,
-                deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
-        assertFalse("The deployment should not contain " + INDEX_HTML + " file anymore.",
-                deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
+        deploymentVerifier
+            .verifyTrue("The deployment does not contain expected " + OTHER_HTML + FILE,
+                    () -> deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML))
+            .verifyTrue("The deployment should not contain " + INDEX_HTML + " file anymore.",
+                    () -> !deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
     }
 
     @Test

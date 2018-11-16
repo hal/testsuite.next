@@ -28,9 +28,12 @@ public class ConfigUtils {
     static {
         // Load default configuration
         try {
-            try (InputStream defaultConfig = PropUtils.class.getResourceAsStream("/suite.properties")) {
-                if (defaultConfig != null) {
+            InputStream defaultConfig = PropUtils.class.getResourceAsStream("/suite.properties");
+            if (defaultConfig != null) {
+                try {
                     config.load(defaultConfig);
+                } finally {
+                    defaultConfig.close();
                 }
             }
         } catch (IOException e) {
@@ -41,8 +44,13 @@ public class ConfigUtils {
         String customConfigLocation = System.getProperty("suite.config.location");
         if (customConfigLocation != null) {
             try {
-                try (InputStream customConfig = new FileInputStream(customConfigLocation)) {
-                    config.load(customConfig);
+                InputStream customConfig = new FileInputStream(customConfigLocation);
+                if (customConfig != null) {
+                    try {
+                        config.load(customConfig);
+                    } finally {
+                        customConfig.close();
+                    }
                 }
             } catch (IOException e) {
                 throw new RuntimeException("Unable to load custom suite configuration");

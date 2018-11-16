@@ -22,7 +22,9 @@ public class RestoreConfigurationListener extends RunListener {
         snapshotBackup = new SnapshotBackup();
         try (OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient()) {
             log.debug("Going to backup server configuration before '{}' run.", description.getChildren());
-            client.apply(snapshotBackup.backup());
+            if (client != null) {
+                client.apply(snapshotBackup.backup());
+            }
         }
     }
 
@@ -30,7 +32,9 @@ public class RestoreConfigurationListener extends RunListener {
     public void testRunFinished(Result result) throws Exception {
         try (OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient()) {
             log.debug("Going to restore server configuration.");
-            client.apply(snapshotBackup.restore());
+            if (client != null) {
+                client.apply(snapshotBackup.restore());
+            }
         }
     }
 }

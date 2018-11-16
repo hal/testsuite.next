@@ -3,7 +3,6 @@ package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.sc
 import java.io.IOException;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
-import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
@@ -17,7 +16,6 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -58,17 +56,9 @@ public class AttributesTest {
         }
     }
 
-    @Drone
-    private WebDriver browser;
-
-    @Inject
-    private Console console;
-
-    @Inject
-    private CrudOperations crudOperations;
-
-    @Page
-    private ScatteredCachePage page;
+    @Inject private Console console;
+    @Inject private CrudOperations crudOperations;
+    @Page private ScatteredCachePage page;
 
     @Before
     public void navigate() {
@@ -78,6 +68,7 @@ public class AttributesTest {
 
     @Test
     public void toggleFetchState() throws Exception {
+        console.waitNoNotification();
         boolean fetchState =
             operations.readAttribute(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "fetch-state")
                 .booleanValue(true);
@@ -87,12 +78,14 @@ public class AttributesTest {
 
     @Test
     public void editMaxBatchSize() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getFileStoreAttributesForm(),
             "max-batch-size", Random.number());
     }
 
     @Test
     public void togglePassivation() throws Exception {
+        console.waitNoNotification();
         boolean passivation =
             operations.readAttribute(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "passivation")
                 .booleanValue(true);
@@ -102,12 +95,14 @@ public class AttributesTest {
 
     @Test
     public void editPath() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getFileStoreAttributesForm(),
             InfinispanFixtures.PATH);
     }
 
     @Test
     public void togglePreload() throws Exception {
+        console.waitNoNotification();
         boolean preload =
             operations.readAttribute(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "preload")
                 .booleanValue(false);
@@ -117,12 +112,14 @@ public class AttributesTest {
 
     @Test
     public void editProperties() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getFileStoreAttributesForm(),
             "properties", Random.properties());
     }
 
     @Test
     public void togglePurge() throws Exception {
+        console.waitNoNotification();
         boolean purge =
             operations.readAttribute(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "purge")
                 .booleanValue(true);
@@ -132,12 +129,14 @@ public class AttributesTest {
 
     @Test
     public void editRelativeTo() throws Exception {
+        console.waitNoNotification();
         crudOperations.update(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getFileStoreAttributesForm(),
             "relative-to", PATH);
     }
 
     @Test
     public void toggleShared() throws Exception {
+        console.waitNoNotification();
         boolean shared =
             operations.readAttribute(fileStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), "shared")
                 .booleanValue(false);
