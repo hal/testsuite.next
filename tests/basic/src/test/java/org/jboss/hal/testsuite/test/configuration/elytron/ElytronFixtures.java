@@ -289,6 +289,7 @@ public final class ElytronFixtures {
     public static final String SECURITY_REALM_ITEM = "security-realm-item";
     public static final String SEED_FROM = "seed-from";
     public static final String SEQUENCE_FROM = "sequence-from";
+    public static final String SERVER_AUTH_MODULES = "server-auth-modules";
     public static final String SERVER_ADDRESS = "server-address";
     public static final String SERVER_SSL_CONTEXT_ITEM = "elytron-server-ssl-context-item";
     public static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
