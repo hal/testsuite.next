@@ -209,6 +209,7 @@ public final class ElytronFixtures {
     public static final String ITERATION_COUNT_INDEX = "iteration-count-index";
     public static final String JBOSS_SRV_CONFIG_DIR = "jboss.server.config.dir";
     public static final String JDBC_REALM_ITEM = "elytron-jdbc-realm-item";
+    public static final String JASPI_CONFIGURATION_ITEM = "elytron-jaspi-item";
     public static final String JKS = "JKS";
     public static final String JOINER = "joiner";
     public static final String JWT = "jwt";
@@ -288,6 +289,7 @@ public final class ElytronFixtures {
     public static final String SECURITY_REALM_ITEM = "security-realm-item";
     public static final String SEED_FROM = "seed-from";
     public static final String SEQUENCE_FROM = "sequence-from";
+    public static final String SERVER_AUTH_MODULES = "server-auth-modules";
     public static final String SERVER_ADDRESS = "server-address";
     public static final String SERVER_SSL_CONTEXT_ITEM = "elytron-server-ssl-context-item";
     public static final String SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY_ITEM = Ids.build(
@@ -1252,5 +1254,11 @@ public final class ElytronFixtures {
 
     public static Address customSecurityEventListenerAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("custom-security-event-listener", name);
+    }
+
+    // ------------ jaspi-configuration
+
+    public static Address jaspiConfigurationAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("jaspi-configuration", name);
     }
 }
