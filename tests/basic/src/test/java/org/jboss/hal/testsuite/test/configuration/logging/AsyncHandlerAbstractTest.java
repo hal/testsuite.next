@@ -51,28 +51,28 @@ public abstract class AsyncHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(ASYNC_HANDLER_CREATE), table, form -> {
-            form.text(NAME, ASYNC_HANDLER_CREATE);
+        crud.create(getHandlerAddress(AsyncHandler.ASYNC_HANDLER_CREATE), table, form -> {
+            form.text(NAME, AsyncHandler.ASYNC_HANDLER_CREATE);
             form.number(QUEUE_LENGTH, 10);
         });
     }
 
     @Test
     public void update() throws Exception {
-        table.select(ASYNC_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(ASYNC_HANDLER_UPDATE), form,
+        table.select(AsyncHandler.ASYNC_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(AsyncHandler.ASYNC_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(ASYNC_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(ASYNC_HANDLER_UPDATE), form);
+        table.select(AsyncHandler.ASYNC_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(AsyncHandler.ASYNC_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(ASYNC_HANDLER_DELETE), table, ASYNC_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(AsyncHandler.ASYNC_HANDLER_DELETE), table, AsyncHandler.ASYNC_HANDLER_DELETE);
     }
 }

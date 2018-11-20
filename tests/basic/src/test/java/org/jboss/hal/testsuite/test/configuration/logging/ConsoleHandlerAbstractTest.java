@@ -49,25 +49,25 @@ public abstract class ConsoleHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(CONSOLE_HANDLER_CREATE), table, CONSOLE_HANDLER_CREATE);
+        crud.create(getHandlerAddress(ConsoleHandler.CONSOLE_HANDLER_CREATE), table, ConsoleHandler.CONSOLE_HANDLER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(CONSOLE_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(CONSOLE_HANDLER_UPDATE), form,
+        table.select(ConsoleHandler.CONSOLE_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(ConsoleHandler.CONSOLE_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(CONSOLE_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(CONSOLE_HANDLER_UPDATE), form);
+        table.select(ConsoleHandler.CONSOLE_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(ConsoleHandler.CONSOLE_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(CONSOLE_HANDLER_DELETE), table, CONSOLE_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(ConsoleHandler.CONSOLE_HANDLER_DELETE), table, ConsoleHandler.CONSOLE_HANDLER_DELETE);
     }
 }

@@ -47,23 +47,25 @@ public abstract class PatternFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(PATTERN_FORMATTER_CREATE), table, PATTERN_FORMATTER_CREATE);
+        crud.create(getFormatterAddress(
+            PatternFormatter.PATTERN_FORMATTER_CREATE), table, PatternFormatter.PATTERN_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(PATTERN_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(PATTERN_FORMATTER_UPDATE), form, COLOR_MAP, COLOR_MAP_VALUE);
+        table.select(PatternFormatter.PATTERN_FORMATTER_UPDATE);
+        crud.update(getFormatterAddress(PatternFormatter.PATTERN_FORMATTER_UPDATE), form, COLOR_MAP, COLOR_MAP_VALUE);
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(PATTERN_FORMATTER_UPDATE);
-        crud.reset(getFormatterAddress(PATTERN_FORMATTER_UPDATE), form);
+        table.select(PatternFormatter.PATTERN_FORMATTER_UPDATE);
+        crud.reset(getFormatterAddress(PatternFormatter.PATTERN_FORMATTER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(PATTERN_FORMATTER_DELETE), table, PATTERN_FORMATTER_DELETE);
+        crud.delete(getFormatterAddress(
+            PatternFormatter.PATTERN_FORMATTER_DELETE), table, PatternFormatter.PATTERN_FORMATTER_DELETE);
     }
 }

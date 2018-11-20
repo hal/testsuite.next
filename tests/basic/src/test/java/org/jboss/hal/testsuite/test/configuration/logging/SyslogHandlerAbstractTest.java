@@ -49,25 +49,25 @@ public abstract class SyslogHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(SYSLOG_HANDLER_CREATE), table, SYSLOG_HANDLER_CREATE);
+        crud.create(getHandlerAddress(SyslogHandler.SYSLOG_HANDLER_CREATE), table, SyslogHandler.SYSLOG_HANDLER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(SYSLOG_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(SYSLOG_HANDLER_UPDATE), form,
+        table.select(SyslogHandler.SYSLOG_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(SyslogHandler.SYSLOG_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(SYSLOG_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(SYSLOG_HANDLER_UPDATE), form);
+        table.select(SyslogHandler.SYSLOG_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(SyslogHandler.SYSLOG_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(SYSLOG_HANDLER_DELETE), table, SYSLOG_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(SyslogHandler.SYSLOG_HANDLER_DELETE), table, SyslogHandler.SYSLOG_HANDLER_DELETE);
     }
 }

@@ -15,15 +15,22 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
 import org.jboss.arquillian.core.api.annotation.Inject;
+
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLASS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
@@ -31,16 +38,25 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 
 public abstract class CustomFormatterAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     @Inject protected Console console;
     @Inject private CrudOperations crud;
     private TableFragment table;
     private FormFragment form;
     protected abstract LoggingConfigurationPage getPage();
-    protected abstract Address getFormatterAddress(String name);
+    protected abstract Address customFormatterAddress(String name);
     protected abstract void navigateToPage();
 
     @Before
-    public void navigate() throws Exception {
+    public void navigate() {
         navigateToPage();
         table = getPage().getCustomFormatterTable();
         form = getPage().getCustomFormatterForm();
@@ -49,8 +65,8 @@ public abstract class CustomFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(CUSTOM_FORMATTER_CREATE), table, form -> {
-            form.text(NAME, CUSTOM_FORMATTER_CREATE);
+        crud.create(customFormatterAddress(CustomFormatter.CUSTOM_FORMATTER_CREATE), table, form -> {
+            form.text(NAME, CustomFormatter.CUSTOM_FORMATTER_CREATE);
             form.text(CLASS, CUSTOM_FORMATTER_CLASS_1_VALUE);
             form.text(MODULE, CUSTOM_FORMATTER_MODULE_VALUE);
         });
@@ -58,18 +74,19 @@ public abstract class CustomFormatterAbstractTest {
 
     @Test
     public void update() throws Exception {
-        table.select(CUSTOM_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(CUSTOM_FORMATTER_UPDATE), form, CLASS, CUSTOM_FORMATTER_CLASS_2_VALUE);
+        table.select(CustomFormatter.CUSTOM_FORMATTER_UPDATE);
+        crud.update(customFormatterAddress(CustomFormatter.CUSTOM_FORMATTER_UPDATE), form, CLASS, CUSTOM_FORMATTER_CLASS_2_VALUE);
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(CUSTOM_FORMATTER_RESET);
-        crud.reset(getFormatterAddress(CUSTOM_FORMATTER_RESET), form);
+        table.select(CustomFormatter.CUSTOM_FORMATTER_RESET);
+        crud.reset(customFormatterAddress(CustomFormatter.CUSTOM_FORMATTER_RESET), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(CUSTOM_FORMATTER_DELETE), table, CUSTOM_FORMATTER_DELETE);
+        crud.delete(customFormatterAddress(
+            CustomFormatter.CUSTOM_FORMATTER_DELETE), table, CustomFormatter.CUSTOM_FORMATTER_DELETE);
     }
 }

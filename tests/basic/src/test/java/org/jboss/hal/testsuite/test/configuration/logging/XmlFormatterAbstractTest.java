@@ -48,23 +48,23 @@ public abstract class XmlFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(XML_FORMATTER_CREATE), table, XML_FORMATTER_CREATE);
+        crud.create(getFormatterAddress(XmlFormatter.XML_FORMATTER_CREATE), table, XmlFormatter.XML_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(XML_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(XML_FORMATTER_UPDATE), form, NAMESPACE_URI, Random.name());
+        table.select(XmlFormatter.XML_FORMATTER_UPDATE);
+        crud.update(getFormatterAddress(XmlFormatter.XML_FORMATTER_UPDATE), form, NAMESPACE_URI, Random.name());
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(XML_FORMATTER_RESET);
-        crud.reset(getFormatterAddress(XML_FORMATTER_RESET), form);
+        table.select(XmlFormatter.XML_FORMATTER_RESET);
+        crud.reset(getFormatterAddress(XmlFormatter.XML_FORMATTER_RESET), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(XML_FORMATTER_DELETE), table, XML_FORMATTER_DELETE);
+        crud.delete(getFormatterAddress(XmlFormatter.XML_FORMATTER_DELETE), table, XmlFormatter.XML_FORMATTER_DELETE);
     }
 }

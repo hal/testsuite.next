@@ -53,8 +53,8 @@ public abstract class CustomHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(CUSTOM_HANDLER_CREATE), table, form -> {
-        form.text(NAME, CUSTOM_HANDLER_CREATE);
+        crud.create(getHandlerAddress(CustomHandler.CUSTOM_HANDLER_CREATE), table, form -> {
+        form.text(NAME, CustomHandler.CUSTOM_HANDLER_CREATE);
         form.text(MODULE, MODULE_VALUE);
         form.text(CLASS, CLASS_VALUE);
         });
@@ -62,27 +62,27 @@ public abstract class CustomHandlerAbstractTest {
 
     @Test
     public void read() {
-        table.select(CUSTOM_HANDLER_READ);
+        table.select(CustomHandler.CUSTOM_HANDLER_READ);
         assertEquals(MODULE_VALUE, form.value(MODULE));
         assertEquals(CLASS_VALUE, form.value(CLASS));
     }
 
     @Test
     public void update() throws Exception {
-        table.select(CUSTOM_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(CUSTOM_HANDLER_UPDATE), form,
+        table.select(CustomHandler.CUSTOM_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(CustomHandler.CUSTOM_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(CUSTOM_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(CUSTOM_HANDLER_UPDATE), form);
+        table.select(CustomHandler.CUSTOM_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(CustomHandler.CUSTOM_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(CUSTOM_HANDLER_DELETE), table, CUSTOM_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(CustomHandler.CUSTOM_HANDLER_DELETE), table, CustomHandler.CUSTOM_HANDLER_DELETE);
     }
 }

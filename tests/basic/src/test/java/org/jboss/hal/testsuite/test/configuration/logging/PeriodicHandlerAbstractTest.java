@@ -52,8 +52,8 @@ public abstract class PeriodicHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(PERIODIC_HANDLER_CREATE), table, form -> {
-            form.text(NAME, PERIODIC_HANDLER_CREATE);
+        crud.create(getHandlerAddress(PeriodicHandler.PERIODIC_HANDLER_CREATE), table, form -> {
+            form.text(NAME, PeriodicHandler.PERIODIC_HANDLER_CREATE);
             form.text(SUFFIX, SUFFIX_VALUE);
             FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getNewPeriodicFileInputElement());
             fileInput.setPath(PATH_VALUE);
@@ -62,27 +62,28 @@ public abstract class PeriodicHandlerAbstractTest {
 
     @Test
     public void read() {
-        table.select(PERIODIC_HANDLER_READ);
+        table.select(PeriodicHandler.PERIODIC_HANDLER_READ);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getReadPeriodicFileInputElement());
         assertEquals(PATH_VALUE, fileInput.getPath());
     }
 
     @Test
     public void update() throws Exception {
-        table.select(PERIODIC_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(PERIODIC_HANDLER_UPDATE), form,
+        table.select(PeriodicHandler.PERIODIC_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(PeriodicHandler.PERIODIC_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(PERIODIC_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(PERIODIC_HANDLER_UPDATE), form);
+        table.select(PeriodicHandler.PERIODIC_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(PeriodicHandler.PERIODIC_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(PERIODIC_HANDLER_DELETE), table, PERIODIC_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(
+            PeriodicHandler.PERIODIC_HANDLER_DELETE), table, PeriodicHandler.PERIODIC_HANDLER_DELETE);
     }
 }

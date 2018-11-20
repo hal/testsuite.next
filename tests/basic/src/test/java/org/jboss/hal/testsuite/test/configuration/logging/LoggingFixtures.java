@@ -58,156 +58,243 @@ public final class LoggingFixtures {
     public static final String PATH_VALUE = "pa/th";
     public static final String RECORD_DELIMITER = "record-delimiter";
     public static final String RECORD_DELIMITER_PROPERTY_NAME = "recordDelimiter";
-    public static final String SOCKET_HANDLER = "socket-handler";
     public static final String SUFFIX = "suffix";
     public static final String SUFFIX_VALUE = "yyyy-MM-dd-HH-mm";
     public static final String NAME = "name";
 
     public static final Address SUBSYSTEM_ADDRESS = Address.subsystem(LOGGING);
 
-    // ------------------------------------------------------ category
+    public static class Category {
 
-    public static final String CATEGORY_CREATE = Ids.build(CATEGORY_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String CATEGORY_READ = Ids.build(CATEGORY_PREFIX, CrudConstants.READ, Random.name());
-    public static final String CATEGORY_UPDATE = Ids.build(CATEGORY_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String CATEGORY_DELETE = Ids.build(CATEGORY_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String CATEGORY_UPDATE = Ids.build(CATEGORY_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String CATEGORY_READ = Ids.build(CATEGORY_PREFIX, CrudConstants.READ, Random.name());
+        public static final String CATEGORY_DELETE = Ids.build(CATEGORY_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String CATEGORY_CREATE = Ids.build(CATEGORY_PREFIX, CrudConstants.CREATE, Random.name());
 
-    static Address categoryAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(LOGGER, name);
+        public static Address categoryAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(LOGGER, name);
+        }
     }
 
-    // ------------------------------------------------------ console handler
+    public static class ConsoleHandler {
 
-    public static final String CONSOLE_HANDLER_CREATE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String CONSOLE_HANDLER_UPDATE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String CONSOLE_HANDLER_DELETE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String CONSOLE_HANDLER_CREATE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String CONSOLE_HANDLER_UPDATE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String CONSOLE_HANDLER_DELETE = Ids.build(CONSOLE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address consoleHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(CONSOLE_HANDLER, name);
+        public static Address consoleHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(CONSOLE_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ file handler
+    public static class FileHandler {
 
-    public static final String FILE_HANDLER_CREATE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String FILE_HANDLER_READ = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
-    public static final String FILE_HANDLER_UPDATE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String FILE_HANDLER_DELETE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String FILE_HANDLER_CREATE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String FILE_HANDLER_READ = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
+        public static final String FILE_HANDLER_UPDATE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String FILE_HANDLER_DELETE = Ids.build(FILE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address fileHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(FILE_HANDLER, name);
+        public static Address fileHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(FILE_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ periodic handler
+    public static class PeriodicHandler {
 
-    public static final String PERIODIC_HANDLER_CREATE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String PERIODIC_HANDLER_READ = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.READ, Random.name());
-    public static final String PERIODIC_HANDLER_UPDATE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String PERIODIC_HANDLER_DELETE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String PERIODIC_HANDLER_CREATE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String PERIODIC_HANDLER_READ = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.READ, Random.name());
+        public static final String PERIODIC_HANDLER_UPDATE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String PERIODIC_HANDLER_DELETE = Ids.build(PERIODIC_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address periodicHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_HANDLER, name);
+        public static Address periodicHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ periodic size handler
+    public static class PeriodicSizeHandler {
 
-    public static final String PERIODIC_SIZE_HANDLER_CREATE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String PERIODIC_SIZE_HANDLER_READ = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
-    public static final String PERIODIC_SIZE_HANDLER_UPDATE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String PERIODIC_SIZE_HANDLER_DELETE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String PERIODIC_SIZE_HANDLER_CREATE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String PERIODIC_SIZE_HANDLER_READ = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
+        public static final String PERIODIC_SIZE_HANDLER_UPDATE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String PERIODIC_SIZE_HANDLER_DELETE = Ids.build(PERIODIC_SIZE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address periodicSizeHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PERIODIC_SIZE_ROTATING_FILE_HANDLER, name);
+        public static Address periodicSizeHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(PERIODIC_SIZE_ROTATING_FILE_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ size handler
+    public static class SizeHandler {
 
-    public static final String SIZE_HANDLER_CREATE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String SIZE_HANDLER_READ = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
-    public static final String SIZE_HANDLER_UPDATE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String SIZE_HANDLER_DELETE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String SIZE_HANDLER_CREATE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String SIZE_HANDLER_READ = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.READ, Random.name());
+        public static final String SIZE_HANDLER_UPDATE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String SIZE_HANDLER_DELETE = Ids.build(SIZE_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address sizeHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_HANDLER, name);
+        public static Address sizeHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ async handler
+    public static class AsyncHandler {
 
-    public static final String ASYNC_HANDLER_CREATE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String ASYNC_HANDLER_UPDATE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String ASYNC_HANDLER_DELETE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String ASYNC_HANDLER_CREATE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String ASYNC_HANDLER_UPDATE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String ASYNC_HANDLER_DELETE = Ids.build(ASYNC_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address asyncHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(ASYNC_HANDLER, name);
+        public static Address asyncHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(ASYNC_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ custom handler
+    public static class CustomHandler {
 
-    public static final String CUSTOM_HANDLER_CREATE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String CUSTOM_HANDLER_READ = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.READ, Random.name());
-    public static final String CUSTOM_HANDLER_UPDATE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String CUSTOM_HANDLER_DELETE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String CUSTOM_HANDLER_CREATE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String CUSTOM_HANDLER_READ = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.READ, Random.name());
+        public static final String CUSTOM_HANDLER_UPDATE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String CUSTOM_HANDLER_DELETE = Ids.build(CUSTOM_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address customHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(CUSTOM_HANDLER, name);
+        public static Address customHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(CUSTOM_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ socket handler
+    public static class SocketHandler {
 
-    public static final String SOCKET_HANDLER_CREATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String SOCKET_HANDLER_UPDATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String SOCKET_HANDLER_DELETE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String SOCKET_HANDLER_CREATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String SOCKET_HANDLER_UPDATE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String SOCKET_HANDLER_DELETE = Ids.build(SOCKET_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String SOCKET_HANDLER = "socket-handler";
 
-    // ------------------------------------------------------ syslog handler
-
-    public static final String SYSLOG_HANDLER_CREATE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String SYSLOG_HANDLER_UPDATE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String SYSLOG_HANDLER_DELETE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
-
-    static Address syslogHandlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SYSLOG_HANDLER, name);
+        public static Address socketHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(SOCKET_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ pattern formatter
+    public static class SyslogHandler {
 
-    public static final String PATTERN_FORMATTER_CREATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String PATTERN_FORMATTER_UPDATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String PATTERN_FORMATTER_DELETE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String SYSLOG_HANDLER_CREATE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String SYSLOG_HANDLER_UPDATE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String SYSLOG_HANDLER_DELETE = Ids.build(SYSLOG_HANDLER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    static Address patternFormatterAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PATTERN_FORMATTER, name);
+        public static Address syslogHandlerAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(SYSLOG_HANDLER, name);
+        }
     }
 
-    // ------------------------------------------------------ JSON formatter
+    public static class PatternFormatter {
 
-    public static final String JSON_FORMATTER = "json-formatter";
-    public static final String JSON_FORMATTER_CREATE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String JSON_FORMATTER_UPDATE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String JSON_FORMATTER_RESET = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
-    public static final String JSON_FORMATTER_DELETE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String PATTERN_FORMATTER_CREATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String PATTERN_FORMATTER_UPDATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String PATTERN_FORMATTER_DELETE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    // ------------------------------------------------------ XML formatter
+        public static Address patternFormatterAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(PATTERN_FORMATTER, name);
+        }
+    }
 
-    public static final String XML_FORMATTER = "xml-formatter";
-    public static final String XML_FORMATTER_CREATE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String XML_FORMATTER_UPDATE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String XML_FORMATTER_RESET = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
-    public static final String XML_FORMATTER_DELETE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+    public static class JsonFormatter {
 
-    // ------------------------------------------------------ custom formatter
+        public static final String JSON_FORMATTER = "json-formatter";
+        public static final String JSON_FORMATTER_CREATE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String JSON_FORMATTER_UPDATE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String JSON_FORMATTER_RESET = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
+        public static final String JSON_FORMATTER_DELETE = Ids.build(JSON_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    public static final String CUSTOM_FORMATTER_CREATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String CUSTOM_FORMATTER_UPDATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
-    public static final String CUSTOM_FORMATTER_RESET = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
-    public static final String CUSTOM_FORMATTER_DELETE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static Address jsonFormatterAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(JSON_FORMATTER, name);
+        }
+    }
 
-    // ------------------------------------------------------ profiles
+    public static class XmlFormatter {
 
-    public static final String PROFILE_CREATE = Ids.build(PROFILE_PREFIX, CrudConstants.CREATE, Random.name());
-    public static final String PROFILE_READ = Ids.build(PROFILE_PREFIX, CrudConstants.READ, Random.name());
-    public static final String PROFILE_DELETE = Ids.build(PROFILE_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String XML_FORMATTER = "xml-formatter";
+        public static final String XML_FORMATTER_CREATE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String XML_FORMATTER_UPDATE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String XML_FORMATTER_RESET = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
+        public static final String XML_FORMATTER_DELETE = Ids.build(XML_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
 
-    public static Address profileAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, name);
+        public static Address xmlFormatterAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(XML_FORMATTER, name);
+        }
+    }
+
+    public static class CustomFormatter {
+
+        public static final String CUSTOM_FORMATTER_CREATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String CUSTOM_FORMATTER_UPDATE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
+        public static final String CUSTOM_FORMATTER_RESET = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.RESET, Random.name());
+        public static final String CUSTOM_FORMATTER_DELETE = Ids.build(CUSTOM_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+
+        public static Address customFormatterAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(CUSTOM_FORMATTER, name);
+        }
+    }
+
+    public static class LoggingProfile {
+
+        public static final String PROFILE_CREATE = Ids.build(PROFILE_PREFIX, CrudConstants.CREATE, Random.name());
+        public static final String PROFILE_READ = Ids.build(PROFILE_PREFIX, CrudConstants.READ, Random.name());
+        public static final String PROFILE_DELETE = Ids.build(PROFILE_PREFIX, CrudConstants.DELETE, Random.name());
+
+        public static Address loggingProfileAddress(String name) {
+            return SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, name);
+        }
+
+        public static Address categoryAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(LOGGER, name);
+        }
+
+        public static Address asyncHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(ASYNC_HANDLER, name);
+        }
+
+        public static Address consoleHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(CONSOLE_HANDLER, name);
+        }
+
+        public static Address customHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(CUSTOM_HANDLER, name);
+        }
+
+        public static Address fileHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(FILE_HANDLER, name);
+        }
+
+        public static Address periodicHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(PERIODIC_ROTATING_FILE_HANDLER, name);
+        }
+
+        public static Address periodicSizeHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(PERIODIC_SIZE_ROTATING_FILE_HANDLER, name);
+        }
+
+        public static Address sizeHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(SIZE_ROTATING_FILE_HANDLER, name);
+        }
+
+        public static Address socketHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(SOCKET_HANDLER, name);
+        }
+
+        public static Address syslogHandlerAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(SYSLOG_HANDLER, name);
+        }
+
+        public static Address patternFormatterAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(PATTERN_FORMATTER, name);
+        }
+
+        public static Address jsonFormatterAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(JSON_FORMATTER, name);
+        }
+
+        public static Address xmlFormatterAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(XML_FORMATTER, name);
+        }
+
+        public static Address customFormatterAddress(String loggingProfile, String name) {
+            return loggingProfileAddress(loggingProfile).and(CUSTOM_FORMATTER, name);
+        }
     }
 
     private LoggingFixtures() {

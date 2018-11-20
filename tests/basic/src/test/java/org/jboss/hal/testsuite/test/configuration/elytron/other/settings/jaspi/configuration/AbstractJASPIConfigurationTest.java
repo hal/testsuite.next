@@ -2,9 +2,9 @@ package org.jboss.hal.testsuite.test.configuration.elytron.other.settings.jaspi.
 
 import java.io.IOException;
 import java.util.Arrays;
-
 import java.util.List;
 import java.util.Optional;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
@@ -24,6 +24,40 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 public abstract class AbstractJASPIConfigurationTest {
+
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations operations = new Operations(client);
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        client.close();
+    }
+
+    protected static void createJASPIConfiguration(String name) throws IOException {
+        createJASPIConfigurationWithServerAuthModuleClassName(name, Random.name());
+    }
+
+    protected static void createJASPIConfigurationWithServerAuthModuleClassName(String name, String... classNames)
+        throws IOException {
+        ModelNodeGenerator.ModelNodeListBuilder serverAuthModulesNodeBuilder =
+            new ModelNodeGenerator.ModelNodeListBuilder();
+        Arrays.stream(classNames).map(className -> new ServerAuthModuleBuilder().withClassName(className).build())
+            .forEach(serverAuthModulesNodeBuilder::addNode);
+        operations.add(ElytronFixtures.jaspiConfigurationAddress(name),
+            Values.of("server-auth-modules", serverAuthModulesNodeBuilder.build())).assertSuccess();
+    }
+
+    @Drone
+    protected WebDriver browser;
+
+    @Inject
+    protected Console console;
+
+    @Inject
+    protected CrudOperations crudOperations;
+
+    @Page
+    protected ElytronOtherSettingsPage page;
 
     protected static class ServerAuthModuleBuilder {
         private String className;
@@ -65,38 +99,4 @@ public abstract class AbstractJASPIConfigurationTest {
             return builder.build();
         }
     }
-
-    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    protected static final Operations operations = new Operations(client);
-
-    @AfterClass
-    public static void tearDown() throws IOException {
-        client.close();
-    }
-
-    protected static void createJASPIConfiguration(String name) throws IOException {
-        createJASPIConfigurationWithServerAuthModuleClassName(name, Random.name());
-    }
-
-    protected static void createJASPIConfigurationWithServerAuthModuleClassName(String name, String... classNames)
-        throws IOException {
-        ModelNodeGenerator.ModelNodeListBuilder serverAuthModulesNodeBuilder =
-            new ModelNodeGenerator.ModelNodeListBuilder();
-        Arrays.stream(classNames).map(className -> new ServerAuthModuleBuilder().withClassName(className).build())
-            .forEach(serverAuthModulesNodeBuilder::addNode);
-        operations.add(ElytronFixtures.jaspiConfigurationAddress(name),
-            Values.of("server-auth-modules", serverAuthModulesNodeBuilder.build())).assertSuccess();
-    }
-
-    @Drone
-    protected WebDriver browser;
-
-    @Inject
-    protected Console console;
-
-    @Inject
-    protected CrudOperations crudOperations;
-
-    @Page
-    protected ElytronOtherSettingsPage page;
 }

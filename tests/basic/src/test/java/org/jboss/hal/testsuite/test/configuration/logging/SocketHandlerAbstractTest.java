@@ -28,9 +28,9 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAMED_FORMATTER;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SOCKET_HANDLER_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SOCKET_HANDLER_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SOCKET_HANDLER_UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SocketHandler.SOCKET_HANDLER_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SocketHandler.SOCKET_HANDLER_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SocketHandler.SOCKET_HANDLER_UPDATE;
 
 public abstract class SocketHandlerAbstractTest {
 

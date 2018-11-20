@@ -51,20 +51,20 @@ public abstract class CategoryAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getCategoryAddress(CATEGORY_CREATE), table, CATEGORY_CREATE);
+        crud.create(getCategoryAddress(Category.CATEGORY_CREATE), table, Category.CATEGORY_CREATE);
     }
 
     @Test
     public void read() {
-        table.select(CATEGORY_READ);
-        assertEquals(HAL_1469_FAIL_MESSAGE, CATEGORY_READ, form.value(CATEGORY));
+        table.select(Category.CATEGORY_READ);
+        assertEquals(HAL_1469_FAIL_MESSAGE, Category.CATEGORY_READ, form.value(CATEGORY));
     }
 
     @Test
     public void update() throws Exception {
-        table.select(CATEGORY_UPDATE);
+        table.select(Category.CATEGORY_UPDATE);
         try {
-            crud.update(getCategoryAddress(CATEGORY_UPDATE), form,
+            crud.update(getCategoryAddress(Category.CATEGORY_UPDATE), form,
                     f -> f.select(LEVEL, "CONFIG"),
                     resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
         } catch (ElementNotInteractableException e) {
@@ -74,9 +74,9 @@ public abstract class CategoryAbstractTest {
 
     @Test
     public void reset() throws Exception {
-        table.select(CATEGORY_UPDATE);
+        table.select(Category.CATEGORY_UPDATE);
         try {
-            crud.reset(getCategoryAddress(CATEGORY_UPDATE), form);
+            crud.reset(getCategoryAddress(Category.CATEGORY_UPDATE), form);
         } catch (ElementNotInteractableException e) {
             Assert.fail(HAL_1469_FAIL_MESSAGE + e.getMessage());
         }
@@ -84,6 +84,6 @@ public abstract class CategoryAbstractTest {
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getCategoryAddress(CATEGORY_DELETE), table, CATEGORY_DELETE);
+        crud.delete(getCategoryAddress(Category.CATEGORY_DELETE), table, Category.CATEGORY_DELETE);
     }
 }

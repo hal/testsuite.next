@@ -52,8 +52,8 @@ public abstract class FileHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(FILE_HANDLER_CREATE), table, form -> {
-            form.text(NAME, FILE_HANDLER_CREATE);
+        crud.create(getHandlerAddress(FileHandler.FILE_HANDLER_CREATE), table, form -> {
+            form.text(NAME, FileHandler.FILE_HANDLER_CREATE);
             FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getNewFileInputElement());
             fileInput.setPath(PATH_VALUE);
         });
@@ -61,27 +61,27 @@ public abstract class FileHandlerAbstractTest {
 
     @Test
     public void read() {
-        table.select(FILE_HANDLER_READ);
+        table.select(FileHandler.FILE_HANDLER_READ);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getReadFileInputElement());
         assertEquals(PATH_VALUE, fileInput.getPath());
     }
 
     @Test
     public void update() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(FILE_HANDLER_UPDATE), form,
+        table.select(FileHandler.FILE_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(FileHandler.FILE_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(FILE_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(FILE_HANDLER_UPDATE), form);
+        table.select(FileHandler.FILE_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(FileHandler.FILE_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(FILE_HANDLER_DELETE), table, FILE_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(FileHandler.FILE_HANDLER_DELETE), table, FileHandler.FILE_HANDLER_DELETE);
     }
 }

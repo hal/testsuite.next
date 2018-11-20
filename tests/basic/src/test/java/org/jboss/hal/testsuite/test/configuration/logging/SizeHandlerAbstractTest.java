@@ -52,8 +52,8 @@ public abstract class SizeHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(SIZE_HANDLER_CREATE), table, form -> {
-            form.text(NAME, SIZE_HANDLER_CREATE);
+        crud.create(getHandlerAddress(SizeHandler.SIZE_HANDLER_CREATE), table, form -> {
+            form.text(NAME, SizeHandler.SIZE_HANDLER_CREATE);
             FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getNewSizeFileInputElement());
             fileInput.setPath(PATH_VALUE);
         });
@@ -61,27 +61,27 @@ public abstract class SizeHandlerAbstractTest {
 
     @Test
     public void read() {
-        table.select(SIZE_HANDLER_READ);
+        table.select(SizeHandler.SIZE_HANDLER_READ);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class, getPage().getReadSizeFileInputElement());
         assertEquals(PATH_VALUE, fileInput.getPath());
     }
 
     @Test
     public void update() throws Exception {
-        table.select(SIZE_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(SIZE_HANDLER_UPDATE), form,
+        table.select(SizeHandler.SIZE_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(SizeHandler.SIZE_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(SIZE_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(SIZE_HANDLER_UPDATE), form);
+        table.select(SizeHandler.SIZE_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(SizeHandler.SIZE_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(SIZE_HANDLER_DELETE), table, SIZE_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(SizeHandler.SIZE_HANDLER_DELETE), table, SizeHandler.SIZE_HANDLER_DELETE);
     }
 }

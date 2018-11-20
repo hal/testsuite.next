@@ -15,31 +15,51 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.JsonFormatter.JSON_FORMATTER_CREATE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.JsonFormatter.JSON_FORMATTER_DELETE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.JsonFormatter.JSON_FORMATTER_RESET;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.JsonFormatter.JSON_FORMATTER_UPDATE;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.RECORD_DELIMITER;
 
 public abstract class JsonFormatterAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void tearDown() throws IOException {
+        client.close();
+    }
+
     @Inject protected Console console;
-    @Inject private CrudOperations crud;
-    private TableFragment table;
-    private FormFragment form;
+    @Inject protected CrudOperations crud;
+    protected TableFragment table;
+    protected FormFragment form;
     protected abstract LoggingConfigurationPage getPage();
-    protected abstract Address getFormatterAddress(String name);
     protected abstract void navigateToPage();
+    protected abstract Address jsonFormatterAddress(String name);
 
     @Before
-    public void navigate() throws Exception {
+    public void navigate() {
         navigateToPage();
         table = getPage().getJsonFormatterTable();
         form = getPage().getJsonFormatterForm();
@@ -48,23 +68,25 @@ public abstract class JsonFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(JSON_FORMATTER_CREATE), table, JSON_FORMATTER_CREATE);
+        crud.create(jsonFormatterAddress(JSON_FORMATTER_CREATE), table, JSON_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
         table.select(JSON_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(JSON_FORMATTER_UPDATE), form, RECORD_DELIMITER, Random.name());
+        crud.update(jsonFormatterAddress(JSON_FORMATTER_UPDATE), form, RECORD_DELIMITER,
+            Random.name());
     }
 
     @Test
     public void reset() throws Exception {
         table.select(JSON_FORMATTER_RESET);
-        crud.reset(getFormatterAddress(JSON_FORMATTER_RESET), form);
+        crud.reset(jsonFormatterAddress(JSON_FORMATTER_RESET), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(JSON_FORMATTER_DELETE), table, JSON_FORMATTER_DELETE);
+        crud.delete(jsonFormatterAddress(JSON_FORMATTER_DELETE), table,
+            JSON_FORMATTER_DELETE);
     }
 }

@@ -52,8 +52,8 @@ public abstract class PeriodicSizeHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(PERIODIC_SIZE_HANDLER_CREATE), table, form -> {
-            form.text(NAME, PERIODIC_SIZE_HANDLER_CREATE);
+        crud.create(getHandlerAddress(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_CREATE), table, form -> {
+            form.text(NAME, PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_CREATE);
             form.text(SUFFIX, SUFFIX_VALUE);
             FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
                     getPage().getNewPeriodicSizeFileInputElement());
@@ -63,7 +63,7 @@ public abstract class PeriodicSizeHandlerAbstractTest {
 
     @Test
     public void read() {
-        table.select(PERIODIC_SIZE_HANDLER_READ);
+        table.select(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_READ);
         FileInputFragment fileInput = createPageFragment(FileInputFragment.class,
                 getPage().getReadPeriodicSizeFileInputElement());
         assertEquals(PATH_VALUE, fileInput.getPath());
@@ -71,20 +71,21 @@ public abstract class PeriodicSizeHandlerAbstractTest {
 
     @Test
     public void update() throws Exception {
-        table.select(PERIODIC_SIZE_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE), form,
+        table.select(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_UPDATE);
+        crud.update(getHandlerAddress(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(PERIODIC_SIZE_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(PERIODIC_SIZE_HANDLER_UPDATE), form);
+        table.select(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_UPDATE);
+        crud.reset(getHandlerAddress(PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(PERIODIC_SIZE_HANDLER_DELETE), table, PERIODIC_SIZE_HANDLER_DELETE);
+        crud.delete(getHandlerAddress(
+            PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_DELETE), table, PeriodicSizeHandler.PERIODIC_SIZE_HANDLER_DELETE);
     }
 }
