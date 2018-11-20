@@ -17,49 +17,41 @@ package org.jboss.hal.testsuite.test.configuration.logging.configuration.root.lo
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.RootLoggerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.CommandFailedException;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class RootLoggerTest extends RootLoggerAbstractTest {
 
-    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Administration adminOps = new Administration(client);
     private static BackupAndRestoreAttributes backup;
-    private static final Address LOGGER_ADDRESS = SUBSYSTEM_ADDRESS.and("root-logger", "ROOT");
-    @Page protected LoggingSubsystemConfigurationPage page;
+
+    @Page
+    protected LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws CommandFailedException {
-        backup = new BackupAndRestoreAttributes.Builder(LOGGER_ADDRESS).build();
+    public static void backupRootLogger() throws CommandFailedException {
+        backup = new BackupAndRestoreAttributes.Builder(LoggingFixtures.ROOT_LOGGER_ADDRESS).build();
         client.apply(backup.backup());
     }
 
     @AfterClass
-    public static void tearDown() throws Exception {
-        try {
-            client.apply(backup.restore());
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void applyRootLoggerBackupAndReload() throws Exception {
+        client.apply(backup.restore());
+        adminOps.reloadIfRequired();
     }
 
     @Override
-    protected Address getLoggerAddress() {
-        return LOGGER_ADDRESS;
+    protected Address rootLoggerAddress() {
+        return LoggingFixtures.ROOT_LOGGER_ADDRESS;
     }
 
     @Override
@@ -72,5 +64,4 @@ public class RootLoggerTest extends RootLoggerAbstractTest {
     protected LoggingConfigurationPage getPage() {
         return page;
     }
-
 }

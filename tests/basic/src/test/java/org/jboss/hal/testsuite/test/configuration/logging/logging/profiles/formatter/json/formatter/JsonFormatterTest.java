@@ -31,6 +31,7 @@ import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
@@ -54,7 +55,7 @@ public class JsonFormatterTest extends JsonFormatterAbstractTest {
     private LoggingProfileConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void createResources() throws IOException {
         ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
         ops.add(LoggingFixtures.LoggingProfile.jsonFormatterAddress(LOGGING_PROFILE, JSON_FORMATTER_UPDATE))
             .assertSuccess();
@@ -64,8 +65,9 @@ public class JsonFormatterTest extends JsonFormatterAbstractTest {
     }
 
     @AfterClass
-    public static void quit() throws IOException, InterruptedException, TimeoutException {
-        ops.remove(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+    public static void removeResourcesAndReload()
+        throws IOException, InterruptedException, TimeoutException, OperationException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
         adminOps.reloadIfRequired();
     }
 

@@ -20,58 +20,48 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
 import org.jboss.hal.testsuite.test.configuration.logging.CategoryAbstractTest;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_READ;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class CategoriesTest extends CategoryAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
     public static void setUp() throws IOException {
-        ops.add(categoryAddress(CATEGORY_READ)).assertSuccess();
-        ops.add(categoryAddress(CATEGORY_UPDATE)).assertSuccess();
-        ops.add(categoryAddress(CATEGORY_DELETE)).assertSuccess();
+        ops.add(LoggingFixtures.Category.categoryAddress(CATEGORY_READ)).assertSuccess();
+        ops.add(LoggingFixtures.Category.categoryAddress(CATEGORY_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.Category.categoryAddress(CATEGORY_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(categoryAddress(CATEGORY_CREATE));
-            ops.removeIfExists(categoryAddress(CATEGORY_READ));
-            ops.removeIfExists(categoryAddress(CATEGORY_UPDATE));
-            ops.removeIfExists(categoryAddress(CATEGORY_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.Category.categoryAddress(CATEGORY_CREATE));
+        ops.removeIfExists(LoggingFixtures.Category.categoryAddress(CATEGORY_READ));
+        ops.removeIfExists(LoggingFixtures.Category.categoryAddress(CATEGORY_UPDATE));
+        ops.removeIfExists(LoggingFixtures.Category.categoryAddress(CATEGORY_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
-    protected Address getCategoryAddress(String name) {
-        return categoryAddress(name);
+    protected Address categoryAddress(String name) {
+        return LoggingFixtures.Category.categoryAddress(name);
     }
 
     @Override
@@ -88,9 +78,5 @@ public class CategoriesTest extends CategoryAbstractTest {
     @Override
     protected FormFragment getCategoryForm() {
         return page.getCategoryForm();
-    }
-
-    private static Address categoryAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(LOGGER, name);
     }
 }

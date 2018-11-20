@@ -15,28 +15,44 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.ElementNotInteractableException;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
+
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 import static org.junit.Assert.assertEquals;
 
 public abstract class CategoryAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     private static final String HAL_1469_FAIL_MESSAGE = "Fails probably due to https://issues.jboss.org/browse/HAL-1469 . ";
     @Inject protected Console console;
     @Inject private CrudOperations crud;
     private TableFragment table;
     private FormFragment form;
-    protected abstract Address getCategoryAddress(String name);
+    protected abstract Address categoryAddress(String name);
     protected abstract TableFragment getCategoryTable();
     protected abstract FormFragment getCategoryForm();
     protected abstract void navigateToPage();
@@ -51,7 +67,7 @@ public abstract class CategoryAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getCategoryAddress(Category.CATEGORY_CREATE), table, Category.CATEGORY_CREATE);
+        crud.create(categoryAddress(Category.CATEGORY_CREATE), table, Category.CATEGORY_CREATE);
     }
 
     @Test
@@ -64,7 +80,7 @@ public abstract class CategoryAbstractTest {
     public void update() throws Exception {
         table.select(Category.CATEGORY_UPDATE);
         try {
-            crud.update(getCategoryAddress(Category.CATEGORY_UPDATE), form,
+            crud.update(categoryAddress(Category.CATEGORY_UPDATE), form,
                     f -> f.select(LEVEL, "CONFIG"),
                     resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
         } catch (ElementNotInteractableException e) {
@@ -76,7 +92,7 @@ public abstract class CategoryAbstractTest {
     public void reset() throws Exception {
         table.select(Category.CATEGORY_UPDATE);
         try {
-            crud.reset(getCategoryAddress(Category.CATEGORY_UPDATE), form);
+            crud.reset(categoryAddress(Category.CATEGORY_UPDATE), form);
         } catch (ElementNotInteractableException e) {
             Assert.fail(HAL_1469_FAIL_MESSAGE + e.getMessage());
         }
@@ -84,6 +100,6 @@ public abstract class CategoryAbstractTest {
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getCategoryAddress(Category.CATEGORY_DELETE), table, Category.CATEGORY_DELETE);
+        crud.delete(categoryAddress(Category.CATEGORY_DELETE), table, Category.CATEGORY_DELETE);
     }
 }

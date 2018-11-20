@@ -20,61 +20,47 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.RootLoggerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
+import org.wildfly.extras.creaper.core.online.operations.OperationException;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class RootLoggerTest extends RootLoggerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress, loggerAddress;
-    @Page protected LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logger-profile-" + Random.name();
+    @Page
+    protected LoggingProfileConfigurationPage page;
 
     @BeforeClass
     public static void setUp() throws IOException {
-        profileName = Ids.build(RootLoggerTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        loggerAddress = profileAddress.and("root-logger", "ROOT");
-        ops.add(profileAddress).assertSuccess();
-        ops.add(loggerAddress).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.rootLoggerAddress(LOGGING_PROFILE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, InterruptedException, TimeoutException, OperationException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
-    protected Address getLoggerAddress() {
-        return loggerAddress;
+    protected Address rootLoggerAddress() {
+        return LoggingFixtures.LoggingProfile.rootLoggerAddress(LOGGING_PROFILE);
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectPrimary("logging-profile-root-logger-item");
     }
 
@@ -82,5 +68,4 @@ public class RootLoggerTest extends RootLoggerAbstractTest {
     protected LoggingConfigurationPage getPage() {
         return page;
     }
-
 }

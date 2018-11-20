@@ -23,6 +23,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.PatternFormatterAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -33,12 +34,10 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PATTERN_FORMATTER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_FORMATTER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class PatternFormatterTest extends PatternFormatterAbstractTest {
@@ -46,31 +45,29 @@ public class PatternFormatterTest extends PatternFormatterAbstractTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations ops = new Operations(client);
     private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
     public static void setUp() throws IOException {
-        ops.add(formatterAddress(PATTERN_FORMATTER_UPDATE)).assertSuccess();
-        ops.add(formatterAddress(PATTERN_FORMATTER_DELETE)).assertSuccess();
+        ops.add(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(formatterAddress(PATTERN_FORMATTER_CREATE));
-            ops.removeIfExists(formatterAddress(PATTERN_FORMATTER_UPDATE));
-            ops.removeIfExists(formatterAddress(PATTERN_FORMATTER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_CREATE));
+        ops.removeIfExists(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_FORMATTER_ITEM,
-                "logging-formatter-pattern-item");
+            "logging-formatter-pattern-item");
     }
 
     @Override
@@ -79,11 +76,7 @@ public class PatternFormatterTest extends PatternFormatterAbstractTest {
     }
 
     @Override
-    protected Address getFormatterAddress(String name) {
-        return formatterAddress(name);
-    }
-
-    private static Address formatterAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PATTERN_FORMATTER, name);
+    protected Address patternFormatterAddress(String name) {
+        return LoggingFixtures.PatternFormatter.patternFormatterAddress(name);
     }
 }

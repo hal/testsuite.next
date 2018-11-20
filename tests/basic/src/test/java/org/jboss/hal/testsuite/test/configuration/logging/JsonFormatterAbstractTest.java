@@ -46,7 +46,7 @@ public abstract class JsonFormatterAbstractTest {
     protected static final Administration adminOps = new Administration(client);
 
     @AfterClass
-    public static void tearDown() throws IOException {
+    public static void closeClient() throws IOException {
         client.close();
     }
 

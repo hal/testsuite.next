@@ -64,6 +64,8 @@ public final class LoggingFixtures {
 
     public static final Address SUBSYSTEM_ADDRESS = Address.subsystem(LOGGING);
 
+    public static final Address ROOT_LOGGER_ADDRESS = SUBSYSTEM_ADDRESS.and("root-logger", "ROOT");
+
     public static class Category {
 
         public static final String CATEGORY_UPDATE = Ids.build(CATEGORY_PREFIX, CrudConstants.UPDATE, Random.name());
@@ -294,6 +296,10 @@ public final class LoggingFixtures {
 
         public static Address customFormatterAddress(String loggingProfile, String name) {
             return loggingProfileAddress(loggingProfile).and(CUSTOM_FORMATTER, name);
+        }
+
+        public static Address rootLoggerAddress(String loggingProfile) {
+            return loggingProfileAddress(loggingProfile).and("root-logger", "ROOT");
         }
     }
 

@@ -70,7 +70,7 @@ public class CustomFormatterTest extends CustomFormatterAbstractTest {
 
     @AfterClass
     public static void removeResources() throws IOException, OperationException, InterruptedException, TimeoutException {
-        ops.remove(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
         adminOps.reloadIfRequired();
     }
 

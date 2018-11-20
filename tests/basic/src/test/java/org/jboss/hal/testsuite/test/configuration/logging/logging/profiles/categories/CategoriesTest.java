@@ -20,68 +20,53 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
 import org.jboss.hal.testsuite.test.configuration.logging.CategoryAbstractTest;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_READ;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.Category.CATEGORY_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class CategoriesTest extends CategoryAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress;
-    @Page private LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logging-profile-" + Random.name();
+
+    @Page
+    private LoggingProfileConfigurationPage page;
 
     @BeforeClass
     public static void setUp() throws IOException {
-        profileName = Ids.build(CategoriesTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        ops.add(profileAddress).assertSuccess();
-        ops.add(categoryAddress(CATEGORY_READ)).assertSuccess();
-        ops.add(categoryAddress(CATEGORY_UPDATE)).assertSuccess();
-        ops.add(categoryAddress(CATEGORY_DELETE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.categoryAddress(LOGGING_PROFILE, CATEGORY_READ)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.categoryAddress(LOGGING_PROFILE, CATEGORY_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.categoryAddress(LOGGING_PROFILE, CATEGORY_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload() throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
-    protected Address getCategoryAddress(String name) {
-        return categoryAddress(name);
+    protected Address categoryAddress(String name) {
+        return LoggingFixtures.LoggingProfile.categoryAddress(LOGGING_PROFILE, name);
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectPrimary("logging-profile-category-item");
     }
 
@@ -94,9 +79,4 @@ public class CategoriesTest extends CategoryAbstractTest {
     protected FormFragment getCategoryForm() {
         return page.getCategoryForm();
     }
-
-    private static Address categoryAddress(String name) {
-        return profileAddress.and(LOGGER, name);
-    }
-
 }

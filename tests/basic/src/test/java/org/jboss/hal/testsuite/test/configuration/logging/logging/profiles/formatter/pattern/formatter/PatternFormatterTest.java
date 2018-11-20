@@ -20,63 +20,49 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.PatternFormatterAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PATTERN_FORMATTER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_PROFILE_FORMATTER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class PatternFormatterTest extends PatternFormatterAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress;
-    @Page private LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logging-profile-" + Random.name();
+
+    @Page
+    private LoggingProfileConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        profileName = Ids.build(PatternFormatterTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        ops.add(profileAddress).assertSuccess();
-        ops.add(formatterAddress(PATTERN_FORMATTER_UPDATE)).assertSuccess();
-        ops.add(formatterAddress(PATTERN_FORMATTER_DELETE)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.patternFormatterAddress(LOGGING_PROFILE, PATTERN_FORMATTER_UPDATE))
+            .assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.patternFormatterAddress(LOGGING_PROFILE, PATTERN_FORMATTER_DELETE))
+            .assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResources() throws IOException, OperationException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectSecondary(LOGGING_PROFILE_FORMATTER_ITEM,
-                "logging-profile-formatter-pattern-item");
+            "logging-profile-formatter-pattern-item");
     }
 
     @Override
@@ -85,12 +71,7 @@ public class PatternFormatterTest extends PatternFormatterAbstractTest {
     }
 
     @Override
-    protected Address getFormatterAddress(String name) {
-        return formatterAddress(name);
+    protected Address patternFormatterAddress(String name) {
+        return LoggingFixtures.LoggingProfile.patternFormatterAddress(LOGGING_PROFILE, name);
     }
-
-    private static Address formatterAddress(String name) {
-        return profileAddress.and(PATTERN_FORMATTER, name);
-    }
-
 }

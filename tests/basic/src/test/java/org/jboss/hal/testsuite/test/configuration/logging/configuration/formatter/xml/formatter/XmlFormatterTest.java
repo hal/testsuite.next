@@ -21,24 +21,19 @@ import java.util.concurrent.TimeoutException;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.XmlFormatterAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_FORMATTER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.RECORD_DELIMITER;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.XmlFormatter.XML_FORMATTER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.XmlFormatter.XML_FORMATTER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.XmlFormatter.XML_FORMATTER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.XmlFormatter.XML_FORMATTER_RESET;
@@ -47,36 +42,32 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 @RunWith(Arquillian.class)
 public class XmlFormatterTest extends XmlFormatterAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        ops.add(formatterAddress(XML_FORMATTER_UPDATE)).assertSuccess();
-        ops.add(formatterAddress(XML_FORMATTER_RESET),Values.of(RECORD_DELIMITER, Random.name())).assertSuccess();
-        ops.add(formatterAddress(XML_FORMATTER_DELETE)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_RESET),
+            Values.of(RECORD_DELIMITER, Random.name())).assertSuccess();
+        ops.add(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(formatterAddress(XML_FORMATTER_CREATE));
-            ops.removeIfExists(formatterAddress(XML_FORMATTER_UPDATE));
-            ops.removeIfExists(formatterAddress(XML_FORMATTER_RESET));
-            ops.removeIfExists(formatterAddress(XML_FORMATTER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_CREATE));
+        ops.removeIfExists(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_RESET));
+        ops.removeIfExists(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_FORMATTER_ITEM,
-                "logging-formatter-xml-item");
+            "logging-formatter-xml-item");
     }
 
     @Override
@@ -85,11 +76,7 @@ public class XmlFormatterTest extends XmlFormatterAbstractTest {
     }
 
     @Override
-    protected Address getFormatterAddress(String name) {
-        return formatterAddress(name);
-    }
-
-    private static Address formatterAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(XML_FORMATTER, name);
+    protected Address xmlFormatterAddress(String name) {
+        return LoggingFixtures.XmlFormatter.xmlFormatterAddress(name);
     }
 }
