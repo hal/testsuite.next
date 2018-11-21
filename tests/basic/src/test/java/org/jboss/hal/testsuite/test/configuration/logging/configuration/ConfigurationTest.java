@@ -16,24 +16,23 @@
 package org.jboss.hal.testsuite.test.configuration.logging.configuration;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
-import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ADD_LOGGING_API_DEPENDENCIES;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_PROFILE_FORMATTER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
@@ -59,31 +58,27 @@ public class ConfigurationTest {
         }
     }
 
+    @Drone
+    private WebDriver browser;
+
     @Inject
     private Console console;
     @Inject
     private CrudOperations crud;
     @Page
     private LoggingSubsystemConfigurationPage page;
-    private FormFragment form;
-
-    @Before
-    public void setUp() throws Exception {
-        page.navigate();
-        console.verticalNavigation().selectSecondary(LOGGING_PROFILE_FORMATTER_ITEM, "logging-json-formatter-item");
-    }
 
     @Test
     public void updateConfiguration() throws Exception {
+        page.navigate();
         console.verticalNavigation().selectPrimary("logging-config-item");
-        form = page.getConfigurationForm();
-        crud.update(SUBSYSTEM_ADDRESS, form, ADD_LOGGING_API_DEPENDENCIES, false);
+        crud.update(SUBSYSTEM_ADDRESS, page.getConfigurationForm(), ADD_LOGGING_API_DEPENDENCIES, false);
     }
 
     @Test
     public void resetConfiguration() throws Exception {
+        page.navigate();
         console.verticalNavigation().selectPrimary("logging-config-item");
-        form = page.getConfigurationForm();
-        crud.reset(SUBSYSTEM_ADDRESS, form);
+        crud.reset(SUBSYSTEM_ADDRESS, page.getConfigurationForm());
     }
 }

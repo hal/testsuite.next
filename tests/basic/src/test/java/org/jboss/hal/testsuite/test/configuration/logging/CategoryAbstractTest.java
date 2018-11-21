@@ -16,7 +16,9 @@
 package org.jboss.hal.testsuite.test.configuration.logging;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -27,6 +29,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.openqa.selenium.ElementNotInteractableException;
+import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -50,6 +53,10 @@ public abstract class CategoryAbstractTest {
     private static final String HAL_1469_FAIL_MESSAGE = "Fails probably due to https://issues.jboss.org/browse/HAL-1469 . ";
     @Inject protected Console console;
     @Inject private CrudOperations crud;
+
+    @Drone
+    private WebDriver browser;
+
     private TableFragment table;
     private FormFragment form;
     protected abstract Address categoryAddress(String name);

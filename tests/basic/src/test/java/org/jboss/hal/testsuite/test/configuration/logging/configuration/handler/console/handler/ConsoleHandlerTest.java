@@ -26,6 +26,7 @@ import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
 import org.jboss.hal.testsuite.test.configuration.logging.ConsoleHandlerAbstractTest;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
@@ -35,12 +36,10 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONSOLE_HANDLER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ConsoleHandler.CONSOLE_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ConsoleHandler.CONSOLE_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.ConsoleHandler.CONSOLE_HANDLER_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class ConsoleHandlerTest extends ConsoleHandlerAbstractTest {
@@ -48,31 +47,29 @@ public class ConsoleHandlerTest extends ConsoleHandlerAbstractTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations ops = new Operations(client);
     private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        ops.add(handlerAddress(CONSOLE_HANDLER_UPDATE)).assertSuccess();
-        ops.add(handlerAddress(CONSOLE_HANDLER_DELETE)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.ConsoleHandler.consoleHandlerAddress(CONSOLE_HANDLER_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.ConsoleHandler.consoleHandlerAddress(CONSOLE_HANDLER_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(CONSOLE_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(CONSOLE_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(CONSOLE_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.ConsoleHandler.consoleHandlerAddress(CONSOLE_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.ConsoleHandler.consoleHandlerAddress(CONSOLE_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.ConsoleHandler.consoleHandlerAddress(CONSOLE_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-console-item");
+            "logging-handler-console-item");
     }
 
     @Override
@@ -81,8 +78,8 @@ public class ConsoleHandlerTest extends ConsoleHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address consoleHandlerAddress(String name) {
+        return LoggingFixtures.ConsoleHandler.consoleHandlerAddress(name);
     }
 
     @Override
@@ -93,9 +90,5 @@ public class ConsoleHandlerTest extends ConsoleHandlerAbstractTest {
     @Override
     protected FormFragment getHandlerForm() {
         return page.getConsoleHandlerForm();
-    }
-
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(CONSOLE_HANDLER, name);
     }
 }

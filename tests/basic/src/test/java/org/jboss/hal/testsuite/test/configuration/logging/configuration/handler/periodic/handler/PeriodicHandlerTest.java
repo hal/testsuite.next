@@ -21,75 +21,60 @@ import java.util.concurrent.TimeoutException;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.PeriodicHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PERIODIC_ROTATING_FILE_HANDLER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PATH_VALUE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PeriodicHandler.PERIODIC_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PeriodicHandler.PERIODIC_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PeriodicHandler.PERIODIC_HANDLER_READ;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PeriodicHandler.PERIODIC_HANDLER_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUFFIX;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUFFIX_VALUE;
 
 @RunWith(Arquillian.class)
 public class PeriodicHandlerTest extends PeriodicHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(PERIODIC_ROTATING_FILE_HANDLER, name);
-    }
-
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void createResources() throws IOException {
         ModelNode file = new ModelNode();
         file.get(PATH).set(PATH_VALUE);
-        ops.add(handlerAddress(PERIODIC_HANDLER_READ),
-                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
-        ops.add(handlerAddress(PERIODIC_HANDLER_UPDATE),
-                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
-        ops.add(handlerAddress(PERIODIC_HANDLER_DELETE),
-                Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
+        ops.add(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_READ),
+            Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
+        ops.add(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_UPDATE),
+            Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
+        ops.add(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_DELETE),
+            Values.of(FILE, file.clone()).and(SUFFIX, SUFFIX_VALUE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(PERIODIC_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(PERIODIC_HANDLER_READ));
-            ops.removeIfExists(handlerAddress(PERIODIC_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(PERIODIC_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload() throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_READ));
+        ops.removeIfExists(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.PeriodicHandler.periodicHandlerAddress(PERIODIC_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address periodicHandlerAddress(String name) {
+        return LoggingFixtures.PeriodicHandler.periodicHandlerAddress(name);
     }
 
     @Override
@@ -111,6 +96,6 @@ public class PeriodicHandlerTest extends PeriodicHandlerAbstractTest {
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-periodic-rotating-file-item");
+            "logging-handler-periodic-rotating-file-item");
     }
 }

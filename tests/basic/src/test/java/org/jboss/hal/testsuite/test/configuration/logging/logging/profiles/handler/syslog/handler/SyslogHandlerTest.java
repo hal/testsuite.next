@@ -20,65 +20,50 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.SyslogHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SYSLOG_HANDLER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_PROFILE_HANDLER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_UPDATE;
 
 @RunWith(Arquillian.class)
 public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress;
-    @Page private LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logging-profile-" + Random.name();
+
+    @Page
+    private LoggingProfileConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        profileName = Ids.build(SyslogHandlerTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        ops.add(profileAddress).assertSuccess();
-        ops.add(handlerAddress(SYSLOG_HANDLER_UPDATE)).assertSuccess();
-        ops.add(handlerAddress(SYSLOG_HANDLER_DELETE)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.syslogHandlerAddress(LOGGING_PROFILE, SYSLOG_HANDLER_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.syslogHandlerAddress(LOGGING_PROFILE, SYSLOG_HANDLER_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload() throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectSecondary(LOGGING_PROFILE_HANDLER_ITEM,
-                "logging-profile-handler-syslog-item");
+            "logging-profile-handler-syslog-item");
     }
 
     @Override
@@ -87,8 +72,8 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address syslogHandlerAddress(String name) {
+        return LoggingFixtures.LoggingProfile.syslogHandlerAddress(LOGGING_PROFILE, name);
     }
 
     @Override
@@ -100,9 +85,4 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
     protected FormFragment getHandlerForm() {
         return page.getSyslogHandlerForm();
     }
-
-    private static Address handlerAddress(String name) {
-        return profileAddress.and(SYSLOG_HANDLER, name);
-    }
-
 }

@@ -20,21 +20,18 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.SocketHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
@@ -42,35 +39,30 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 @RunWith(Arquillian.class)
 public class SocketHandlerTest extends SocketHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void createResources() throws IOException {
         Values params = Values.of(NAMED_FORMATTER, "PATTERN").and(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
-        ops.add(handlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
-        ops.add(handlerAddress(SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
+        ops.add(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
+        ops.add(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(SocketHandler.SOCKET_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(SocketHandler.SOCKET_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-socket-item");
+            "logging-handler-socket-item");
     }
 
     @Override
@@ -79,8 +71,8 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address socketHandlerAddress(String name) {
+        return LoggingFixtures.SocketHandler.socketHandlerAddress(name);
     }
 
     @Override
@@ -91,9 +83,5 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
     @Override
     protected FormFragment getHandlerForm() {
         return page.getSocketHandlerForm();
-    }
-
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SocketHandler.SOCKET_HANDLER, name);
     }
 }

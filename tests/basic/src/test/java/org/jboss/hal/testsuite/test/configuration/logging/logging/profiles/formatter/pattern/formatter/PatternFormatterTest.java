@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.configuration.logging.logging.profiles.formatter.pattern.formatter;
 
 import java.io.IOException;
-import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;

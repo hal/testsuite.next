@@ -21,27 +21,21 @@ import java.util.concurrent.TimeoutException;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
 import org.jboss.hal.testsuite.test.configuration.logging.FileHandlerAbstractTest;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE_HANDLER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.FileHandler.FILE_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.FileHandler.FILE_HANDLER_READ;
@@ -49,45 +43,37 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_PROFILE_HANDLER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PATH_VALUE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class FileHandlerTest extends FileHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress;
-    @Page private LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logging-profile-" + Random.name();
+
+    @Page
+    private LoggingProfileConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        profileName = Ids.build(FileHandlerTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        ops.add(profileAddress).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
         ModelNode file = new ModelNode();
         file.get(PATH).set(PATH_VALUE);
-        ops.add(handlerAddress(FILE_HANDLER_READ), Values.of(FILE, file.clone())).assertSuccess();
-        ops.add(handlerAddress(FILE_HANDLER_UPDATE), Values.of(FILE, file.clone())).assertSuccess();
-        ops.add(handlerAddress(FILE_HANDLER_DELETE), Values.of(FILE, file.clone())).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.fileHandlerAddress(LOGGING_PROFILE, FILE_HANDLER_READ), Values.of(FILE, file.clone())).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.fileHandlerAddress(LOGGING_PROFILE, FILE_HANDLER_UPDATE), Values.of(FILE, file.clone())).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.fileHandlerAddress(LOGGING_PROFILE, FILE_HANDLER_DELETE), Values.of(FILE, file.clone())).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectSecondary(LOGGING_PROFILE_HANDLER_ITEM,
-                "logging-profile-handler-file-item");
+            "logging-profile-handler-file-item");
     }
 
     @Override
@@ -96,8 +82,8 @@ public class FileHandlerTest extends FileHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address fileHandlerAddress(String name) {
+        return LoggingFixtures.LoggingProfile.fileHandlerAddress(LOGGING_PROFILE, name);
     }
 
     @Override
@@ -109,9 +95,4 @@ public class FileHandlerTest extends FileHandlerAbstractTest {
     protected FormFragment getHandlerForm() {
         return page.getFileHandlerForm();
     }
-
-    private static Address handlerAddress(String name) {
-        return profileAddress.and(FILE_HANDLER, name);
-    }
-
 }

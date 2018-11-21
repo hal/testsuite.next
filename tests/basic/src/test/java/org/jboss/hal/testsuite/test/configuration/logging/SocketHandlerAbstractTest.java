@@ -15,15 +15,24 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
@@ -34,12 +43,25 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 
 public abstract class SocketHandlerAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     @Inject protected Console console;
     @Inject private CrudOperations crud;
+
+    @Drone
+    private WebDriver browser;
+
     private TableFragment table;
     private FormFragment form;
     protected abstract LoggingConfigurationPage getPage();
-    protected abstract Address getHandlerAddress(String name);
+    protected abstract Address socketHandlerAddress(String name);
     protected abstract TableFragment getHandlerTable();
     protected abstract FormFragment getHandlerForm();
     protected abstract void navigateToPage();
@@ -60,7 +82,7 @@ public abstract class SocketHandlerAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getHandlerAddress(SOCKET_HANDLER_CREATE), table, f -> {
+        crud.create(socketHandlerAddress(SOCKET_HANDLER_CREATE), table, f -> {
             f.text(NAME, SOCKET_HANDLER_CREATE);
             f.text(NAMED_FORMATTER, getPatternFormatter());
             f.text(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
@@ -70,17 +92,17 @@ public abstract class SocketHandlerAbstractTest {
     @Test
     public void update() throws Exception {
         table.select(SOCKET_HANDLER_UPDATE);
-        crud.update(getHandlerAddress(SOCKET_HANDLER_UPDATE), form, "filter-spec", "not(match(\"JBAS.*\"))");
+        crud.update(socketHandlerAddress(SOCKET_HANDLER_UPDATE), form, "filter-spec", "not(match(\"JBAS.*\"))");
     }
 
     @Test
     public void reset() throws Exception {
         table.select(SOCKET_HANDLER_UPDATE);
-        crud.reset(getHandlerAddress(SOCKET_HANDLER_UPDATE), form);
+        crud.reset(socketHandlerAddress(SOCKET_HANDLER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getHandlerAddress(SOCKET_HANDLER_DELETE), table, SOCKET_HANDLER_DELETE);
+        crud.delete(socketHandlerAddress(SOCKET_HANDLER_DELETE), table, SOCKET_HANDLER_DELETE);
     }
 }

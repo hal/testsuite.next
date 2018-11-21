@@ -20,61 +20,50 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
 import org.jboss.hal.testsuite.test.configuration.logging.AsyncHandlerAbstractTest;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ASYNC_HANDLER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.QUEUE_LENGTH;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.AsyncHandler.ASYNC_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.AsyncHandler.ASYNC_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.AsyncHandler.ASYNC_HANDLER_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class AsyncHandlerTest extends AsyncHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        ops.add(handlerAddress(ASYNC_HANDLER_UPDATE), Values.of(QUEUE_LENGTH, 10)).assertSuccess();
-        ops.add(handlerAddress(ASYNC_HANDLER_DELETE), Values.of(QUEUE_LENGTH, 10)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.AsyncHandler.asyncHandlerAddress(ASYNC_HANDLER_UPDATE), Values.of(QUEUE_LENGTH, 10)).assertSuccess();
+        ops.add(LoggingFixtures.AsyncHandler.asyncHandlerAddress(ASYNC_HANDLER_DELETE), Values.of(QUEUE_LENGTH, 10)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(ASYNC_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(ASYNC_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(ASYNC_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResources() throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.AsyncHandler.asyncHandlerAddress(ASYNC_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.AsyncHandler.asyncHandlerAddress(ASYNC_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.AsyncHandler.asyncHandlerAddress(ASYNC_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-async-item");
+            "logging-handler-async-item");
     }
 
     @Override
@@ -83,8 +72,8 @@ public class AsyncHandlerTest extends AsyncHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address asyncHandlerAddress(String name) {
+        return LoggingFixtures.AsyncHandler.asyncHandlerAddress(name);
     }
 
     @Override
@@ -95,9 +84,5 @@ public class AsyncHandlerTest extends AsyncHandlerAbstractTest {
     @Override
     protected FormFragment getHandlerForm() {
         return page.getAsyncHandlerForm();
-    }
-
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(ASYNC_HANDLER, name);
     }
 }

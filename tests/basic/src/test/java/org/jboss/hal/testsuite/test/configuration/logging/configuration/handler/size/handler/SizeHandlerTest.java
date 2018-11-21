@@ -21,68 +21,61 @@ import java.util.concurrent.TimeoutException;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.SizeHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.FILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SIZE_ROTATING_FILE_HANDLER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PATH_VALUE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SizeHandler.SIZE_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SizeHandler.SIZE_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SizeHandler.SIZE_HANDLER_READ;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SizeHandler.SIZE_HANDLER_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 
 @RunWith(Arquillian.class)
 public class SizeHandlerTest extends SizeHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
+    public static void createResources() throws IOException {
         ModelNode file = new ModelNode();
         file.get(PATH).set(PATH_VALUE);
-        ops.add(handlerAddress(SIZE_HANDLER_READ), Values.of(FILE, file.clone())).assertSuccess();
-        ops.add(handlerAddress(SIZE_HANDLER_UPDATE), Values.of(FILE, file.clone())).assertSuccess();
-        ops.add(handlerAddress(SIZE_HANDLER_DELETE), Values.of(FILE, file.clone())).assertSuccess();
+        ops.add(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_READ), Values.of(FILE, file.clone()))
+            .assertSuccess();
+        ops.add(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_UPDATE), Values.of(FILE, file.clone()))
+            .assertSuccess();
+        ops.add(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_DELETE), Values.of(FILE, file.clone()))
+            .assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(SIZE_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(SIZE_HANDLER_READ));
-            ops.removeIfExists(handlerAddress(SIZE_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(SIZE_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_READ));
+        ops.removeIfExists(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.SizeHandler.sizeHandlerAddress(SIZE_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-size-rotating-file-item");
+            "logging-handler-size-rotating-file-item");
     }
 
     @Override
@@ -91,8 +84,8 @@ public class SizeHandlerTest extends SizeHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address sizeHandlerAddress(String name) {
+        return LoggingFixtures.SizeHandler.sizeHandlerAddress(name);
     }
 
     @Override
@@ -103,9 +96,5 @@ public class SizeHandlerTest extends SizeHandlerAbstractTest {
     @Override
     protected FormFragment getHandlerForm() {
         return page.getSizeHandlerForm();
-    }
-
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SIZE_ROTATING_FILE_HANDLER, name);
     }
 }

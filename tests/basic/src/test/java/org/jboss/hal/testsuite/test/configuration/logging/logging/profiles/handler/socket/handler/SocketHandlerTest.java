@@ -20,25 +20,20 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingProfileConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.SocketHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOGGING_PROFILE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.OUTBOUND_SOCKET_BINDING_REF;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATTERN_FORMATTER;
@@ -47,22 +42,20 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 @RunWith(Arquillian.class)
 public class SocketHandlerTest extends SocketHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    private static String profileName;
-    private static Address profileAddress;
-    @Page private LoggingProfileConfigurationPage page;
+    private static final String LOGGING_PROFILE = "logging-profile-" + Random.name();
+
+    @Page
+    private LoggingProfileConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        profileName = Ids.build(SocketHandlerTest.class.getSimpleName(), Random.name());
-        profileAddress = SUBSYSTEM_ADDRESS.and(LOGGING_PROFILE, profileName);
-        ops.add(profileAddress).assertSuccess();
-        ops.add(profileAddress.and(PATTERN_FORMATTER, PatternFormatter.PATTERN_FORMATTER_CREATE)).assertSuccess();
-        Values params = Values.of(NAMED_FORMATTER, PatternFormatter.PATTERN_FORMATTER_CREATE).and(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
-        ops.add(handlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
-        ops.add(handlerAddress(SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)
+            .and(PATTERN_FORMATTER, PatternFormatter.PATTERN_FORMATTER_CREATE)).assertSuccess();
+        Values params = Values.of(NAMED_FORMATTER, PatternFormatter.PATTERN_FORMATTER_CREATE)
+            .and(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
+        ops.add(LoggingFixtures.LoggingProfile.socketHandlerAddress(LOGGING_PROFILE, SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.socketHandlerAddress(LOGGING_PROFILE, SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
     }
 
     @Override
@@ -71,20 +64,16 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.remove(profileAddress);
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload() throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
-        page.navigate(NAME, profileName);
+        page.navigate(NAME, LOGGING_PROFILE);
         console.verticalNavigation().selectSecondary(LOGGING_PROFILE_HANDLER_ITEM,
-                "logging-profile-handler-socket-item");
+            "logging-profile-handler-socket-item");
     }
 
     @Override
@@ -93,8 +82,8 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address socketHandlerAddress(String name) {
+        return LoggingFixtures.LoggingProfile.socketHandlerAddress(LOGGING_PROFILE, name);
     }
 
     @Override
@@ -106,9 +95,4 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
     protected FormFragment getHandlerForm() {
         return page.getSocketHandlerForm();
     }
-
-    private static Address handlerAddress(String name) {
-        return profileAddress.and(SocketHandler.SOCKET_HANDLER, name);
-    }
-
 }

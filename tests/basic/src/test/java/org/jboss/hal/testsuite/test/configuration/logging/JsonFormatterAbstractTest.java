@@ -18,6 +18,7 @@ package org.jboss.hal.testsuite.test.configuration.logging;
 import java.io.IOException;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
@@ -28,6 +29,7 @@ import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
@@ -52,6 +54,10 @@ public abstract class JsonFormatterAbstractTest {
 
     @Inject protected Console console;
     @Inject protected CrudOperations crud;
+
+    @Drone
+    private WebDriver browser;
+
     protected TableFragment table;
     protected FormFragment form;
     protected abstract LoggingConfigurationPage getPage();

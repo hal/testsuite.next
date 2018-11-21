@@ -20,24 +20,19 @@ import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
 import org.jboss.hal.testsuite.page.configuration.LoggingSubsystemConfigurationPage;
+import org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures;
 import org.jboss.hal.testsuite.test.configuration.logging.SyslogHandlerAbstractTest;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
-import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SYSLOG_HANDLER;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
-import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SUBSYSTEM_ADDRESS;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_UPDATE;
@@ -45,34 +40,29 @@ import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures
 @RunWith(Arquillian.class)
 public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
 
-    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
-    private static final Operations ops = new Operations(client);
-    private static final Administration adminOps = new Administration(client);
-    @Page private LoggingSubsystemConfigurationPage page;
+    @Page
+    private LoggingSubsystemConfigurationPage page;
 
     @BeforeClass
-    public static void setUp() throws IOException {
-        ops.add(handlerAddress(SYSLOG_HANDLER_UPDATE)).assertSuccess();
-        ops.add(handlerAddress(SYSLOG_HANDLER_DELETE)).assertSuccess();
+    public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_UPDATE)).assertSuccess();
+        ops.add(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_DELETE)).assertSuccess();
     }
 
     @AfterClass
-    public static void tearDown() throws IOException, OperationException, InterruptedException, TimeoutException {
-        try {
-            ops.removeIfExists(handlerAddress(SYSLOG_HANDLER_CREATE));
-            ops.removeIfExists(handlerAddress(SYSLOG_HANDLER_UPDATE));
-            ops.removeIfExists(handlerAddress(SYSLOG_HANDLER_DELETE));
-            adminOps.reloadIfRequired();
-        } finally {
-            client.close();
-        }
+    public static void removeResourcesAndReload()
+        throws IOException, OperationException, InterruptedException, TimeoutException {
+        ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_CREATE));
+        ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_UPDATE));
+        ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_DELETE));
+        adminOps.reloadIfRequired();
     }
 
     @Override
     protected void navigateToPage() {
         page.navigate();
         console.verticalNavigation().selectSecondary(LOGGING_HANDLER_ITEM,
-                "logging-handler-syslog-item");
+            "logging-handler-syslog-item");
     }
 
     @Override
@@ -81,8 +71,8 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
     }
 
     @Override
-    protected Address getHandlerAddress(String name) {
-        return handlerAddress(name);
+    protected Address syslogHandlerAddress(String name) {
+        return LoggingFixtures.SyslogHandler.syslogHandlerAddress(name);
     }
 
     @Override
@@ -93,9 +83,5 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
     @Override
     protected FormFragment getHandlerForm() {
         return page.getSyslogHandlerForm();
-    }
-
-    private static Address handlerAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and(SYSLOG_HANDLER, name);
     }
 }
