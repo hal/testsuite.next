@@ -15,27 +15,49 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 
 public abstract class XmlFormatterAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     @Inject protected Console console;
     @Inject private CrudOperations crud;
+
+    @Drone
+    private WebDriver browser;
+
     private TableFragment table;
     private FormFragment form;
     protected abstract LoggingConfigurationPage getPage();
-    protected abstract Address getFormatterAddress(String name);
+    protected abstract Address xmlFormatterAddress(String name);
     protected abstract void navigateToPage();
 
     @Before
@@ -48,23 +70,23 @@ public abstract class XmlFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(XML_FORMATTER_CREATE), table, XML_FORMATTER_CREATE);
+        crud.create(xmlFormatterAddress(XmlFormatter.XML_FORMATTER_CREATE), table, XmlFormatter.XML_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(XML_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(XML_FORMATTER_UPDATE), form, NAMESPACE_URI, Random.name());
+        table.select(XmlFormatter.XML_FORMATTER_UPDATE);
+        crud.update(xmlFormatterAddress(XmlFormatter.XML_FORMATTER_UPDATE), form, NAMESPACE_URI, Random.name());
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(XML_FORMATTER_RESET);
-        crud.reset(getFormatterAddress(XML_FORMATTER_RESET), form);
+        table.select(XmlFormatter.XML_FORMATTER_RESET);
+        crud.reset(xmlFormatterAddress(XmlFormatter.XML_FORMATTER_RESET), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(XML_FORMATTER_DELETE), table, XML_FORMATTER_DELETE);
+        crud.delete(xmlFormatterAddress(XmlFormatter.XML_FORMATTER_DELETE), table, XmlFormatter.XML_FORMATTER_DELETE);
     }
 }

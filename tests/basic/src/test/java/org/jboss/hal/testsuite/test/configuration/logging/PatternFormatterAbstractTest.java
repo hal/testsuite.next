@@ -15,26 +15,48 @@
  */
 package org.jboss.hal.testsuite.test.configuration.logging;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
+import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.LoggingConfigurationPage;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
+import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
 
 public abstract class PatternFormatterAbstractTest {
 
+    protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    protected static final Operations ops = new Operations(client);
+    protected static final Administration adminOps = new Administration(client);
+
+    @AfterClass
+    public static void closeClient() throws IOException {
+        client.close();
+    }
+
     @Inject protected Console console;
     @Inject private CrudOperations crud;
+
+    @Drone
+    private WebDriver browser;
+
     private TableFragment table;
     private FormFragment form;
     protected abstract LoggingConfigurationPage getPage();
-    protected abstract Address getFormatterAddress(String name);
+    protected abstract Address patternFormatterAddress(String name);
     protected abstract void navigateToPage();
 
     @Before
@@ -47,23 +69,25 @@ public abstract class PatternFormatterAbstractTest {
 
     @Test
     public void create() throws Exception {
-        crud.create(getFormatterAddress(PATTERN_FORMATTER_CREATE), table, PATTERN_FORMATTER_CREATE);
+        crud.create(patternFormatterAddress(
+            PatternFormatter.PATTERN_FORMATTER_CREATE), table, PatternFormatter.PATTERN_FORMATTER_CREATE);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(PATTERN_FORMATTER_UPDATE);
-        crud.update(getFormatterAddress(PATTERN_FORMATTER_UPDATE), form, COLOR_MAP, COLOR_MAP_VALUE);
+        table.select(PatternFormatter.PATTERN_FORMATTER_UPDATE);
+        crud.update(patternFormatterAddress(PatternFormatter.PATTERN_FORMATTER_UPDATE), form, COLOR_MAP, COLOR_MAP_VALUE);
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(PATTERN_FORMATTER_UPDATE);
-        crud.reset(getFormatterAddress(PATTERN_FORMATTER_UPDATE), form);
+        table.select(PatternFormatter.PATTERN_FORMATTER_UPDATE);
+        crud.reset(patternFormatterAddress(PatternFormatter.PATTERN_FORMATTER_UPDATE), form);
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(getFormatterAddress(PATTERN_FORMATTER_DELETE), table, PATTERN_FORMATTER_DELETE);
+        crud.delete(patternFormatterAddress(
+            PatternFormatter.PATTERN_FORMATTER_DELETE), table, PatternFormatter.PATTERN_FORMATTER_DELETE);
     }
 }
