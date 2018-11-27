@@ -47,6 +47,7 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
         Values params = Values.of(NAMED_FORMATTER, "PATTERN").and(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
         ops.add(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
         ops.add(LoggingFixtures.SocketHandler.socketHandlerAddress(SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
+        ops.add(LoggingFixtures.XmlFormatter.xmlFormatterAddress(XML_FORMATTER)).assertSuccess();
     }
 
     @AfterClass
