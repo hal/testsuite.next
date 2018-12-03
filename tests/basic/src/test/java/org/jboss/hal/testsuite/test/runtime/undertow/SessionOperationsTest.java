@@ -19,6 +19,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.runtime.UndertowRuntimePage;
+import org.jboss.hal.testsuite.test.DeploymentDrone;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
