@@ -56,6 +56,7 @@ public class SocketHandlerTest extends SocketHandlerAbstractTest {
             .and(OUTBOUND_SOCKET_BINDING_REF, "mail-smtp");
         ops.add(LoggingFixtures.LoggingProfile.socketHandlerAddress(LOGGING_PROFILE, SocketHandler.SOCKET_HANDLER_UPDATE), params).assertSuccess();
         ops.add(LoggingFixtures.LoggingProfile.socketHandlerAddress(LOGGING_PROFILE, SocketHandler.SOCKET_HANDLER_DELETE), params).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.xmlFormatterAddress(LOGGING_PROFILE, XML_FORMATTER)).assertSuccess();
     }
 
     @Override
