@@ -25,7 +25,6 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.as.domain.management.ModelDescriptionConstants.JKS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.keyStoreAddress;
@@ -50,7 +49,7 @@ public class TrustManagerTest {
         ModelNode credentialReference = new ModelNode();
         credentialReference.get(CLEAR_TEXT).set(Random.name());
         operations.add(keyStoreAddress(name),
-            Values.of(ModelDescriptionConstants.TYPE, JKS).and(CREDENTIAL_REFERENCE, credentialReference)
+            Values.of(ModelDescriptionConstants.TYPE, "JKS").and(CREDENTIAL_REFERENCE, credentialReference)
         .and(ModelDescriptionConstants.PATH, Random.name()).and(ModelDescriptionConstants.RELATIVE_TO, "jboss.home.dir"))
             .assertSuccess();
     }
