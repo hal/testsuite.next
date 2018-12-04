@@ -1,4 +1,4 @@
-package org.jboss.hal.testsuite.test.runtime.elytron;
+package org.jboss.hal.testsuite.test.runtime.elytron.ssl;
 
 import java.io.File;
 import java.io.IOException;
