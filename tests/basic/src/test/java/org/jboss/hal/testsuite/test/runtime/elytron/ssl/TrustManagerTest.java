@@ -13,7 +13,6 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.runtime.elytron.ElytronRuntimeSSLPage;
-import org.jboss.hal.testsuite.util.audit.log.AuditLog;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -72,8 +71,6 @@ public class TrustManagerTest {
 
     @Page
     private ElytronRuntimeSSLPage page;
-
-    private AuditLog auditLog;
 
     @Before
     public void initPage() throws IOException {
