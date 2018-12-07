@@ -8,6 +8,7 @@ import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CERTIFICATE_AUTHORITY_ACCOUNT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRUST_MANAGER;
 import static org.jboss.hal.resources.Ids.FORM;
 import static org.jboss.hal.resources.Ids.TABLE;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
@@ -21,11 +22,18 @@ public class ElytronRuntimeSSLPage extends BasePage {
     @FindBy(id = CERTIFICATE_AUTHORITY_ACCOUNT + "-" + FORM)
     private FormFragment certificateAuthorityAccountForm;
 
+    @FindBy(id = TRUST_MANAGER + "-" + TABLE + WRAPPER)
+    private TableFragment trustManagerTable;
+
     public FormFragment getCertificateAuthorityAccountForm() {
         return certificateAuthorityAccountForm;
     }
 
     public TableFragment getCertificateAuthorityAccountTable() {
         return certificateAuthorityAccountTable;
+    }
+
+    public TableFragment getTrustManagerTable() {
+        return trustManagerTable;
     }
 }
