@@ -10,17 +10,14 @@ public class TestsuiteEnvironmentUtils {
     private static final String JBOSS_HOME = "JBOSS_HOME";
     private static final Properties properties = new Properties();
 
-    private TestsuiteEnvironmentUtils() { }
+    private TestsuiteEnvironmentUtils() {
+    }
 
     static {
-        boolean found = false;
-        try {
-            try (InputStream inputStream = TestsuiteEnvironmentUtils.class.getResourceAsStream("/testsuite.properties")) {
-                if (inputStream != null) {
-                    found = true;
-                    properties.load(inputStream);
-                }
-            }
+        boolean found;
+        try (InputStream inputStream = TestsuiteEnvironmentUtils.class.getResourceAsStream("/testsuite.properties")) {
+            properties.load(inputStream);
+            found = true;
         } catch (IOException e) {
             throw new RuntimeException("Unable to load testsuite.properties", e);
         }
