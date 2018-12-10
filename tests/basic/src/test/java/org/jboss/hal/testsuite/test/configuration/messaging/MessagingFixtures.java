@@ -371,6 +371,14 @@ public final class MessagingFixtures {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(REMOTE_CONNECTOR, name);
         }
 
+        public static Address discoveryGroupAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(DISCOVERY_GROUP, name);
+        }
+
+        public static Address connectionFactoryAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(CONNECTION_FACTORY, name);
+        }
+
         private RemoteActiveMQServer() {
 
         }
