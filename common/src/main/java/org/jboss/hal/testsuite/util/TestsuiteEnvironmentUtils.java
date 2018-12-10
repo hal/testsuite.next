@@ -16,8 +16,8 @@ public class TestsuiteEnvironmentUtils {
     static {
         boolean found;
         try (InputStream inputStream = TestsuiteEnvironmentUtils.class.getResourceAsStream("/testsuite.properties")) {
-            found = true;
             properties.load(inputStream);
+            found = true;
         } catch (IOException e) {
             throw new RuntimeException("Unable to load testsuite.properties", e);
         }
