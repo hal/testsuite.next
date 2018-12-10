@@ -359,6 +359,18 @@ public final class MessagingFixtures {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(CONNECTOR, name);
         }
 
+        public static Address inVMConnectorAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(IN_VM_CONNECTOR, name);
+        }
+
+        public static Address httpConnectorAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(HTTP_CONNECTOR, name);
+        }
+
+        public static Address remoteConnectorAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(REMOTE_CONNECTOR, name);
+        }
+
         private RemoteActiveMQServer() {
 
         }
