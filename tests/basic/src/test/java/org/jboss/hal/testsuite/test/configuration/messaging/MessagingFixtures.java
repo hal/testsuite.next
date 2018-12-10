@@ -351,6 +351,19 @@ public final class MessagingFixtures {
         return SUBSYSTEM_ADDRESS.and(JMS_BRIDGE, name);
     }
 
+    public static class RemoteActiveMQServer {
+
+        public static Address REMOTE_ACTIVEMQ_SERVER_ADDRESS = SUBSYSTEM_ADDRESS;
+
+        public static Address genericConnectorAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(CONNECTOR, name);
+        }
+
+        private RemoteActiveMQServer() {
+
+        }
+    }
+
     private MessagingFixtures() {
     }
 }

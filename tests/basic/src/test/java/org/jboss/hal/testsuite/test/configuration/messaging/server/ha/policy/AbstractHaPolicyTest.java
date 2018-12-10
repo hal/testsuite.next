@@ -59,8 +59,7 @@ public abstract class AbstractHaPolicyTest {
     public static void tearDown() throws Exception {
         try {
             operations.removeIfExists(serverAddress(SRV_UPDATE));
-        }
-        finally {
+        } finally {
             client.close();
         }
     }

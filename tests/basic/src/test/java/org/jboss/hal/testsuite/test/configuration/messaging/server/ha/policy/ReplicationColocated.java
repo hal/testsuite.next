@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.messaging.server.ha.policy;
 
 import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Random;
 import org.junit.AfterClass;
