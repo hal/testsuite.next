@@ -379,6 +379,14 @@ public final class MessagingFixtures {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(CONNECTION_FACTORY, name);
         }
 
+        public static Address externalJMSQueueAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(EXTERNAL_JMS_QUEUE, name);
+        }
+
+        public static Address externalJMSTopicAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(EXTERNAL_JMS_TOPIC, name);
+        }
+
         private RemoteActiveMQServer() {
 
         }
