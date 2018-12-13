@@ -50,11 +50,14 @@ public class MessagingRemoteActiveMQPage extends BasePage {
     @FindBy(id = "msg-remote-activemq-pooled-connection-factory-table_wrapper")
     private TableFragment pooledConnectionFactoryTable;
 
-    @FindBy(id = "msq-remote-activemq-pooled-connection-factory-tab-container")
+    @FindBy(id = "msg-remote-activemq-pooled-connection-factory-tab-container")
     private TabsFragment pooledConnectionFactoryTab;
 
-    @FindBy(id = "msg-remote-connection-factory-form")
+    @FindBy(id = "messaging-pooled-connection-factory-form")
     private FormFragment pooledConnectionFactoryForm;
+
+    @FindBy(id = "msg-remote-activemq-credential-reference-form")
+    private FormFragment pooledConnectionFactoryCredentialReferenceForm;
 
     @FindBy(id = "msg-remote-external-queue-table_wrapper")
     private TableFragment externalJMSQueueTable;
@@ -125,7 +128,13 @@ public class MessagingRemoteActiveMQPage extends BasePage {
     }
 
     public FormFragment getPooledConnectionFactoryForm() {
+        getPooledConnectionFactoryTab().select("msg-remote-activemq-pooled-connection-factory-attributes-tab");
         return pooledConnectionFactoryForm;
+    }
+
+    public FormFragment getPooledConnectionFactoryCredentialReferenceForm() {
+        getPooledConnectionFactoryTab().select("msg-remote-activemq-pooled-connection-factory-credential-reference-tab");
+        return pooledConnectionFactoryCredentialReferenceForm;
     }
 
     public TableFragment getExternalJMSQueueTable() {

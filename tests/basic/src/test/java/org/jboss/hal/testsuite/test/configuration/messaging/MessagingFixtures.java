@@ -379,6 +379,10 @@ public final class MessagingFixtures {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(CONNECTION_FACTORY, name);
         }
 
+        public static Address pooledConnectionFactoryAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and("pooled-connection-factory", name);
+        }
+
         public static Address externalJMSQueueAddress(String name) {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(EXTERNAL_JMS_QUEUE, name);
         }
