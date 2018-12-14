@@ -62,7 +62,7 @@ public class BridgeTest extends AbstractClusteringTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void navigate() {
         page.navigate(SERVER, SRV_UPDATE);
     }
 
@@ -201,9 +201,10 @@ public class BridgeTest extends AbstractClusteringTest {
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), PASSWORD);
         operations.undefineAttribute(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), CREDENTIAL_REFERENCE);
         // navigate again, to reload the page as new data were added with the operations above
-        page.navigateAgain(SERVER, SRV_UPDATE);
-        console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
 
+        page.navigateAgain(SERVER, SRV_UPDATE);
+        String clearText = Random.name();
+        console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
         TableFragment table = page.getBridgeTable();
         FormFragment form = page.getBridgeCRForm();
         EmptyState emptyState = form.emptyState();
@@ -214,12 +215,12 @@ public class BridgeTest extends AbstractClusteringTest {
         console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
-        addResource.getForm().text(CLEAR_TEXT, Random.name());
+        addResource.getForm().text(CLEAR_TEXT, clearText);
         addResource.add();
 
         console.verifySuccess();
         new ResourceVerifier(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), client)
-            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, Random.name());
+            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearText);
 
     }
 

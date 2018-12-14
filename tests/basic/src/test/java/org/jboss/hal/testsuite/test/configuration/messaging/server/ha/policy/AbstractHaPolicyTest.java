@@ -52,7 +52,7 @@ public abstract class AbstractHaPolicyTest {
         batchSrvUpd.add(serverPathAddress(SRV_UPDATE, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
         batchSrvUpd.add(serverPathAddress(SRV_UPDATE, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
         batchSrvUpd.add(serverPathAddress(SRV_UPDATE, PAGING_DIRECTORY), Values.of(PATH, Random.name()));
-        operations.batch(batchSrvUpd);
+        operations.batch(batchSrvUpd).assertSuccess();
     }
 
     @AfterClass

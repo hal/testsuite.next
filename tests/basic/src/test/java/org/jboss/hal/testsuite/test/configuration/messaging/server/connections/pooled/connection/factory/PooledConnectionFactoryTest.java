@@ -36,16 +36,12 @@ import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_SERVER;
 import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CALL_TIMEOUT;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.FACTORY_CLASS;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.POOL_CONN_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.POOL_CONN_CREATE_ENTRY;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.POOL_CONN_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.POOL_CONN_TRY_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.POOL_CONN_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SRV_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectorServiceAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.pooledConnectionFactoryAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
 
@@ -55,10 +51,12 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
     @BeforeClass
     public static void createResources() throws IOException {
         createServer(SRV_UPDATE);
-        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE), Values.of(FACTORY_CLASS, Random.name()))
-            .assertSuccess();
-        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_DELETE), Values.of(FACTORY_CLASS, Random.name()))
-            .assertSuccess();
+        operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE),
+            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
+        operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_TRY_UPDATE),
+            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
+        operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_DELETE),
+            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
     }
 
     @AfterClass
@@ -67,7 +65,7 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
     }
 
     @Before
-    public void setUp() throws Exception {
+    public void navigate() {
         page.navigate(SERVER, SRV_UPDATE);
     }
 
@@ -224,14 +222,14 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
         table.select(POOL_CONN_UPDATE);
         page.getPooledFormsTab().select(CREDENTIAL_REFERENCE_TAB);
         emptyState.mainAction();
-
+        String clearText = Random.name();
         AddResourceDialogFragment addResource = console.addResourceDialog();
-        addResource.getForm().text(CLEAR_TEXT, Random.name());
+        addResource.getForm().text(CLEAR_TEXT, clearText);
         addResource.add();
 
         console.verifySuccess();
         new ResourceVerifier(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), client)
-            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, Random.name());
+            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearText);
     }
 
     @Test

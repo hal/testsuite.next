@@ -1,14 +1,22 @@
 package org.jboss.hal.testsuite.test.configuration.messaging.server.destinations;
 
+import java.io.IOException;
+
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.junit.AfterClass;
+import org.junit.Before;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.core.online.operations.Batch;
+import org.wildfly.extras.creaper.core.online.operations.OperationException;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATTERN;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ROLE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
 import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONSUME;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.MESSAGING_SECURITY_SETTING_ROLE;
@@ -19,9 +27,35 @@ import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixt
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SRV_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.securitySettingAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.securitySettingRoleAddress;
+import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
 
 @RunWith(Arquillian.class)
 public class SecuritySettingTest extends AbstractServerDestinationsTest {
+
+    @BeforeClass
+    public static void createResources() throws IOException {
+        createServer(SRV_UPDATE);
+        createSecuritySettingsWithRoles(SRV_UPDATE, SECSET_DELETE);
+        createSecuritySettingsWithRoles(SRV_UPDATE, SECSET_UPDATE);
+    }
+
+    private static void createSecuritySettingsWithRoles(String serverName, String securitySetting) throws IOException {
+        Batch securitySettingBatch = new Batch();
+        securitySettingBatch.add(securitySettingAddress(serverName, securitySetting));
+        securitySettingBatch.add(
+            securitySettingRoleAddress(serverName, securitySetting, ROLE_CREATE));
+        operations.batch(securitySettingBatch).assertSuccess();
+    }
+
+    @AfterClass
+    public static void removeResources() throws IOException, OperationException {
+        operations.removeIfExists(serverAddress(SRV_UPDATE));
+    }
+
+    @Before
+    public void navigate() {
+        page.navigate(SERVER, SRV_UPDATE);
+    }
 
     @Test
     public void create() throws Exception {
@@ -58,5 +92,4 @@ public class SecuritySettingTest extends AbstractServerDestinationsTest {
 
         crudOperations.delete(securitySettingAddress(SRV_UPDATE, SECSET_DELETE), table, SECSET_DELETE);
     }
-
 }

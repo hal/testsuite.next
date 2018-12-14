@@ -16,20 +16,15 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_CONNECTOR_SERVICE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_REM_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_REM_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.FACTORY_CLASS;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SRV_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectorRemoteAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectorServiceAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
 
@@ -39,10 +34,8 @@ public class ConnectorServiceTest extends AbstractServerConnectionsTest {
     @BeforeClass
     public static void createResources() throws IOException {
         createServer(SRV_UPDATE);
-        operations.add(connectorRemoteAddress(SRV_UPDATE, CONN_REM_UPDATE), Values.of(SOCKET_BINDING, HTTP))
-            .assertSuccess();
-        operations.add(connectorRemoteAddress(SRV_UPDATE, CONN_REM_DELETE), Values.of(SOCKET_BINDING, HTTP))
-            .assertSuccess();
+        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE), Values.of(FACTORY_CLASS, Random.name())).assertSuccess();
+        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_DELETE), Values.of(FACTORY_CLASS, Random.name())).assertSuccess();
     }
 
     @AfterClass
