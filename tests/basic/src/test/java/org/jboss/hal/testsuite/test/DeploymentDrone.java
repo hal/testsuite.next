@@ -1,4 +1,4 @@
-package org.jboss.hal.testsuite.test.runtime.undertow;
+package org.jboss.hal.testsuite.test;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
