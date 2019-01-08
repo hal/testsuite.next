@@ -170,6 +170,12 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_JASPI + "-" + "server-auth-modules" + "-" + FORM)
     private FormFragment jaspiServerAuthModulesForm;
 
+    @FindBy(id = "elytron-server-ssl-sni-context-" + TABLE + WRAPPER)
+    private TableFragment serverSSLSNIContextTable;
+
+    @FindBy(id = "elytron-server-ssl-sni-context-" + FORM)
+    private FormFragment serverSSLSNIContextForm;
+
     public TableFragment getCredentialStoreTable() {
         return credentialStoreTable;
     }
@@ -450,5 +456,13 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public FormFragment getJaspiServerAuthModulesForm() {
         return jaspiServerAuthModulesForm;
+    }
+
+    public TableFragment getServerSSLSNIContextTable() {
+        return serverSSLSNIContextTable;
+    }
+
+    public FormFragment getServerSSLSNIContextForm() {
+        return serverSSLSNIContextForm;
     }
 }

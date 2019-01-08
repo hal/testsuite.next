@@ -325,6 +325,7 @@ public final class ElytronFixtures {
             Random.name());
     public static final String AGG_HTTP_DELETE = Ids.build(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY_PREFIX,
             CrudConstants.DELETE, Random.name());
+    public static final String HOST_CONTEXT_MAP = "host-context-map";
 
     public static Address aggregateHttpServerMechanismFactoryAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(AGGREGATE_HTTP_SERVER_MECHANISM_FACTORY, name);
@@ -1260,5 +1261,9 @@ public final class ElytronFixtures {
 
     public static Address jaspiConfigurationAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("jaspi-configuration", name);
+    }
+
+    public static Address serverSSLSNIContextAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("server-ssl-sni-context", name);
     }
 }
