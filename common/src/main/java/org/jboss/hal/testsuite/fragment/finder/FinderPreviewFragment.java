@@ -22,13 +22,15 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.fragment.AlertFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static java.util.stream.Collectors.toMap;
-
+import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.alert;
 import static org.jboss.hal.resources.CSS.key;
 import static org.jboss.hal.resources.CSS.listGroup;
 import static org.jboss.hal.resources.CSS.value;
@@ -42,6 +44,10 @@ public class FinderPreviewFragment {
     private WebElement root;
     @Inject
     private Console console;
+
+    public AlertFragment getAlert() {
+        return createPageFragment(AlertFragment.class, root.findElement(By.className(alert)));
+    }
 
     public Map<String, String> getMainAttributes() {
         return getMainAttributesElements().entrySet()
