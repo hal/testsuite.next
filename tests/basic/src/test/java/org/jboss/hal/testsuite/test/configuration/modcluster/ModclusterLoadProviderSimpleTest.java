@@ -22,39 +22,37 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
-import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
-import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.LISTENER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.TYPE;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
+import static org.junit.Assert.assertTrue;
+import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-public class LoadMetricTest {
+@FixMethodOrder(NAME_ASCENDING)
+public class ModclusterLoadProviderSimpleTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        Batch proxyAdd = new Batch();
-        proxyAdd.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
-        proxyAdd.add(loadProviderDynamicAddress(PROXY_UPDATE));
-        operations.batch(proxyAdd);
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), Values.of(TYPE, "mem"));
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), Values.of(TYPE, "mem"));
+        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, DEFAULT));
+        operations.remove(loadProviderSimpleAddress(PROXY_UPDATE));
     }
 
     @AfterClass
@@ -65,48 +63,51 @@ public class LoadMetricTest {
     @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private ModclusterPage page;
-    private TableFragment table;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, PROXY_UPDATE);
+        console.verticalNavigation().selectPrimary("load-provider-simple-item");
+        form = page.getLoadProviderSimpleForm();
+    }
+
+    @Test
+    public void _0create() throws Exception {
+        crud.createSingleton(loadProviderSimpleAddress(PROXY_UPDATE), form);
+    }
+
+    @Test
+    public void _1noDynamicProvider() {
+        console.verticalNavigation().selectPrimary("load-provider-dynamic-item");
+        EmptyState empty = page.getLoadProviderDynamicEmpty();
+        assertTrue(empty.getRoot().isDisplayed());
+    }
+
+    @Test
+    public void _2customLoadMetricsWarning() {
+        console.verticalNavigation().selectPrimary("custom-load-metrics-item");
+        assertTrue(page.getCustomLoadMetricAlert().isWarning());
+    }
+
+    @Test
+    public void _3loadMetricsWarning() {
         console.verticalNavigation().selectPrimary("load-metrics-item");
-        table = page.getLoadMetricTable();
-        form = page.getLoadMetricForm();
-        table.bind(form);
+        assertTrue(page.getLoadMetricAlert().isWarning());
     }
 
     @Test
-    public void create() throws Exception {
-        crud.create(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_CREATE), table, f -> {
-                    f.text(NAME, LOAD_METRIC_CREATE);
-                    f.select(TYPE, "cpu");
-                },
-                ver -> ver.verifyAttribute(TYPE, "cpu"));
+    public void _4reset() throws Exception {
+        crud.reset(loadProviderSimpleAddress(PROXY_UPDATE), form);
     }
 
     @Test
-    public void reset() throws Exception {
-        table.select(LOAD_METRIC_UPDATE);
-        crud.reset(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form);
+    public void _5update() throws Exception {
+        crud.update(loadProviderSimpleAddress(PROXY_UPDATE), form, FACTOR, Random.number());
     }
 
     @Test
-    public void update() throws Exception {
-        table.select(LOAD_METRIC_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, WEIGHT, Random.number());
-    }
-
-    @Test
-    public void updateCapacity() throws Exception {
-        // update an attribute of type DOUBLE
-        table.select(LOAD_METRIC_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, CAPACITY, Random.numberDouble());
-    }
-
-    @Test
-    public void delete() throws Exception {
-        crud.delete(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), table, LOAD_METRIC_DELETE);
+    public void _6delete() throws Exception {
+        crud.deleteSingleton(loadProviderSimpleAddress(PROXY_UPDATE), form);
     }
 }

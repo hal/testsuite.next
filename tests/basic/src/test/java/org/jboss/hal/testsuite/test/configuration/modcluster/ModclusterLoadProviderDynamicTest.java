@@ -22,6 +22,7 @@ import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
@@ -41,6 +42,7 @@ import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFi
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.PROXY_UPDATE;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.loadProviderDynamicAddress;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.proxyAddress;
+import static org.junit.Assert.assertTrue;
 import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
@@ -73,22 +75,29 @@ public class ModclusterLoadProviderDynamicTest {
     }
 
     @Test
-    public void create() throws Exception {
+    public void _0create() throws Exception {
         crud.createSingleton(loadProviderDynamicAddress(PROXY_UPDATE), form);
     }
 
     @Test
-    public void reset() throws Exception {
+    public void _1noSimpleProvider() {
+        console.verticalNavigation().selectPrimary("load-provider-simple-item");
+        EmptyState empty = page.getLoadProviderSimpleEmpty();
+        assertTrue(empty.getRoot().isDisplayed());
+    }
+
+    @Test
+    public void _2reset() throws Exception {
         crud.reset(loadProviderDynamicAddress(PROXY_UPDATE), form);
     }
 
     @Test
-    public void update() throws Exception {
+    public void _3update() throws Exception {
         crud.update(loadProviderDynamicAddress(PROXY_UPDATE), form, HISTORY, Random.number());
     }
 
     @Test
-    public void zzzDelete() throws Exception {
+    public void _4delete() throws Exception {
         crud.deleteSingleton(loadProviderDynamicAddress(PROXY_UPDATE), form);
     }
 }

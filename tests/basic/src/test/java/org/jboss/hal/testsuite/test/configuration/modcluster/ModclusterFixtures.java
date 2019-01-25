@@ -22,21 +22,24 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODCLUSTER;
 
-public final class ModclusterFixtures {
+final class ModclusterFixtures {
 
+    private static final Address SUBSYSTEM_ADDRESS = Address.subsystem(MODCLUSTER);
+
+    static final String CAPACITY = "capacity";
+    static final String CLASS_NAME = "com.foo.Bar";
     static final String EXCLUDED_CONTEXTS = "excluded-contexts";
-    static final String LOAD_MET = "load-met";
+    static final String FACTOR = "factor";
+    static final String HISTORY = "history";
     static final String NODE_TIMEOUT = "node-timeout";
-    static final String PROXY = "proxy";
     static final String PROXY_URL = "proxy-url";
     static final String STICKY_SESSION = "sticky-session";
-    static final String HISTORY = "history";
     static final String WEIGHT = "weight";
 
-    static final Address SUBSYSTEM_ADDRESS = Address.subsystem(MODCLUSTER);
 
-    // ----------------------- proxy
+    // ------------------------------------------------------ proxy
 
+    private static final String PROXY = "proxy";
     static final String PROXY_CREATE = Ids.build(PROXY, CrudConstants.CREATE, Random.name());
     static final String PROXY_CREATE2 = Ids.build(PROXY, "create2", Random.name());
     static final String PROXY_READ = Ids.build(PROXY, CrudConstants.READ, Random.name());
@@ -44,22 +47,38 @@ public final class ModclusterFixtures {
     static final String PROXY_DELETE = Ids.build(PROXY, CrudConstants.DELETE, Random.name());
 
     static Address proxyAddress(String name) {
-        return SUBSYSTEM_ADDRESS.and("proxy", name);
+        return SUBSYSTEM_ADDRESS.and(PROXY, name);
+    }
+
+    static Address loadProviderSimpleAddress(String proxy) {
+        return SUBSYSTEM_ADDRESS.and(PROXY, proxy).and("load-provider", "simple");
     }
 
     static Address loadProviderDynamicAddress(String proxy) {
-        return SUBSYSTEM_ADDRESS.and("proxy", proxy).and("load-provider", "dynamic");
+        return SUBSYSTEM_ADDRESS.and(PROXY, proxy).and("load-provider", "dynamic");
     }
+
+
+    // ------------------------------------------------------ custom load metrics
+
+    private static final String CUSTOM_LOAD_METRIC = "custom-load-metric";
+
+    static final String CUSTOM_LOAD_METRIC_CREATE = Ids.build(CUSTOM_LOAD_METRIC, CrudConstants.CREATE, Random.name());
+    static final String CUSTOM_LOAD_METRIC_UPDATE = Ids.build(CUSTOM_LOAD_METRIC, CrudConstants.UPDATE, Random.name());
+    static final String CUSTOM_LOAD_METRIC_DELETE = Ids.build(CUSTOM_LOAD_METRIC, CrudConstants.DELETE, Random.name());
 
     static Address customLoadMetricAddress(String proxy, String name) {
         return loadProviderDynamicAddress(proxy).and("custom-load-metric", name);
     }
 
-    // ----------------------- load metric
 
-    static final String LOAD_MET_CREATE = Ids.build(LOAD_MET, CrudConstants.CREATE, Random.name());
-    static final String LOAD_MET_UPDATE = Ids.build(LOAD_MET, CrudConstants.UPDATE, Random.name());
-    static final String LOAD_MET_DELETE = Ids.build(LOAD_MET, CrudConstants.DELETE, Random.name());
+    // ------------------------------------------------------ load metrics
+
+    private static final String LOAD_METRIC = "load-metric";
+
+    static final String LOAD_METRIC_CREATE = Ids.build(LOAD_METRIC, CrudConstants.CREATE, Random.name());
+    static final String LOAD_METRIC_UPDATE = Ids.build(LOAD_METRIC, CrudConstants.UPDATE, Random.name());
+    static final String LOAD_METRIC_DELETE = Ids.build(LOAD_METRIC, CrudConstants.DELETE, Random.name());
 
     static Address loadMetricAddress(String proxy, String name) {
         return loadProviderDynamicAddress(proxy).and("load-metric", name);

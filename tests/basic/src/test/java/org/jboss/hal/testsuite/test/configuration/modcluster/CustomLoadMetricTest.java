@@ -35,14 +35,12 @@ import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.TYPE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.CLASS_NAME;
 
 @RunWith(Arquillian.class)
-public class LoadMetricTest {
+public class CustomLoadMetricTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
@@ -53,8 +51,8 @@ public class LoadMetricTest {
         proxyAdd.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
         proxyAdd.add(loadProviderDynamicAddress(PROXY_UPDATE));
         operations.batch(proxyAdd);
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), Values.of(TYPE, "mem"));
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), Values.of(TYPE, "mem"));
+        operations.add(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_DELETE), Values.of(CLASS, CLASS_NAME));
+        operations.add(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), Values.of(CLASS, CLASS_NAME));
     }
 
     @AfterClass
@@ -71,42 +69,43 @@ public class LoadMetricTest {
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, PROXY_UPDATE);
-        console.verticalNavigation().selectPrimary("load-metrics-item");
-        table = page.getLoadMetricTable();
-        form = page.getLoadMetricForm();
+        console.verticalNavigation().selectPrimary("custom-load-metrics-item");
+        table = page.getCustomLoadMetricTable();
+        form = page.getCustomLoadMetricForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        crud.create(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_CREATE), table, f -> {
-                    f.text(NAME, LOAD_METRIC_CREATE);
-                    f.select(TYPE, "cpu");
+        crud.create(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_CREATE), table, f -> {
+                    f.text(NAME, CUSTOM_LOAD_METRIC_CREATE);
+                    f.text(CLASS, CLASS_NAME);
                 },
-                ver -> ver.verifyAttribute(TYPE, "cpu"));
+                ver -> ver.verifyAttribute(CLASS, CLASS_NAME));
     }
 
     @Test
     public void reset() throws Exception {
-        table.select(LOAD_METRIC_UPDATE);
-        crud.reset(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form);
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.reset(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(LOAD_METRIC_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, WEIGHT, Random.number());
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.update(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form, WEIGHT, Random.number());
     }
 
     @Test
     public void updateCapacity() throws Exception {
         // update an attribute of type DOUBLE
-        table.select(LOAD_METRIC_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, CAPACITY, Random.numberDouble());
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.update(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form, "capacity",
+                Random.numberDouble());
     }
 
     @Test
     public void delete() throws Exception {
-        crud.delete(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), table, LOAD_METRIC_DELETE);
+        crud.delete(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_DELETE), table, CUSTOM_LOAD_METRIC_DELETE);
     }
 }
