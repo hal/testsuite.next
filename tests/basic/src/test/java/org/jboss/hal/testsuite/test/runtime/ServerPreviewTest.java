@@ -88,6 +88,11 @@ public class ServerPreviewTest {
         }
     }
 
+    @Test
+    public void openPorts() {
+        ServerPreviewFragment preview = getMainAttributesFinder().preview(ServerPreviewFragment.class);
+    }
+
     private void verifyIconClass(ServerPreviewFragment serverPreviewFragment, String iconClass, String assertMessage) {
         Assert.assertTrue(assertMessage,
             serverPreviewFragment.getUrlAttributeItem().getValueElement().findElement(ByJQuery.selector("span > span"))
