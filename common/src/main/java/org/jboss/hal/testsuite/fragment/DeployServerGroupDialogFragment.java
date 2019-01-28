@@ -7,9 +7,7 @@ import org.jboss.hal.resources.Ids;
 
 import static org.jboss.hal.testsuite.Selectors.contains;
 
-/**
- * Deploy to/undeploy from server group dialog abstraction.
- */
+/** Deploy to/undeploy from server group dialog abstraction. */
 public class DeployServerGroupDialogFragment extends DialogFragment {
 
     public DeployServerGroupDialogFragment selectServerGroups(String... serverGroupNames) {

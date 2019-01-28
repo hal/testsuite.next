@@ -63,7 +63,6 @@ public final class MessagingFixtures {
     static final String CLUSTER_NAME =  "cluster-name";
     static final String CONNECTION_FACTORY_VALUE = "ConnectionFactory";
     static final String CONNECTION_TTL_OVERRIDE = "connection-ttl-override";
-    static final String CONSUME = "consume";
     static final String DESTINATION_QUEUE = "jms/queue/DLQ";
     static final String DIVERT_ADDRESS = "divert-address";
     static final String ELYTRON_DOMAIN = "elytron-domain";
