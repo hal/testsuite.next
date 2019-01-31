@@ -138,6 +138,7 @@ public final class ElytronFixtures {
     public static final String AGGREGATE_SECURITY_EVENT_LISTENER_ITEM = "elytron-aggregate-security-event-listener-item";
     public static final String ALGORITHM_FROM = "algorithm-from";
     public static final String ALIAS_FILTER = "alias-filter";
+    public static final String ALIASES = "Aliases";
     public static final String AND = "and";
     public static final String ANY_STRING = Random.name();
     public static final String APP_ROLES_PROPS = "application-roles.properties";
@@ -275,6 +276,7 @@ public final class ElytronFixtures {
     public static final String ROLE_MAPPERS = "role-mappers";
     public static final String ROLE_MAPPERS_ITEM = "mappers-decoders-role-mappers";
     public static final String ROLE_MAP = "role-map";
+    public static final String RSA = "RSA";
     public static final String SALT_INDEX = "salt-index";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER = "salted-simple-digest-mapper";
     public static final String SALTED_SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-salted-simple-digest-mapper-tab";
@@ -296,6 +298,8 @@ public final class ElytronFixtures {
             ELYTRON_SERVICE_LOADER_HTTP_SERVER_MECHANISM_FACTORY, ITEM);
     public static final String SERVICE_LOADER_SASL_SERVER_FACTORY_ITEM = Ids.build(ELYTRON_SERVICE_LOADER_SASL_SERVER_FACTORY,
             ITEM);
+    public static final String SHA_256_WITH_RSA = "SHA256withRSA";
+    public static final String SIGNATURE_ALGORITHM = "signature-algorithm";
     public static final String SIMPLE_DIGEST_MAPPER = "simple-digest-mapper";
     public static final String SIMPLE_DIGEST_MAPPER_TAB = "elytron-jdbc-realm-principal-query-simple-digest-mapper-tab";
     public static final String SIMPLE_PERMISSION_MAPPER_ITEM = "elytron-simple-permission-mapper-item";
