@@ -42,6 +42,11 @@
             <version>7.0</version>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.microprofile.health</groupId>
+            <artifactId>microprofile-health-api</artifactId>
+            <version>1.0</version>
+        </dependency>
 
         <!-- JDBC Drivers for datasource-properties tests -->
 

@@ -50,14 +50,14 @@ public class FinderPreviewFragment {
     }
 
     public Map<String, String> getMainAttributes() {
-        return getMainAttributesElements().entrySet()
+        return getAttributeElementMap("Main Attributes").entrySet()
             .stream()
             .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getText()));
     }
 
-    public Map<String, WebElement> getMainAttributesElements() {
+    protected Map<String, WebElement> getAttributeElementMap(String heading) {
         By attributeSelector =
-            ByJQuery.selector("h2:contains('Main Attributes'):visible ~ ul." + listGroup + " > li:visible");
+            ByJQuery.selector("h2:contains('" + heading + "'):visible ~ ul." + listGroup + " > li:visible");
         waitGui().until().element(root, attributeSelector).is().present();
         return root.findElements(attributeSelector).stream().collect(toMap(attributeElement -> {
             return attributeElement.findElement(By.className(key)).getText();
