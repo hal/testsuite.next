@@ -6,3 +6,4 @@
 .checkstyle
 *.testsuite.properties
 target
+testsuite.properties
