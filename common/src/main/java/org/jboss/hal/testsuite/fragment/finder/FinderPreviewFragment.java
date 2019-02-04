@@ -22,13 +22,15 @@ import org.jboss.arquillian.drone.api.annotation.Drone;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.fragment.AlertFragment;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
 import static java.util.stream.Collectors.toMap;
-
+import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.alert;
 import static org.jboss.hal.resources.CSS.key;
 import static org.jboss.hal.resources.CSS.listGroup;
 import static org.jboss.hal.resources.CSS.value;
@@ -43,15 +45,19 @@ public class FinderPreviewFragment {
     @Inject
     private Console console;
 
+    public AlertFragment getAlert() {
+        return createPageFragment(AlertFragment.class, root.findElement(By.className(alert)));
+    }
+
     public Map<String, String> getMainAttributes() {
-        return getMainAttributesElements().entrySet()
+        return getAttributeElementMap("Main Attributes").entrySet()
             .stream()
             .collect(toMap(Map.Entry::getKey, entry -> entry.getValue().getText()));
     }
 
-    public Map<String, WebElement> getMainAttributesElements() {
+    protected Map<String, WebElement> getAttributeElementMap(String heading) {
         By attributeSelector =
-            ByJQuery.selector("h2:contains('Main Attributes'):visible ~ ul." + listGroup + " > li:visible");
+            ByJQuery.selector("h2:contains('" + heading + "'):visible ~ ul." + listGroup + " > li:visible");
         waitGui().until().element(root, attributeSelector).is().present();
         return root.findElements(attributeSelector).stream().collect(toMap(attributeElement -> {
             return attributeElement.findElement(By.className(key)).getText();

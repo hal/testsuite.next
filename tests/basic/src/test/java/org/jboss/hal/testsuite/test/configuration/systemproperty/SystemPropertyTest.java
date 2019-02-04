@@ -53,10 +53,14 @@ public class SystemPropertyTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.removeIfExists(systemPropertyAddress(CREATE_NAME));
-        operations.removeIfExists(systemPropertyAddress(READ_NAME));
-        operations.removeIfExists(systemPropertyAddress(UPDATE_NAME));
-        operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
+        try {
+            operations.removeIfExists(systemPropertyAddress(CREATE_NAME));
+            operations.removeIfExists(systemPropertyAddress(READ_NAME));
+            operations.removeIfExists(systemPropertyAddress(UPDATE_NAME));
+            operations.removeIfExists(systemPropertyAddress(DELETE_NAME));
+        } finally {
+            client.close();
+        }
     }
 
     @Inject private CrudOperations crud;
