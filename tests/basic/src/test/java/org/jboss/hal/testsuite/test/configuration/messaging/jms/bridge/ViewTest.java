@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.messaging;
+package org.jboss.hal.testsuite.test.configuration.messaging.jms.bridge;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -43,7 +43,7 @@ import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 
 @RunWith(Arquillian.class)
-public class JmsBridgeViewTest {
+public class ViewTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);

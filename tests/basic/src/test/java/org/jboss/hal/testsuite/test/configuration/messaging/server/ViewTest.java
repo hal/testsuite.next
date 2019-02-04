@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.messaging;
+package org.jboss.hal.testsuite.test.configuration.messaging.server;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -55,7 +55,7 @@ import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
 @FixMethodOrder(NAME_ASCENDING)
-public class ServerConfigurationTest {
+public class ViewTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);

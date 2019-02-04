@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.jboss.hal.testsuite.test.configuration.messaging;
+package org.jboss.hal.testsuite.test.configuration.messaging.server;
 
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -49,7 +49,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class ServerFinderTest {
+public class FinderTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
