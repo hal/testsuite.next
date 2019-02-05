@@ -27,6 +27,7 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
+import org.junit.AfterClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
@@ -42,6 +43,12 @@ public class MicroProfileHealthCheckTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
+
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        client.close();
+    }
+
 
     @Inject private Console console;
 

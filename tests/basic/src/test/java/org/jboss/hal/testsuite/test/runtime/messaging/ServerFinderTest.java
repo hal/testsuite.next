@@ -85,7 +85,9 @@ public class ServerFinderTest {
         operations.removeIfExists(serverAddress(SRV_READ));
         operations.removeIfExists(serverAddress(SRV_RESET));
         operations.removeIfExists(serverAddress(SRV_FAILOVER));
+        client.close();
     }
+
 
     @Inject private Console console;
     private FinderFragment finder;

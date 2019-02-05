@@ -58,6 +58,7 @@ public class ServerApplicationTest {
     @AfterClass
     public static void afterClass() throws Exception {
         operations.removeIfExists(serverAddress(SRV_READ));
+        client.close();
     }
 
     @Inject private Console console;
