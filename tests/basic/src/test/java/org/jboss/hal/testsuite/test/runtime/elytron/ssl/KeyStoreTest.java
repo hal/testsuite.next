@@ -33,6 +33,7 @@ import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -44,6 +45,8 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 
+// temporarily disable tests as the pebble server is not ready to run in CI server.
+@Ignore
 @RunWith(Arquillian.class)
 public class KeyStoreTest {
 
