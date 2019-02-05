@@ -31,6 +31,7 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.finder.ServerPreviewFragment;
 import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -53,6 +54,12 @@ public class OpenPortsTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
     private static final Operations operations = new Operations(client);
+
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        client.close();
+    }
+
 
     @Inject
     private Console console;
