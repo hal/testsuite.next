@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.io.FileUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -16,14 +15,12 @@ import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.AddLocalSocketBinding;
-import org.jboss.hal.testsuite.creaper.command.RemoveLocalSocketBinding;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.ssl.EnableSslWizard;
 import org.jboss.hal.testsuite.page.configuration.UndertowServerPage;
 import org.jboss.hal.testsuite.test.configuration.management.ssl.SslOperations;
 import org.jboss.hal.testsuite.test.configuration.undertow.UndertowFixtures;
-import org.junit.After;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
@@ -37,14 +34,14 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.keyManagerAddress;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.keyStoreAddress;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.serverSslContextAddress;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.trustManagerAddress;
-import static org.jboss.hal.testsuite.test.configuration.management.ssl.KeyEntryType.*;
+import static org.jboss.hal.testsuite.test.configuration.management.ssl.KeyEntryType.PRIVATE_KEY_ENTRY;
+import static org.jboss.hal.testsuite.test.configuration.management.ssl.KeyEntryType.TRUSTED_CERTIFICATE_ENTRY;
 import static org.jboss.hal.testsuite.test.configuration.management.ssl.SslFixtures.*;
 
 @RunWith(Arquillian.class)
@@ -54,15 +51,18 @@ public class HTTPSListenerSSLTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations ops = new Operations(client);
     private static final SslOperations sslOps = new SslOperations(client).filesToBeCleanedUp(FILE_NAMES_TO_BE_DELETED);
-    private static final Administration adminOps = new Administration(client);
     private static final String
         UNDERTOW_SERVER_TO_BE_TESTED = Ids.build("undertow-server-to-be-tested", Random.name()),
         HTTPS_LISTENER_TO_BE_TESTED = Ids.build("https-listener-to-be-tested", Random.name()),
-        INIT_SOCKET_BINDING_NAME = Ids.build("socket-binding", Random.name());
+        INIT_SOCKET_BINDING_NAME = Ids.build("socket-binding", Random.name()),
+        DOMAIN_NAME = "www.foobar.com",
+        HTTPS_LISTENER_ITEM = Ids.build(Ids.UNDERTOW_SERVER_HTTPS_LISTENER, "item");
 
     private static final Address
         UNDERTOW_SERVER_ADRESS = UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED),
         HTTPS_LISTENER_ADDRESS = UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_TESTED);
+
+    private static SnapshotBackup snapshot = new SnapshotBackup();
 
     @Inject
     private Console console;
@@ -70,10 +70,9 @@ public class HTTPSListenerSSLTest {
     @Page
     private UndertowServerPage page;
 
-    private SnapshotBackup snapshot = new SnapshotBackup();
-
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException {
+        client.apply(snapshot.backup());
         ops.add(UNDERTOW_SERVER_ADRESS).assertSuccess();
         client.apply(new AddLocalSocketBinding(INIT_SOCKET_BINDING_NAME));
         ops.add(HTTPS_LISTENER_ADDRESS,
@@ -85,10 +84,7 @@ public class HTTPSListenerSSLTest {
     @AfterClass
     public static void tearDown() throws Exception {
         try {
-            ops.removeIfExists(HTTPS_LISTENER_ADDRESS);
-            ops.removeIfExists(UNDERTOW_SERVER_ADRESS);
-            client.apply(new RemoveLocalSocketBinding(INIT_SOCKET_BINDING_NAME));
-            adminOps.reloadIfRequired();
+            client.apply(snapshot.restore());
             File keyStoresDir = sslOps.getKeyStoresDirectory();
             FILE_NAMES_TO_BE_DELETED.stream().forEach(fileName -> FileUtils.deleteQuietly(new File(keyStoresDir, fileName)));
         } finally {
@@ -97,14 +93,12 @@ public class HTTPSListenerSSLTest {
     }
 
     @Before
-    public void backupAndNavigate() throws CommandFailedException {
-        client.apply(snapshot.backup());
+    public void unsetSslContextAndNavigate() throws IOException {
+        Batch disableSsl = new Batch();
+        disableSsl.undefineAttribute(HTTPS_LISTENER_ADDRESS, SSL_CONTEXT);
+        disableSsl.writeAttribute(HTTPS_LISTENER_ADDRESS, SECURITY_REALM, "ApplicationRealm");
+        ops.batch(disableSsl);
         selectListenerInTable();
-    }
-
-    @After
-    public void restoreBackup() throws IOException, InterruptedException, TimeoutException, CommandFailedException {
-        client.apply(snapshot.restore());
     }
 
     /**
@@ -184,6 +178,90 @@ public class HTTPSListenerSSLTest {
             .assertHALisDNOrganizationUnitOf(ISSUER, aliasResult, PRIVATE_KEY_ENTRY)
             .assertHALisDNOrganizationUnitOf(SUBJECT, aliasResult, PRIVATE_KEY_ENTRY);
 
+    }
+
+    /**
+     * Testing configuration of https listener with
+     * <ul>
+     *  <li>just one-way server authentication</li>
+     *  <li>server certificate obtained from LetsEncrypt</li>
+     * </ul>
+     */
+    // temporarily disabled as the pebble server is not ready on ci server
+    // @Test
+    public void enableObtainFromLetsEncrypt() throws Exception {
+
+        String
+            keyStoreNameValue = Ids.build(KEY_STORE, NAME, Random.name()),
+            keyStorePasswordValue = Ids.build(KEY_STORE, PASS, Random.name()),
+            keyStorePathValue = Ids.build(KEY_STORE, PATH, Random.name()),
+            keyAliasValue = Ids.build(KEY_ALIAS, Random.name()),
+            keyManagerValue = Ids.build(KEY_MANAGER, Random.name()),
+            caaName = Ids.build(CERTIFICATE_AUTHORITY_ACCOUNT, Random.name()),
+            caaAlias = Ids.build(CERTIFICATE_AUTHORITY_ACCOUNT, ALIAS, Random.name()),
+            serverSslContextValue = Ids.build(SERVER_SSL_CONTEXT, Random.name());
+
+        FILE_NAMES_TO_BE_DELETED.add(keyStorePathValue);
+        EnableSslWizard wizard = page.enableSslWizard()
+            .tryNextToConfigurationWithExpectError(YOU_NEED_TO_SELECT_AUTHENTICATION_AS_WELL_AS_KEY_STORE_MANIPULATION_STATEGY)
+            .disableMutualAuthentication()
+            .tryNextToConfigurationWithExpectError(YOU_NEED_TO_SELECT_KEY_STORE_MANIPULATION_STATEGY)
+            .obtainFromLetsEncrypt()
+            .nextConfiguration();
+        FormFragment configForm = wizard.getConfigurationForm();
+        // configForm.editTextFiringExtraChangeEvent(KEY_DN_ORGANIZATION, HAL);
+        wizard.next();
+
+        configForm
+            .expectError(KEY_STORE_NAME)
+            .expectError(KEY_STORE_PASSWORD)
+            .expectError(KEY_STORE_PATH)
+            .expectError(KEY_ALIAS)
+            .expectError(KEY_MANAGER)
+            .expectError(SERVER_SSL_CONTEXT)
+            .expectError("certificate-authority-account-name")
+            .expectError("certificate-authority-alias")
+            .expectError("certificate-domain-names");
+
+        configForm
+                .editTextFiringExtraChangeEvent(KEY_STORE_NAME, keyStoreNameValue)
+                .editTextFiringExtraChangeEvent(KEY_STORE_PASSWORD, keyStorePasswordValue)
+                .editTextFiringExtraChangeEvent(KEY_STORE_PATH, keyStorePathValue)
+                .editTextFiringExtraChangeEvent(KEY_ALIAS, keyAliasValue)
+                .editTextFiringExtraChangeEvent(KEY_MANAGER, keyManagerValue)
+                .editTextFiringExtraChangeEvent(SERVER_SSL_CONTEXT, serverSslContextValue)
+                .editTextFiringExtraChangeEvent("certificate-authority-account-name", caaName)
+                .editTextFiringExtraChangeEvent("certificate-authority-alias", caaAlias)
+                .list("certificate-domain-names").add(DOMAIN_NAME);
+
+        wizard
+            .nextReview()
+            .finishStayOpen()
+            .verifySuccess()
+            .close();
+
+        Address keyStoreAddress = keyStoreAddress(keyStoreNameValue);
+        new ResourceVerifier(keyStoreAddress, client)
+            .verifyExists()
+            .verifyAttribute(CREDENTIAL_REFERENCE_CLEAR_TEXT_ATTR, keyStorePasswordValue)
+            .verifyAttribute(PATH, keyStorePathValue);
+        new ResourceVerifier(keyManagerAddress(keyManagerValue), client)
+            .verifyExists()
+            .verifyAttribute(KEY_STORE, keyStoreNameValue)
+            .verifyAttribute(CREDENTIAL_REFERENCE_CLEAR_TEXT_ATTR, keyStorePasswordValue);
+        new ResourceVerifier(serverSslContextAddress(serverSslContextValue), client)
+            .verifyExists()
+            .verifyAttribute(KEY_MANAGER, keyManagerValue);
+        new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
+            .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
+            .verifyAttributeIsUndefined(SECURITY_REALM)
+            .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
+            .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
+            .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
+            .verifyAttributeIsUndefined(SSL_SESSION_CACHE_SIZE)
+            .verifyAttributeIsUndefined(SSL_SESSION_TIMEOUT);
+        ModelNodeResult aliasResult =  ops.invoke(READ_ALIAS, keyStoreAddress, Values.of(ALIAS, keyAliasValue));
+        aliasResult.assertSuccess();
     }
 
     /**
@@ -673,9 +751,8 @@ public class HTTPSListenerSSLTest {
     }
 
     private void selectListenerInTable() {
-        page.navigate(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
-        console.verticalNavigation()
-            .selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, Ids.build(Ids.UNDERTOW_SERVER_HTTPS_LISTENER, "item"));
+        page.navigateAgain(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
+        console.verticalNavigation().selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, HTTPS_LISTENER_ITEM);
         page.getHttpsListenerTable().select(HTTPS_LISTENER_TO_BE_TESTED);
     }
 }

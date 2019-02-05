@@ -34,6 +34,10 @@ public class EnableSslWizard extends WizardFragment {
         return selectRadioButtonById(KEY_STORE_STRATEGY, "strategy-create-all");
     }
 
+    public EnableSslWizard obtainFromLetsEncrypt() {
+        return selectRadioButtonById(KEY_STORE_STRATEGY, "strategy-obtain-from-letsencrypt");
+    }
+
     public EnableSslWizard createKeyStore() {
         return selectRadioButtonById(KEY_STORE_STRATEGY, "strategy-create-key-store");
     }
