@@ -57,8 +57,10 @@ public class CustomLoadMetricTest {
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.remove(proxyAddress(PROXY_UPDATE));
+        operations.removeIfExists(proxyAddress(PROXY_UPDATE));
+        client.close();
     }
+
 
     @Inject private Console console;
     @Inject private CrudOperations crud;

@@ -58,7 +58,9 @@ public class ModclusterLoadProviderSimpleTest {
     @AfterClass
     public static void afterClass() throws Exception {
         operations.remove(proxyAddress(PROXY_UPDATE));
+        client.close();
     }
+
 
     @Inject private Console console;
     @Inject private CrudOperations crud;

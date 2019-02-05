@@ -60,6 +60,7 @@ public class ModclusterLoadProviderDynamicTest {
     @AfterClass
     public static void afterClass() throws Exception {
         operations.remove(proxyAddress(PROXY_UPDATE));
+        client.close();
     }
 
     @Inject private Console console;
