@@ -19,9 +19,6 @@ public class TestsuiteEnvironmentUtils {
             properties.load(inputStream);
             found = true;
         } catch (IOException e) {
-            throw new RuntimeException("Unable to load testsuite.properties", e);
-        }
-        if (!found) {
             String customPropertyLocation = System.getProperty("testsuite.config.location");
             if (customPropertyLocation != null) {
                 try {
@@ -29,15 +26,16 @@ public class TestsuiteEnvironmentUtils {
                         properties.load(customConfig);
                         found = true;
                     }
-                } catch (IOException e) {
+                } catch (IOException e2) {
                     throw new RuntimeException("Unable to load testsuite.properties", e);
                 }
-            }
-        }
-        if (!found) {
-            String jbossHome = System.getProperty(JBOSS_HOME);
-            if (jbossHome != null) {
-                properties.put(JBOSS_HOME, jbossHome);
+            } else {
+                String jbossHome = System.getProperty(JBOSS_HOME);
+                if (jbossHome != null) {
+                    properties.put(JBOSS_HOME, jbossHome);
+                } else {
+                    throw new RuntimeException("Unable to load JBOSS_HOME parameter from either testsuite.properties or as a parameter. Specify as a command line parameter.");
+                }
             }
         }
     }
