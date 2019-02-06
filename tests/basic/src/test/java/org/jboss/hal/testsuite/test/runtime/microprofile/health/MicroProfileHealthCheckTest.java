@@ -61,6 +61,12 @@ public class MicroProfileHealthCheckTest {
                 .build();
     private FinderFragment previewFinder;
 
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        client.close();
+    }
+
+
     @Inject private Console console;
 
     @AfterClass
