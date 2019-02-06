@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -38,15 +37,10 @@ import org.wildfly.extras.creaper.core.online.operations.Values;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LISTENER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.HISTORY;
-import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.PROXY_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.loadProviderDynamicAddress;
-import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.proxyAddress;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
 import static org.junit.Assert.assertTrue;
-import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-@FixMethodOrder(NAME_ASCENDING)
 public class ModclusterLoadProviderDynamicTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -54,12 +48,13 @@ public class ModclusterLoadProviderDynamicTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, DEFAULT));
+        operations.add(proxyAddress(PROXY_DYNAMIC_LP), Values.of(LISTENER, DEFAULT));
+        operations.add(loadProviderDynamicAddress(PROXY_DYNAMIC_LP));
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.remove(proxyAddress(PROXY_UPDATE));
+        operations.remove(proxyAddress(PROXY_DYNAMIC_LP));
         client.close();
     }
 
@@ -70,35 +65,25 @@ public class ModclusterLoadProviderDynamicTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, PROXY_UPDATE);
+        page.navigate(NAME, PROXY_DYNAMIC_LP);
         console.verticalNavigation().selectPrimary("load-provider-dynamic-item");
         form = page.getLoadProviderDynamicForm();
     }
 
     @Test
-    public void _0create() throws Exception {
-        crud.createSingleton(loadProviderDynamicAddress(PROXY_UPDATE), form);
-    }
-
-    @Test
-    public void _1noSimpleProvider() {
+    public void noSimpleProvider() {
         console.verticalNavigation().selectPrimary("load-provider-simple-item");
         EmptyState empty = page.getLoadProviderSimpleEmpty();
         assertTrue(empty.getRoot().isDisplayed());
     }
 
     @Test
-    public void _2reset() throws Exception {
-        crud.reset(loadProviderDynamicAddress(PROXY_UPDATE), form);
+    public void reset() throws Exception {
+        crud.reset(loadProviderDynamicAddress(PROXY_DYNAMIC_LP), form);
     }
 
     @Test
-    public void _3update() throws Exception {
-        crud.update(loadProviderDynamicAddress(PROXY_UPDATE), form, HISTORY, Random.number());
-    }
-
-    @Test
-    public void _4delete() throws Exception {
-        crud.deleteSingleton(loadProviderDynamicAddress(PROXY_UPDATE), form);
+    public void update() throws Exception {
+        crud.update(loadProviderDynamicAddress(PROXY_DYNAMIC_LP), form, HISTORY, Random.number());
     }
 }

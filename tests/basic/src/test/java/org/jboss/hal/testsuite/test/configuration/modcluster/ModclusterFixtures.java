@@ -45,6 +45,8 @@ final class ModclusterFixtures {
     static final String PROXY_READ = Ids.build(PROXY, CrudConstants.READ, Random.name());
     static final String PROXY_UPDATE = Ids.build(PROXY, CrudConstants.UPDATE, Random.name());
     static final String PROXY_DELETE = Ids.build(PROXY, CrudConstants.DELETE, Random.name());
+    static final String PROXY_SIMPLE_LP = Ids.build(PROXY, "simple-lp", Random.name());
+    static final String PROXY_DYNAMIC_LP = Ids.build(PROXY, "dynamic-lp", Random.name());
 
     static Address proxyAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(PROXY, name);
