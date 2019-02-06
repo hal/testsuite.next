@@ -37,9 +37,10 @@ public class ServerPreviewTest {
     private static final String DEFAULT_URL_ICON_CLASS = "pficon-server";
 
     @AfterClass
-    public static void tearDown() throws IOException {
+    public static void cleanUp() throws IOException {
         client.close();
     }
+
 
     @Drone
     private WebDriver browser;
@@ -86,6 +87,11 @@ public class ServerPreviewTest {
         } else {
             Assert.fail("Unrecognised icon class");
         }
+    }
+
+    @Test
+    public void openPorts() {
+        ServerPreviewFragment preview = getMainAttributesFinder().preview(ServerPreviewFragment.class);
     }
 
     private void verifyIconClass(ServerPreviewFragment serverPreviewFragment, String iconClass, String assertMessage) {
