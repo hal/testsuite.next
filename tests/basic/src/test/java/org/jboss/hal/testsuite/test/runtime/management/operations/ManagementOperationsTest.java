@@ -53,7 +53,7 @@ public class ManagementOperationsTest {
 
     @Test
     public void listOperations() throws Exception {
-        Deployment deployment = createSlowDeployment(6);
+        Deployment deployment = createSlowDeployment(10);
         CompletableFuture<Void> deployFuture = deploymentOps.deployAsync(deployment);
 
         long operationId = managementOps.getActiveDeploymentOperationId();
@@ -65,7 +65,7 @@ public class ManagementOperationsTest {
 
     @Test
     public void reloadOperations() throws Exception {
-        Deployment deployment = createSlowDeployment(6);
+        Deployment deployment = createSlowDeployment(10);
         page.navigate();
 
         CompletableFuture<Void> deployFuture = deploymentOps.deployAsync(deployment);
