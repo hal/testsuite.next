@@ -29,6 +29,7 @@ import static org.jboss.hal.resources.CSS.drawerPfHal;
 public class HeaderFragment {
 
     @FindBy(css = "a[data-element='reloadLink']") private WebElement reload;
+    @FindBy(css = "a[data-element='nonProgressingOperationLink']") private WebElement nonProgressingOp;
     @FindBy(css = "a[data-element='messages']") private WebElement notifications;
     @FindBy(css = "span[data-element='badgeIcon']") private WebElement badgeIcon;
     @FindBy(css = "." + drawerPf + "." + drawerPfHal) private NotificationDrawerFragment notificationDrawer;
@@ -56,5 +57,9 @@ public class HeaderFragment {
 
     public HeaderBreadcrumbFragment breadcrumb() {
         return breadcrumb;
+    }
+
+    public WebElement getNonProgressingOp() {
+        return nonProgressingOp;
     }
 }
