@@ -49,6 +49,13 @@ public class MicroProfileHealthCheckTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
+
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        client.close();
+    }
+
+
     private final DeploymentOperations deploymentOps = new DeploymentOperations(client);
     private final Deployment
         upDeployment = new Deployment.Builder("up.war")
@@ -68,11 +75,6 @@ public class MicroProfileHealthCheckTest {
 
 
     @Inject private Console console;
-
-    @AfterClass
-    public static void cleanUp() throws IOException {
-        client.close();
-    }
 
     @Test
     public void checkUp() {
