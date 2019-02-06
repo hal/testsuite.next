@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.test.runtime.microprofile.health;
 
 import java.io.IOException;
-import java.util.Arrays;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.junit.Arquillian;
@@ -37,6 +36,7 @@ import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
+import static java.util.Collections.singletonList;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MICROPROFILE_HEALTH_SMALLRYE;
 import static org.jboss.hal.testsuite.fragment.finder.FinderFragment.runtimeSubsystemPath;
 import static org.jboss.hal.testsuite.test.runtime.microprofile.health.CustomHealthCheck.*;
@@ -57,23 +57,15 @@ public class MicroProfileHealthCheckTest {
 
 
     private final DeploymentOperations deploymentOps = new DeploymentOperations(client);
-    private final Deployment
-        upDeployment = new Deployment.Builder("up.war")
-                .classFile(CustomHealthCheck.class)
-                .textFile(PROPERTIES_FILENAME, PROPERTIES_KEY + "=" + UP)
-                .build(),
-        downDeployment = new Deployment.Builder("down.war")
-                .classFile(CustomHealthCheck.class)
-                .textFile(PROPERTIES_FILENAME, PROPERTIES_KEY + "=" + DOWN)
-                .build();
+    private final Deployment upDeployment = new Deployment.Builder("up.war")
+            .classFile(CustomHealthCheck.class)
+            .textFile(PROPERTIES_FILENAME, PROPERTIES_KEY + "=" + UP)
+            .build();
+    private final Deployment downDeployment = new Deployment.Builder("down.war")
+            .classFile(CustomHealthCheck.class)
+            .textFile(PROPERTIES_FILENAME, PROPERTIES_KEY + "=" + DOWN)
+            .build();
     private FinderFragment previewFinder;
-
-    @AfterClass
-    public static void cleanUp() throws IOException {
-        client.close();
-    }
-
-
     @Inject private Console console;
 
     @Test
@@ -130,7 +122,7 @@ public class MicroProfileHealthCheckTest {
             client.apply(deployment.deployEnabledCommand());
             action.run();
         } finally {
-            deploymentOps.removeDeploymentsIfExist(Arrays.asList(deployment.getName()));
+            deploymentOps.removeDeploymentsIfExist(singletonList(deployment.getName()));
         }
     }
 
