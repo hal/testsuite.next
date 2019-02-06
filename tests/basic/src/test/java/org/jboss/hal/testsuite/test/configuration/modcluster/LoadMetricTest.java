@@ -28,7 +28,6 @@ import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -41,10 +40,8 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TYPE;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
-import static org.junit.runners.MethodSorters.NAME_ASCENDING;
 
 @RunWith(Arquillian.class)
-@FixMethodOrder(NAME_ASCENDING)
 public class LoadMetricTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
@@ -56,13 +53,14 @@ public class LoadMetricTest {
         proxyAdd.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
         proxyAdd.add(loadProviderDynamicAddress(PROXY_UPDATE));
         operations.batch(proxyAdd);
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_MET_DELETE), Values.of(TYPE, "mem"));
-        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), Values.of(TYPE, "mem"));
+        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), Values.of(TYPE, "mem"));
+        operations.add(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), Values.of(TYPE, "mem"));
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.remove(proxyAddress(PROXY_UPDATE));
+        operations.removeIfExists(proxyAddress(PROXY_UPDATE));
+        client.close();
     }
 
     @Inject private Console console;
@@ -75,15 +73,15 @@ public class LoadMetricTest {
     public void setUp() throws Exception {
         page.navigate(NAME, PROXY_UPDATE);
         console.verticalNavigation().selectPrimary("load-metrics-item");
-        table = page.getLoadMetricsTable();
-        form = page.getLoadMetricsForm();
+        table = page.getLoadMetricTable();
+        form = page.getLoadMetricForm();
         table.bind(form);
     }
 
     @Test
     public void create() throws Exception {
-        crud.create(loadMetricAddress(PROXY_UPDATE, LOAD_MET_CREATE), table, f -> {
-                    f.text(NAME, LOAD_MET_CREATE);
+        crud.create(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_CREATE), table, f -> {
+                    f.text(NAME, LOAD_METRIC_CREATE);
                     f.select(TYPE, "cpu");
                 },
                 ver -> ver.verifyAttribute(TYPE, "cpu"));
@@ -91,25 +89,25 @@ public class LoadMetricTest {
 
     @Test
     public void reset() throws Exception {
-        table.select(LOAD_MET_UPDATE);
-        crud.reset(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), form);
+        table.select(LOAD_METRIC_UPDATE);
+        crud.reset(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form);
     }
 
     @Test
     public void update() throws Exception {
-        table.select(LOAD_MET_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), form, WEIGHT, Random.number());
+        table.select(LOAD_METRIC_UPDATE);
+        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, WEIGHT, Random.number());
     }
 
     @Test
     public void updateCapacity() throws Exception {
         // update an attribute of type DOUBLE
-        table.select(LOAD_MET_UPDATE);
-        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_MET_UPDATE), form, "capacity", Random.numberDouble());
+        table.select(LOAD_METRIC_UPDATE);
+        crud.update(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_UPDATE), form, CAPACITY, Random.numberDouble());
     }
 
     @Test
-    public void zzzDelete() throws Exception {
-        crud.delete(loadMetricAddress(PROXY_UPDATE, LOAD_MET_DELETE), table, LOAD_MET_DELETE);
+    public void delete() throws Exception {
+        crud.delete(loadMetricAddress(PROXY_UPDATE, LOAD_METRIC_DELETE), table, LOAD_METRIC_DELETE);
     }
 }

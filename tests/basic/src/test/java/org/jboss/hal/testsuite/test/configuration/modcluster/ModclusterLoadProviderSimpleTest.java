@@ -20,7 +20,9 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
@@ -33,27 +35,29 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTPS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LISTENER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
+import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
-public class ModclusterConfigurationTest {
+public class ModclusterLoadProviderSimpleTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, DEFAULT));
+        operations.add(proxyAddress(PROXY_SIMPLE_LP), Values.of(LISTENER, DEFAULT));
+        operations.add(loadProviderSimpleAddress(PROXY_SIMPLE_LP));
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
-        operations.removeIfExists(proxyAddress(PROXY_UPDATE));
+        operations.remove(proxyAddress(PROXY_SIMPLE_LP));
         client.close();
     }
+
 
     @Inject private Console console;
     @Inject private CrudOperations crud;
@@ -62,42 +66,37 @@ public class ModclusterConfigurationTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(NAME, PROXY_UPDATE);
-        console.verticalNavigation().selectPrimary("proxy-item");
+        page.navigate(NAME, PROXY_SIMPLE_LP);
+        console.verticalNavigation().selectPrimary("load-provider-simple-item");
+        form = page.getLoadProviderSimpleForm();
     }
 
     @Test
-    public void updateAdvertising() throws Exception {
-        page.getTabs().select("advertising-tab");
-        form = page.getAdvertisingForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, LISTENER, HTTPS);
+    public void noDynamicProvider() {
+        console.verticalNavigation().selectPrimary("load-provider-dynamic-item");
+        EmptyState empty = page.getLoadProviderDynamicEmpty();
+        assertTrue(empty.getRoot().isDisplayed());
     }
 
     @Test
-    public void updateSessions() throws Exception {
-        page.getTabs().select("sessions-tab");
-        form = page.getSessionsForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, STICKY_SESSION, false);
+    public void customLoadMetricsWarning() {
+        console.verticalNavigation().selectPrimary("custom-load-metrics-item");
+        assertTrue(page.getCustomLoadMetricAlert().isWarning());
     }
 
     @Test
-    public void updateWebContexts() throws Exception {
-        page.getTabs().select("web-contexts-tab");
-        form = page.getWebContextsForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, EXCLUDED_CONTEXTS);
+    public void loadMetricsWarning() {
+        console.verticalNavigation().selectPrimary("load-metrics-item");
+        assertTrue(page.getLoadMetricAlert().isWarning());
     }
 
     @Test
-    public void updateProxies() throws Exception {
-        page.getTabs().select("proxies-tab");
-        form = page.getProxiesForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, PROXY_URL);
+    public void reset() throws Exception {
+        crud.reset(loadProviderSimpleAddress(PROXY_SIMPLE_LP), form);
     }
 
     @Test
-    public void updateNetworking() throws Exception {
-        page.getTabs().select("networking-tab");
-        form = page.getNetworkingForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, NODE_TIMEOUT, 123);
+    public void update() throws Exception {
+        crud.update(loadProviderSimpleAddress(PROXY_SIMPLE_LP), form, FACTOR, Random.number());
     }
 }

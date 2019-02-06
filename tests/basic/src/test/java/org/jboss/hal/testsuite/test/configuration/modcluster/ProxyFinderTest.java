@@ -63,6 +63,7 @@ public class ProxyFinderTest {
         operations.removeIfExists(proxyAddress(PROXY_READ));
         operations.removeIfExists(proxyAddress(PROXY_UPDATE));
         operations.removeIfExists(proxyAddress(PROXY_DELETE));
+        client.close();
     }
 
     @Inject private Console console;

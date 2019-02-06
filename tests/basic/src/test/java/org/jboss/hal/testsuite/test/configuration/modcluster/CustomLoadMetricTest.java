@@ -20,8 +20,10 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.ModclusterPage;
 import org.junit.AfterClass;
 import org.junit.Before;
@@ -29,24 +31,28 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DEFAULT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTPS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LISTENER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.modcluster.ModclusterFixtures.CLASS_NAME;
 
 @RunWith(Arquillian.class)
-public class ModclusterConfigurationTest {
+public class CustomLoadMetricTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(proxyAddress(PROXY_UPDATE), Values.of(LISTENER, DEFAULT));
+        Batch proxyAdd = new Batch();
+        proxyAdd.add(proxyAddress(PROXY_UPDATE), Values.of(CONNECTOR, DEFAULT));
+        proxyAdd.add(loadProviderDynamicAddress(PROXY_UPDATE));
+        operations.batch(proxyAdd);
+        operations.add(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_DELETE), Values.of(CLASS, CLASS_NAME));
+        operations.add(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), Values.of(CLASS, CLASS_NAME));
     }
 
     @AfterClass
@@ -55,49 +61,53 @@ public class ModclusterConfigurationTest {
         client.close();
     }
 
+
     @Inject private Console console;
     @Inject private CrudOperations crud;
     @Page private ModclusterPage page;
+    private TableFragment table;
     private FormFragment form;
 
     @Before
     public void setUp() throws Exception {
         page.navigate(NAME, PROXY_UPDATE);
-        console.verticalNavigation().selectPrimary("proxy-item");
+        console.verticalNavigation().selectPrimary("custom-load-metrics-item");
+        table = page.getCustomLoadMetricTable();
+        form = page.getCustomLoadMetricForm();
+        table.bind(form);
     }
 
     @Test
-    public void updateAdvertising() throws Exception {
-        page.getTabs().select("advertising-tab");
-        form = page.getAdvertisingForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, LISTENER, HTTPS);
+    public void create() throws Exception {
+        crud.create(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_CREATE), table, f -> {
+                    f.text(NAME, CUSTOM_LOAD_METRIC_CREATE);
+                    f.text(CLASS, CLASS_NAME);
+                },
+                ver -> ver.verifyAttribute(CLASS, CLASS_NAME));
     }
 
     @Test
-    public void updateSessions() throws Exception {
-        page.getTabs().select("sessions-tab");
-        form = page.getSessionsForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, STICKY_SESSION, false);
+    public void reset() throws Exception {
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.reset(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form);
     }
 
     @Test
-    public void updateWebContexts() throws Exception {
-        page.getTabs().select("web-contexts-tab");
-        form = page.getWebContextsForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, EXCLUDED_CONTEXTS);
+    public void update() throws Exception {
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.update(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form, WEIGHT, Random.number());
     }
 
     @Test
-    public void updateProxies() throws Exception {
-        page.getTabs().select("proxies-tab");
-        form = page.getProxiesForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, PROXY_URL);
+    public void updateCapacity() throws Exception {
+        // update an attribute of type DOUBLE
+        table.select(CUSTOM_LOAD_METRIC_UPDATE);
+        crud.update(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_UPDATE), form, "capacity",
+                Random.numberDouble());
     }
 
     @Test
-    public void updateNetworking() throws Exception {
-        page.getTabs().select("networking-tab");
-        form = page.getNetworkingForm();
-        crud.update(proxyAddress(PROXY_UPDATE), form, NODE_TIMEOUT, 123);
+    public void delete() throws Exception {
+        crud.delete(customLoadMetricAddress(PROXY_UPDATE, CUSTOM_LOAD_METRIC_DELETE), table, CUSTOM_LOAD_METRIC_DELETE);
     }
 }
