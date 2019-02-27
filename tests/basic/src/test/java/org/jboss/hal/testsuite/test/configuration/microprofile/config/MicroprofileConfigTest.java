@@ -39,13 +39,13 @@ import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
-
 
 import static org.jboss.hal.testsuite.dmr.ModelNodeGenerator.ModelNodePropertiesBuilder;
 import static org.jboss.hal.testsuite.test.configuration.microprofile.config.MicroprofileConfigFixtures.*;
@@ -101,6 +101,9 @@ public class MicroprofileConfigTest {
             ops.removeIfExists(getConfigSourceAddress(CONFIG_SOURCE_PROPS_DELETE));
             ops.removeIfExists(getConfigSourceAddress(CONFIG_SOURCE_CLASS_CREATE));
             ops.removeIfExists(getConfigSourceAddress(CONFIG_SOURCE_CLASS_UPDATE));
+            ops.removeIfExists(getConfigProviderAddress(CONFIG_PROVIDER_UPDATE));
+            ops.removeIfExists(getConfigProviderAddress(CONFIG_PROVIDER_DELETE));
+            ops.removeIfExists(getConfigProviderAddress(CONFIG_PROVIDER_CREATE));
             moduleUtils.removeModule(CUSTOM_MODULE_PATH);
             moduleUtils.removeModule(CUSTOM_MODULE_FOR_UPDATE_PATH);
         } finally {
@@ -108,6 +111,7 @@ public class MicroprofileConfigTest {
         }
     }
 
+    @Ignore // use a wizard to create the config-source
     @Test
     public void propertiesSourceCreate() throws Exception {
         ModelNode propertiesNode = Random.properties();
@@ -137,6 +141,7 @@ public class MicroprofileConfigTest {
         crud.delete(getConfigSourceAddress(CONFIG_SOURCE_PROPS_DELETE), configSourcesTable, CONFIG_SOURCE_PROPS_DELETE);
     }
 
+    @Ignore // use a wizard to create the config-source
     @Test
     public void classSourceCreate() throws Exception {
         TableFragment configSourcesTable = page.navigateToConfigSourcesTable();

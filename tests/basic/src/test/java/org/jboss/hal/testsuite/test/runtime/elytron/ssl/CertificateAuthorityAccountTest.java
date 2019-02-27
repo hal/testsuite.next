@@ -29,6 +29,7 @@ import org.junit.AfterClass;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -40,6 +41,8 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+// temporarily disable tests as the pebble server is not ready to run in CI server.
+@Ignore
 @RunWith(Arquillian.class)
 public class CertificateAuthorityAccountTest {
 

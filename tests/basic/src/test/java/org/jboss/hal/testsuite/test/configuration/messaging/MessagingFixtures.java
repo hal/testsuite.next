@@ -61,6 +61,7 @@ public final class MessagingFixtures {
     public static final String CLUSTER_CREDENTIAL_REFERENCE = "cluster-credential-reference";
     public static final String CONNECTION_FACTORY_VALUE = "ConnectionFactory";
     public static final String CONNECTION_TTL_OVERRIDE = "connection-ttl-override";
+    public static final String CONNECTOR_FACTORY_CLASS = "org.apache.activemq.artemis.utils.ClassloadingUtil";
     public static final String CONSUME = "consume";
     public static final String DESTINATION_QUEUE = "jms/queue/DLQ";
     public static final String DIVERT_ADDRESS = "divert-address";

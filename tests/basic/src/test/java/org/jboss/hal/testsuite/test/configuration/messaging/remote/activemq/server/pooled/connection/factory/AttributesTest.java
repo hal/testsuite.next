@@ -16,6 +16,7 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSACTION;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.RemoteActiveMQServer;
 
 @RunWith(Arquillian.class)
@@ -398,7 +399,8 @@ public class AttributesTest extends AbstractPooledConnectionFactoryTest {
     @Test
     public void editTransaction() throws Exception {
         crudOperations.update(RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_UPDATE),
-            page.getPooledConnectionFactoryForm(), "transaction");
+            page.getPooledConnectionFactoryForm(), f -> f.select(TRANSACTION, "local"),
+                rv -> rv.verifyAttribute(TRANSACTION, "local"));
     }
 
     @Test

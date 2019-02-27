@@ -93,12 +93,4 @@ public class ExternalJMSTopicTest {
         crudOperations.delete(RemoteActiveMQServer.externalJMSTopicAddress(EXTERNAL_JMS_TOPIC_DELETE),
             page.getExternalJMSTopicTable(), EXTERNAL_JMS_TOPIC_DELETE);
     }
-
-    @Test
-    public void editEntries() throws Exception {
-        page.getExternalJMSTopicTable().select(EXTERNAL_JMS_TOPIC_UPDATE);
-        crudOperations.update(RemoteActiveMQServer.externalJMSTopicAddress(EXTERNAL_JMS_TOPIC_UPDATE),
-            page.getExternalJMSTopicForm(), "entries", Arrays.asList(Random.name(), Random.name()));
-    }
-
 }
