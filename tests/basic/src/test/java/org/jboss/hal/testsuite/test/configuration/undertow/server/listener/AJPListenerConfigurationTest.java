@@ -91,7 +91,7 @@ public class AJPListenerConfigurationTest {
 
     @Before
     public void initPage() {
-        page.navigate(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
+        page.navigateAgain(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
         console.verticalNavigation()
             .selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, Ids.build(Ids.UNDERTOW_SERVER_AJP_LISTENER, "item"));
         page.getAjpListenerTable().select(AJP_LISTENER_TO_BE_EDITED);

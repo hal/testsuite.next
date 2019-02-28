@@ -14,6 +14,7 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.TransactionPage;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -94,6 +95,9 @@ public class ConfigurationTest {
             Random.name());
     }
 
+    // TODO: recent wildfly uses an expression for this value and the flip operation should switch to normal mode
+    // before flipping
+    @Ignore
     @Test
     public void toggleStatisticsEnabled() throws Exception {
         boolean statisticsEnabled =

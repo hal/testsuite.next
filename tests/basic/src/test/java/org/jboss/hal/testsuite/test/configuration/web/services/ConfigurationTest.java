@@ -1,8 +1,6 @@
 package org.jboss.hal.testsuite.test.configuration.web.services;
 
 import java.io.IOException;
-import java.util.Arrays;
-import java.util.stream.Collectors;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -16,6 +14,7 @@ import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.page.configuration.WebServicesPage;
 import org.junit.AfterClass;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
@@ -60,6 +59,9 @@ public class ConfigurationTest {
             "modify-wsdl-address", !modifyWSDLAddress);
     }
 
+    // TODO: recent wildfly uses an expression for this value and the flip operation should switch to normal mode
+    // before flipping
+    @Ignore
     @Test
     public void toggleStatisticsEnabled() throws Exception {
         boolean statisticsEnabled =
@@ -95,13 +97,8 @@ public class ConfigurationTest {
 
     @Test
     public void editWSDLURIScheme() throws Exception {
-        String[] wsdlUriSchemeOptions = {"", "http", "https"};
-        String wsdlUriScheme =
-            operations.readAttribute(WebServicesFixtures.WEB_SERVICES_ADDRESS, "wsdl-uri-scheme").stringValue("");
-        String chosenOption = Arrays.stream(wsdlUriSchemeOptions).filter(option -> !option.equals(wsdlUriScheme))
-            .collect(Collectors.toList()).get(Random.number(0,2));
         crudOperations.update(WebServicesFixtures.WEB_SERVICES_ADDRESS, page.getWebServicesConfigurationForm(),
-            formFragment -> formFragment.select("wsdl-uri-scheme", chosenOption),
-            resourceVerifier -> resourceVerifier.verifyAttribute("wsdl-uri-scheme", chosenOption));
+            formFragment -> formFragment.select("wsdl-uri-scheme", "http"),
+            resourceVerifier -> resourceVerifier.verifyAttribute("wsdl-uri-scheme", "http"));
     }
 }
