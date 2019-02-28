@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.messaging.server.connections.pooled.connection.factory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
@@ -15,38 +16,25 @@ import org.jboss.hal.testsuite.test.configuration.messaging.server.connections.A
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ALIAS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTORS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DISCOVERY_GROUP;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ENTRIES;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.PASSWORD;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.POOLED_CONNECTION_FACTORY;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_SERVER;
 import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.DG_UPDATE;
 
-@Ignore // unable to create a pooled-connection-factory, ignore while this is investigated, see WFLY-11792
 @RunWith(Arquillian.class)
 public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
 
     @BeforeClass
-    public static void createResources() throws IOException {
+    public static void createResources() throws IOException, TimeoutException, InterruptedException {
         createServer(SRV_UPDATE);
-        operations.add(discoveryGroupAddress(SRV_UPDATE, DG_UPDATE)).assertSuccess();
+        operations.add(discoveryGroupAddress(SRV_UPDATE, DG_UPDATE), Values.of(JGROUPS_CHANNEL, EE)).assertSuccess();
+        administration.reloadIfRequired();
         operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE),
             Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, DG_UPDATE)).assertSuccess();
         operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_TRY_UPDATE),
