@@ -32,15 +32,20 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.jboss.hal.resources.Ids.*;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.POOLED_CONNECTION_FACTORY;
+import static org.jboss.hal.resources.Ids.MESSAGING_SERVER;
+import static org.jboss.hal.resources.Ids.TAB;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 
 public abstract class AbstractServerConnectionsTest {
 
     protected static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     protected static final Operations operations = new Operations(client);
+    protected static final Administration administration = new Administration(client);
     protected static final String CREDENTIAL_REFERENCE_TAB =
         Ids.build(MESSAGING_SERVER, POOLED_CONNECTION_FACTORY, CREDENTIAL_REFERENCE, TAB);
 
