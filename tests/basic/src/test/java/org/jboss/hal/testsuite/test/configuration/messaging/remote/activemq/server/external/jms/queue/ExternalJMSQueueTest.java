@@ -93,11 +93,4 @@ public class ExternalJMSQueueTest {
         crudOperations.delete(RemoteActiveMQServer.externalJMSQueueAddress(EXTERNAL_JMS_QUEUE_DELETE),
             page.getExternalJMSQueueTable(), EXTERNAL_JMS_QUEUE_DELETE);
     }
-
-    @Test
-    public void editEntries() throws Exception {
-        page.getExternalJMSQueueTable().select(EXTERNAL_JMS_QUEUE_UPDATE);
-        crudOperations.update(RemoteActiveMQServer.externalJMSQueueAddress(EXTERNAL_JMS_QUEUE_UPDATE),
-            page.getExternalJMSQueueForm(), "entries", Arrays.asList(Random.name(), Random.name()));
-    }
 }

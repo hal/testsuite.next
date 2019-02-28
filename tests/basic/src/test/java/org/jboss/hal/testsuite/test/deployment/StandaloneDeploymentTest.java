@@ -63,7 +63,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
             .verifyAttribute(NAME, nameValue)
             .verifyAttribute(RUNTIME_NAME, runtimeNameValue);
         assertEquals(pathValue, deploymentOps.getDeploymentPath(nameValue));
-        assertEquals(false, deploymentOps.deploymentIsExploded(nameValue));
+        assertFalse(deploymentOps.deploymentIsExploded(nameValue));
     }
 
     @Test
@@ -149,6 +149,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         DialogFragment uploadDialog = console.dialog();
         UploadFormFragment.getUploadForm(uploadDialog.getRoot()).uploadFile(modifiedDeployment.getDeploymentFile());
         uploadDialog.primaryButton();
+        Library.letsSleep(500);
 
         assertFalse("The deployment should not any more contain " + INDEX_HTML + " file from original deployment.",
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));

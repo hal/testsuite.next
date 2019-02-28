@@ -11,6 +11,7 @@ import org.jboss.hal.testsuite.test.configuration.messaging.server.connections.A
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -33,6 +34,7 @@ import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixt
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectionFactoryAddress;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
 
+@Ignore // unable to create a connection-factory, ignore while this is investigated
 @RunWith(Arquillian.class)
 public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
 

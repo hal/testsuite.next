@@ -111,7 +111,7 @@ public class HTTPSListenerConfigurationTest {
 
     @Before
     public void initPage() {
-        page.navigate("name", UNDERTOW_SERVER_TO_BE_TESTED);
+        page.navigateAgain("name", UNDERTOW_SERVER_TO_BE_TESTED);
         console.verticalNavigation()
             .selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, Ids.build(Ids.UNDERTOW_SERVER_HTTPS_LISTENER, "item"));
         page.getHttpsListenerTable().select(HTTPS_LISTENER_TO_BE_EDITED);

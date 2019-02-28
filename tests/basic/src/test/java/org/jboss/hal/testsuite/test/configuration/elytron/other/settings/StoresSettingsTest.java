@@ -171,7 +171,7 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
-        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), TYPE);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), CLEAR_TEXT);
     }
 
     @Test

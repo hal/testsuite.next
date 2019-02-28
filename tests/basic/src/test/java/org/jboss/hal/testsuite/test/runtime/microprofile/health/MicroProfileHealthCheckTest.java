@@ -29,6 +29,7 @@ import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.fragment.finder.preview.MicroProfileHealthPreviewFragment;
 import org.jboss.hal.testsuite.test.deployment.Deployment;
 import org.jboss.hal.testsuite.test.deployment.DeploymentOperations;
+import org.jboss.hal.testsuite.util.Library;
 import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
 import org.junit.AfterClass;
 import org.junit.Test;
@@ -70,6 +71,8 @@ public class MicroProfileHealthCheckTest {
 
     @Test
     public void checkUp() {
+        openPreview();
+        // console.waitNoNotification();
         assertTrue(getPreview().getAlert().isSuccess());
     }
 
@@ -84,6 +87,7 @@ public class MicroProfileHealthCheckTest {
                 assertTrue(shownData.startsWith(DOWN_DATA_1));
                 assertTrue(shownData.endsWith(DOWN_DATA_2));
             });
+            Library.letsSleep(2000);
             doWithDeployment(upDeployment, () -> {
                 MicroProfileHealthPreviewFragment preview = getPreview();
                 preview.refresh();
@@ -123,6 +127,7 @@ public class MicroProfileHealthCheckTest {
             action.run();
         } finally {
             deploymentOps.removeDeploymentsIfExist(singletonList(deployment.getName()));
+            Library.letsSleep(2000);
         }
     }
 

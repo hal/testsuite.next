@@ -58,10 +58,7 @@ public class ViewTest {
         targetContextModel.get("java.naming.provider.url").set("http-remoting://localhost:8180");
 
         PARAMS = Values.of(QUALITY_OF_SERVICE, AT_MOST_ONCE)
-                .and(FAILURE_RETRY_INTERVAL, 10)
-                .and(MAX_RETRIES, 1)
-                .and(MAX_BATCH_SIZE, 1)
-                .and(MAX_BATCH_TIME, 1)
+                .and(MODULE, "org.wildfly.extension.messaging-activemq")
                 .and(TARGET_CONTEXT, targetContextModel)
                 .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE)
                 .and(SOURCE_DESTINATION, DESTINATION_QUEUE)
@@ -98,7 +95,7 @@ public class ViewTest {
     public void tryEditAttribute() {
         page.navigateAgain(NAME, JMSBRIDGE_UPDATE);
         FormFragment form = page.getAttributesForm();
-        crudOperations.updateWithError(form, f -> f.clear(FAILURE_RETRY_INTERVAL), FAILURE_RETRY_INTERVAL);
+        crudOperations.updateWithError(form, f -> f.clear(MODULE), MODULE);
     }
 
     @Test

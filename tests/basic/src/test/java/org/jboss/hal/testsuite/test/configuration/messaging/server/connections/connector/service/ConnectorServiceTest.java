@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.test.configuration.messaging.server.connections.AbstractServerConnectionsTest;
@@ -20,13 +19,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
 import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_CONNECTOR_SERVICE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_SVC_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.FACTORY_CLASS;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SRV_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectorServiceAddress;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
+import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 
 @RunWith(Arquillian.class)
 public class ConnectorServiceTest extends AbstractServerConnectionsTest {
@@ -34,8 +27,10 @@ public class ConnectorServiceTest extends AbstractServerConnectionsTest {
     @BeforeClass
     public static void createResources() throws IOException {
         createServer(SRV_UPDATE);
-        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE), Values.of(FACTORY_CLASS, Random.name())).assertSuccess();
-        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_DELETE), Values.of(FACTORY_CLASS, Random.name())).assertSuccess();
+        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE),
+                Values.of(FACTORY_CLASS, CONNECTOR_FACTORY_CLASS)).assertSuccess();
+        operations.add(connectorServiceAddress(SRV_UPDATE, CONN_SVC_DELETE),
+                Values.of(FACTORY_CLASS, CONNECTOR_FACTORY_CLASS)).assertSuccess();
     }
 
     @AfterClass
@@ -58,7 +53,7 @@ public class ConnectorServiceTest extends AbstractServerConnectionsTest {
         crudOperations.create(connectorServiceAddress(SRV_UPDATE, CONN_SVC_CREATE), table,
             formFragment -> {
                 formFragment.text(NAME, CONN_SVC_CREATE);
-                formFragment.text(FACTORY_CLASS, Random.name());
+                formFragment.text(FACTORY_CLASS, CONNECTOR_FACTORY_CLASS);
             }
         );
     }
@@ -80,7 +75,7 @@ public class ConnectorServiceTest extends AbstractServerConnectionsTest {
         FormFragment form = page.getConnectorServiceForm();
         table.bind(form);
         table.select(CONN_SVC_UPDATE);
-        crudOperations.update(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE), form, FACTORY_CLASS);
+        crudOperations.update(connectorServiceAddress(SRV_UPDATE, CONN_SVC_UPDATE), form, FACTORY_CLASS, "org.apache.activemq.artemis.ArtemisConstants");
     }
 
     @Test

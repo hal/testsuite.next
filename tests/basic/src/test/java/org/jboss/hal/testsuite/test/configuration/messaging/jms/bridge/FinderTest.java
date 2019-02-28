@@ -38,8 +38,8 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_RETRIES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MESSAGING_ACTIVEMQ;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.resources.Ids.JMS_BRIDGE;
 import static org.jboss.hal.resources.Ids.JMS_BRIDGE_ITEM;
@@ -63,10 +63,7 @@ public class FinderTest {
         TARGET_CONTEXT_MODEL.get("java.naming.provider.url").set("http-remoting://localhost:8180");
 
         PARAMS = Values.of(QUALITY_OF_SERVICE, AT_MOST_ONCE)
-                .and(FAILURE_RETRY_INTERVAL, 10)
-                .and(MAX_RETRIES, 1)
-                .and(MAX_BATCH_SIZE, 1)
-                .and(MAX_BATCH_TIME, 1)
+                .and(MODULE, "org.wildfly.extension.messaging-activemq")
                 .and(TARGET_CONTEXT, TARGET_CONTEXT_MODEL)
                 .and(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE)
                 .and(SOURCE_DESTINATION, DESTINATION_QUEUE)
@@ -102,16 +99,12 @@ public class FinderTest {
     public void create() throws Exception {
         AddResourceDialogFragment dialog = column.add();
         dialog.getForm().text(NAME, JMSBRIDGE_CREATE);
-        dialog.getForm().number(FAILURE_RETRY_INTERVAL, 1);
-        dialog.getForm().number(MAX_RETRIES, 1);
-        dialog.getForm().number(MAX_BATCH_SIZE, 1);
-        dialog.getForm().number(MAX_BATCH_TIME, 1);
-        dialog.getForm().select(QUALITY_OF_SERVICE, AT_MOST_ONCE);
         dialog.getForm().properties(TARGET_CONTEXT).add(TARGET_CONTEXT_MODEL);
         dialog.getForm().text(SOURCE_CONNECTION_FACTORY, CONNECTION_FACTORY_VALUE);
         dialog.getForm().text(SOURCE_DESTINATION, DESTINATION_QUEUE);
         dialog.getForm().text(TARGET_CONNECTION_FACTORY, REMOTE_CONNECTION_FACTORY);
         dialog.getForm().text(TARGET_DESTINATION, DESTINATION_QUEUE);
+        dialog.getForm().text(MODULE, "org.wildfly.extension.messaging-activemq");
         dialog.add();
         console.verifySuccess();
         assertTrue(column.containsItem(Ids.jmsBridge(JMSBRIDGE_CREATE)));
