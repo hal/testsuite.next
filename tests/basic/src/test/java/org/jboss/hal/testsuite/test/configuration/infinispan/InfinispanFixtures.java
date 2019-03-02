@@ -106,6 +106,10 @@ public final class InfinispanFixtures {
         return cacheContainerAddress(cacheContainer).and("local-cache", localCache);
     }
 
+    public static Address distributedCacheAddress(String cacheContainer, String distributedCache) {
+        return cacheContainerAddress(cacheContainer).and("distributed-cache", distributedCache);
+    }
+
     public static Address scatteredCacheAddress(String cacheContainer, String scatteredCache) {
         return cacheContainerAddress(cacheContainer).and("scattered-cache", scatteredCache);
     }
