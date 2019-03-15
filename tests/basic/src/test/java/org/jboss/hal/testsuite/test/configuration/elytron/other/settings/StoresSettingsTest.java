@@ -25,6 +25,7 @@ import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CREATE;

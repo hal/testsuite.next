@@ -13,7 +13,6 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static java.lang.String.join;
-
 import static org.jboss.hal.meta.token.NameTokens.DEPLOYMENT;
 
 @Place(DEPLOYMENT)
