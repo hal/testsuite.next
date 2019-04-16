@@ -15,15 +15,33 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.jboss.hal.resources.CSS;
 import org.jboss.hal.testsuite.Console;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import static org.jboss.hal.testsuite.Selectors.contains;
 
 /** Fragment for the console footer. Use {@link Console#footer()} to get an instance. */
 public class FooterFragment {
 
-    @Drone private WebDriver browser;
-    @Root private WebElement root;
+    @Drone
+    private WebDriver browser;
+
+    @Root
+    private WebElement root;
+
+    @Inject
+    private Console console;
+
+    public DialogFragment openSettingsWindow() {
+        final By settingsLink = ByJQuery.selector("a." + CSS.clickable + contains("Settings"));
+        root.findElement(settingsLink).click();
+        return console.dialog();
+    }
 }
