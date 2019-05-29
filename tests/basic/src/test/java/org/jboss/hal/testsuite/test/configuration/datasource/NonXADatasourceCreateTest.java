@@ -36,6 +36,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
@@ -92,7 +93,8 @@ public class NonXADatasourceCreateTest extends AbstractDatasourcePropertiesTest 
         wizard.finishStayOpen();
         wizard.verifySuccess();
         wizard.close();
-        assertEquals("Bad value of field " + DATASOURCE_CLASS + " in configuration file!","",operations.readAttribute(DataSourceFixtures.dataSourceAddress(PG_DATASOURCE_NAME), DATASOURCE_CLASS).stringValue());
+        ModelNodeResult result = operations.readAttribute(DataSourceFixtures.dataSourceAddress(PG_DATASOURCE_NAME), DATASOURCE_CLASS);
+        assertEquals("Bad value of field " + DATASOURCE_CLASS + " in configuration file!","undefined",operations.readAttribute(DataSourceFixtures.dataSourceAddress(PG_DATASOURCE_NAME), DATASOURCE_CLASS).value().asString());
     }
 
     /** Create a data source for sqlserver */
@@ -115,6 +117,6 @@ public class NonXADatasourceCreateTest extends AbstractDatasourcePropertiesTest 
         wizard.finishStayOpen();
         wizard.verifySuccess();
         wizard.close();
-        assertEquals("Bad value of field " + DATASOURCE_CLASS + " in configuration file!","",operations.readAttribute(DataSourceFixtures.dataSourceAddress(SQLSERVER_DATASOURCE_NAME), DATASOURCE_CLASS).stringValue());
+        assertEquals("Bad value of field " + DATASOURCE_CLASS + " in configuration file!","undefined",operations.readAttribute(DataSourceFixtures.dataSourceAddress(SQLSERVER_DATASOURCE_NAME), DATASOURCE_CLASS).value().asString());
     }
 }
