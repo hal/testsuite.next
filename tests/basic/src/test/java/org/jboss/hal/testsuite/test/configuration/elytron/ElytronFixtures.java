@@ -157,6 +157,7 @@ public final class ElytronFixtures {
     public static final String CACHING_REALM_ITEM = "elytron-caching-realm-item";
     public static final String CERTIFICATE_FROM = "certificate-from";
     public static final String CERTIFICATE_AUTHORITY_ACCOUNT_ITEM = "elytron-certificate-authority-account-item";
+    public static final String CERTIFICATE_AUTHORITY_ITEM = "elytron-certificate-authority-item";
     public static final String CERTIFICATE_REVOCATION_LIST = "certificate-revocation-list";
     public static final String CHAINED_PRINCIPAL_TRANSFORMER_ITEM = Ids.build(ELYTRON_CHAINED_PRINCIPAL_TRANSFORMER, ITEM);
     public static final String CLEAR_PASSWORD_MAPPER = "clear-password-mapper";
@@ -1246,6 +1247,10 @@ public final class ElytronFixtures {
     // ------------- certificate-authority-account
     public static Address certificateAuthorityAccountAddress(String name) {
         return SUBSYSTEM_ADDRESS.and("certificate-authority-account", name);
+    }
+
+    public static Address certificateAuthorityAddress(String name) {
+        return SUBSYSTEM_ADDRESS.and("certificate-authority", name);
     }
 
     // ------------- mapped-role-mapper
