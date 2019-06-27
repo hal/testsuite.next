@@ -37,6 +37,9 @@ public class IOWorkerPreviewFragment {
     @FindByJQuery("div.progress-description[title='IO Thread Count'] + div")
     private WebElement ioThreadCount;
 
+    @FindByJQuery("div.progress-description[title='Busy Task Thread Count'] + div")
+    private WebElement busyTaskThreadCount;
+
     @FindByJQuery("a.clickable > span.fa-refresh")
     private WebElement refreshButton;
 
@@ -54,6 +57,10 @@ public class IOWorkerPreviewFragment {
 
     public WebElement getIoThreadCount() {
         return ioThreadCount;
+    }
+
+    public WebElement getBusyTaskThreadCount() {
+        return busyTaskThreadCount;
     }
 
     public void refresh() {
