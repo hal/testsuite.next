@@ -140,6 +140,12 @@ public class ElytronOtherSettingsPage extends BasePage {
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment dirContextCredentialReferenceForm;
     @FindBy(id = ELYTRON_DIR_CONTEXT + "-" + TAB_CONTAINER) private TabsFragment dirContextTabs;
 
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY + "-" + TABLE + WRAPPER)
+    private TableFragment certificateAuthorityTable;
+
+    @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY + "-" + FORM)
+    private FormFragment certificateAuthorityForm;
+
     @FindBy(id = ELYTRON_CERTIFICATE_AUTHORITY_ACCOUNT + "-" + TABLE + WRAPPER)
     private TableFragment certificateAuthorityAccountTable;
 
@@ -418,6 +424,14 @@ public class ElytronOtherSettingsPage extends BasePage {
 
     public TabsFragment getDirContextTabs() {
         return dirContextTabs;
+    }
+
+    public TableFragment getCertificateAuthorityTable() {
+        return certificateAuthorityTable;
+    }
+
+    public FormFragment getCertificateAuthorityForm() {
+        return certificateAuthorityForm;
     }
 
     public TableFragment getCertificateAuthorityAccountTable() {
