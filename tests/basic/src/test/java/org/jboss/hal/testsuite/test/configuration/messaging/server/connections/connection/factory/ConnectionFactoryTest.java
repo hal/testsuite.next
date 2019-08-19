@@ -17,22 +17,10 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTORS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DISCOVERY_GROUP;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ENTRIES;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_CONNECTION_FACTORY;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CALL_TIMEOUT;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_FAC_CREATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_FAC_CREATE_ENTRY;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_FAC_DELETE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_FAC_TRY_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.CONN_FAC_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.SRV_UPDATE;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.connectionFactoryAddress;
-import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.serverAddress;
+import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 
 @Ignore // unable to create a connection-factory, ignore while this is investigated
 @RunWith(Arquillian.class)
@@ -41,12 +29,14 @@ public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
     @BeforeClass
     public static void createResources() throws IOException {
         createServer(SRV_UPDATE);
+        String discoveryGroup = Random.name();
+        operations.add(discoveryGroupAddress(SRV_UPDATE, discoveryGroup));
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE),
-            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
+                Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, discoveryGroup)).assertSuccess();
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_TRY_UPDATE),
-            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
+                Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, discoveryGroup)).assertSuccess();
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_DELETE),
-            Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, Random.name())).assertSuccess();
+                Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, discoveryGroup)).assertSuccess();
     }
 
     @AfterClass
@@ -67,11 +57,11 @@ public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
         table.bind(form);
 
         crudOperations.create(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_CREATE), table,
-            formFragment -> {
-                formFragment.text(NAME, CONN_FAC_CREATE);
-                formFragment.text(DISCOVERY_GROUP, Random.name());
-                formFragment.list(ENTRIES).add(CONN_FAC_CREATE_ENTRY);
-            }
+                formFragment -> {
+                    formFragment.text(NAME, CONN_FAC_CREATE);
+                    formFragment.text(DISCOVERY_GROUP, Random.name());
+                    formFragment.list(ENTRIES).add(CONN_FAC_CREATE_ENTRY);
+                }
         );
     }
 
@@ -92,7 +82,15 @@ public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
         FormFragment form = page.getConnectionFactoryForm();
         table.bind(form);
         table.select(CONN_FAC_UPDATE);
-        crudOperations.update(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE), form, CALL_TIMEOUT, 123L);
+        crudOperations.update(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE), form,
+                formFragment -> {
+                    formFragment.number(CALL_TIMEOUT, 123L);
+                    formFragment.flip("use-topology-for-load-balancing", false);
+                },
+                verifier -> {
+                    verifier.verifyAttribute(CALL_TIMEOUT, 123L);
+                    verifier.verifyAttribute("use-topology-for-load-balancing", false);
+                });
     }
 
     @Test

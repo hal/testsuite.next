@@ -87,7 +87,16 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
         FormFragment form = page.getPooledConnectionFactoryForm();
         table.bind(form);
         table.select(POOL_CONN_UPDATE);
-        crudOperations.update(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), form, CALL_TIMEOUT, 123L);
+        crudOperations.update(connectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), form,
+                formFragment -> {
+                    formFragment.number(CALL_TIMEOUT, 123L);
+                    formFragment.flip("use-topology-for-load-balancing", false);
+                },
+                verifier -> {
+                    verifier.verifyAttribute(CALL_TIMEOUT, 123L);
+                    verifier.verifyAttribute("use-topology-for-load-balancing", false);
+                });
+
     }
 
     @Test
