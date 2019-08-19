@@ -33,6 +33,7 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_HANDLER_ITEM;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_REF;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_CREATE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_UPDATE;
@@ -45,6 +46,7 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
 
     @BeforeClass
     public static void createResources() throws IOException {
+        ops.add(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_REF)).assertSuccess();
         ops.add(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_UPDATE)).assertSuccess();
         ops.add(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_DELETE)).assertSuccess();
     }
@@ -55,6 +57,7 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
         ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_CREATE));
         ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_UPDATE));
         ops.removeIfExists(LoggingFixtures.SyslogHandler.syslogHandlerAddress(SYSLOG_HANDLER_DELETE));
+        ops.removeIfExists(LoggingFixtures.PatternFormatter.patternFormatterAddress(PATTERN_FORMATTER_REF));
         adminOps.reloadIfRequired();
     }
 

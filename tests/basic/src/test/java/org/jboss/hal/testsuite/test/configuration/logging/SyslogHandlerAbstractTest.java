@@ -36,6 +36,7 @@ import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LEVEL;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.*;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_REF;
 
 public abstract class SyslogHandlerAbstractTest {
 
@@ -63,7 +64,7 @@ public abstract class SyslogHandlerAbstractTest {
     protected abstract void navigateToPage();
 
     @Before
-    public void navigate() throws Exception {
+    public void navigate() {
         navigateToPage();
         table = getPage().getSyslogHandlerTable();
         form = getPage().getSyslogHandlerForm();
@@ -81,6 +82,14 @@ public abstract class SyslogHandlerAbstractTest {
         crud.update(syslogHandlerAddress(SyslogHandler.SYSLOG_HANDLER_UPDATE), form,
                 f -> f.select(LEVEL, "CONFIG"),
                 resourceVerifier -> resourceVerifier.verifyAttribute(LEVEL, "CONFIG"));
+    }
+
+    @Test
+    public void updateNamedFormatter() throws Exception {
+        table.select(SyslogHandler.SYSLOG_HANDLER_UPDATE);
+        crud.update(syslogHandlerAddress(SyslogHandler.SYSLOG_HANDLER_UPDATE), form,
+                f -> f.text(NAMED_FORMATTER, PATTERN_FORMATTER_REF),
+                resourceVerifier -> resourceVerifier.verifyAttribute(NAMED_FORMATTER, PATTERN_FORMATTER_REF));
     }
 
     @Test
