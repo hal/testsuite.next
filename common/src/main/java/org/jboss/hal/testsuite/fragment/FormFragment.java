@@ -248,11 +248,12 @@ public class FormFragment {
 
     /** Changes the specified bootstrap switch element. */
     public FormFragment flip(String name, boolean value) {
+        WebElement formGroup = formGroup(name);
         WebElement inputElement = inputElement(name);
         boolean inputValue = inputElement.isSelected();
         if (inputValue != value) {
             WebElement switchElement =
-                root.findElement(By.cssSelector(".bootstrap-switch-id-" + editingId(name) + " .bootstrap-switch-label"));
+                formGroup.findElement(By.cssSelector(".bootstrap-switch-label"));
             try {
                 console.scrollIntoView(switchElement).click();
             } catch (WebDriverException e) {
