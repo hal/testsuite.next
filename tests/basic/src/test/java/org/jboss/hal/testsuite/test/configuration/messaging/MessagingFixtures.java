@@ -76,6 +76,7 @@ public final class MessagingFixtures {
     public static final String JMX_DOMAIN = "jmx-domain";
     public static final String JOURNAL_BINDING_TABLE = "journal-bindings-table";
     public static final String JOURNAL_DIRECTORY = "journal-directory";
+    public static final String JOURNAL_FILE_OPEN_TIMEOUT = "journal-file-open-timeout";
     public static final String LARGE_MESSAGES_DIRECTORY = "large-messages-directory";
     public static final String MAX_BATCH_SIZE = "max-batch-size";
     public static final String MAX_BATCH_TIME = "max-batch-time";
