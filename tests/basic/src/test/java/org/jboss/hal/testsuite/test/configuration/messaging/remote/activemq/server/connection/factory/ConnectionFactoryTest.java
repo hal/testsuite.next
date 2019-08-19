@@ -181,4 +181,14 @@ public class ConnectionFactoryTest {
         crudOperations.update(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_UPDATE),
             page.getConnectionFactoryForm(), "ha", !ha);
     }
+
+    @Test
+    public void toggleAmq1Prefix() throws Exception {
+        boolean amq1Prefix =
+            operations.readAttribute(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_UPDATE), "enable-amq1-prefix")
+                .booleanValue(false);
+        page.getConnectionFactoryTable().select(CONNECTION_FACTORY_UPDATE);
+        crudOperations.update(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_UPDATE),
+            page.getConnectionFactoryForm(), "enable-amq1-prefix", !amq1Prefix);
+    }
 }
