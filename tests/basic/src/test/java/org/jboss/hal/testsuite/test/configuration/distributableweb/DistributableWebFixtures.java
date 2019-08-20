@@ -22,7 +22,6 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DISTRIBUTABLE_WEB;
 import static org.jboss.hal.testsuite.CrudConstants.CREATE;
 import static org.jboss.hal.testsuite.CrudConstants.DELETE;
-import static org.jboss.hal.testsuite.CrudConstants.READ;
 import static org.jboss.hal.testsuite.CrudConstants.UPDATE;
 
 final class DistributableWebFixtures {
