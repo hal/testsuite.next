@@ -96,6 +96,7 @@ public final class InfinispanFixtures {
     // ------------------------------------------------------ local cache
 
     public static final String LC_CREATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String LC_READ = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.READ, Random.name());
     public static final String LC_UPDATE = Ids.build(LOCAL_CACHE_PREFIX, CrudConstants.UPDATE, Random.name());
     public static final String LC_UPDATE_ATTRIBUTES = Ids.build(LOCAL_CACHE_PREFIX, "update-attributes", Random.name());
     public static final String LC_RESET = Ids.build(LOCAL_CACHE_PREFIX, "reset", Random.name());
