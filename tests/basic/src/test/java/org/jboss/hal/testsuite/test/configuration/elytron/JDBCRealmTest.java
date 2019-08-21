@@ -68,6 +68,8 @@ public class JDBCRealmTest {
         bcrypt.get(PASSWORD_INDEX).set(523);
         bcrypt.get(SALT_INDEX).set(323);
         bcrypt.get(ITERATION_COUNT_INDEX).set(345);
+        ModelNode mcrypt = new ModelNode();
+        mcrypt.get(PASSWORD_INDEX).set(987);
         Values jdbcParams = Values.ofList(PRINCIPAL_QUERY, createSqlNode(SQL_UPDATE), createSqlNode(SQL_DELETE),
                 createSqlNode(SQL_CPM_CRT),
                 createSqlNode(SQL_CPM_UPD, CLEAR_PASSWORD_MAPPER, cpm),
@@ -75,6 +77,9 @@ public class JDBCRealmTest {
                 createSqlNode(SQL_BCM_CRT),
                 createSqlNode(SQL_BCM_UPD, BCRYPT_MAPPER, bcrypt),
                 createSqlNode(SQL_BCM_DEL, BCRYPT_MAPPER, bcrypt),
+                createSqlNode(SQL_MCM_CRT),
+                createSqlNode(SQL_MCM_UPD, MODULAR_CRYPT_MAPPER, mcrypt),
+                createSqlNode(SQL_MCM_DEL, MODULAR_CRYPT_MAPPER, mcrypt),
                 createSqlNode(SQL_SSDM_CRT),
                 createSqlNode(SQL_SSDM_UPD, SALTED_SIMPLE_DIGEST_MAPPER, ssdm),
                 createSqlNode(SQL_SSDM_DEL, SALTED_SIMPLE_DIGEST_MAPPER, ssdm),
@@ -539,7 +544,64 @@ public class JDBCRealmTest {
                 PRINCIPAL_QUERY, SQL, SQL_SM_DEL, SCRAM_MAPPER);
     }
 
+    // modular-crypt-mapper tab
+    @Test
+    public void principalQueryModularCryptMapperAdd() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
+        TableFragment jdbcTable = page.getJdbcRealmTable();
+        TableFragment table = page.getPrincipalQueryTable();
+        FormFragment form = page.getPrincipalQueryMcryptForm();
+        table.bind(form);
+        jdbcTable.action(JDBC_RLM_UPDATE, PQ_LABEL);
+        waitGui().until().element(table.getRoot()).is().visible();
+        table.filterAndSelect(SQL_MCM_CRT);
+        page.getPrincipalQueryTabs().select(MCRYPT_MAPPER_TAB);
+        EmptyState emptyState = form.emptyState();
+        emptyState.mainAction();
+        int passIdx = 92;
+        ModelNode mapper = new ModelNode();
+        mapper.get(PASSWORD_INDEX).set(passIdx);
+        AddResourceDialogFragment addDialog = console.addResourceDialog();
+        addDialog.getForm().number(PASSWORD_INDEX, passIdx);
+        addDialog.add();
+        console.verifySuccess();
+        new ResourceVerifier(jdbcRealmAddress(JDBC_RLM_UPDATE), client).verifyListAttributeContainsObjectValue(
+                PRINCIPAL_QUERY, SQL, SQL_MCM_CRT, MODULAR_CRYPT_MAPPER, mapper);
+    }
 
+    @Test
+    public void principalQueryModularCryptMapperUpdate() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
+        TableFragment jdbcTable = page.getJdbcRealmTable();
+        TableFragment table = page.getPrincipalQueryTable();
+        FormFragment form = page.getPrincipalQueryMcryptForm();
+        table.bind(form);
+        jdbcTable.action(JDBC_RLM_UPDATE, PQ_LABEL);
+        waitGui().until().element(table.getRoot()).is().visible();
+        table.select(SQL_MCM_UPD);
+        page.getPrincipalQueryTabs().select(MCRYPT_MAPPER_TAB);
+        long number = 23;
+        ModelNode mapper = new ModelNode();
+        mapper.get(PASSWORD_INDEX).set(number);
+        crud.update(jdbcRealmAddress(JDBC_RLM_UPDATE), form, f -> f.number(PASSWORD_INDEX, number),
+                ver -> ver.verifyListAttributeContainsObjectValue(
+                        PRINCIPAL_QUERY, SQL, SQL_MCM_UPD, MODULAR_CRYPT_MAPPER, mapper));
+    }
 
-
+    @Test
+    public void principalQueryModularCryptMapperDelete() throws Exception {
+        console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, JDBC_REALM_ITEM);
+        TableFragment jdbcTable = page.getJdbcRealmTable();
+        TableFragment table = page.getPrincipalQueryTable();
+        FormFragment form = page.getPrincipalQueryMcryptForm();
+        table.bind(form);
+        jdbcTable.action(JDBC_RLM_UPDATE, PQ_LABEL);
+        waitGui().until().element(table.getRoot()).is().visible();
+        table.select(SQL_MCM_DEL);
+        page.getPrincipalQueryTabs().select(MCRYPT_MAPPER_TAB);
+        form.remove();
+        console.verifySuccess();
+        new ResourceVerifier(jdbcRealmAddress(JDBC_RLM_UPDATE), client).verifyListAttributeObjectIsUndefined(
+                PRINCIPAL_QUERY, SQL, SQL_MCM_DEL, MODULAR_CRYPT_MAPPER);
+    }
 }
