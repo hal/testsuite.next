@@ -109,6 +109,7 @@ public final class ElytronFixtures {
     private static final String SIMPLE_ROLE_DECODER_PREFIX = "simp-role";
     private static final String SIZE_ROTATING_FILE_AUDIT_LOG_PREFIX = "siz-log";
     private static final String SQL_BCM_PREFIX = "sql-bcm";
+    private static final String SQL_MCM_PREFIX = "sql-mcm";
     private static final String SQL_CPM_PREFIX = "sql-cpm";
     private static final String SQL_PREFIX = "sql";
     private static final String SQL_SDM_PREFIX = "sql-sdm";
@@ -235,6 +236,8 @@ public final class ElytronFixtures {
     public static final String MATCH_RULES = "match-rules";
     public static final String MATCH_RULES_TITLE = "Match Rules";
     public static final String MAXIMUM_AGE = "maximum-age";
+    public static final String MODULAR_CRYPT_MAPPER = "modular-crypt-mapper";
+    public static final String MCRYPT_MAPPER_TAB = "elytron-jdbc-realm-principal-query-modular-crypt-mapper-tab";
     public static final String MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY_ITEM = Ids.build(
             ELYTRON_MECHANISM_PROVIDER_FILTERING_SASL_SERVER_FACTORY, ITEM);
     public static final String OAUTH2_INTROSPECTION = "oauth2-introspection";
@@ -1093,6 +1096,10 @@ public final class ElytronFixtures {
     public static final String SQL_BCM_CRT = Ids.build(SQL_BCM_PREFIX, CrudConstants.CREATE, Random.name());
     public static final String SQL_BCM_UPD = Ids.build(SQL_BCM_PREFIX, CrudConstants.UPDATE, Random.name());
     public static final String SQL_BCM_DEL = Ids.build(SQL_BCM_PREFIX, CrudConstants.DELETE, Random.name());
+
+    public static final String SQL_MCM_CRT = Ids.build(SQL_MCM_PREFIX, CrudConstants.CREATE, Random.name());
+    public static final String SQL_MCM_UPD = Ids.build(SQL_MCM_PREFIX, CrudConstants.UPDATE, Random.name());
+    public static final String SQL_MCM_DEL = Ids.build(SQL_MCM_PREFIX, CrudConstants.DELETE, Random.name());
 
     public static final String SQL_SSDM_CRT = Ids.build(SQL_SSDM_PREFIX, CrudConstants.CREATE, Random.name());
     public static final String SQL_SSDM_UPD = Ids.build(SQL_SSDM_PREFIX, CrudConstants.UPDATE, Random.name());

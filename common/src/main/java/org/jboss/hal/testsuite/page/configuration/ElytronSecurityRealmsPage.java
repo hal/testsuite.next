@@ -63,6 +63,7 @@ public class ElytronSecurityRealmsPage extends BasePage {
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-" + ATTRIBUTES + "-" + FORM) private FormFragment principalQueryAttributesForm;
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-clear-password-mapper-" + FORM) private FormFragment principalQueryClearPasswordForm;
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-bcrypt-mapper-" + FORM) private FormFragment principalQueryBcryptForm;
+    @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-modular-crypt-mapper-" + FORM) private FormFragment principalQueryMcryptForm;
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-salted-simple-digest-mapper-" + FORM) private FormFragment principalQuerySaltedSimpleDigestForm;
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-simple-digest-mapper-" + FORM) private FormFragment principalQuerySimpleDigestForm;
     @FindBy(id = ELYTRON_JDBC_REALM + "-" + PRINCIPAL_QUERY + "-scram-mapper-" + FORM) private FormFragment principalQueryScramForm;
@@ -181,6 +182,10 @@ public class ElytronSecurityRealmsPage extends BasePage {
 
     public FormFragment getPrincipalQueryBcryptForm() {
         return principalQueryBcryptForm;
+    }
+
+    public FormFragment getPrincipalQueryMcryptForm() {
+        return principalQueryMcryptForm;
     }
 
     public FormFragment getPrincipalQuerySaltedSimpleDigestForm() {
