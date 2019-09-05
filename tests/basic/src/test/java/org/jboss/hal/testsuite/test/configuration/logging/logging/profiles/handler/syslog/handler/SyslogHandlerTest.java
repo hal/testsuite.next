@@ -35,6 +35,7 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.LOGGING_PROFILE_HANDLER_ITEM;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.NAME;
+import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.PatternFormatter.PATTERN_FORMATTER_REF;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_DELETE;
 import static org.jboss.hal.testsuite.test.configuration.logging.LoggingFixtures.SyslogHandler.SYSLOG_HANDLER_UPDATE;
 
@@ -49,6 +50,7 @@ public class SyslogHandlerTest extends SyslogHandlerAbstractTest {
     @BeforeClass
     public static void createResources() throws IOException {
         ops.add(LoggingFixtures.LoggingProfile.loggingProfileAddress(LOGGING_PROFILE)).assertSuccess();
+        ops.add(LoggingFixtures.LoggingProfile.patternFormatterAddress(LOGGING_PROFILE, PATTERN_FORMATTER_REF)).assertSuccess();
         ops.add(LoggingFixtures.LoggingProfile.syslogHandlerAddress(LOGGING_PROFILE, SYSLOG_HANDLER_UPDATE)).assertSuccess();
         ops.add(LoggingFixtures.LoggingProfile.syslogHandlerAddress(LOGGING_PROFILE, SYSLOG_HANDLER_DELETE)).assertSuccess();
     }

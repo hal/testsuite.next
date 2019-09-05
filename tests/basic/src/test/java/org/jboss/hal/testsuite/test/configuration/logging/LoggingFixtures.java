@@ -188,6 +188,7 @@ public final class LoggingFixtures {
         public static final String PATTERN_FORMATTER_CREATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.CREATE, Random.name());
         public static final String PATTERN_FORMATTER_UPDATE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.UPDATE, Random.name());
         public static final String PATTERN_FORMATTER_DELETE = Ids.build(PATTERN_FORMATTER_PREFIX, CrudConstants.DELETE, Random.name());
+        public static final String PATTERN_FORMATTER_REF = Ids.build(PATTERN_FORMATTER_PREFIX, "ref", Random.name());
 
         public static Address patternFormatterAddress(String name) {
             return SUBSYSTEM_ADDRESS.and(PATTERN_FORMATTER, name);
