@@ -30,6 +30,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -89,6 +90,24 @@ public class IOWorkerTest {
     @Before
     public void initConsole() {
         browser.navigate().refresh();
+    }
+
+    /**
+     * Test is BusyTaskThreadCount is displayed.
+     * See https://issues.jboss.org/browse/HAL-1576
+     * @throws IOException
+     */
+    @Test
+    public void checkDisplayOfBusyTaskTreadCount() throws IOException {
+        IOWorkerPreviewFragment ioWorkerPreviewFragment = getIOWorkerFragment().preview(IOWorkerPreviewFragment.class);
+     try {
+         IOWorkerPreviewFragment.ProgressItem busyTaskTreadCount =
+                 new IOWorkerPreviewFragment.ProgressItem(ioWorkerPreviewFragment.getBusyTaskThreadCount());
+         busyTaskTreadCount.getCurrentValue();
+
+     } catch (NoSuchElementException e) {
+         Assert.fail("No number of busy threads is displayed. See HAL-1576.");
+     }
     }
 
     @Test
