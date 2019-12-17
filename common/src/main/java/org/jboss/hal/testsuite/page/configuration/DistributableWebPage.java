@@ -15,13 +15,18 @@
  */
 package org.jboss.hal.testsuite.page.configuration;
 
+import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.SelectFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.hal.resources.CSS.bootstrapSelect;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 
 @Place(NameTokens.DISTRIBUTABLE_WEB)
@@ -36,6 +41,8 @@ public class DistributableWebPage extends BasePage {
     @FindBy(id = "dw-infinispan-session-management-form") private FormFragment infinispanSessionManagementForm;
     @FindBy(id = "dw-infinispan-sso-management-table" + WRAPPER) private TableFragment infinispanSSOManagementTable;
     @FindBy(id = "dw-infinispan-sso-management-form") private FormFragment infinispanSSOManagementForm;
+    @FindBy(id = "dw-routing-infinispan-form") private FormFragment routingForm;
+    // @FindBy(id="dw-routing-select") private Select
 
     public FormFragment getConfigurationForm() {
         return configurationForm;
@@ -71,5 +78,17 @@ public class DistributableWebPage extends BasePage {
 
     public FormFragment getInfinispanSSOManagementForm() {
         return infinispanSSOManagementForm;
+    }
+
+    public FormFragment getRoutingForm() {
+        return routingForm;
+    }
+
+    public SelectFragment getSwitchRouting() {
+        WebElement element = getRootContainer().findElement(By.cssSelector(".header-form ." + bootstrapSelect));
+        if (element != null) {
+            return Graphene.createPageFragment(SelectFragment.class, element);
+        }
+        return null;
     }
 }

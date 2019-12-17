@@ -32,6 +32,7 @@ final class DistributableWebFixtures {
     private static final String SSO_PREFIX = "sso";
 
     static final String ATTRIBUTE = "ATTRIBUTE";
+    static final String CACHE = "cache";
     static final String DEFAULT_SESSION_MANAGEMENT = "default-session-management";
     static final String DEFAULT_SSO_MANAGEMENT = "default-single-sign-on-management";
     static final String GRANULARITY = "granularity";

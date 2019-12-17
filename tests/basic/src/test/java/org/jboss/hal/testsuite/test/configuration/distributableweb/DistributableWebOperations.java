@@ -32,12 +32,12 @@ import static org.jboss.hal.testsuite.test.configuration.infinispan.InfinispanFi
 
 interface DistributableWebOperations {
 
-    static void addCacheContainer(OnlineManagementClient client, Operations operations, String name)
+    static void addCacheContainer(OnlineManagementClient client, Operations operations, String cacheContainer)
             throws Exception {
         String localCache = Random.name();
-        operations.add(cacheContainerAddress(name));
-        client.apply(new AddLocalCache.Builder(localCache).cacheContainer(name).build());
-        operations.writeAttribute(cacheContainerAddress(name), DEFAULT_CACHE, localCache);
+        operations.add(cacheContainerAddress(cacheContainer));
+        client.apply(new AddLocalCache.Builder(localCache).cacheContainer(cacheContainer).build());
+        operations.writeAttribute(cacheContainerAddress(cacheContainer), DEFAULT_CACHE, localCache);
     }
 
     static void addRemoteSocketBinding(OnlineManagementClient client, Operations operations, String name)
