@@ -144,10 +144,19 @@ public class ViewTest {
     public void updateJournal() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
-        FormFragment form = page.getJournalForm();
-        String table = Random.name();
 
-        crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_BINDING_TABLE, table);
+
+        FormFragment form = page.getJournalForm();
+        String tableName = Random.name();
+        int timeout = Random.number(1, 59);
+        crudOperations.update(serverAddress(SRV_UPDATE), form,
+                formFragment -> {
+                    formFragment.text(JOURNAL_BINDING_TABLE, tableName);
+                    formFragment.number(JOURNAL_FILE_OPEN_TIMEOUT, timeout);
+                }, verifier -> {
+                    verifier.verifyAttribute(JOURNAL_BINDING_TABLE, tableName);
+                    verifier.verifyAttribute(JOURNAL_FILE_OPEN_TIMEOUT, timeout);
+                });
     }
 
     // --------------- cluster tab
@@ -206,7 +215,7 @@ public class ViewTest {
         page.getTab().select(Ids.build(MESSAGING_SERVER, CLUSTER_CREDENTIAL_REFERENCE, TAB));
         FormFragment form = page.getClusterCredentialReferenceForm();
         crudOperations.updateWithError(form, f ->
-                        f.text(ALIAS, Random.name()), STORE);
+                f.text(ALIAS, Random.name()), STORE);
     }
 
     @Test
