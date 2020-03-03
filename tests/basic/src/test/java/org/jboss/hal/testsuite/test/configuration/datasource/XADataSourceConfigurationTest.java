@@ -132,6 +132,7 @@ public class XADataSourceConfigurationTest {
         properties.get("key2").set("jdbc:microsoft:sqlserver://localhost:1433;DatabaseName=MyDatabase");
         properties.get("key3").set("jdbc:oracle:thin:@localhost:1521:orcalesid");
         properties.get("key4").set("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1");
+        properties.get("key5").set("URL=jdbc:oracle:thin:@(DESCRIPTION=(ADDRESS=(PROTOCOL=TCP)(HOST=localhost)(PORT=1521))(CONNECT_DATA=(SERVER=dedicated)(SERVICE_NAME=test)))");
 
         form.edit();
         form.properties(XA_DATASOURCE_PROPERTIES).removeTags();
