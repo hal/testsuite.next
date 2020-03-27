@@ -435,6 +435,17 @@
             </dependencies>
         </profile>
         <profile>
+            <id>lets-encrypt</id>
+            <activation>
+                <property>
+                    <name>letsEncrypt</name>
+                </property>
+            </activation>
+            <properties>
+                <test.included.category>org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
+            </properties>
+        </profile>
+        <profile>
             <id>upstream</id>
             <properties>
                 <upstream.excluded.category>

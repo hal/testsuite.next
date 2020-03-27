@@ -12,6 +12,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.category.RequiresLetsEncrypt;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.creaper.command.AddLocalSocketBinding;
@@ -25,6 +26,7 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.commands.foundation.online.SnapshotBackup;
 import org.wildfly.extras.creaper.core.CommandFailedException;
@@ -187,8 +189,8 @@ public class HTTPSListenerSSLTest {
      *  <li>server certificate obtained from LetsEncrypt</li>
      * </ul>
      */
-    // temporarily disabled as the pebble server is not ready on ci server
-    // @Test
+    @Test
+    @Category(RequiresLetsEncrypt.class)
     public void enableObtainFromLetsEncrypt() throws Exception {
 
         String
@@ -209,7 +211,6 @@ public class HTTPSListenerSSLTest {
             .obtainFromLetsEncrypt()
             .nextConfiguration();
         FormFragment configForm = wizard.getConfigurationForm();
-        // configForm.editTextFiringExtraChangeEvent(KEY_DN_ORGANIZATION, HAL);
         wizard.next();
 
         configForm
