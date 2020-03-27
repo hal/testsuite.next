@@ -1,9 +1,6 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.scattered.cache.memory;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -69,26 +66,6 @@ public class OffHeapMemoryTest {
     public void initPage() {
         page.navigate(CACHE_CONTAINER, SCATTERED_CACHE);
         console.verticalNavigation().selectPrimary("scattered-cache-memory-item");
-    }
-
-    @Test
-    public void editCapacity() throws Exception {
-        crudOperations.update(offHeapMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getOffHeapMemoryForm(), "capacity",
-            Random.number());
-    }
-
-    @Test
-    public void editEvictionType() throws Exception {
-        console.waitNoNotification();
-        String currentEvictionType =
-            operations.readAttribute(offHeapMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), "eviction-type")
-                .stringValue("COUNT");
-        List<String> evictionTypes = new ArrayList<>(Arrays.asList("COUNT", "MEMORY"));
-        evictionTypes.remove(currentEvictionType);
-        String evictionType = evictionTypes.get(0);
-        crudOperations.update(offHeapMemoryAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getOffHeapMemoryForm(),
-            formFragment -> formFragment.select("eviction-type", evictionType),
-            resourceVerifier -> resourceVerifier.verifyAttribute("eviction-type", evictionType));
     }
 
     @Test

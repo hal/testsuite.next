@@ -55,8 +55,8 @@ public class StackTest {
         Batch stackDelete = new Batch();
         stackDelete.add(stackAddress(STACK_DELETE));
         stackDelete.add(transportAddress(STACK_DELETE, TRANSPORT_CREATE), Values.of(SOCKET_BINDING, JGROUPS_TCP));
-        operations.batch(stackUpdate);
-        operations.batch(stackDelete);
+        operations.batch(stackUpdate).assertSuccess();
+        operations.batch(stackDelete).assertSuccess();
     }
 
     @AfterClass

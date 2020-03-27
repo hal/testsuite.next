@@ -45,8 +45,8 @@ public class ChannelForkTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP));
-        operations.add(forkAddress(CHANNEL_CREATE, FORK_DELETE));
+        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP)).assertSuccess();
+        operations.add(forkAddress(CHANNEL_CREATE, FORK_DELETE)).assertSuccess();
     }
 
     @AfterClass

@@ -6,6 +6,7 @@ import java.util.concurrent.TimeoutException;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
+import org.jboss.arquillian.graphene.findby.ByJQuery;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.CrudOperations;
@@ -125,11 +126,13 @@ public class GlobalSettingsTest {
 
     @Test
     public void toggleStatisticsEnabled() throws Exception {
-        boolean statisticsEnabled =
-            operations.readAttribute(UndertowFixtures.UNDERTOW_ADDRESS, UndertowFixtures.STATISTICS_ENABLED)
-                .booleanValue();
+        boolean statisticsEnabled = operations.invoke("read-attribute", UNDERTOW_ADDRESS, Values.of("name", "statistics-enabled").and("resolve-expressions", true)).booleanValue();
         page.navigate();
         crudOperations.update(UndertowFixtures.UNDERTOW_ADDRESS, page.getConfigurationForm(),
-            UndertowFixtures.STATISTICS_ENABLED, !statisticsEnabled);
+           form -> {
+            form.getRoot().findElement(ByJQuery.selector("button[title=\"Switch to normal mode\"]")).click();
+            form.flip(STATISTICS_ENABLED, !statisticsEnabled);
+           }, resourceVerifier -> resourceVerifier.verifyAttribute(
+                   STATISTICS_ENABLED, !statisticsEnabled));
     }
 }

@@ -239,14 +239,14 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
         table.select(POOL_CONN_UPDATE);
         page.getPooledFormsTab().select(CREDENTIAL_REFERENCE_TAB);
         emptyState.mainAction();
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         AddResourceDialogFragment addResource = console.addResourceDialog();
-        addResource.getForm().text(CLEAR_TEXT, clearText);
+        addResource.getForm().text(CLEAR_TEXT, clearTextValue);
         addResource.add();
 
         console.verifySuccess();
         new ResourceVerifier(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE), client)
-            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearText);
+            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearTextValue);
     }
 
     @Test

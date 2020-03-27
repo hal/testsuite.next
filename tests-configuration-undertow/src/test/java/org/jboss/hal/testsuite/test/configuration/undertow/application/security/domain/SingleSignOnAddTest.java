@@ -70,19 +70,19 @@ public class SingleSignOnAddTest {
     public void create() throws Exception {
         page.navigate(NAME, APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED2);
         String keyAlias = Random.name();
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         crudOperations.createSingleton(
             ApplicationSecurityDomainFixtures.singleSignOnAddress(APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED2),
             page.getSingleSignOnForm(), formFragment -> {
                 formFragment.text(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_ALIAS, keyAlias);
                 formFragment.text(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_STORE, KEY_STORE_TO_BE_ADDED);
-                formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearText);
+                formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearTextValue);
             }, resourceVerifier -> {
                 resourceVerifier.verifyAttribute(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_ALIAS, keyAlias);
                 resourceVerifier.verifyAttribute(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_STORE,
                     KEY_STORE_TO_BE_ADDED);
                 resourceVerifier.verifyAttribute(
-                    CredentialReference.fqName(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT), clearText);
+                    CredentialReference.fqName(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT), clearTextValue);
             });
     }
 }

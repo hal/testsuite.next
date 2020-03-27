@@ -61,7 +61,6 @@ public class KeycloakWildflyOperations {
                 .and("ssl-required", "EXTERNAL")).assertSuccess();
 
         // Protect HTTP mgmt interface with Keycloak adapter
-        ops.undefineAttribute(HTTP_INTERFACE_ADDRESS, SECURITY_REALM).assertSuccess();
         ModelNode mechanismConfigurationsListNode = new ModelNodePropertiesBuilder()
                 .addProperty(MECHANISM_NAME, "KEYCLOAK")
                 .addProperty(MECHANISM_REALM_CONFIGURATIONS,

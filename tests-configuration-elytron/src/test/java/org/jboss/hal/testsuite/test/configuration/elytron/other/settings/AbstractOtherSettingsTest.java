@@ -47,37 +47,38 @@ public class AbstractOtherSettingsTest {
     public static void beforeTests() throws Exception {
 
         // used in key-store, as trust-manager requires a key-store with providers attribute set
-        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE));
-        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE2));
-        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE3));
-        operations.add(providerLoaderAddress(PROV_LOAD_DELETE));
+        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE)).assertSuccess();
+        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE2)).assertSuccess();
+        operations.add(providerLoaderAddress(PROV_LOAD_UPDATE3)).assertSuccess();
+        operations.add(providerLoaderAddress(PROV_LOAD_DELETE)).assertSuccess();
 
         // Stores
         ModelNode credRef = new ModelNode();
         credRef.get(CLEAR_TEXT).set(ANY_STRING);
         Values credParams = Values.of(CREATE, true).and(CREDENTIAL_REFERENCE, credRef).and(LOCATION, ANY_STRING);
-        operations.add(credentialStoreAddress(CRED_ST_UPDATE), credParams);
-        operations.add(credentialStoreAddress(CRED_ST_DELETE), credParams);
+        operations.add(credentialStoreAddress(CRED_ST_UPDATE), credParams).assertSuccess();
+
+        operations.add(credentialStoreAddress(CRED_ST_DELETE), credParams).assertSuccess();
 
         Values ksParams = Values.of(TYPE, JKS).and(CREDENTIAL_REFERENCE, credRef);
-        operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams);
-        operations.add(keyStoreAddress(KEY_ST_CR_UPDATE), ksParams);
-        operations.add(keyStoreAddress(KEY_ST_DELETE), ksParams);
-        operations.writeAttribute(keyStoreAddress(KEY_ST_UPDATE), PROVIDERS, PROV_LOAD_UPDATE);
+        operations.add(keyStoreAddress(KEY_ST_UPDATE), ksParams).assertSuccess();
+        operations.add(keyStoreAddress(KEY_ST_CR_UPDATE), ksParams).assertSuccess();
+        operations.add(keyStoreAddress(KEY_ST_DELETE), ksParams).assertSuccess();
+        operations.writeAttribute(keyStoreAddress(KEY_ST_UPDATE), PROVIDERS, PROV_LOAD_UPDATE).assertSuccess();
 
         operations.add(filteringKeyStoreAddress(FILT_ST_DELETE),
-                Values.of(ALIAS_FILTER, ANY_STRING).and(KEY_STORE, KEY_ST_UPDATE));
+                Values.of(ALIAS_FILTER, ANY_STRING).and(KEY_STORE, KEY_ST_UPDATE)).assertSuccess();
         operations.add(filteringKeyStoreAddress(FILT_ST_UPDATE),
-                Values.of(ALIAS_FILTER, ANY_STRING).and(KEY_STORE, KEY_ST_UPDATE));
+                Values.of(ALIAS_FILTER, ANY_STRING).and(KEY_STORE, KEY_ST_UPDATE)).assertSuccess();
 
-        operations.add(dirContextAddress(DIR_UPDATE), Values.of(URL, ANY_STRING));
-        operations.add(dirContextAddress(DIR_DELETE), Values.of(URL, ANY_STRING));
+        operations.add(dirContextAddress(DIR_UPDATE), Values.of(URL, ANY_STRING)).assertSuccess();
+        operations.add(dirContextAddress(DIR_DELETE), Values.of(URL, ANY_STRING)).assertSuccess();
 
         Values dirCtxParams = Values.of(URL, ANY_STRING)
                 .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
-        operations.add(dirContextAddress(DIR_CR_CRT), Values.of(URL, ANY_STRING));
-        operations.add(dirContextAddress(DIR_CR_UPD), dirCtxParams);
-        operations.add(dirContextAddress(DIR_CR_DEL), dirCtxParams);
+        operations.add(dirContextAddress(DIR_CR_CRT), Values.of(URL, ANY_STRING)).assertSuccess();
+        operations.add(dirContextAddress(DIR_CR_UPD), dirCtxParams).assertSuccess();
+        operations.add(dirContextAddress(DIR_CR_DEL), dirCtxParams).assertSuccess();
 
         Values ldapKsValues = Values.of(DIR_CONTEXT, DIR_UPDATE).and(SEARCH_PATH, ANY_STRING);
         ModelNode props = new ModelNode();
@@ -88,95 +89,95 @@ public class AbstractOtherSettingsTest {
         newItemTemplate.get(NEW_ITEM_RDN).set(ANY_STRING);
         newItemTemplate.get(NEW_ITEM_ATTRIBUTES).add(props);
 
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE), ldapKsValues);
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_DELETE), ldapKsValues);
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), ldapKsValues);
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), ldapKsValues);
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), ldapKsValues);
-        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD), ldapKsValues);
-        operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), NEW_ITEM_TEMPLATE, newItemTemplate);
-        operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), NEW_ITEM_TEMPLATE, newItemTemplate);
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_UPDATE), ldapKsValues).assertSuccess();
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_DELETE), ldapKsValues).assertSuccess();
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), ldapKsValues).assertSuccess();
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), ldapKsValues).assertSuccess();
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP3_ADD), ldapKsValues).assertSuccess();
+        operations.add(ldapKeyStoreAddress(LDAPKEY_ST_TEMP4_TRY_ADD), ldapKsValues).assertSuccess();
+        operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP1_UPDATE), NEW_ITEM_TEMPLATE, newItemTemplate).assertSuccess();
+        operations.writeAttribute(ldapKeyStoreAddress(LDAPKEY_ST_TEMP2_DELETE), NEW_ITEM_TEMPLATE, newItemTemplate).assertSuccess();
 
         // SSL
         Values aggValues = Values.ofList(PROVIDERS, PROV_LOAD_UPDATE, PROV_LOAD_UPDATE2);
-        operations.add(aggregateProvidersAddress(AGG_PRV_DELETE), aggValues);
-        operations.add(aggregateProvidersAddress(AGG_PRV_UPDATE), aggValues);
+        operations.add(aggregateProvidersAddress(AGG_PRV_DELETE), aggValues).assertSuccess();
+        operations.add(aggregateProvidersAddress(AGG_PRV_UPDATE), aggValues).assertSuccess();
 
-        operations.add(clientSslContextAddress(CLI_SSL_DELETE));
-        operations.add(clientSslContextAddress(CLI_SSL_UPDATE));
+        operations.add(clientSslContextAddress(CLI_SSL_DELETE)).assertSuccess();
+        operations.add(clientSslContextAddress(CLI_SSL_UPDATE)).assertSuccess();
 
         Values keyManagerValues = Values.of(KEY_STORE, KEY_ST_UPDATE)
                 .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
-        operations.add(keyManagerAddress(KEY_MAN_UPDATE), keyManagerValues);
-        operations.add(keyManagerAddress(KEY_MAN_TRY_UPDATE), keyManagerValues);
-        operations.add(keyManagerAddress(KEY_MAN_DELETE), keyManagerValues);
+        operations.add(keyManagerAddress(KEY_MAN_UPDATE), keyManagerValues).assertSuccess();
+        operations.add(keyManagerAddress(KEY_MAN_TRY_UPDATE), keyManagerValues).assertSuccess();
+        operations.add(keyManagerAddress(KEY_MAN_DELETE), keyManagerValues).assertSuccess();
 
         Values serverSslContextValues = Values.of(KEY_MANAGER, KEY_MAN_UPDATE);
-        operations.add(serverSslContextAddress(SRV_SSL_DELETE), serverSslContextValues);
-        operations.add(serverSslContextAddress(SRV_SSL_UPDATE), serverSslContextValues);
+        operations.add(serverSslContextAddress(SRV_SSL_DELETE), serverSslContextValues).assertSuccess();
+        operations.add(serverSslContextAddress(SRV_SSL_UPDATE), serverSslContextValues).assertSuccess();
 
         // a realm is required for new security-domain
-        operations.add(filesystemRealmAddress(FILESYS_RLM_CREATE), Values.of(PATH, ANY_STRING));
-        operations.add(filesystemRealmAddress(FILESYS_RLM_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(filesystemRealmAddress(FILESYS_RLM_CREATE), Values.of(PATH, ANY_STRING)).assertSuccess();
+        operations.add(filesystemRealmAddress(FILESYS_RLM_UPDATE), Values.of(PATH, ANY_STRING)).assertSuccess();
         ModelNode realmNode1 = new ModelNode();
         realmNode1.get(REALM).set(FILESYS_RLM_UPDATE);
         ModelNode realmNode2 = new ModelNode();
         realmNode2.get(REALM).set(FILESYS_RLM_CREATE);
         Values secDomainParams = Values.of(DEFAULT_REALM, FILESYS_RLM_UPDATE).andList(REALMS, realmNode1);
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE), secDomainParams);
-        operations.add(securityDomainAddress(SEC_DOM_UPDATE2), secDomainParams);
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE), secDomainParams).assertSuccess();
+        operations.add(securityDomainAddress(SEC_DOM_UPDATE2), secDomainParams).assertSuccess();
         operations.add(securityDomainAddress(SEC_DOM_UPDATE3),
-                Values.of(DEFAULT_REALM, FILESYS_RLM_UPDATE).andList(REALMS, realmNode1, realmNode2));
-        operations.add(securityDomainAddress(SEC_DOM_DELETE));
+                Values.of(DEFAULT_REALM, FILESYS_RLM_UPDATE).andList(REALMS, realmNode1, realmNode2)).assertSuccess();
+        operations.add(securityDomainAddress(SEC_DOM_DELETE)).assertSuccess();
 
-        operations.add(trustManagerAddress(TRU_MAN_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE));
-        operations.add(trustManagerAddress(TRU_MAN_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE));
+        operations.add(trustManagerAddress(TRU_MAN_UPDATE), Values.of(KEY_STORE, KEY_ST_UPDATE)).assertSuccess();
+        operations.add(trustManagerAddress(TRU_MAN_DELETE), Values.of(KEY_STORE, KEY_ST_UPDATE)).assertSuccess();
 
         Values trustParams = Values.of(KEY_STORE, KEY_ST_UPDATE).andObject(CERTIFICATE_REVOCATION_LIST,
                         Values.of(PATH, "${jboss.server.config.dir}/logging.properties"));
-        operations.add(trustManagerAddress(TRU_MAN_CRL_CRT), Values.of(KEY_STORE, KEY_ST_UPDATE));
-        operations.add(trustManagerAddress(TRU_MAN_CRL_UPD), trustParams);
-        operations.add(trustManagerAddress(TRU_MAN_CRL_DEL), trustParams);
+        operations.add(trustManagerAddress(TRU_MAN_CRL_CRT), Values.of(KEY_STORE, KEY_ST_UPDATE)).assertSuccess();
+        operations.add(trustManagerAddress(TRU_MAN_CRL_UPD), trustParams).assertSuccess();
+        operations.add(trustManagerAddress(TRU_MAN_CRL_DEL), trustParams).assertSuccess();
 
-        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE), Values.of(CONSTANT, ANY_STRING));
+        operations.add(constantPrincipalTransformerAddress(CONS_PRI_TRANS_UPDATE), Values.of(CONSTANT, ANY_STRING)).assertSuccess();
 
-        operations.add(authenticationConfigurationAddress(AUT_CF_UPDATE));
-        operations.add(authenticationConfigurationAddress(AUT_CF_DELETE));
+        operations.add(authenticationConfigurationAddress(AUT_CF_UPDATE)).assertSuccess();
+        operations.add(authenticationConfigurationAddress(AUT_CF_DELETE)).assertSuccess();
 
         Values autParams = Values.ofObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, ANY_STRING));
-        operations.add(authenticationConfigurationAddress(AUT_CF_CR_CRT));
-        operations.add(authenticationConfigurationAddress(AUT_CF_CR_UPD), autParams);
-        operations.add(authenticationConfigurationAddress(AUT_CF_CR_DEL), autParams);
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_CRT)).assertSuccess();
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_UPD), autParams).assertSuccess();
+        operations.add(authenticationConfigurationAddress(AUT_CF_CR_DEL), autParams).assertSuccess();
 
-        operations.add(authenticationContextAddress(AUT_CT_DELETE));
-        operations.add(authenticationContextAddress(AUT_CT_UPDATE));
+        operations.add(authenticationContextAddress(AUT_CT_DELETE)).assertSuccess();
+        operations.add(authenticationContextAddress(AUT_CT_UPDATE)).assertSuccess();
         ModelNode matchRuleUpdate = new ModelNode();
         matchRuleUpdate.get(MATCH_ABSTRACT_TYPE).set(AUT_CT_MR_UPDATE);
         ModelNode matchRuleDelete = new ModelNode();
         matchRuleDelete.get(MATCH_ABSTRACT_TYPE).set(AUT_CT_MR_DELETE);
         operations.add(authenticationContextAddress(AUT_CT_UPDATE2),
-                Values.ofList(MATCH_RULES, matchRuleUpdate, matchRuleDelete));
+                Values.ofList(MATCH_RULES, matchRuleUpdate, matchRuleDelete)).assertSuccess();
 
-        operations.add(fileAuditLogAddress(FILE_LOG_DELETE), Values.of(PATH, ANY_STRING));
-        operations.add(fileAuditLogAddress(FILE_LOG_UPDATE), Values.of(PATH, ANY_STRING));
-        operations.add(fileAuditLogAddress(FILE_LOG_TRY_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(fileAuditLogAddress(FILE_LOG_DELETE), Values.of(PATH, ANY_STRING)).assertSuccess();
+        operations.add(fileAuditLogAddress(FILE_LOG_UPDATE), Values.of(PATH, ANY_STRING)).assertSuccess();
+        operations.add(fileAuditLogAddress(FILE_LOG_TRY_UPDATE), Values.of(PATH, ANY_STRING)).assertSuccess();
 
         Values params = Values.of(PATH, ANY_STRING).and(SUFFIX, SUFFIX_LOG);
-        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), params);
-        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), params);
-        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE), params);
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_DELETE), params).assertSuccess();
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_UPDATE), params).assertSuccess();
+        operations.add(periodicRotatingFileAuditLogAddress(PER_LOG_TRY_UPDATE), params).assertSuccess();
 
-        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), Values.of(PATH, ANY_STRING));
-        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), Values.of(PATH, ANY_STRING));
+        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_DELETE), Values.of(PATH, ANY_STRING)).assertSuccess();
+        operations.add(sizeRotatingFileAuditLogAddress(SIZ_LOG_UPDATE), Values.of(PATH, ANY_STRING)).assertSuccess();
 
-        Values syslogParams = Values.of(HOSTNAME, ANY_STRING).and(PORT, Random.number()).and(SERVER_ADDRESS, LOCALHOST);
-        operations.add(syslogAuditLogAddress(SYS_LOG_UPDATE), syslogParams);
-        operations.add(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE), syslogParams);
-        operations.add(syslogAuditLogAddress(SYS_LOG_DELETE), syslogParams);
+        Values syslogParams = Values.of(HOSTNAME, ANY_STRING).and(PORT, Random.number()).and(SERVER_ADDRESS, LOCALHOST).and("reconnect-attempts", 200);
+        operations.add(syslogAuditLogAddress(SYS_LOG_UPDATE), syslogParams).assertSuccess();
+        operations.add(syslogAuditLogAddress(SYS_LOG_TRY_UPDATE), syslogParams).assertSuccess();
+        operations.add(syslogAuditLogAddress(SYS_LOG_DELETE), syslogParams).assertSuccess();
 
         Values secEventParams = Values.ofList(SECURITY_EVENT_LISTENERS, SYS_LOG_UPDATE, SIZ_LOG_UPDATE);
-        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_UPDATE), secEventParams);
-        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE), secEventParams);
+        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_UPDATE), secEventParams).assertSuccess();
+        operations.add(aggregateSecurityEventListenerAddress(AGG_SEC_DELETE), secEventParams).assertSuccess();
     }
 
     @AfterClass

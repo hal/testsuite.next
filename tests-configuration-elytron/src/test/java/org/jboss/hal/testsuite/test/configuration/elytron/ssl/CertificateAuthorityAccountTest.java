@@ -68,7 +68,7 @@ public class CertificateAuthorityAccountTest {
         operations.add(ElytronFixtures.certificateAuthorityAccountAddress(name),
             Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                 .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE).and("contact-urls", new ModelNodeGenerator.ModelNodeListBuilder()
-            .addAll("mailto:example@org").build()));
+            .addAll("mailto:example@org.com").build()));
     }
 
     private static void activateCertificateAuthorityAccount(String name) throws IOException {

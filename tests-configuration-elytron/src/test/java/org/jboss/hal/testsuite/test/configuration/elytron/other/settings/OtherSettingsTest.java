@@ -21,15 +21,14 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.fixtures.ElytronFixtures;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -195,17 +194,16 @@ public class OtherSettingsTest extends AbstractOtherSettingsTest {
 
     @Test
     public void dirContextCredentialReferenceAdd() throws Exception {
+        String clearTextValue = Random.name();
         console.verticalNavigation().selectSecondary(OTHER_ITEM, DIR_CONTEXT_ITEM);
         TableFragment table = page.getDirContextTable();
         FormFragment form = page.getDirContextCredentialReferenceForm();
         table.bind(form);
         table.select(DIR_CR_CRT);
         page.getDirContextTabs().select(Ids.build(ELYTRON_DIR_CONTEXT, CREDENTIAL_REFERENCE, TAB));
-        form.emptyState().mainAction();
-        console.verifySuccess();
-        // the UI "add" operation adds a credential-reference with no inner attributes, as they are not required
-        ModelNodeResult actualResult = operations.readAttribute(dirContextAddress(DIR_CR_CRT), CREDENTIAL_REFERENCE);
-        Assert.assertTrue("attribute credential-reference should exist", actualResult.value().isDefined());
+        crud.createSingleton(dirContextAddress(DIR_CR_CRT), form,
+                formFragment -> formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearTextValue),
+                resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
     }
 
     @Test

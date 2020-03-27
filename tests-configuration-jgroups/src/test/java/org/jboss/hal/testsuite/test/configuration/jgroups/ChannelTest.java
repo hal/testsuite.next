@@ -48,10 +48,9 @@ public class ChannelTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
+        operations.add(channelAddress(CHANNEL_UPDATE), Values.of(STACK, TCP)).assertSuccess();
+        operations.add(channelAddress(CHANNEL_DELETE), Values.of(STACK, TCP)).assertSuccess();
         administration.reloadIfRequired();
-
-        operations.add(channelAddress(CHANNEL_UPDATE), Values.of(STACK, TCP));
-        operations.add(channelAddress(CHANNEL_DELETE), Values.of(STACK, TCP));
     }
 
     @AfterClass

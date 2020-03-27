@@ -52,7 +52,7 @@ public class SessionOperationsTest {
         "http:" + System.getProperty("as.managementAddress", "localhost") + ":8080/" + DEPLOYMENT_NAME;
     private static final Address UNDERTOW_RUNTIME_ADDRESS = Address.deployment(ARCHIVE_NAME).and("subsystem", "undertow");
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MM/d/YY, h:mm a");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("MMM d, yyyy, h:mm:ss a");
 
     private void invalidateSession(String sessionId) throws IOException {
         operations.invoke("invalidate-session", UNDERTOW_RUNTIME_ADDRESS, Values.of("session-id", sessionId));
@@ -227,7 +227,7 @@ public class SessionOperationsTest {
         String lastAccessedTime = selectedRowColumns.get(2).getText();
         Calendar lastAccessedTimeCalendar = Calendar.getInstance();
         lastAccessedTimeCalendar.setTimeInMillis(end);
-        Assert.assertEquals("Creation time should be matching", DATE_FORMAT.format(lastAccessedTimeCalendar.getTime()), lastAccessedTime);
+        Assert.assertEquals("Last accessed time should be matching", DATE_FORMAT.format(lastAccessedTimeCalendar.getTime()), lastAccessedTime);
         invalidateSession(sessionId);
     }
 }

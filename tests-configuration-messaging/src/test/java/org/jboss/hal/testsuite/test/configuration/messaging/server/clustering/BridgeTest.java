@@ -203,7 +203,7 @@ public class BridgeTest extends AbstractClusteringTest {
         // navigate again, to reload the page as new data were added with the operations above
 
         page.navigateAgain(SERVER, SRV_UPDATE);
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         console.verticalNavigation().selectPrimary(Ids.build(MESSAGING_SERVER, BRIDGE, ITEM));
         TableFragment table = page.getBridgeTable();
         FormFragment form = page.getBridgeCRForm();
@@ -215,12 +215,12 @@ public class BridgeTest extends AbstractClusteringTest {
         console.confirmationDialog().getPrimaryButton().click();
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
-        addResource.getForm().text(CLEAR_TEXT, clearText);
+        addResource.getForm().text(CLEAR_TEXT, clearTextValue);
         addResource.add();
 
         console.verifySuccess();
         new ResourceVerifier(bridgeAddress(SRV_UPDATE, BRIDGE_UPDATE), client)
-            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearText);
+            .verifyAttribute(CREDENTIAL_REFERENCE + "." + CLEAR_TEXT, clearTextValue);
 
     }
 

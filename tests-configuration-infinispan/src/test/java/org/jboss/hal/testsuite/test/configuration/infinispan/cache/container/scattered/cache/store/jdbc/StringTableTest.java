@@ -46,14 +46,14 @@ public class StringTableTest {
 
     @BeforeClass
     public static void init() throws IOException, CommandFailedException {
-        operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups"));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER)).assertSuccess();
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and("transport", "jgroups")).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE)).assertSuccess();
         client.apply(
             new AddDataSource.Builder<>(DATA_SOURCE).driverName("h2").jndiName(Random.jndiName()).connectionUrl(
                 DataSourceFixtures.h2ConnectionUrl(Random.name())).build());
         operations.headers(Values.of("allow-resource-service-restart", true))
-            .add(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), Values.of("data-source", DATA_SOURCE));
+            .add(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), Values.of("data-source", DATA_SOURCE)).assertSuccess();
     }
 
     @AfterClass
@@ -95,7 +95,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String idColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("ID Column Name", idColumnName),
+            formFragment -> formFragment.textByLabel("ID Column / ID Column Name", idColumnName),
             resourceVerifier -> resourceVerifier.verifyAttribute("id-column.name", idColumnName));
     }
 
@@ -104,7 +104,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String idColumnType = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("ID Column Type", idColumnType),
+            formFragment -> formFragment.textByLabel("ID Column / ID Column Type", idColumnType),
             resourceVerifier -> resourceVerifier.verifyAttribute("id-column.type", idColumnType));
     }
 
@@ -113,7 +113,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String dataColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("Data Column Name", dataColumnName),
+            formFragment -> formFragment.textByLabel("Data Column / Data Column Name", dataColumnName),
             resourceVerifier -> resourceVerifier.verifyAttribute("data-column.name", dataColumnName));
     }
 
@@ -122,7 +122,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String dataColumnType = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("Data Column Type", dataColumnType),
+            formFragment -> formFragment.textByLabel("Data Column / Data Column Type", dataColumnType),
             resourceVerifier -> resourceVerifier.verifyAttribute("data-column.type", dataColumnType));
     }
 
@@ -131,7 +131,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String timestampColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("Timestamp Column Name", timestampColumnName),
+            formFragment -> formFragment.textByLabel("Timestamp Column / Timestamp Column Name", timestampColumnName),
             resourceVerifier -> resourceVerifier.verifyAttribute("timestamp-column.name", timestampColumnName));
     }
 
@@ -140,7 +140,7 @@ public class StringTableTest {
         console.waitNoNotification();
         String timeStampColumnName = Random.name();
         crudOperations.update(STRING_TABLE_ADDRESS, page.getJdbcStoreStringTableForm(),
-            formFragment -> formFragment.textByLabel("Timestamp Column Type", timeStampColumnName),
+            formFragment -> formFragment.textByLabel("Timestamp Column / Timestamp Column Type", timeStampColumnName),
             resourceVerifier -> resourceVerifier.verifyAttribute("timestamp-column.type", timeStampColumnName));
     }
 

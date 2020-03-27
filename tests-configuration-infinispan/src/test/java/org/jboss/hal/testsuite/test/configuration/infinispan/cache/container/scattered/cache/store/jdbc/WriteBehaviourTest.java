@@ -52,15 +52,15 @@ public class WriteBehaviourTest {
 
     @BeforeClass
     public static void init() throws IOException, CommandFailedException {
-        operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER)).assertSuccess();
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE)).assertSuccess();
 
         client.apply(new AddDataSource.Builder<>(DS).driverName("h2").jndiName(Random.jndiName())
                 .connectionUrl(DataSourceFixtures.h2ConnectionUrl(Random.name())).build());
 
         operations.headers(Values.of(ModelDescriptionConstants.ALLOW_RESOURCE_SERVICE_RESTART, true))
-                .add(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), Values.of(DATA_SOURCE, DS));
+                .add(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE), Values.of(DATA_SOURCE, DS)).assertSuccess();
     }
 
     @AfterClass
@@ -97,12 +97,6 @@ public class WriteBehaviourTest {
     public void change2ModificationQueueSize() throws Exception {
         crud.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
                 "modification-queue-size", Random.number());
-    }
-
-    @Test
-    public void change3ThreadPoolSize() throws Exception {
-        crud.update(jdbcStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
-                "thread-pool-size", Random.number());
     }
 
     @Test

@@ -127,7 +127,10 @@ public class MappedRoleMapperTest {
         page.getMappedRoleMapperTable().select(MAPPED_ROLE_MAPPER_UPDATE);
         crudOperations.update(ElytronFixtures.mappedRoleMapperAddress(MAPPED_ROLE_MAPPER_UPDATE),
             page.getMappedRoleMapperForm(),
-            formFragment -> formFragment.properties(ElytronFixtures.ROLE_MAP).add(key, value),
+            formFragment -> {
+            formFragment.properties(ElytronFixtures.ROLE_MAP).removeTags();
+            formFragment.properties(ElytronFixtures.ROLE_MAP).add(key, value);
+            },
             resourceVerifier -> resourceVerifier.verifyListAttributeContainsValue(ElytronFixtures.ROLE_MAP, roleMap));
     }
 }

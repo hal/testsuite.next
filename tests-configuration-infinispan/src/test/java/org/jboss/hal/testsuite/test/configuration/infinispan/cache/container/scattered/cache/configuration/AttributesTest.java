@@ -1,9 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan.cache.container.scattered.cache.configuration;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Collections;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
@@ -23,9 +21,7 @@ import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSPORT;
-import static org.jboss.hal.testsuite.fixtures.InfinispanFixtures.CONSISTENT_HASH_STRATEGY;
 import static org.jboss.hal.testsuite.fixtures.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.fixtures.InfinispanFixtures.scatteredCacheAddress;
 
@@ -40,9 +36,9 @@ public class AttributesTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER)).assertSuccess();
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE)).assertSuccess();
     }
 
     @AfterClass
@@ -71,26 +67,14 @@ public class AttributesTest {
     }
 
     @Test
-    public void editConsistentHashStrategy() throws Exception {
-        String currentHashStrategy =
-            operations.readAttribute(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), CONSISTENT_HASH_STRATEGY)
-                .stringValue();
-        List<String> hashStrategies = new ArrayList<>(Arrays.asList("INTER_CACHE", "INTRA_CACHE"));
-        hashStrategies.remove(currentHashStrategy);
-        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
-            formFragment -> formFragment.select(CONSISTENT_HASH_STRATEGY, hashStrategies.get(0)),
-            resourceVerifier -> resourceVerifier.verifyAttribute(CONSISTENT_HASH_STRATEGY, hashStrategies.get(0)));
-    }
-
-    @Test
     public void editInvalidationBatchSize() throws Exception {
         crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(),
             "invalidation-batch-size", Random.number());
     }
 
     @Test
-    public void editModule() throws Exception {
-        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(), MODULE);
+    public void editModules() throws Exception {
+        crud.update(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE), page.getConfigurationForm(), "modules", Collections.singletonList(Random.name()));
     }
 
     @Test

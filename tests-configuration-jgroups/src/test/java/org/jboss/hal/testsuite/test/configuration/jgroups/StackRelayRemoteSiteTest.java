@@ -58,11 +58,11 @@ public class StackRelayRemoteSiteTest {
         Batch stackCreate = new Batch();
         stackCreate.add(stackAddress(STACK_CREATE));
         stackCreate.add(transportAddress(STACK_CREATE, TRANSPORT_CREATE), Values.of(SOCKET_BINDING, JGROUPS_TCP));
-        operations.batch(stackCreate);
-        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP));
-        operations.add(relayAddress(STACK_CREATE), Values.of(SITE, Random.name()));
-        operations.add(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_UPDATE), Values.of(CHANNEL, EE));
-        operations.add(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_DELETE), Values.of(CHANNEL, EE));
+        operations.batch(stackCreate).assertSuccess();
+        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP)).assertSuccess();
+        operations.add(relayAddress(STACK_CREATE), Values.of(SITE, Random.name())).assertSuccess();
+        operations.add(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_UPDATE), Values.of(CHANNEL, EE)).assertSuccess();
+        operations.add(relayRemoteSiteAddress(STACK_CREATE, REMOTESITE_DELETE), Values.of(CHANNEL, EE)).assertSuccess();
     }
 
     @AfterClass

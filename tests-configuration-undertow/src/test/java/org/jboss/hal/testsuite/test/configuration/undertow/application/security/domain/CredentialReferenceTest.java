@@ -133,17 +133,17 @@ public class CredentialReferenceTest {
 
     @Test
     public void updateClearText() throws Exception {
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         crudOperations.update(
             ApplicationSecurityDomainFixtures.singleSignOnAddress(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
             page.getCredentialReferenceForm(),
             formFragment -> {
                 formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, "");
-                formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearText);
+                formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearTextValue);
                 formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_STORE, "");
             },
             resourceVerifier -> resourceVerifier.verifyAttribute(
-                CredentialReference.fqName(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT), clearText));
+                CredentialReference.fqName(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT), clearTextValue));
     }
 
     @Test

@@ -20,6 +20,7 @@
 
     <extension qualifier="webdriver">
         <property name="browser">${browser}</property>
+        <property name="chromeAcceptInsecureCerts">true</property>
     </extension>
 
     <extension qualifier="graphene">

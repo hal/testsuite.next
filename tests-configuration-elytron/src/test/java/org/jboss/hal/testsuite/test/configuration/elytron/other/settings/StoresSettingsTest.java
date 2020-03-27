@@ -32,7 +32,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.CREATE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DIR_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_ATTRIBUTES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NEW_ITEM_PATH;
@@ -90,8 +89,8 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
 
         crud.create(credentialStoreAddress(CRED_ST_CREATE), table, f -> {
             f.text(NAME, CRED_ST_CREATE);
+            f.text(PATH, ANY_STRING);
             f.flip(CREATE, true);
-            f.text(LOCATION, ANY_STRING);
             f.text(CLEAR_TEXT, ANY_STRING);
         });
     }

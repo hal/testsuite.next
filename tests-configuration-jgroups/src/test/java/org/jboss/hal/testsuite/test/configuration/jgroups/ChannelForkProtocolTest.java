@@ -48,10 +48,10 @@ public class ChannelForkProtocolTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP));
-        operations.add(forkAddress(CHANNEL_CREATE, FORK_CREATE));
-        operations.add(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_UPDATE));
-        operations.add(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_DELETE));
+        operations.add(channelAddress(CHANNEL_CREATE), Values.of(STACK, TCP)).assertSuccess();
+        operations.add(forkAddress(CHANNEL_CREATE, FORK_CREATE)).assertSuccess();
+        operations.add(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_UPDATE)).assertSuccess();
+        operations.add(forkProtocolAddress(CHANNEL_CREATE, FORK_CREATE, FORK_PROTOCOL_DELETE)).assertSuccess();
     }
 
     @AfterClass

@@ -406,7 +406,10 @@ public class LdapRealmTest {
         String attr = IDENTITY_MAPPING + PROPERTY_DELIMITER +  ATTRIBUTE_MAPPING;
         String to = Random.name();
         table.select(LDAP_RLM_AM_FROM_UPD);
-        crud.update(ldapRealmAddress(LDAP_RLM_AM_UPD), form, f -> f.text(TO, to),
+        crud.update(ldapRealmAddress(LDAP_RLM_AM_UPD), form, f -> {
+            f.number("role-recursion", Random.number());
+            f.text(TO, to);
+                },
                 ver -> ver.verifyListAttributeContainsSingleValue(attr, TO, to));
     }
 

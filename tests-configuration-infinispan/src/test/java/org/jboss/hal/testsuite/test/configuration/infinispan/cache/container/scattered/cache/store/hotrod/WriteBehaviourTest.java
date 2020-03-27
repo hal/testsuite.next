@@ -115,13 +115,6 @@ public class WriteBehaviourTest {
     }
 
     @Test
-    public void change3ThreadPoolSize() throws Exception {
-        console.waitNoNotification();
-        crud.update(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, BEHIND), form,
-                "thread-pool-size", Random.number());
-    }
-
-    @Test
     public void change4ToWriteThrough() throws Exception {
         page.switchBehaviour();
         new ResourceVerifier(hotrodStoreAddress(CACHE_CONTAINER, SCATTERED_CACHE).and(WRITE, THROUGH),

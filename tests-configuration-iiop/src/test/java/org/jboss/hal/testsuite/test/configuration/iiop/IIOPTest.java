@@ -33,8 +33,9 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+
+import static org.jboss.hal.dmr.ModelDescriptionConstants.AUTHENTICATION_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLIENT_SSL_CONTEXT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ELYTRON;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IDENTITY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IIOP_OPENJDK;
@@ -130,11 +131,12 @@ public class IIOPTest {
 
     @Test
     public void updateInitializers() throws Exception {
+        String authenticationContextValue = Random.name();
         page.getTabs().select(Ids.build(IIOP_PREFIX, GROUP, "initializers", Ids.TAB));
         form = page.getInitializersForm();
         crud.update(SUBSYSTEM_ADDRESS, form,
-                f -> f.select(SECURITY, ELYTRON),
-                resourceVerifier -> resourceVerifier.verifyAttribute(SECURITY, ELYTRON));
+                f -> f.text(AUTHENTICATION_CONTEXT, authenticationContextValue),
+                resourceVerifier -> resourceVerifier.verifyAttribute(AUTHENTICATION_CONTEXT, authenticationContextValue));
     }
 
     @Test

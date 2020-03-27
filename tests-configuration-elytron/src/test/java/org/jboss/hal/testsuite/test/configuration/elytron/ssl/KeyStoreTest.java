@@ -34,7 +34,6 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.ConfirmationDialogFragment;
 import org.jboss.hal.testsuite.page.runtime.elytron.ElytronRuntimeStoresPage;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -89,40 +88,36 @@ public class KeyStoreTest {
         operations.add(keyStoreAddress(KEY_STORE_NAME), Values.of(ModelDescriptionConstants.TYPE, JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
                 .and(ModelDescriptionConstants.PATH, Random.name())
-                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir"));
+                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir")).assertSuccess();
         // add a certificate-authority-account
         operations.add(certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE),
                 Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                         .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE_NAME).and("contact-urls", new ModelNodeGenerator.ModelNodeListBuilder()
-                .addAll("mailto:example@org").build()));
+                .addAll("mailto:example@mail.com").build())).assertSuccess();
         // generate and add a certificate to the keystore and export it to later run the test to import the certificate
         operations.add(keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.TYPE, JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
                 .and(ModelDescriptionConstants.PATH, Random.name())
-                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir"));
+                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir")).assertSuccess();
         operations.invoke(ModelDescriptionConstants.GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_RENAME)
                 .and(ModelDescriptionConstants.DISTINGUISHED_NAME, "cn=selfsigned")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
-                .and(ModelDescriptionConstants.ALGORITHM, RSA));
+                .and(ModelDescriptionConstants.ALGORITHM, RSA)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TRY_TO_RENAME)
                 .and(ModelDescriptionConstants.DISTINGUISHED_NAME, "cn=selfsigned")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
-                .and(ModelDescriptionConstants.ALGORITHM, RSA));
+                .and(ModelDescriptionConstants.ALGORITHM, RSA)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_EXPORT)
                 .and(ModelDescriptionConstants.DISTINGUISHED_NAME, "cn=to-export")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
-                .and(ModelDescriptionConstants.ALGORITHM, RSA));
+                .and(ModelDescriptionConstants.ALGORITHM, RSA)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_REMOVE)
                 .and(ModelDescriptionConstants.DISTINGUISHED_NAME, "cn=to-remove")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
-                .and(ModelDescriptionConstants.ALGORITHM, RSA));
-        operations.invoke(ModelDescriptionConstants.STORE, keyStoreAddress(KEY_STORE_NAME2));
+                .and(ModelDescriptionConstants.ALGORITHM, RSA)).assertSuccess();
+        operations.invoke(ModelDescriptionConstants.STORE, keyStoreAddress(KEY_STORE_NAME2)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.EXPORT_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_RENAME)
-                .and(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME));
-        operations.invoke(ModelDescriptionConstants.OBTAIN_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_REVOKE)
-                .and(AGREE_TO_TERMS_OF_SERVICE, true)
-                .and(ModelDescriptionConstants.CERTIFICATE_AUTHORITY_ACCOUNT, CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE)
-                .andList(DOMAIN_NAMES, "www.foobar.com"));
+                .and(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME)).assertSuccess();
     }
 
     @AfterClass
@@ -142,7 +137,6 @@ public class KeyStoreTest {
     @Page
     private ElytronRuntimeStoresPage page;
 
-    @Before
     public void initPage() {
         page.navigate();
         console.verticalNavigation().selectPrimary(Ids.ELYTRON_KEY_STORE);
@@ -150,6 +144,7 @@ public class KeyStoreTest {
 
     @Test
     public void load() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Load").click();
         console.verifySuccess();
@@ -157,6 +152,7 @@ public class KeyStoreTest {
 
     @Test
     public void store() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Store").click();
         console.verifySuccess();
@@ -164,6 +160,7 @@ public class KeyStoreTest {
 
     @Test
     public void generateKeyPair() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Generate Key Pair").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -175,6 +172,7 @@ public class KeyStoreTest {
 
     @Test
     public void tryGenerateKeyPair() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Generate Key Pair").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -185,6 +183,7 @@ public class KeyStoreTest {
 
     @Test
     public void generateKeyPairFull() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Generate Key Pair").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -200,7 +199,9 @@ public class KeyStoreTest {
     }
 
     @Test
+    @Category(RequiresLetsEncrypt.class)
     public void obtainCertificateStaging() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Obtain").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -215,6 +216,7 @@ public class KeyStoreTest {
 
     @Test
     public void tryObtainCertificateStaging() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Obtain").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -228,7 +230,9 @@ public class KeyStoreTest {
     }
 
     @Test
+    @Category(RequiresLetsEncrypt.class)
     public void obtainCertificate() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Obtain").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -242,6 +246,7 @@ public class KeyStoreTest {
 
     @Test
     public void importCertificate() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Import Certificate").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -255,6 +260,7 @@ public class KeyStoreTest {
 
     @Test
     public void tryImportCertificate() {
+        initPage();
         page.getKeyStoreTable().select(KEY_STORE_NAME);
         page.getKeyStoreTable().button("Import Certificate").click();
         AddResourceDialogFragment dialog = console.addResourceDialog();
@@ -268,6 +274,7 @@ public class KeyStoreTest {
 
     @Test
     public void changeAlias() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -282,6 +289,7 @@ public class KeyStoreTest {
 
     @Test
     public void tryChangeAlias() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
         page.getKeyStoreAliasTable().select(ALIAS_TRY_TO_RENAME);
@@ -294,6 +302,7 @@ public class KeyStoreTest {
 
     @Test
     public void exportAliasCertificate() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -308,6 +317,7 @@ public class KeyStoreTest {
 
     @Test
     public void tryExportAliasCertificate() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -322,6 +332,7 @@ public class KeyStoreTest {
 
     @Test
     public void generateAliasCSR() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -336,6 +347,7 @@ public class KeyStoreTest {
 
     @Test
     public void removeAlias() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -348,7 +360,13 @@ public class KeyStoreTest {
     }
 
     @Test
-    public void revokeAliasCertificate() {
+    @Category(RequiresLetsEncrypt.class)
+    public void revokeAliasCertificate() throws IOException {
+        operations.invoke(ModelDescriptionConstants.OBTAIN_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_REVOKE)
+                .and(AGREE_TO_TERMS_OF_SERVICE, true)
+                .and(ModelDescriptionConstants.CERTIFICATE_AUTHORITY_ACCOUNT, CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE)
+                .andList(DOMAIN_NAMES, "www.foobar.com")).assertSuccess();
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
@@ -363,6 +381,7 @@ public class KeyStoreTest {
 
     @Test
     public void verifyAliasRenew() {
+        initPage();
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         Graphene.waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
 
