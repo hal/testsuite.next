@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.messaging.server.connections.connection.factory;
 
 import java.io.IOException;
+import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
@@ -11,7 +12,6 @@ import org.jboss.hal.testsuite.test.configuration.messaging.server.connections.A
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -22,15 +22,15 @@ import static org.jboss.hal.resources.Ids.ITEM;
 import static org.jboss.hal.resources.Ids.MESSAGING_CONNECTION_FACTORY;
 import static org.jboss.hal.testsuite.test.configuration.messaging.MessagingFixtures.*;
 
-@Ignore // unable to create a connection-factory, ignore while this is investigated
 @RunWith(Arquillian.class)
 public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
 
     @BeforeClass
-    public static void createResources() throws IOException {
+    public static void createResources() throws IOException, InterruptedException, TimeoutException {
         createServer(SRV_UPDATE);
         String discoveryGroup = Random.name();
-        operations.add(discoveryGroupAddress(SRV_UPDATE, discoveryGroup));
+        operations.add(discoveryGroupAddress(SRV_UPDATE, discoveryGroup)).assertSuccess();
+        administration.reload();
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE),
                 Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, discoveryGroup)).assertSuccess();
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_TRY_UPDATE),
@@ -46,7 +46,7 @@ public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
 
     @Before
     public void setUp() throws Exception {
-        page.navigate(SERVER, SRV_UPDATE);
+        page.navigateAgain(SERVER, SRV_UPDATE);
     }
 
     @Test
