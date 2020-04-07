@@ -25,7 +25,9 @@ import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.category.RequiresLetsEncrypt;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.ConfirmationDialogFragment;
 import org.jboss.hal.testsuite.page.runtime.elytron.ElytronRuntimeStoresPage;
@@ -33,8 +35,8 @@ import org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures;
 import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -45,8 +47,7 @@ import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.test.configuration.elytron.ElytronFixtures.*;
 
-// temporarily disable tests as the pebble server is not ready to run in CI server.
-@Ignore
+@Category(RequiresLetsEncrypt.class)
 @RunWith(Arquillian.class)
 public class KeyStoreTest {
 
@@ -61,6 +62,7 @@ public class KeyStoreTest {
     private static final String ALIAS_OBTAIN = "obtain-" + Random.name();
     private static final String ALIAS_OBTAIN_STAGING = "obtain-stag-" + Random.name();
     private static final String ALIAS_TO_RENAME = "to-rename-" + Random.name();
+    private static final String ALIAS_TRY_TO_RENAME = "try-to-rename" + Random.name();
     private static final String ALIAS_RENAMED = "renamed-" + Random.name();
     private static final String ALIAS_TO_EXPORT = "to-export-" + Random.name();
     private static final String ALIAS_TO_REMOVE = "to-remove-" + Random.name();
@@ -87,13 +89,18 @@ public class KeyStoreTest {
         // add a certificate-authority-account
         operations.add(certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE),
                 Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
-                        .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE_NAME));
+                        .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE_NAME).and("contact-urls", new ModelNodeGenerator.ModelNodeListBuilder()
+                .addAll("mailto:example@org").build()));
         // generate and add a certificate to the keystore and export it to later run the test to import the certificate
         operations.add(keyStoreAddress(KEY_STORE_NAME2), Values.of(TYPE, JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
                 .and(PATH, Random.name())
                 .and(RELATIVE_TO, "jboss.server.config.dir"));
         operations.invoke(GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ALIAS, ALIAS_TO_RENAME)
+                .and(DISTINGUISHED_NAME, "cn=selfsigned")
+                .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
+                .and(ALGORITHM, RSA));
+        operations.invoke(GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ALIAS, ALIAS_TRY_TO_RENAME)
                 .and(DISTINGUISHED_NAME, "cn=selfsigned")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
                 .and(ALGORITHM, RSA));
@@ -108,7 +115,6 @@ public class KeyStoreTest {
         operations.invoke(STORE, keyStoreAddress(KEY_STORE_NAME2));
         operations.invoke(EXPORT_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ALIAS, ALIAS_TO_RENAME)
                 .and(PATH, EXPORTED_CERT_FILENAME));
-        // obtain-certificate(agree-to-terms-of-service,alias=lalalal1,certificate-authority-account=caa1,domain-names=["www.foobar.com"])
         operations.invoke(OBTAIN_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ALIAS, ALIAS_TO_REVOKE)
                 .and(AGREE_TO_TERMS_OF_SERVICE, true)
                 .and(CERTIFICATE_AUTHORITY_ACCOUNT, CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE)
@@ -274,10 +280,8 @@ public class KeyStoreTest {
     public void tryChangeAlias() {
         page.getKeyStoreTable().action(KEY_STORE_NAME2, ALIASES);
         waitGui().until().element(page.getKeyStoreAliasTable().getRoot()).is().visible();
-
-        page.getKeyStoreAliasTable().select(ALIAS_TO_RENAME);
+        page.getKeyStoreAliasTable().select(ALIAS_TRY_TO_RENAME);
         page.getKeyStoreAliasTable().button("Change alias").click();
-
         AddResourceDialogFragment dialog = console.addResourceDialog();
         dialog.getPrimaryButton().click();
         dialog.getForm().expectError("new-alias");
@@ -307,7 +311,6 @@ public class KeyStoreTest {
         page.getKeyStoreAliasTable().button("Export Certificate").click();
 
         AddResourceDialogFragment dialog = console.addResourceDialog();
-        dialog.getForm().text(PATH, EXPORTED_CERT_FILENAME2);
         dialog.getPrimaryButton().click();
         dialog.getForm().expectError(PATH);
         dialog.getSecondaryButton().click();
