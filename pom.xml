@@ -647,11 +647,7 @@
                 </property>
             </activation>
             <properties>
-<<<<<<< HEAD
                 <test.included.category>org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
-=======
-                <test.included.category>rg.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
->>>>>>> introduced letsencrypt profile + fixing letsencrypt tests
             </properties>
         </profile>
         <profile>
