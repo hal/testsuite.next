@@ -85,7 +85,7 @@
         <commons.text.version>1.2</commons.text.version>
         <creaper.version>1.6.1</creaper.version>
         <graphene.version>2.3.2</graphene.version>
-        <guava.version>23.5-jre</guava.version>
+        <guava.version>24.1.1-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
         <hal.version>3.2.1.Final</hal.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
