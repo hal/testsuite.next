@@ -38,7 +38,7 @@ import static org.jboss.hal.testsuite.Selectors.contains;
 @Place(NameTokens.HOMEPAGE)
 public class HomePage extends BasePage {
 
-    private static final String MODULES_SELECTOR = "a[data-element=moduleHeader]";
+    private static final String MODULES_SELECTOR = "div.navbar-header";
     @FindBy(css = MODULES_SELECTOR) private List<WebElement> modules;
     @FindBy(id = Ids.HEADER_USERNAME) private WebElement userElement;
 

@@ -35,7 +35,7 @@ public class HeaderFragment {
     @FindBy(css = "." + drawerPf + "." + drawerPfHal) private NotificationDrawerFragment notificationDrawer;
     @FindBy(css = "ul[data-element=topLevelCategories] > li > a") private List<WebElement> topLevelCategories;
     @FindBy(css = "ul[data-element=topLevelCategories] > li.active > a") private WebElement selectedTopLevelCategory;
-    @FindBy(css = "ol[data-element=breadcrumb]") private HeaderBreadcrumbFragment breadcrumb;
+    @FindBy(css = "ol.breadcrumb") private HeaderBreadcrumbFragment breadcrumb;
 
     public NotificationDrawerFragment openNotificationDrawer() {
         notifications.click();
