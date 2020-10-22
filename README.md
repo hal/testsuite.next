@@ -36,9 +36,12 @@ The easiest way is to use the provided scripts
 - `start-wildfly.sh` and
 - `stop-wildfly.sh`
 
-They use the docker image [halconsole/hal-wildfly-nightly](https://hub.docker.com/r/halconsole/hal-wildfly-nightly/) which is based on [jboss/wildfly](https://hub.docker.com/r/jboss/wildfly/), the latest HAl console and standalone configurations with insecure management interfaces.
+They use the docker image [halconsole/hal-wildfly](https://hub.docker.com/r/halconsole/hal-wildfly/) which is based
+on [jboss/wildfly](https://hub.docker.com/r/jboss/wildfly/), the latest HAl console and standalone configurations with
+insecure management interfaces.
 
-If you rather want to use a custom WildFly instance, use the following commands to remove the security realm from the management interface:
+If you rather want to use a custom WildFly instance, use the following commands to remove the security realm from the
+management interface:
 
 Standalone
 
