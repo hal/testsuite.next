@@ -17,6 +17,7 @@ import org.wildfly.extras.creaper.commands.deployments.Deploy;
 import org.wildfly.extras.creaper.commands.deployments.Undeploy;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+@SuppressWarnings({"rawtypes", "unchecked", "Convert2MethodRef"})
 public class Deployment {
 
     private final Archive archive;
