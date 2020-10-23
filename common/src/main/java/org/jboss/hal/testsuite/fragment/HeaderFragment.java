@@ -15,27 +15,45 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
-import java.util.List;
-
+import org.jboss.hal.resources.CSS;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.resources.CSS.drawerPf;
-import static org.jboss.hal.resources.CSS.drawerPfHal;
+import java.util.List;
 
-/** Fragment for the console header. Use {@link Console#header()} to get an instance. */
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.*;
+
+/**
+ * Fragment for the console header. Use {@link Console#header()} to get an instance.
+ */
 public class HeaderFragment {
 
-    @FindBy(css = "a[data-element='reloadLink']") private WebElement reload;
-    @FindBy(css = "a[data-element='nonProgressingOperationLink']") private WebElement nonProgressingOp;
-    @FindBy(css = "a[data-element='messages']") private WebElement notifications;
-    @FindBy(css = "span[data-element='badgeIcon']") private WebElement badgeIcon;
-    @FindBy(css = "." + drawerPf + "." + drawerPfHal) private NotificationDrawerFragment notificationDrawer;
-    @FindBy(css = "ul[data-element=topLevelCategories] > li > a") private List<WebElement> topLevelCategories;
-    @FindBy(css = "ul[data-element=topLevelCategories] > li.active > a") private WebElement selectedTopLevelCategory;
-    @FindBy(css = "ol[data-element=breadcrumb]") private HeaderBreadcrumbFragment breadcrumb;
+    @FindBy(id = Ids.RELOAD_LINK)
+    private WebElement reload;
+
+    @FindBy(id = Ids.NONE_PROGRESSING_LINK)
+    private WebElement nonProgressingOp;
+
+    @FindBy(id = Ids.MESSAGES_LINK)
+    private WebElement notifications;
+
+    @FindBy(id = Ids.BADEGE_ICON)
+    private WebElement badgeIcon;
+
+    @FindBy(css = "." + drawerPf + "." + drawerPfHal)
+    private NotificationDrawerFragment notificationDrawer;
+
+    @FindBy(css = "ul." + nav + "." + navbarNav + "." + navbarPrimary + " > li > a")
+    private List<WebElement> topLevelCategories;
+
+    @FindBy(css = "ul." + nav + "." + navbarNav + "." + navbarPrimary + " > li.active > a")
+    private WebElement selectedTopLevelCategory;
+
+    @FindBy(css = "ol." + CSS.breadcrumb + "." + halBreadcrumb)
+    private HeaderBreadcrumbFragment breadcrumb;
 
     public NotificationDrawerFragment openNotificationDrawer() {
         notifications.click();

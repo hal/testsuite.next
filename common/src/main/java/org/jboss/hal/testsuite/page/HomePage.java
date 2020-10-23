@@ -15,10 +15,6 @@
  */
 package org.jboss.hal.testsuite.page;
 
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.List;
-
 import com.gwtplatform.mvp.shared.proxy.PlaceRequest;
 import org.jboss.arquillian.graphene.Graphene;
 import org.jboss.arquillian.graphene.findby.ByJQuery;
@@ -31,15 +27,21 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
+
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.hal.resources.CSS.eapHomeModuleLink;
 import static org.jboss.hal.testsuite.Selectors.contains;
 
 @Place(NameTokens.HOMEPAGE)
 public class HomePage extends BasePage {
 
-    private static final String MODULES_SELECTOR = "a[data-element=moduleHeader]";
-    @FindBy(css = MODULES_SELECTOR) private List<WebElement> modules;
+    private static final String MODULES_SELECTOR = "a." + eapHomeModuleLink;
+    @FindBy(css = MODULES_SELECTOR)
+    private List<WebElement> modules;
     @FindBy(id = Ids.HEADER_USERNAME) private WebElement userElement;
 
     public List<WebElement> getModules() {
@@ -68,7 +70,7 @@ public class HomePage extends BasePage {
 
     public void logout() {
         userElement.click();
-        By logoutSelector = By.cssSelector("a[data-element=logout]");
+        By logoutSelector = By.id(Ids.LOGOUT_LINK);
         Graphene.waitGui().until().element(logoutSelector).is().clickable();
         browser.findElement(logoutSelector).click();
     }
