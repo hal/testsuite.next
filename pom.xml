@@ -87,7 +87,7 @@
         <graphene.version>2.3.2</graphene.version>
         <guava.version>23.5-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
-        <hal.version>3.2.11.Final</hal.version>
+        <hal.version>3.3.0.Final</hal.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.12</junit.version>
