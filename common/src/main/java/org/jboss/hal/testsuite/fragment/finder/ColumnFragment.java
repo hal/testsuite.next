@@ -68,6 +68,17 @@ public class ColumnFragment {
         action(actionId).click();
     }
 
+    public boolean hasDropdownActions(String dropdownId, String... actionIds) {
+        root.findElement(By.id(dropdownId)).click();
+        waitGui().until().element(By.cssSelector("ul[aria-labelledby=" + dropdownId + "]")).is().visible();
+        for (String actionId: actionIds) {
+            if (action(actionId) == null) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     /** Returns the specified column action */
     public WebElement action(String id) {
         return root.findElement(By.id(id));
