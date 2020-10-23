@@ -451,4 +451,12 @@ public class AttributesTest extends AbstractPooledConnectionFactoryTest {
             page.getPooledConnectionFactoryForm(), "user");
     }
 
+    @Test
+    public void toggleAmq1Prefix() throws Exception {
+        boolean amq1Prefix = operations.readAttribute(
+                RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_UPDATE), "enable-amq1-prefix")
+                .booleanValue(false);
+        crudOperations.update(RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_UPDATE),
+                page.getPooledConnectionFactoryForm(), "enable-amq1-prefix", !amq1Prefix);
+    }
 }
