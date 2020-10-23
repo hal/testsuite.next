@@ -28,11 +28,7 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.page.configuration.MessagingServerPage;
-import org.junit.AfterClass;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
+import org.junit.*;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
@@ -40,12 +36,12 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ATTRIBUTES;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MANAGEMENT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.resources.Ids.*;
 import static org.jboss.hal.testsuite.Message.valueMustBeMasked;
 import static org.jboss.hal.testsuite.Message.valueMustBeUnmasked;
@@ -146,7 +142,6 @@ public class ViewTest {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
         page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
 
-
         FormFragment form = page.getJournalForm();
         String tableName = Random.name();
         int timeout = Random.number(1, 59);
@@ -158,6 +153,38 @@ public class ViewTest {
                     verifier.verifyAttribute(JOURNAL_BINDING_TABLE, tableName);
                     verifier.verifyAttribute(JOURNAL_FILE_OPEN_TIMEOUT, timeout);
                 });
+    }
+
+    @Test
+    public void updateJournalFileOpenTimeoutNegative() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        FormFragment form = page.getJournalForm();
+        crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, -1);
+    }
+
+    @Test
+    public void updateJournalFileOpenTimeoutZero() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        FormFragment form = page.getJournalForm();
+        crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, 0);
+    }
+
+    @Test
+    public void updateJournalFileOpenTimeoutPositive() throws Exception {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        FormFragment form = page.getJournalForm();
+        crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, 123);
+    }
+
+    @Test
+    public void updateJournalFileOpenTimeoutInvalid() {
+        console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        FormFragment form = page.getJournalForm();
+        crudOperations.updateWithError(form, JOURNAL_FILE_OPEN_TIMEOUT, "nan");
     }
 
     // --------------- cluster tab
