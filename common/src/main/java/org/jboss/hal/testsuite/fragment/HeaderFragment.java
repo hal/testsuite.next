@@ -15,13 +15,13 @@
  */
 package org.jboss.hal.testsuite.fragment;
 
+import java.util.List;
+
 import org.jboss.hal.resources.CSS;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-
-import java.util.List;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.*;

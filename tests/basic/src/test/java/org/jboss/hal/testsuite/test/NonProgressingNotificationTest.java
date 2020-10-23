@@ -15,6 +15,11 @@
  */
 package org.jboss.hal.testsuite.test;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
+
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
@@ -33,11 +38,6 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
-
 import static org.jboss.hal.testsuite.test.runtime.management.operations.LongRunningServlet.DURATION_IN_SECONDS;
 import static org.jboss.hal.testsuite.test.runtime.management.operations.LongRunningServlet.DURATION_PROPERTIES_PATH;
 import static org.junit.Assert.assertTrue;
@@ -51,8 +51,10 @@ public class NonProgressingNotificationTest {
     private static final DeploymentOperations deploymentOps = new DeploymentOperations(client);
     private static final List<String> deploymentsToBeCleanedUp = new ArrayList<>();
 
-    @Page private HomePage page;
-    @Inject private Console console;
+    @Page
+    private HomePage page;
+    @Inject
+    private Console console;
 
     @AfterClass
     public static void endTests() throws Exception {
