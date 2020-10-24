@@ -93,6 +93,15 @@ public abstract class SyslogHandlerAbstractTest {
     }
 
     @Test
+    public void updateNonExistingNamedFormatter() throws Exception {
+        table.select(SyslogHandler.SYSLOG_HANDLER_UPDATE);
+        form.edit();
+        form.text(NAMED_FORMATTER, "foo");
+        form.save();
+        console.verifyError();
+    }
+
+    @Test
     public void reset() throws Exception {
         table.select(SyslogHandler.SYSLOG_HANDLER_UPDATE);
         crud.reset(syslogHandlerAddress(SyslogHandler.SYSLOG_HANDLER_UPDATE), form);
