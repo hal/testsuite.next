@@ -85,6 +85,7 @@ public class ViewTest {
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
     private static final String ID_DELIMITER = "-";
+    private static final String JOURNAL = "journal";
 
     @BeforeClass
     public static void beforeTests() throws Exception {
@@ -168,7 +169,7 @@ public class ViewTest {
     @Test
     public void updateJournal() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
-        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, JOURNAL, TAB));
 
         FormFragment form = page.getJournalForm();
         String tableName = Random.name();
@@ -186,7 +187,7 @@ public class ViewTest {
     @Test
     public void updateJournalFileOpenTimeoutNegative() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
-        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, JOURNAL, TAB));
         FormFragment form = page.getJournalForm();
         crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, -1);
     }
@@ -194,7 +195,7 @@ public class ViewTest {
     @Test
     public void updateJournalFileOpenTimeoutZero() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
-        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, JOURNAL, TAB));
         FormFragment form = page.getJournalForm();
         crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, 0);
     }
@@ -202,7 +203,7 @@ public class ViewTest {
     @Test
     public void updateJournalFileOpenTimeoutPositive() throws Exception {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
-        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, JOURNAL, TAB));
         FormFragment form = page.getJournalForm();
         crudOperations.update(serverAddress(SRV_UPDATE), form, JOURNAL_FILE_OPEN_TIMEOUT, 123);
     }
@@ -210,7 +211,7 @@ public class ViewTest {
     @Test
     public void updateJournalFileOpenTimeoutInvalid() {
         console.verticalNavigation().selectPrimary(MESSAGING_SERVER + ID_DELIMITER + ITEM);
-        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, "journal", TAB));
+        page.getTab().select(Ids.build(MESSAGING_SERVER, GROUP, JOURNAL, TAB));
         FormFragment form = page.getJournalForm();
         crudOperations.updateWithError(form, JOURNAL_FILE_OPEN_TIMEOUT, "nan");
     }
