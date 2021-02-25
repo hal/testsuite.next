@@ -70,7 +70,7 @@
         <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
 
         <!-- Just to avoid 'Invalid group expression' in maven-surefire-plugin due to empty placeholder: -->
-        <test.excluded.category>org.jboss.hal.org.jboss.hal.testsuite.category.DefaultCategory</test.excluded.category>
+        <test.excluded.category>org.jboss.hal.testsuite.category.DefaultCategory</test.excluded.category>
 
         <upstream.excluded.category/>
         <test.included.category/>
@@ -605,7 +605,7 @@
             <properties>
                 <suite.mode>standalone</suite.mode>
                 <test.excluded.category>
-                    org.jboss.hal.org.jboss.hal.testsuite.category.Domain
+                    org.jboss.hal.testsuite.category.Domain
                 </test.excluded.category>
             </properties>
             <dependencies>
@@ -620,7 +620,7 @@
             <properties>
                 <suite.mode>domain</suite.mode>
                 <test.included.category>
-                    org.jboss.hal.org.jboss.hal.testsuite.category.Domain
+                    org.jboss.hal.testsuite.category.Domain
                 </test.included.category>
             </properties>
             <dependencies>
@@ -638,14 +638,14 @@
                 </property>
             </activation>
             <properties>
-                <test.included.category>org.jboss.hal.org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
+                <test.included.category>org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
             </properties>
         </profile>
         <profile>
             <id>upstream</id>
             <properties>
                 <upstream.excluded.category>
-                    org.jboss.hal.org.jboss.hal.testsuite.category.EAP
+                    org.jboss.hal.testsuite.category.EAP
                 </upstream.excluded.category>
             </properties>
             <activation>
@@ -665,12 +665,20 @@
                             <properties>
                                 <property>
                                     <name>listener</name>
-                                    <value>org.jboss.hal.org.jboss.hal.testsuite.testlistener.RestoreConfigurationListener</value>
+                                    <value>org.jboss.hal.testsuite.testlistener.RestoreConfigurationListener</value>
                                 </property>
                             </properties>
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
                         </configuration>
+                        <dependencies>
+                            <!-- dependency on test listener -->
+                            <dependency>
+                                <groupId>org.jboss.hal</groupId>
+                                <artifactId>hal-testsuite-common</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
                     </plugin>
                 </plugins>
             </build>
