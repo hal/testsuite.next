@@ -9,7 +9,7 @@ import org.openqa.selenium.support.FindBy;
 @Place(NameTokens.UNDERTOW_RUNTIME_DEPLOYMENT_VIEW)
 public class UndertowRuntimePage extends BasePage {
 
-    @FindBy(id = "undertow-deployment-session_wrapper")
+    @FindBy(id = "undertow-org.jboss.hal.testsuite.test.deployment-session_wrapper")
     private TableFragment sessionsTable;
 
     public TableFragment getSessionsTable() {

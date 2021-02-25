@@ -25,7 +25,6 @@
     </parent>
 
     <modules>
-        <module>basic</module>
         <module>rbac</module>
         <module>transaction</module>
         <module>multihosts</module>

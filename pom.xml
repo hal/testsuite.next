@@ -57,7 +57,7 @@
         <as.managementPort>9990</as.managementPort>
         <browser>phantomjs</browser>
         <linkXRef>false</linkXRef>
-        <testsuite.config.location>${user.dir}/testsuite.properties</testsuite.config.location>
+        <testsuite.config.location>${user.dir}/org.jboss.hal.testsuite.properties</testsuite.config.location>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -70,7 +70,7 @@
         <take.screenshot.after.each.test>false</take.screenshot.after.each.test>
 
         <!-- Just to avoid 'Invalid group expression' in maven-surefire-plugin due to empty placeholder: -->
-        <test.excluded.category>org.jboss.hal.testsuite.category.DefaultCategory</test.excluded.category>
+        <test.excluded.category>org.jboss.hal.org.jboss.hal.testsuite.category.DefaultCategory</test.excluded.category>
 
         <upstream.excluded.category/>
         <test.included.category/>
@@ -101,6 +101,47 @@
 
     <modules>
         <module>common</module>
+        <module>tests-configuration-batch</module>
+        <module>tests-configuration-datasource</module>
+        <module>tests-configuration-deploymentscanner</module>
+        <module>tests-configuration-distributableweb</module>
+        <module>tests-configuration-ee</module>
+        <module>tests-configuration-ejb</module>
+        <module>tests-configuration-elytron</module>
+        <module>tests-configuration-iiop</module>
+        <module>tests-configuration-infinispan</module>
+        <module>tests-configuration-interface</module>
+        <module>tests-configuration-io</module>
+        <module>tests-configuration-jca</module>
+        <module>tests-configuration-jgroups</module>
+        <module>tests-configuration-jmx</module>
+        <module>tests-configuration-jpa</module>
+        <module>tests-configuration-jsf</module>
+        <module>tests-configuration-logging</module>
+        <module>tests-configuration-mail</module>
+        <module>tests-configuration-management</module>
+        <module>tests-configuration-messaging</module>
+        <module>tests-configuration-microprofile</module>
+        <module>tests-configuration-modcluster</module>
+        <module>tests-configuration-paths</module>
+        <module>tests-configuration-remoting</module>
+        <module>tests-configuration-resourceadapter</module>
+        <module>tests-configuration-security-legacy</module>
+        <module>tests-configuration-securitymanager</module>
+        <module>tests-configuration-socketbinding</module>
+        <module>tests-configuration-systemproperty</module>
+        <module>tests-configuration-transaction</module>
+        <module>tests-configuration-undertow</module>
+        <module>tests-configuration-webservices</module>
+        <module>tests-hal-deployment</module>
+        <module>tests-hal-configuration</module>
+        <module>tests-hal-runtime</module>
+        <module>tests-hal-vulnerabilities</module>
+        <module>tests-hal-basic</module>
+        <module>resources-subsystem-fixtures</module>
+        <module>tooling-deployment</module>
+        <module>tooling-management-operations</module>
+        <module>tooling-ssl-operations</module>
     </modules>
 
     <dependencyManagement>
@@ -110,6 +151,30 @@
                 <groupId>org.jboss.hal</groupId>
                 <artifactId>hal-testsuite-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>resources-subsystem-fixtures</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-deployment</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-ssl-operations</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-management-operations</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Arquillian & Co -->
@@ -267,6 +332,59 @@
                 <artifactId>jaxb-runtime</artifactId>
                 <version>2.3.0</version>
             </dependency>
+
+            <!-- EE specs -->
+            <dependency>
+                <groupId>javax.batch</groupId>
+                <artifactId>javax.batch-api</artifactId>
+                <version>1.0.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>2.0.SP1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- microprofile -->
+
+            <dependency>
+                <groupId>org.eclipse.microprofile.health</groupId>
+                <artifactId>microprofile-health-api</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>1.3</version>
+            </dependency>
+
+            <!-- JDBC -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.2.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.16</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>7.0.0.jre8</version>
+                <scope>test</scope>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -303,8 +421,17 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.2.0</version>
+                <dependencies>
+                    <!-- overwrite dependency on spotbugs if you want to specify the version of spotbugs -->
+                    <dependency>
+                        <groupId>com.github.spotbugs</groupId>
+                        <artifactId>spotbugs</artifactId>
+                        <version>4.2.1</version>
+                    </dependency>
+                </dependencies>
                 <executions>
                     <execution>
                         <id>finding-bugs</id>
@@ -312,11 +439,6 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <threshold>Low</threshold>
-                            <xmlOutput>true</xmlOutput>
-                            <failOnError>true</failOnError>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -338,6 +460,44 @@
             </activation>
             <modules>
                 <module>tests</module>
+                <!-- modularized basic tests -->
+                <module>tests-configuration-batch</module>
+                <module>tests-configuration-datasource</module>
+                <module>tests-configuration-deploymentscanner</module>
+                <module>tests-configuration-distributableweb</module>
+                <module>tests-configuration-ee</module>
+                <module>tests-configuration-ejb</module>
+                <module>tests-configuration-elytron</module>
+                <module>tests-configuration-iiop</module>
+                <module>tests-configuration-infinispan</module>
+                <module>tests-configuration-interface</module>
+                <module>tests-configuration-io</module>
+                <module>tests-configuration-jca</module>
+                <module>tests-configuration-jgroups</module>
+                <module>tests-configuration-jmx</module>
+                <module>tests-configuration-jpa</module>
+                <module>tests-configuration-jsf</module>
+                <module>tests-configuration-logging</module>
+                <module>tests-configuration-mail</module>
+                <module>tests-configuration-management</module>
+                <module>tests-configuration-messaging</module>
+                <module>tests-configuration-microprofile</module>
+                <module>tests-configuration-modcluster</module>
+                <module>tests-configuration-paths</module>
+                <module>tests-configuration-remoting</module>
+                <module>tests-configuration-resourceadapter</module>
+                <module>tests-configuration-security-legacy</module>
+                <module>tests-configuration-securitymanager</module>
+                <module>tests-configuration-socketbinding</module>
+                <module>tests-configuration-systemproperty</module>
+                <module>tests-configuration-transaction</module>
+                <module>tests-configuration-undertow</module>
+                <module>tests-configuration-webservices</module>
+                <module>tests-hal-deployment</module>
+                <module>tests-hal-configuration</module>
+                <module>tests-hal-runtime</module>
+                <module>tests-hal-vulnerabilities</module>
+                <module>tests-hal-basic</module>
             </modules>
         </profile>
         <profile>
@@ -377,7 +537,43 @@
         <profile>
             <id>basic</id>
             <modules>
-                <module>tests/basic</module>
+                <module>tests-configuration-batch</module>
+                <module>tests-configuration-datasource</module>
+                <module>tests-configuration-deploymentscanner</module>
+                <module>tests-configuration-distributableweb</module>
+                <module>tests-configuration-ee</module>
+                <module>tests-configuration-ejb</module>
+                <module>tests-configuration-elytron</module>
+                <module>tests-configuration-iiop</module>
+                <module>tests-configuration-infinispan</module>
+                <module>tests-configuration-interface</module>
+                <module>tests-configuration-io</module>
+                <module>tests-configuration-jca</module>
+                <module>tests-configuration-jgroups</module>
+                <module>tests-configuration-jmx</module>
+                <module>tests-configuration-jpa</module>
+                <module>tests-configuration-jsf</module>
+                <module>tests-configuration-logging</module>
+                <module>tests-configuration-mail</module>
+                <module>tests-configuration-management</module>
+                <module>tests-configuration-messaging</module>
+                <module>tests-configuration-microprofile</module>
+                <module>tests-configuration-modcluster</module>
+                <module>tests-configuration-paths</module>
+                <module>tests-configuration-remoting</module>
+                <module>tests-configuration-resourceadapter</module>
+                <module>tests-configuration-security-legacy</module>
+                <module>tests-configuration-securitymanager</module>
+                <module>tests-configuration-socketbinding</module>
+                <module>tests-configuration-systemproperty</module>
+                <module>tests-configuration-transaction</module>
+                <module>tests-configuration-undertow</module>
+                <module>tests-configuration-webservices</module>
+                <module>tests-hal-deployment</module>
+                <module>tests-hal-configuration</module>
+                <module>tests-hal-runtime</module>
+                <module>tests-hal-vulnerabilities</module>
+                <module>tests-hal-basic</module>
             </modules>
         </profile>
         <profile>
@@ -409,7 +605,7 @@
             <properties>
                 <suite.mode>standalone</suite.mode>
                 <test.excluded.category>
-                    org.jboss.hal.testsuite.category.Domain
+                    org.jboss.hal.org.jboss.hal.testsuite.category.Domain
                 </test.excluded.category>
             </properties>
             <dependencies>
@@ -424,7 +620,7 @@
             <properties>
                 <suite.mode>domain</suite.mode>
                 <test.included.category>
-                    org.jboss.hal.testsuite.category.Domain
+                    org.jboss.hal.org.jboss.hal.testsuite.category.Domain
                 </test.included.category>
             </properties>
             <dependencies>
@@ -442,14 +638,14 @@
                 </property>
             </activation>
             <properties>
-                <test.included.category>org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
+                <test.included.category>org.jboss.hal.org.jboss.hal.testsuite.category.RequiresLetsEncrypt</test.included.category>
             </properties>
         </profile>
         <profile>
             <id>upstream</id>
             <properties>
                 <upstream.excluded.category>
-                    org.jboss.hal.testsuite.category.EAP
+                    org.jboss.hal.org.jboss.hal.testsuite.category.EAP
                 </upstream.excluded.category>
             </properties>
             <activation>
@@ -469,7 +665,7 @@
                             <properties>
                                 <property>
                                     <name>listener</name>
-                                    <value>org.jboss.hal.testsuite.testlistener.RestoreConfigurationListener</value>
+                                    <value>org.jboss.hal.org.jboss.hal.testsuite.testlistener.RestoreConfigurationListener</value>
                                 </property>
                             </properties>
                             <forkCount>1</forkCount>

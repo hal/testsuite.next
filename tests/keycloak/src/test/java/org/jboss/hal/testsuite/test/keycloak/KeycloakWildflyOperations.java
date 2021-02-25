@@ -55,8 +55,8 @@ public class KeycloakWildflyOperations {
         ops.add(Address.subsystem(KEYCLOAK).and(REALM, WILDFLY_INFRA), Values.of(AUTH_SERVER_URL,
                 "http://localhost:8180/auth").and(REALM_PUBLIC_KEY, keycloakRealmPublicKey)).assertSuccess();
 
-        // Create a secure-deployment in order to protect mgmt interface
-        ops.add(Address.subsystem(KEYCLOAK).and("secure-deployment", WILDFLY_MANAGEMENT), Values.of(REALM, WILDFLY_INFRA)
+        // Create a secure-org.jboss.hal.testsuite.test.deployment in order to protect mgmt interface
+        ops.add(Address.subsystem(KEYCLOAK).and("secure-org.jboss.hal.testsuite.test.deployment", WILDFLY_MANAGEMENT), Values.of(REALM, WILDFLY_INFRA)
                 .and(RESOURCE, WILDFLY_MANAGEMENT).and("principal-attribute", "preferred_username").and("bearer-only", true)
                 .and("ssl-required", "EXTERNAL")).assertSuccess();
 
