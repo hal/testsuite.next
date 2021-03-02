@@ -27,8 +27,8 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.DEPLOYMENT_SCANNERS)
 public class DeploymentScannerPage extends BasePage {
 
-    @FindBy(id = "org.jboss.hal.testsuite.test.deployment-scanner-table" + WRAPPER) private TableFragment table;
-    @FindBy(id = "org.jboss.hal.testsuite.test.deployment-scanner-form") private FormFragment form;
+    @FindBy(id = "deployment-scanner-table" + WRAPPER) private TableFragment table;
+    @FindBy(id = "deployment-scanner-form") private FormFragment form;
 
     public TableFragment getTable() {
         return table;
