@@ -28,7 +28,7 @@ public final class SecurityManagerFixtures {
         MIN_PERMISSIONS_MENU_ITEM = SECURITY_MANAGER_MINIMUM_PERMISSIONS + "-" + ITEM;
 
     public static final Address DEFAULT_DEPLOYMENT_PERMISSIONS_ADDRESS =
-            Address.subsystem(SECURITY_MANAGER).and("org.jboss.hal.testsuite.test.deployment-permissions", "default");
+            Address.subsystem(SECURITY_MANAGER).and("deployment-permissions", "default");
 
     // -------------- minimum permissions
 

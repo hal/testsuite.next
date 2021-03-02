@@ -117,7 +117,7 @@ public class SessionOperationsTest {
     private UndertowRuntimePage page;
 
     private void navigateToDeploymentRuntime() {
-        page.navigate("org.jboss.hal.testsuite.test.deployment", ARCHIVE_NAME);
+        page.navigate("deployment", ARCHIVE_NAME);
         console.verticalNavigation().selectPrimary("undertow-org.jboss.hal.testsuite.test.deployment-session-item");
 
     }
