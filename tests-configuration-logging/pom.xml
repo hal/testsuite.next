@@ -11,8 +11,6 @@
 
     <artifactId>tests-configuration-logging</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>

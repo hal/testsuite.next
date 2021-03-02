@@ -683,6 +683,27 @@
                 </plugins>
             </build>
         </profile>
+
+
+        <profile>
+            <!-- JAX-B needs to be included on JDK > 8 -->
+            <id>jdk-9</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>org.glassfish.jaxb</groupId>
+                    <artifactId>jaxb-runtime</artifactId>
+                    <version>2.3.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
     </profiles>
 
     <repositories>

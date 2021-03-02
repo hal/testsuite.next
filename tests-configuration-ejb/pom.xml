@@ -11,8 +11,6 @@
 
     <artifactId>tests-configuration-ejb</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>

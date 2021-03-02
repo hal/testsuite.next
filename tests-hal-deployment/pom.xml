@@ -11,8 +11,6 @@
 
     <artifactId>tests-deployment</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>

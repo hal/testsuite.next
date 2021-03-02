@@ -11,8 +11,6 @@
 
     <artifactId>tooling-management-operations</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>

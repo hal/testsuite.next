@@ -11,8 +11,6 @@
 
     <artifactId>tests-hal-basic</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>

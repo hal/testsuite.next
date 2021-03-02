@@ -11,8 +11,6 @@
 
     <artifactId>tooling-deployment</artifactId>
 
-
-
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>
