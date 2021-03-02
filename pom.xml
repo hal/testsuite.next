@@ -326,12 +326,6 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-            <!-- JDK 9+ -->
-            <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.0</version>
-            </dependency>
 
             <!-- EE specs -->
             <dependency>
@@ -354,7 +348,6 @@
             </dependency>
 
             <!-- microprofile -->
-
             <dependency>
                 <groupId>org.eclipse.microprofile.health</groupId>
                 <artifactId>microprofile-health-api</artifactId>
@@ -421,6 +414,7 @@
                 </executions>
             </plugin>
             <plugin>
+                <!-- This replaces unsupported findbugs plugin -->
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
                 <version>4.2.0</version>
@@ -654,6 +648,7 @@
                 </property>
             </activation>
         </profile>
+
         <profile>
             <id>restoreConfig</id>
             <build>
@@ -683,7 +678,6 @@
                 </plugins>
             </build>
         </profile>
-
 
         <profile>
             <!-- JAX-B needs to be included on JDK > 8 -->
