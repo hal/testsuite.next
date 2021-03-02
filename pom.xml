@@ -388,6 +388,21 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${surefire.version}</version>
+                    <configuration>
+                        <trimStackTrace>false</trimStackTrace>
+                        <systemPropertyVariables>
+                            <as.managementAddress>${as.managementAddress}</as.managementAddress>
+                            <as.managementPort>${as.managementPort}</as.managementPort>
+                            <browser>${browser}</browser>
+                            <suite.domain.default.host>${suite.domain.default.host}</suite.domain.default.host>
+                            <suite.domain.default.profile>${suite.domain.default.profile}</suite.domain.default.profile>
+                            <suite.domain.default.server>${suite.domain.default.server}</suite.domain.default.server>
+                            <suite.mode>${suite.mode}</suite.mode>
+                            <suite.url>${suite.url}</suite.url>
+                        </systemPropertyVariables>
+                        <groups>${test.included.category}</groups>
+                        <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
