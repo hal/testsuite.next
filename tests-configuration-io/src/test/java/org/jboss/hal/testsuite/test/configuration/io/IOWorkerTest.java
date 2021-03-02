@@ -158,7 +158,7 @@ public class IOWorkerTest {
         List<String> newlyAddedConnections = ioWorkerPreviewFragment.getConnections()
             .stream()
             .map(attributeItem -> attributeItem.getKeyElement().getText())
-            .filter(connectionUrl -> connectionUrl.contains("0.0.0.0:" + SOCKET_BINDING_PORT))
+            .filter(connectionUrl -> connectionUrl.contains("127.0.0.1:" + SOCKET_BINDING_PORT))
             .collect(Collectors.toList());
         Assert.assertEquals("Newly added connections should be present in the list", 1, newlyAddedConnections.size());
     }
