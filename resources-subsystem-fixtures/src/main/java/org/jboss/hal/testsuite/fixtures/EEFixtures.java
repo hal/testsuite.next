@@ -16,6 +16,7 @@
 package org.jboss.hal.testsuite.fixtures;
 
 import org.jboss.dmr.ModelNode;
+import org.jboss.dmr.ModelType;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
@@ -51,6 +52,7 @@ public final class EEFixtures {
         ModelNode globalModule = new ModelNode();
         globalModule.get(NAME).set(name);
         globalModule.get("meta-inf").set(true);
+        globalModule.get("slot").set(ModelType.UNDEFINED);
         return globalModule;
     }
 
