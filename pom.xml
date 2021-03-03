@@ -450,6 +450,12 @@
                         <artifactId>spotbugs</artifactId>
                         <version>4.2.1</version>
                     </dependency>
+                    <!-- need to explicitely state this dependency for offline purposes -->
+                    <dependency>
+                        <groupId>com.google.collections</groupId>
+                        <artifactId>google-collections</artifactId>
+                        <version>1.0</version>
+                    </dependency>
                 </dependencies>
                 <executions>
                     <execution>
