@@ -381,6 +381,15 @@
         </dependencies>
     </dependencyManagement>
 
+    <dependencies>
+        <!-- Plugin dependencies which are not resolved by Maven before offline mode -->
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-resources</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <pluginManagement>
             <plugins>
