@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.util.PathOperations;
 import org.jboss.modules.maven.ArtifactCoordinates;
 import org.jboss.modules.maven.MavenResolver;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
@@ -19,7 +20,6 @@ import org.junit.ClassRule;
 import org.junit.rules.TemporaryFolder;
 import org.wildfly.extras.creaper.commands.datasources.AddJdbcDriver;
 import org.wildfly.extras.creaper.commands.datasources.RemoveJdbcDriver;
-import org.wildfly.extras.creaper.commands.modules.AddModule;
 import org.wildfly.extras.creaper.commands.modules.RemoveModule;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
@@ -88,22 +88,26 @@ public abstract class AbstractDatasourcePropertiesTest {
             .resource(resolver.resolveJarArtifact(ArtifactCoordinates.fromString("org.postgresql:postgresql:42.2.4")))
             .dependency(JAVAX_API)
             .dependency(JAVAX_TRANSACTION_API)
+            .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addMSQLJDBCDriverModule = new AddModule.Builder(MYSQL_MODULE_NAME)
             .resource(resolver.resolveJarArtifact(ArtifactCoordinates.fromString("mysql:mysql-connector-java:8.0.12")))
             .dependency(JAVAX_API)
             .dependency(JAVAX_TRANSACTION_API)
+            .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addMSSQLJDBCDriverModule = new AddModule.Builder(MSSQL_MODULE_NAME)
             .resource(resolver.resolveJarArtifact(
                 ArtifactCoordinates.fromString("com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8")))
             .dependency(JAVAX_API)
             .dependency(JAVAX_TRANSACTION_API)
+            .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addCustomJDBCDriverModule = new AddModule.Builder(CUSTOM_MODULE_NAME)
             .dependency(JAVAX_API)
             .dependency(JAVAX_TRANSACTION_API)
             .resource(customModuleArchiveFile)
+            .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         client.apply(addPGJDBCDriverModule);
         client.apply(addMSQLJDBCDriverModule);
