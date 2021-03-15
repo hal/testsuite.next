@@ -11,6 +11,15 @@
 
     <artifactId>tests-configuration-datasource</artifactId>
 
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
         <dependency>
             <groupId>org.jboss.hal</groupId>
@@ -42,6 +51,10 @@
         <dependency>
             <groupId>org.wildfly.extras.creaper</groupId>
             <artifactId>creaper-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly.extras.creaper</groupId>
+            <artifactId>creaper-commands</artifactId>
         </dependency>
         <dependency>
             <groupId>org.wildfly.core</groupId>
