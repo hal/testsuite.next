@@ -28,7 +28,6 @@
     <groupId>org.jboss.hal</groupId>
     <artifactId>hal-testsuite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>HAL Testsuite :: Parent</name>
     <description>Testsuite for HAL.next</description>
     <packaging>pom</packaging>
 

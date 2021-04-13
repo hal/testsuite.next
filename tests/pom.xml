@@ -32,7 +32,6 @@
     </modules>
 
     <artifactId>hal-testsuite-tests</artifactId>
-    <name>HAL Testsuite :: Tests</name>
     <description>Parent POM for all tests</description>
     <packaging>pom</packaging>
 

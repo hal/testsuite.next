@@ -26,7 +26,6 @@
     </parent>
 
     <artifactId>hal-testsuite-tests-keycloak</artifactId>
-    <name>HAL Testsuite :: Tests :: Keycloak</name>
     <description>Keycloak integration tests</description>
 
     <build>
