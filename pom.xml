@@ -100,44 +100,8 @@
     </properties>
 
     <modules>
+        <!--only tooling modules, test modules are specified in respective profiles-->
         <module>common</module>
-        <module>tests-configuration-batch</module>
-        <module>tests-configuration-datasource</module>
-        <module>tests-configuration-deploymentscanner</module>
-        <module>tests-configuration-distributableweb</module>
-        <module>tests-configuration-ee</module>
-        <module>tests-configuration-ejb</module>
-        <module>tests-configuration-elytron</module>
-        <module>tests-configuration-iiop</module>
-        <module>tests-configuration-infinispan</module>
-        <module>tests-configuration-interface</module>
-        <module>tests-configuration-io</module>
-        <module>tests-configuration-jca</module>
-        <module>tests-configuration-jgroups</module>
-        <module>tests-configuration-jmx</module>
-        <module>tests-configuration-jpa</module>
-        <module>tests-configuration-jsf</module>
-        <module>tests-configuration-logging</module>
-        <module>tests-configuration-mail</module>
-        <module>tests-configuration-management</module>
-        <module>tests-configuration-messaging</module>
-        <module>tests-configuration-microprofile</module>
-        <module>tests-configuration-modcluster</module>
-        <module>tests-configuration-paths</module>
-        <module>tests-configuration-remoting</module>
-        <module>tests-configuration-resourceadapter</module>
-        <module>tests-configuration-security-legacy</module>
-        <module>tests-configuration-securitymanager</module>
-        <module>tests-configuration-socketbinding</module>
-        <module>tests-configuration-systemproperty</module>
-        <module>tests-configuration-transaction</module>
-        <module>tests-configuration-undertow</module>
-        <module>tests-configuration-webservices</module>
-        <module>tests-hal-deployment</module>
-        <module>tests-hal-configuration</module>
-        <module>tests-hal-runtime</module>
-        <module>tests-hal-vulnerabilities</module>
-        <module>tests-hal-basic</module>
         <module>resources-subsystem-fixtures</module>
         <module>tooling-deployment</module>
         <module>tooling-management-operations</module>
