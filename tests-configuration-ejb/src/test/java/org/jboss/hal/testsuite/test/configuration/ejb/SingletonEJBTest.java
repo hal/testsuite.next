@@ -140,7 +140,7 @@ public class SingletonEJBTest extends AbstractEJBTest {
         invoke(numberOfInvocations, SINGLETON_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT);
         console.navigate(SINGLETON_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT.getPlaceRequest());
         int actualExecutionTime = page.getSingletonEJBForm().intValue("execution-time");
-        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB org.jboss.hal.testsuite.test.deployment",
+        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB deployment",
             numberOfInvocations * SLEEP_TIME <= actualExecutionTime);
         new ResourceVerifier(singletonEJBAddress(SINGLETON_EJB_DEPLOYMENT_NAME, SingletonCounterEJB.class),
             client)

@@ -49,10 +49,10 @@ public class FileHandlerTest {
     private UndertowHandlersPage page;
 
     private static final String TEMP_DEPLOYMENT_CREATE =
-        "temp-org.jboss.hal.testsuite.test.deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
+        "temp-deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
 
     private static final String TEMP_DEPLOYMENT_DELETE =
-        "temp-org.jboss.hal.testsuite.test.deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
+        "temp-deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
 
     private static final String FILE_HANDLER_CREATE =
         "file-handler-to-be-created-" + RandomStringUtils.randomAlphanumeric(7);

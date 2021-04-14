@@ -135,7 +135,7 @@ public class StatelessEJBTest extends AbstractEJBTest {
         invoke(numberOfInvocations, STATELESS_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT);
         console.navigate(STATELESS_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT.getPlaceRequest());
         int actualExecutionTime = page.getStatelessEJBForm().intValue("execution-time");
-        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB org.jboss.hal.testsuite.test.deployment",
+        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB deployment",
             numberOfInvocations * SLEEP_TIME <= actualExecutionTime);
         new ResourceVerifier(
             statelessEJBAddress(STATELESS_EJB_DEPLOYMENT_EXECUTION_TIME_NAME, StatelessGreeterEJB.class),

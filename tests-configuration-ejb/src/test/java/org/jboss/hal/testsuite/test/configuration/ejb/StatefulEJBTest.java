@@ -132,7 +132,7 @@ public class StatefulEJBTest extends AbstractEJBTest {
         invoke(numberOfInvocations, STATEFUL_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT);
         console.navigate(STATEFUL_EJB_DEPLOYMENT_EXECUTION_TIME_DEPLOYMENT.getPlaceRequest());
         int actualExecutionTime = page.getStatefulEJBForm().intValue("execution-time");
-        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB org.jboss.hal.testsuite.test.deployment",
+        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB deployment",
             numberOfInvocations * SLEEP_TIME <= actualExecutionTime);
         new ResourceVerifier(
             statefulEJBAddress(STATEFUL_EJB_DEPLOYMENT_EXECUTION_TIME_NAME, StatefulEJBExecutionTime.class),

@@ -72,7 +72,7 @@ public class TakeTourTest {
                     finderPlace(NameTokens.HOMEPAGE, null))
             .verifyNext(DEPLOYMENT_TITLE, "Enable, disable, and view the status of all deployments.",
                     finderPlace(NameTokens.DEPLOYMENTS, null))
-            .verifyNext(DEPLOYMENT_TITLE, "Add a org.jboss.hal.testsuite.test.deployment by uploading a new org.jboss.hal.testsuite.test.deployment",
+            .verifyNext(DEPLOYMENT_TITLE, "Add a deployment by uploading a new deployment",
                     finderPlace(NameTokens.DEPLOYMENTS, null))
             .verifyNext("Configuration", "View and modify the configuration for each available subsystem.",
                     finderPlace(NameTokens.CONFIGURATION, new FinderPath().append(Ids.CONFIGURATION, "subsystems")))
@@ -106,7 +106,7 @@ public class TakeTourTest {
                 finderPlace(NameTokens.HOMEPAGE, null))
         .verifyNext(DEPLOYMENT_TITLE, "Add deployments and assign them to server groups",
                 finderPlace(NameTokens.DEPLOYMENTS, null))
-        .verifyNext(DEPLOYMENT_TITLE, "Add a org.jboss.hal.testsuite.test.deployment to a server group",
+        .verifyNext(DEPLOYMENT_TITLE, "Add a deployment to a server group",
                 finderPlace(NameTokens.DEPLOYMENTS, new FinderPath().append(Ids.DEPLOYMENT_BROWSE_BY, "content-repository")))
         .verifyNext("Configuration", "List of profiles available",
                 finderPlace(NameTokens.CONFIGURATION, new FinderPath().append(Ids.CONFIGURATION, "profiles")))

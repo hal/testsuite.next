@@ -149,7 +149,7 @@ public class MessageDrivenEJBTest extends AbstractEJBTest {
         invoke(numberOfInvocations, MESSAGE_DRIVEN_EJB_EXECUTION_TIME_DEPLOYMENT);
         console.navigate(MESSAGE_DRIVEN_EJB_EXECUTION_TIME_DEPLOYMENT.getPlaceRequest());
         int actualExecutionTime = page.getMessageDrivenBeanEJBForm().intValue("execution-time");
-        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB org.jboss.hal.testsuite.test.deployment",
+        Assert.assertTrue("Execution time in the form should be close to the total execution time of the EJB deployment",
             numberOfInvocations * SLEEP_TIME <= actualExecutionTime);
         new ResourceVerifier(messageDrivenEJBAddress(MESSAGE_DRIVEN_EJB_DEPLOYMENT_EXECUTION_TIME_NAME,
             MessageDrivenEJBExecutionTime.class),
