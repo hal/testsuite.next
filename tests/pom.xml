@@ -25,7 +25,6 @@
     </parent>
 
     <modules>
-        <module>basic</module>
         <module>rbac</module>
         <module>transaction</module>
         <module>multihosts</module>
@@ -33,7 +32,6 @@
     </modules>
 
     <artifactId>hal-testsuite-tests</artifactId>
-    <name>HAL Testsuite :: Tests</name>
     <description>Parent POM for all tests</description>
     <packaging>pom</packaging>
 
@@ -90,10 +88,6 @@
             <groupId>ch.qos.logback</groupId>
             <artifactId>logback-classic</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.glassfish.jaxb</groupId>
-            <artifactId>jaxb-runtime</artifactId>
-        </dependency>
     </dependencies>
 
     <build>
@@ -117,26 +111,13 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
-                <configuration>
-                    <trimStackTrace>false</trimStackTrace>
-                    <systemPropertyVariables>
-                        <as.managementAddress>${as.managementAddress}</as.managementAddress>
-                        <as.managementPort>${as.managementPort}</as.managementPort>
-                        <browser>${browser}</browser>
-                        <suite.domain.default.host>${suite.domain.default.host}</suite.domain.default.host>
-                        <suite.domain.default.profile>${suite.domain.default.profile}</suite.domain.default.profile>
-                        <suite.domain.default.server>${suite.domain.default.server}</suite.domain.default.server>
-                        <suite.mode>${suite.mode}</suite.mode>
-                        <suite.url>${suite.url}</suite.url>
-                    </systemPropertyVariables>
-                    <groups>${test.included.category}</groups>
-                    <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
-                </configuration>
             </plugin>
         </plugins>
+
     </build>
 </project>

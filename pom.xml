@@ -22,13 +22,12 @@
     <parent>
         <groupId>org.jboss</groupId>
         <artifactId>jboss-parent</artifactId>
-        <version>25</version>
+        <version>37</version>
     </parent>
 
     <groupId>org.jboss.hal</groupId>
     <artifactId>hal-testsuite</artifactId>
     <version>0.0.1-SNAPSHOT</version>
-    <name>HAL Testsuite :: Parent</name>
     <description>Testsuite for HAL.next</description>
     <packaging>pom</packaging>
 
@@ -76,10 +75,10 @@
         <test.included.category/>
 
         <!-- dependency versions -->
-        <arquillian.version>1.1.15.Final</arquillian.version>
+        <arquillian.version>1.6.0.Final</arquillian.version>
         <arquillian.drone.version>2.5.0</arquillian.drone.version>
         <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
-        <shrinkwrap.resolver.version>3.1.3</shrinkwrap.resolver.version>
+        <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
         <commons.io.version>2.6</commons.io.version>
         <commons.lang.version>3.7</commons.lang.version>
         <commons.text.version>1.2</commons.text.version>
@@ -100,7 +99,12 @@
     </properties>
 
     <modules>
+        <!--only tooling modules, test modules are specified in respective profiles-->
         <module>common</module>
+        <module>resources-subsystem-fixtures</module>
+        <module>tooling-deployment</module>
+        <module>tooling-management-operations</module>
+        <module>tooling-ssl-operations</module>
     </modules>
 
     <dependencyManagement>
@@ -110,6 +114,30 @@
                 <groupId>org.jboss.hal</groupId>
                 <artifactId>hal-testsuite-common</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>resources-subsystem-fixtures</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-deployment</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-ssl-operations</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.hal</groupId>
+                <artifactId>tooling-management-operations</artifactId>
+                <version>${project.version}</version>
+                <scope>test</scope>
             </dependency>
 
             <!-- Arquillian & Co -->
@@ -261,11 +289,57 @@
                 <scope>import</scope>
                 <type>pom</type>
             </dependency>
-            <!-- JDK 9+ -->
+
+            <!-- EE specs -->
             <dependency>
-                <groupId>org.glassfish.jaxb</groupId>
-                <artifactId>jaxb-runtime</artifactId>
-                <version>2.3.0</version>
+                <groupId>javax.batch</groupId>
+                <artifactId>javax.batch-api</artifactId>
+                <version>1.0.1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax.enterprise</groupId>
+                <artifactId>cdi-api</artifactId>
+                <version>2.0.SP1</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>javax</groupId>
+                <artifactId>javaee-api</artifactId>
+                <version>7.0</version>
+                <scope>test</scope>
+            </dependency>
+
+            <!-- microprofile -->
+            <dependency>
+                <groupId>org.eclipse.microprofile.health</groupId>
+                <artifactId>microprofile-health-api</artifactId>
+                <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.microprofile.config</groupId>
+                <artifactId>microprofile-config-api</artifactId>
+                <version>1.3</version>
+            </dependency>
+
+            <!-- JDBC -->
+            <dependency>
+                <groupId>org.postgresql</groupId>
+                <artifactId>postgresql</artifactId>
+                <version>42.2.4</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>mysql</groupId>
+                <artifactId>mysql-connector-java</artifactId>
+                <version>8.0.16</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>com.microsoft.sqlserver</groupId>
+                <artifactId>mssql-jdbc</artifactId>
+                <version>7.0.0.jre8</version>
+                <scope>test</scope>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -277,9 +351,25 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>${surefire.version}</version>
+                    <configuration>
+                        <trimStackTrace>false</trimStackTrace>
+                        <systemPropertyVariables>
+                            <as.managementAddress>${as.managementAddress}</as.managementAddress>
+                            <as.managementPort>${as.managementPort}</as.managementPort>
+                            <browser>${browser}</browser>
+                            <suite.domain.default.host>${suite.domain.default.host}</suite.domain.default.host>
+                            <suite.domain.default.profile>${suite.domain.default.profile}</suite.domain.default.profile>
+                            <suite.domain.default.server>${suite.domain.default.server}</suite.domain.default.server>
+                            <suite.mode>${suite.mode}</suite.mode>
+                            <suite.url>${suite.url}</suite.url>
+                        </systemPropertyVariables>
+                        <groups>${test.included.category}</groups>
+                        <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
+                    </configuration>
                 </plugin>
             </plugins>
         </pluginManagement>
+
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -303,8 +393,10 @@
                 </executions>
             </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>findbugs-maven-plugin</artifactId>
+                <!-- This replaces unsupported findbugs plugin -->
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
+                <version>4.2.0</version>
                 <executions>
                     <execution>
                         <id>finding-bugs</id>
@@ -312,20 +404,8 @@
                         <goals>
                             <goal>check</goal>
                         </goals>
-                        <configuration>
-                            <threshold>Low</threshold>
-                            <xmlOutput>true</xmlOutput>
-                            <failOnError>true</failOnError>
-                        </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <configuration>
-                    <tagNameFormat>v@{version}</tagNameFormat>
-                </configuration>
             </plugin>
         </plugins>
     </build>
@@ -338,6 +418,44 @@
             </activation>
             <modules>
                 <module>tests</module>
+                <!-- modularized basic tests -->
+                <module>tests-configuration-batch</module>
+                <module>tests-configuration-datasource</module>
+                <module>tests-configuration-deploymentscanner</module>
+                <module>tests-configuration-distributableweb</module>
+                <module>tests-configuration-ee</module>
+                <module>tests-configuration-ejb</module>
+                <module>tests-configuration-elytron</module>
+                <module>tests-configuration-iiop</module>
+                <module>tests-configuration-infinispan</module>
+                <module>tests-configuration-interface</module>
+                <module>tests-configuration-io</module>
+                <module>tests-configuration-jca</module>
+                <module>tests-configuration-jgroups</module>
+                <module>tests-configuration-jmx</module>
+                <module>tests-configuration-jpa</module>
+                <module>tests-configuration-jsf</module>
+                <module>tests-configuration-logging</module>
+                <module>tests-configuration-mail</module>
+                <module>tests-configuration-management</module>
+                <module>tests-configuration-messaging</module>
+                <module>tests-configuration-microprofile</module>
+                <module>tests-configuration-modcluster</module>
+                <module>tests-configuration-paths</module>
+                <module>tests-configuration-remoting</module>
+                <module>tests-configuration-resourceadapter</module>
+                <module>tests-configuration-security-legacy</module>
+                <module>tests-configuration-securitymanager</module>
+                <module>tests-configuration-socketbinding</module>
+                <module>tests-configuration-systemproperty</module>
+                <module>tests-configuration-transaction</module>
+                <module>tests-configuration-undertow</module>
+                <module>tests-configuration-webservices</module>
+                <module>tests-hal-deployment</module>
+                <module>tests-hal-configuration</module>
+                <module>tests-hal-runtime</module>
+                <module>tests-hal-vulnerabilities</module>
+                <module>tests-hal-basic</module>
             </modules>
         </profile>
         <profile>
@@ -377,7 +495,43 @@
         <profile>
             <id>basic</id>
             <modules>
-                <module>tests/basic</module>
+                <module>tests-configuration-batch</module>
+                <module>tests-configuration-datasource</module>
+                <module>tests-configuration-deploymentscanner</module>
+                <module>tests-configuration-distributableweb</module>
+                <module>tests-configuration-ee</module>
+                <module>tests-configuration-ejb</module>
+                <module>tests-configuration-elytron</module>
+                <module>tests-configuration-iiop</module>
+                <module>tests-configuration-infinispan</module>
+                <module>tests-configuration-interface</module>
+                <module>tests-configuration-io</module>
+                <module>tests-configuration-jca</module>
+                <module>tests-configuration-jgroups</module>
+                <module>tests-configuration-jmx</module>
+                <module>tests-configuration-jpa</module>
+                <module>tests-configuration-jsf</module>
+                <module>tests-configuration-logging</module>
+                <module>tests-configuration-mail</module>
+                <module>tests-configuration-management</module>
+                <module>tests-configuration-messaging</module>
+                <module>tests-configuration-microprofile</module>
+                <module>tests-configuration-modcluster</module>
+                <module>tests-configuration-paths</module>
+                <module>tests-configuration-remoting</module>
+                <module>tests-configuration-resourceadapter</module>
+                <module>tests-configuration-security-legacy</module>
+                <module>tests-configuration-securitymanager</module>
+                <module>tests-configuration-socketbinding</module>
+                <module>tests-configuration-systemproperty</module>
+                <module>tests-configuration-transaction</module>
+                <module>tests-configuration-undertow</module>
+                <module>tests-configuration-webservices</module>
+                <module>tests-hal-deployment</module>
+                <module>tests-hal-configuration</module>
+                <module>tests-hal-runtime</module>
+                <module>tests-hal-vulnerabilities</module>
+                <module>tests-hal-basic</module>
             </modules>
         </profile>
         <profile>
@@ -458,6 +612,7 @@
                 </property>
             </activation>
         </profile>
+
         <profile>
             <id>restoreConfig</id>
             <build>
@@ -475,6 +630,53 @@
                             <forkCount>1</forkCount>
                             <reuseForks>false</reuseForks>
                         </configuration>
+                        <dependencies>
+                            <!-- dependency on test listener -->
+                            <dependency>
+                                <groupId>org.jboss.hal</groupId>
+                                <artifactId>hal-testsuite-common</artifactId>
+                                <version>${project.version}</version>
+                            </dependency>
+                        </dependencies>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <!-- JAX-B needs to be included on JDK > 8 -->
+            <id>jdk-9</id>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <dependencies>
+                <dependency>
+                    <groupId>javax.xml.bind</groupId>
+                    <artifactId>jaxb-api</artifactId>
+                    <version>2.3.1</version>
+                </dependency>
+                <dependency>
+                    <groupId>javax.activation</groupId>
+                    <artifactId>activation</artifactId>
+                    <version>1.1.1</version>
+                </dependency>
+            </dependencies>
+        </profile>
+
+        <profile>
+            <id>offline-build</id>
+            <!-- buildnumber plugin from parent needs to connect to SCM, let's turn it off -->
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>buildnumber-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>get-scm-revision</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -483,9 +685,10 @@
 
     <repositories>
         <repository>
+            <!-- hal-bom dependency -->
             <id>jboss-public-repository-group</id>
             <name>JBoss Public Maven Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -499,4 +702,5 @@
             </snapshots>
         </repository>
     </repositories>
+
 </project>

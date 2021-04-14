@@ -26,7 +26,6 @@
     </parent>
 
     <artifactId>hal-testsuite-tests-rbac</artifactId>
-    <name>HAL Testsuite :: Tests :: RBAC</name>
     <description>RBAC tests</description>
 
     <build>

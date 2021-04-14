@@ -26,7 +26,6 @@
     </parent>
 
     <artifactId>hal-testsuite-tests-transaction</artifactId>
-    <name>HAL Testsuite :: Tests :: Transaction</name>
     <description>Transaction tests</description>
 
     <build>

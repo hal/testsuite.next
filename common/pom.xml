@@ -25,7 +25,6 @@
     </parent>
 
     <artifactId>hal-testsuite-common</artifactId>
-    <name>HAL Testsuite :: Common Code</name>
     <description>Common code like pages and fragments used in the actual tests</description>
 
     <dependencies>

@@ -26,7 +26,6 @@
     </parent>
 
     <artifactId>hal-testsuite-tests-multihosts</artifactId>
-    <name>HAL Testsuite :: Tests :: Multi hosts</name>
     <description>Multi hosts tests</description>
 
     <build>
