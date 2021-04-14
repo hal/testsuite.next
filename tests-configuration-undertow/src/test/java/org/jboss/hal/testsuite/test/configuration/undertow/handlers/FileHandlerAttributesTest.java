@@ -53,10 +53,10 @@ public class FileHandlerAttributesTest {
     private UndertowHandlersPage page;
 
     private static final String TEMP_DEPLOYMENT_CREATE =
-        "temp-org.jboss.hal.testsuite.test.deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
+        "temp-deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
 
     private static final String TEMP_DEPLOYMENT_EDIT =
-        "temp-org.jboss.hal.testsuite.test.deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
+        "temp-deployment-" + RandomStringUtils.randomAlphanumeric(7) + ".war";
 
     private static final String FILE_HANDLER_EDIT =
         "file-handler-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);

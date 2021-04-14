@@ -39,7 +39,7 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         wizard.close();
 
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + INDEX_HTML + FILE,
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + FILE,
                 deploymentOps.deploymentContainsPath(deployment.getName(), INDEX_HTML));
     }
 
@@ -114,9 +114,9 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
 
         client.apply(originalDeployment.deployEnabledCommand(MAIN_SERVER_GROUP));
         deploymentVerifier.verifyExists();
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + INDEX_HTML + FILE,
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + FILE,
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
-        assertFalse("The org.jboss.hal.testsuite.test.deployment should not yet contain " + OTHER_HTML + FILE,
+        assertFalse("The deployment should not yet contain " + OTHER_HTML + FILE,
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
 
         deploymentPage.navigate();
@@ -127,9 +127,9 @@ public class DomainContentRepositoryDeploymentTest extends AbstractDeploymentTes
         uploadDialog.primaryButton();
 
         deploymentVerifier
-            .verifyTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + OTHER_HTML + FILE,
+            .verifyTrue("The deployment does not contain expected " + OTHER_HTML + FILE,
                     () -> deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML))
-            .verifyTrue("The org.jboss.hal.testsuite.test.deployment should not contain " + INDEX_HTML + " file anymore.",
+            .verifyTrue("The deployment should not contain " + INDEX_HTML + " file anymore.",
                     () -> !deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
     }
 

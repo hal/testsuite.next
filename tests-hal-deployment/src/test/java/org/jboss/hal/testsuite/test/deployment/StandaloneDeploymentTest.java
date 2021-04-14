@@ -38,7 +38,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         wizard.close();
 
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + INDEX_HTML + " file.",
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + " file.",
                 deploymentOps.deploymentContainsPath(deployment.getName(), INDEX_HTML));
     }
 
@@ -76,7 +76,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         client.apply(deployment.deployEnabledCommand());
         deploymentVerifier.verifyExists().verifyAttribute(ENABLED, true);
         deploymentPage.navigate();
-        assertFalse(enableActionName + " action should not be available for already enabled org.jboss.hal.testsuite.test.deployment.",
+        assertFalse(enableActionName + " action should not be available for already enabled deployment.",
                 deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), enableActionName));
 
         client.apply(deployment.disableCommand());
@@ -101,7 +101,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         deploymentVerifier.verifyAttribute(ENABLED, false);
 
         deploymentPage.navigate();
-        assertFalse(disableActionName + " action should not be available for already disabled org.jboss.hal.testsuite.test.deployment.",
+        assertFalse(disableActionName + " action should not be available for already disabled deployment.",
                 deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), disableActionName));
     }
 
@@ -114,7 +114,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
 
         deploymentPage.navigate();
-        assertFalse(explodeActionName + " action should not be available for enabled org.jboss.hal.testsuite.test.deployment.",
+        assertFalse(explodeActionName + " action should not be available for enabled deployment.",
                 deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
 
         client.apply(deployment.disableCommand());
@@ -126,7 +126,7 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         assertTrue("Deployment should be exploded.", deploymentOps.deploymentIsExploded(deployment.getName()));
 
         deploymentPage.navigate();
-        assertFalse(explodeActionName + " action should not be available for already exploded org.jboss.hal.testsuite.test.deployment.",
+        assertFalse(explodeActionName + " action should not be available for already exploded deployment.",
                 deploymentPage.isActionOnStandaloneDeploymentAvailable(deployment.getName(), explodeActionName));
     }
 
@@ -139,9 +139,9 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
 
         client.apply(originalDeployment.deployEnabledCommand());
         new ResourceVerifier(originalDeployment.getAddress(), client).verifyExists();
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + INDEX_HTML + " original file.",
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + " original file.",
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
-        assertFalse("The org.jboss.hal.testsuite.test.deployment should not yet contain " + OTHER_HTML + " file.",
+        assertFalse("The deployment should not yet contain " + OTHER_HTML + " file.",
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
 
         deploymentPage.navigate();
@@ -152,9 +152,9 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         uploadDialog.primaryButton();
         Library.letsSleep(500);
 
-        assertFalse("The org.jboss.hal.testsuite.test.deployment should not any more contain " + INDEX_HTML + " file from original org.jboss.hal.testsuite.test.deployment.",
+        assertFalse("The deployment should not any more contain " + INDEX_HTML + " file from original deployment.",
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), INDEX_HTML));
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + OTHER_HTML + " file.",
+        assertTrue("The deployment does not contain expected " + OTHER_HTML + " file.",
                 deploymentOps.deploymentContainsPath(originalDeployment.getName(), OTHER_HTML));
     }
 

@@ -36,7 +36,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
         wizard.close();
 
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
-        assertTrue("The org.jboss.hal.testsuite.test.deployment does not contain expected " + INDEX_HTML + FILE,
+        assertTrue("The deployment does not contain expected " + INDEX_HTML + FILE,
                 deploymentOps.deploymentContainsPath(deployment.getName(), INDEX_HTML));
         new ResourceVerifier(Address.of(SERVER_GROUP, MAIN_SERVER_GROUP)
                 .and(DEPLOYMENT, deployment.getName()), client).verifyExists();

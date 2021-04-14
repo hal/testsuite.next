@@ -7,7 +7,7 @@ public class ApplicationSecurityDomainFixtures {
 
     public static final String ENABLE_JACC = "enable-jacc";
     public static final String HTTP_AUTHENTICATION_FACTORY = "http-authentication-factory";
-    public static final String OVERRIDE_DEPLOYMENT_CONFIG = "override-org.jboss.hal.testsuite.test.deployment-config";
+    public static final String OVERRIDE_DEPLOYMENT_CONFIG = "override-deployment-config";
 
     public static final String SINGLE_SIGN_ON_KEY_STORE = "key-store";
     public static final String SINGLE_SIGN_ON_KEY_ALIAS = "key-alias";

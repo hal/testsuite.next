@@ -118,7 +118,7 @@ public class SessionOperationsTest {
 
     private void navigateToDeploymentRuntime() {
         page.navigate("deployment", ARCHIVE_NAME);
-        console.verticalNavigation().selectPrimary("undertow-org.jboss.hal.testsuite.test.deployment-session-item");
+        console.verticalNavigation().selectPrimary("undertow-deployment-session-item");
 
     }
 
@@ -147,15 +147,15 @@ public class SessionOperationsTest {
     @Test
     public void listSessions() throws IOException {
         navigateToDeploymentRuntime();
-        Assert.assertTrue("No sessions should be present in the model before accessing the org.jboss.hal.testsuite.test.deployment",
+        Assert.assertTrue("No sessions should be present in the model before accessing the deployment",
             getSessionsFromModel()
                 .isEmpty());
         deploymentBrowser.get(DEPLOYMENT_URL);
         reloadSessions();
-        Assert.assertFalse("A session should be present in the model after accessing the org.jboss.hal.testsuite.test.deployment",
+        Assert.assertFalse("A session should be present in the model after accessing the deployment",
             getSessionsFromModel()
                 .isEmpty());
-        Assert.assertFalse("The session table should not be empty after accessing the org.jboss.hal.testsuite.test.deployment",
+        Assert.assertFalse("The session table should not be empty after accessing the deployment",
             getSessionsFromView().isEmpty());
         invalidateSession(getSessionsFromModel().get(0));
     }
