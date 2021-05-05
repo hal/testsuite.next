@@ -14,10 +14,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static java.util.stream.Collectors.toMap;
-import static org.jboss.hal.resources.CSS.key;
-import static org.jboss.hal.resources.CSS.listGroup;
-import static org.jboss.hal.resources.CSS.listGroupItem;
-import static org.jboss.hal.resources.CSS.value;
+import static org.jboss.hal.resources.CSS.*;
 import static org.openqa.selenium.By.className;
 
 public class ServerPreviewFragment {
