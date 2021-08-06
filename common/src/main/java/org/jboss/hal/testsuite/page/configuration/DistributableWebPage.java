@@ -85,7 +85,7 @@ public class DistributableWebPage extends BasePage {
     }
 
     public SelectFragment getSwitchRouting() {
-        WebElement element = getRootContainer().findElement(By.cssSelector(".header-form ." + bootstrapSelect));
+        WebElement element = getRootContainer().findElement(By.cssSelector("section[data-vn-item-for=dw-routing-item] .header-form ." + bootstrapSelect));
         if (element != null) {
             return Graphene.createPageFragment(SelectFragment.class, element);
         }
