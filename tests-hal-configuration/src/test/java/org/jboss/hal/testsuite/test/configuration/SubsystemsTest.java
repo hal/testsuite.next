@@ -56,8 +56,8 @@ public class SubsystemsTest {
     private static final Operations operations = new Operations(client);
     private static List<String> subsystems = new ArrayList<>();
     // this is from org.jboss.hal.client.configuration.subsystem.SubsystemColumn
-    private static final List<String> EMPTY_SUBSYSTEMS = asList("bean-validation", "ee-security", "jaxrs", "jdr",
-            "microprofile-opentracing-smallrye", "jsr77", "pojo", "sar");
+    private static final List<String> EMPTY_SUBSYSTEMS = asList("bean-validation", "ee-security", "jdr",
+            "jsr77", "microprofile-opentracing-smallrye", "pojo", "sar");
 
     @BeforeClass
     public static void beforeClass() throws Exception {
@@ -74,7 +74,6 @@ public class SubsystemsTest {
 
     @Before
     public void setUp() throws Exception {
-        browser.navigate().refresh();
         column = console.finder(NameTokens.CONFIGURATION,
             new FinderPath().append(Ids.CONFIGURATION, Ids.asId(Names.SUBSYSTEMS)))
             .column(Ids.CONFIGURATION_SUBSYSTEM);
@@ -111,6 +110,8 @@ public class SubsystemsTest {
             .filter(WebElement::isDisplayed)
             .count();
         assertEquals(filtered, visible);
+
+        browser.navigate().refresh();
     }
 
     @Test
@@ -126,14 +127,14 @@ public class SubsystemsTest {
         WebElement element = column.selectItem(subsystemId).getRoot();
         console.scrollIntoView(element);
         new Actions(browser).moveToElement(element).perform();
-        element.findElement(By.className("pin")).click();
+        element.findElement(By.cssSelector("#" + subsystemId + " > .pin")).click();
     }
 
     private void unpin(String subsystemId) {
         WebElement element = column.selectItem(subsystemId).getRoot();
         console.scrollIntoView(element);
         new Actions(browser).moveToElement(element).perform();
-        element.findElement(By.className("unpin")).click();
+        element.findElement(By.cssSelector("#" + subsystemId + " > .unpin")).click();
     }
 
     @Test
