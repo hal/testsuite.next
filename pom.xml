@@ -314,7 +314,7 @@
             <dependency>
                 <groupId>org.eclipse.microprofile.health</groupId>
                 <artifactId>microprofile-health-api</artifactId>
-                <version>1.0</version>
+                <version>2.0</version>
             </dependency>
             <dependency>
                 <groupId>org.eclipse.microprofile.config</groupId>
@@ -564,6 +564,9 @@
                 <suite.mode>standalone</suite.mode>
                 <test.excluded.category>
                     org.jboss.hal.testsuite.category.Domain
+                </test.excluded.category>
+                <test.excluded.category>
+                    org.jboss.hal.testsuite.category.RequiresXP
                 </test.excluded.category>
             </properties>
             <dependencies>

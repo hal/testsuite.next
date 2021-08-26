@@ -10,7 +10,7 @@ public class MicroProfileHealthPreviewFragment extends FinderPreviewFragment {
     private WebElement refreshButton;
 
     public String getCheckState(String checkName) {
-        return getAttributeElementMap(checkName).get("State").getText();
+        return getAttributeElementMap(checkName).get("Status").getText();
     }
 
     public String getCheckData(String checkName) {
