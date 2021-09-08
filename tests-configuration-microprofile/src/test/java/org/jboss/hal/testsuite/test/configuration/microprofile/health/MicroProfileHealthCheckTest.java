@@ -22,7 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.category.RequiresXP;
+import org.jboss.hal.testsuite.category.Microprofile;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
@@ -55,7 +55,7 @@ import static org.jboss.hal.testsuite.test.configuration.microprofile.health.Cus
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-@Category(RequiresXP.class)
+@Category(Microprofile.class)
 @RunWith(Arquillian.class)
 public class MicroProfileHealthCheckTest {
 

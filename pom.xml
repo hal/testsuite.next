@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright 2015-2016 Red Hat, Inc, and individual contributors.
@@ -515,7 +516,6 @@
                 <module>tests-configuration-mail</module>
                 <module>tests-configuration-management</module>
                 <module>tests-configuration-messaging</module>
-                <module>tests-configuration-microprofile</module>
                 <module>tests-configuration-modcluster</module>
                 <module>tests-configuration-paths</module>
                 <module>tests-configuration-remoting</module>
@@ -563,10 +563,8 @@
             <properties>
                 <suite.mode>standalone</suite.mode>
                 <test.excluded.category>
-                    org.jboss.hal.testsuite.category.Domain
-                </test.excluded.category>
-                <test.excluded.category>
-                    org.jboss.hal.testsuite.category.RequiresXP
+                    org.jboss.hal.testsuite.category.Domain,
+                    org.jboss.hal.testsuite.category.Microprofile
                 </test.excluded.category>
             </properties>
             <dependencies>
@@ -588,6 +586,24 @@
                 <dependency>
                     <groupId>org.wildfly.arquillian</groupId>
                     <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
+            <id>microprofile</id>
+            <modules>
+                <module>tests-configuration-microprofile</module>
+            </modules>
+            <properties>
+                <suite.mode>microprofile</suite.mode>
+                <test.included.category>
+                    org.jboss.hal.testsuite.category.Microprofile
+                </test.included.category>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-remote</artifactId>
                 </dependency>
             </dependencies>
         </profile>
