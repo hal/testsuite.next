@@ -589,6 +589,21 @@
             </dependencies>
         </profile>
         <profile>
+            <id>domain-hc-dc</id>
+            <properties>
+                <suite.mode>domain</suite.mode>
+                <test.included.category>
+                    org.jboss.hal.testsuite.category.DomainHcDc
+                </test.included.category>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>lets-encrypt</id>
             <activation>
                 <property>
