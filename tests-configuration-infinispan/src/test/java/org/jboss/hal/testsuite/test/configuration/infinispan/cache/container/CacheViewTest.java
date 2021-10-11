@@ -47,14 +47,17 @@ public class CacheViewTest {
     }
 
     /**
-     *Check if internal error is displayed when click on view on cache.
-     * See https://issues.redhat.com/browse/HAL-1627
+     * Check if Missing metadatain resource description and then
+     * check if internal error is displayed when click on view on cache.
+     * See https://issues.redhat.com/browse/HAL-1757, https://issues.redhat.com/browse/HAL-1627
      */
     @Test
     public void checkNoErrorTest() {
         List<WebElement> elements =  cacheColumn.getItems();
         elements.get(0).click();
         elements.get(0).findElement(By.className("clickable")).click();
+        console.verifyError();
+        Assert.assertTrue("Missing metadata... For more information see https://issues.redhat.com/browse/HAL-1757", console.verifyNoError());
         waitGui().until().element(By.className("back")).is().visible();
         Assert.assertTrue("Internal error is displayed! See https://issues.redhat.com/browse/HAL-1627",
                 console.verifyNoError());
