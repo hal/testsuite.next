@@ -30,6 +30,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.category.Microprofile;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
@@ -41,6 +42,7 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Ignore;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
@@ -69,6 +71,7 @@ import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileConfigFi
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileConfigFixtures.getConfigProviderAddress;
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileConfigFixtures.getConfigSourceAddress;
 
+@Category(Microprofile.class)
 @RunWith(Arquillian.class)
 public class MicroprofileConfigTest {
 
@@ -231,3 +234,5 @@ public class MicroprofileConfigTest {
         crud.delete(getConfigSourceAddress(CONFIG_PROVIDER_DELETE), configProviderTable, CONFIG_PROVIDER_DELETE);
     }
 }
+
+
