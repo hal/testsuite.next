@@ -10,7 +10,7 @@ The testsuite uses various profiles to decide how and which tests to run. The fo
 
 - `chrome` | `firefox` | `safari`: Defines the browser to run the tests (mutual exclusive)
 - `basic`, `rbac`, `transaction`, `multihosts`, `keycloak`: Defines which tests to run (can be combined)
-- `standalone` | `domain`: Defines the operation mode (mutual exclusive)
+- `standalone` | `domain` | `domain-hc-dc`: Defines the operation mode (mutual exclusive). Domain-hc-dc means domain mode with master (dc) and slave (hc) host.
 
 Combine multiple profiles to define your setup. Choose at least one profile from each line. Please note that you cannot combine profiles which are marked as mutual exclusive.
 
@@ -18,6 +18,7 @@ Examples of valid combinations:
 
 - `chrome,basic,standalone`
 - `firefox,basic,rbac,domain`
+- `firefox,basic,domain-hc-dc`
 - `safari,rbac,transaction,standalone`
 
 Examples of invalid combinations:
@@ -25,6 +26,8 @@ Examples of invalid combinations:
 - `safari,firefox`
 - `basic,transaction`
 - `standalone,domain`
+- `standalone,domain-hc-dc`
+- `domain,domain-hc-dc`
 - `chrome,basic,standalone,domain`
 
 ## Run Tests
@@ -51,6 +54,13 @@ Standalone
 ```
 
 Domain
+
+```
+/host=master/core-service=management/management-interface=http-interface:undefine-attribute(name=security-realm)
+/host=master:reload
+```
+
+Domain hc dc (on master)
 
 ```
 /host=master/core-service=management/management-interface=http-interface:undefine-attribute(name=security-realm)
