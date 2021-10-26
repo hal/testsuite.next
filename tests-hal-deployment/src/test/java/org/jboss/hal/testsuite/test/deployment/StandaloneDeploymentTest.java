@@ -1,7 +1,5 @@
 package org.jboss.hal.testsuite.test.deployment;
 
-import java.io.OutputStreamWriter;
-
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.meta.token.NameTokens;
@@ -12,20 +10,16 @@ import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.UploadFormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
-import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.tooling.deployment.Deployment;
 import org.jboss.hal.testsuite.util.Library;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 @RunWith(Arquillian.class)
 public class StandaloneDeploymentTest extends AbstractDeploymentTest {
