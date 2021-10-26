@@ -1,6 +1,10 @@
 package org.jboss.hal.testsuite.test.deployment;
 
+import java.io.OutputStreamWriter;
+
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
+import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
@@ -8,16 +12,17 @@ import org.jboss.hal.testsuite.fragment.DialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.UploadFormFragment;
 import org.jboss.hal.testsuite.fragment.WizardFragment;
+import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
+import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
 import org.jboss.hal.testsuite.tooling.deployment.Deployment;
 import org.jboss.hal.testsuite.util.Library;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.operations.Address;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ARCHIVE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.ENABLED;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.RUNTIME_NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -40,6 +45,40 @@ public class StandaloneDeploymentTest extends AbstractDeploymentTest {
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
         assertTrue("The deployment does not contain expected " + INDEX_HTML + " file.",
                 deploymentOps.deploymentContainsPath(deployment.getName(), INDEX_HTML));
+    }
+
+    @Test
+    public void verifyHash() throws Exception {
+        deploymentPage.navigate();
+        Deployment deployment = createSimpleDeployment();
+
+        WizardFragment wizard = deploymentPage.uploadStandaloneDeployment();
+        wizard.getUploadForm().uploadFile(deployment.getDeploymentFile());
+        wizard.next(Ids.UPLOAD_NAMES_FORM);
+        wizard.finishStayOpen();
+        wizard.verifySuccess();
+        wizard.close();
+
+        FinderFragment finder = console.finder(NameTokens.DEPLOYMENTS);
+        finder.column(Ids.DEPLOYMENT).selectItem(Ids.deployment(deployment.getName()));
+        String expected = finder.preview().getMainAttributes().get("Hash");
+
+        Operations ops = new Operations(client);
+        ModelNode content = ops.readAttribute(deployment.getAddress(), CONTENT).value();
+        byte[] hash = content.get(0).get(HASH).asBytes();
+        StringBuilder actual = new StringBuilder();
+        for (byte b : hash) {
+            int i = b;
+            if (i < 0) {
+                i = i & 0xff;
+            }
+            String hex = Integer.toHexString(i);
+            if (hex.length() == 1) {
+                actual.append('0');
+            }
+            actual.append(hex);
+        }
+        assertEquals(expected, actual.toString());
     }
 
     @Test
