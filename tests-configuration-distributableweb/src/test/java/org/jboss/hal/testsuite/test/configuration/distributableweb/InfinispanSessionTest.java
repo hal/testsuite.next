@@ -21,7 +21,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
+import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.FormFragment;
+import org.jboss.hal.testsuite.fragment.SelectFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
 import org.jboss.hal.testsuite.page.configuration.DistributableWebPage;
 import org.junit.AfterClass;
@@ -33,10 +35,13 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.AFFINITY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RANKED;
 import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.ATTRIBUTE;
 import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.GRANULARITY;
+import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.INFINISPAN_SESSION_AFFINITY;
 import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.INFINISPAN_SESSION_CREATE;
 import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.INFINISPAN_SESSION_DELETE;
 import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.INFINISPAN_SESSION_UPDATE;
@@ -45,6 +50,7 @@ import static org.jboss.hal.testsuite.fixtures.DistributableWebFixtures.infinisp
 import static org.jboss.hal.testsuite.fixtures.InfinispanFixtures.CC_CREATE;
 import static org.jboss.hal.testsuite.fixtures.InfinispanFixtures.cacheContainerAddress;
 import static org.jboss.hal.testsuite.test.configuration.distributableweb.DistributableWebOperations.addCacheContainer;
+import static org.junit.Assert.fail;
 
 @RunWith(Arquillian.class)
 public class InfinispanSessionTest {
@@ -57,6 +63,7 @@ public class InfinispanSessionTest {
         addCacheContainer(client, operations, CC_CREATE);
         Values values = Values.of(CACHE_CONTAINER, CC_CREATE).and(GRANULARITY, SESSION);
         operations.add(infinispanSessionAddress(INFINISPAN_SESSION_UPDATE), values);
+        operations.add(infinispanSessionAddress(INFINISPAN_SESSION_AFFINITY), values);
         operations.add(infinispanSessionAddress(INFINISPAN_SESSION_DELETE), values);
     }
 
@@ -64,13 +71,17 @@ public class InfinispanSessionTest {
     public static void tearDown() throws Exception {
         operations.removeIfExists(infinispanSessionAddress(INFINISPAN_SESSION_DELETE));
         operations.removeIfExists(infinispanSessionAddress(INFINISPAN_SESSION_UPDATE));
+        operations.removeIfExists(infinispanSessionAddress(INFINISPAN_SESSION_AFFINITY));
         operations.removeIfExists(infinispanSessionAddress(INFINISPAN_SESSION_CREATE));
         operations.removeIfExists(cacheContainerAddress(CC_CREATE));
     }
 
-    @Page private DistributableWebPage page;
-    @Inject private CrudOperations crud;
-    @Inject private Console console;
+    @Page
+    private DistributableWebPage page;
+    @Inject
+    private CrudOperations crud;
+    @Inject
+    private Console console;
     private TableFragment table;
     private FormFragment form;
 
@@ -97,6 +108,22 @@ public class InfinispanSessionTest {
         crud.update(infinispanSessionAddress(INFINISPAN_SESSION_UPDATE), form,
                 f -> f.select(GRANULARITY, ATTRIBUTE),
                 verifier -> verifier.verifyAttribute(GRANULARITY, ATTRIBUTE));
+    }
+
+    @Test
+    public void switchAffinity() throws Exception {
+        table.select(INFINISPAN_SESSION_AFFINITY);
+        page.getInfinispanSessionManagementTabs().select("dw-infinispan-session-management-affinity-tab");
+        SelectFragment select = page.getSwitchAffinity();
+        if (select != null) {
+            select.select(RANKED);
+            console.verifySuccess();
+            new ResourceVerifier(infinispanSessionAddress(INFINISPAN_SESSION_AFFINITY).and(AFFINITY, RANKED), client)
+                    .verifyExists();
+        } else {
+            fail("Select control to switch affinity not found!");
+        }
+
     }
 
     @Test

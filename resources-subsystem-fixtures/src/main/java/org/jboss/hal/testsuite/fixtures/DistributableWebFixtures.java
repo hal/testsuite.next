@@ -19,6 +19,7 @@ import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.AFFINITY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DISTRIBUTABLE_WEB;
 import static org.jboss.hal.testsuite.CrudConstants.CREATE;
 import static org.jboss.hal.testsuite.CrudConstants.DELETE;
@@ -66,6 +67,7 @@ public final class DistributableWebFixtures {
     public static final String INFINISPAN_SESSION_CREATE = Ids.build(INFINISPAN_PREFIX, SESSION_PREFIX, CREATE, Random.name());
     public static final String INFINISPAN_SESSION_REF = Ids.build(INFINISPAN_PREFIX, SESSION_PREFIX, "ref", Random.name());
     public static final String INFINISPAN_SESSION_UPDATE = Ids.build(INFINISPAN_PREFIX, SESSION_PREFIX, UPDATE, Random.name());
+    public static final String INFINISPAN_SESSION_AFFINITY = Ids.build(INFINISPAN_PREFIX, SESSION_PREFIX, AFFINITY, Random.name());
     public static final String INFINISPAN_SESSION_DELETE = Ids.build(INFINISPAN_PREFIX, SESSION_PREFIX, DELETE, Random.name());
 
     public static Address infinispanSessionAddress(String name) {
