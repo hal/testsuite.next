@@ -47,6 +47,15 @@ public final class CredentialReference {
         return modelNode;
     }
 
+    /** Create a new credential reference model node with the specified store, alias and clear-text values. */
+    public static ModelNode storeAlias(String store, String alias, String clearText) {
+        ModelNode modelNode = new ModelNode();
+        modelNode.get(STORE).set(store);
+        modelNode.get(ALIAS).set(alias);
+        modelNode.get(CLEAR_TEXT).set(clearText);
+        return modelNode;
+    }
+
     /** Create a new credential reference model node with random clear text. */
     public static ModelNode clearText() {
         return clearText(Ids.build(CLEAR_TEXT, Random.name()));

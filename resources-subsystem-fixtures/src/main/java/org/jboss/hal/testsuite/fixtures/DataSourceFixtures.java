@@ -39,6 +39,7 @@ public final class DataSourceFixtures {
     public static final String DATA_SOURCE_CREATE_CUSTOM = Ids.build(DATA_SOURCE_PREFIX, "create-custom", Random.name());
     public static final String DATA_SOURCE_CREATE_EXISTING = Ids.build(DATA_SOURCE_PREFIX, "create-existing", Random.name());
     public static final String DATA_SOURCE_CREATE_H2 = H2_NAME;
+    public static final String DATA_SOURCE_CREATE_H2_UNIQUE = Ids.build(DATA_SOURCE_PREFIX, H2_NAME, Random.name());
     public static final String DATA_SOURCE_CREATE_TEST_CANCEL = Ids.build(DATA_SOURCE_PREFIX, "create-test-cancel", Random.name());
     public static final String DATA_SOURCE_CREATE_TEST_CHANGE = Ids.build(DATA_SOURCE_PREFIX, "create-test-change", Random.name());
     public static final String DATA_SOURCE_CREATE_TEST_FINISH = Ids.build(DATA_SOURCE_PREFIX, "create-test-finish", Random.name());
