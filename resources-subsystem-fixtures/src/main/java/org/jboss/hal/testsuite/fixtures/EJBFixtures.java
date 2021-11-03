@@ -15,16 +15,24 @@
  */
 package org.jboss.hal.testsuite.fixtures;
 
+import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.CrudConstants;
 import org.jboss.hal.testsuite.Random;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CLASS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EJB3;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ELYTRON;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVICE;
 
 public final class EJBFixtures {
+
+    public static final String ROLE_1 = "role1";
+    public static final String ROLE_2 = "role2";
+
+    public static final int SLEEP_TIME = 500;
 
     private static final String THREAD_POOL_PREFIX = "tp";
     private static final String REMOTING_PROFILE_PREFIX = "rp";
@@ -33,6 +41,7 @@ public final class EJBFixtures {
     private static final String PASSIVATION_PREFIX = "passivation";
     private static final String MDB_PREFIX = "mdb";
     private static final String ASD_PREFIX = "asd";
+    private static final String SI_PREFIX = "si";
 
     public static final String ALIASES = "aliases";
     public static final String CLUSTER = "cluster";
@@ -43,10 +52,33 @@ public final class EJBFixtures {
     public static final String LOCAL_RECEIVER_PASS_BY_VALUE = "local-receiver-pass-by-value";
     public static final String MAX_SIZE = "max-size";
     public static final String OUTFLOW_SECURITY_DOMAINS = "outflow-security-domains";
+    public static final String SERVER_INTERCEPTORS = "server-interceptors";
     public static final String THREAD_POOL_NAME = "thread-pool-name";
     public static final String USE_QUALIFIED_NAME = "use-qualified-name";
 
+    // ------------------------------------------------------ address
+
     public static final Address SUBSYSTEM_ADDRESS = Address.subsystem(EJB3);
+
+    public static Address singletonEJBAddress(String deploymentName, Class<?> singletonBeanClass) {
+        return ejb3SubsystemAddress(deploymentName).and("singleton-bean", singletonBeanClass.getSimpleName());
+    }
+
+    private static Address ejb3SubsystemAddress(String deploymentName) {
+        return Address.deployment(deploymentName).and("subsystem", "ejb3");
+    }
+
+    public static Address statelessEJBAddress(String deploymentName, Class<?> statelessBeanClass) {
+        return ejb3SubsystemAddress(deploymentName).and("stateless-session-bean", statelessBeanClass.getSimpleName());
+    }
+
+    public static Address statefulEJBAddress(String deploymentName, Class<?> statefulBeanClass) {
+        return ejb3SubsystemAddress(deploymentName).and("stateful-session-bean", statefulBeanClass.getSimpleName());
+    }
+
+    public static Address messageDrivenEJBAddress(String deploymentName, Class<?> messageDrivenBeanClass) {
+        return ejb3SubsystemAddress(deploymentName).and("message-driven-bean", messageDrivenBeanClass.getSimpleName());
+    }
 
     // ------------------------------------------------------ container / thread pool
 
@@ -132,31 +164,22 @@ public final class EJBFixtures {
         return SUBSYSTEM_ADDRESS.and("application-security-domain", name);
     }
 
+    // ------------------------------------------------------ server interceptors
+
+    public static final String SI_CLASS_CREATE = Ids.build(SI_PREFIX, CLASS, CrudConstants.CREATE, Random.name());
+    public static final String SI_MODULE_CREATE = Ids.build(SI_PREFIX, MODULE, CrudConstants.CREATE, Random.name());
+    public static final String SI_CLASS_DELETE = Ids.build(SI_PREFIX, CLASS, CrudConstants.DELETE, Random.name());
+    public static final String SI_MODULE_DELETE = Ids.build(SI_PREFIX, MODULE, CrudConstants.DELETE, Random.name());
+
+    public static ModelNode serverInterceptor(String clazz, String module) {
+        ModelNode serverInterceptor = new ModelNode();
+        serverInterceptor.get(CLASS).set(clazz);
+        serverInterceptor.get(MODULE).set(module);
+        return serverInterceptor;
+    }
+
+    // ------------------------------------------------------ constructor
+
     private EJBFixtures() {
-    }
-
-    public static final String ROLE_1 = "role1";
-    public static final String ROLE_2 = "role2";
-
-    public static final int SLEEP_TIME = 500;
-
-    public static Address singletonEJBAddress(String deploymentName, Class<?> singletonBeanClass) {
-        return ejb3SubsystemAddress(deploymentName).and("singleton-bean", singletonBeanClass.getSimpleName());
-    }
-
-    private static Address ejb3SubsystemAddress(String deploymentName) {
-        return Address.deployment(deploymentName).and("subsystem", "ejb3");
-    }
-
-    public static Address statelessEJBAddress(String deploymentName, Class<?> statelessBeanClass) {
-        return ejb3SubsystemAddress(deploymentName).and("stateless-session-bean", statelessBeanClass.getSimpleName());
-    }
-
-    public static Address statefulEJBAddress(String deploymentName, Class<?> statefulBeanClass) {
-        return ejb3SubsystemAddress(deploymentName).and("stateful-session-bean", statefulBeanClass.getSimpleName());
-    }
-
-    public static Address messageDrivenEJBAddress(String deploymentName, Class<?> messageDrivenBeanClass) {
-        return ejb3SubsystemAddress(deploymentName).and("message-driven-bean", messageDrivenBeanClass.getSimpleName());
     }
 }
