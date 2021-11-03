@@ -22,7 +22,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
-import org.jboss.hal.testsuite.category.Standalone;
+import org.jboss.hal.testsuite.category.Microprofile;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.finder.ColumnFragment;
 import org.jboss.hal.testsuite.fragment.finder.FinderFragment;
@@ -32,10 +32,13 @@ import org.jboss.hal.testsuite.tooling.deployment.DeploymentOperations;
 import org.jboss.hal.testsuite.util.Library;
 import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Operations;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static java.util.Collections.singletonList;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MICROPROFILE_HEALTH_SMALLRYE;
@@ -52,12 +55,21 @@ import static org.jboss.hal.testsuite.test.configuration.microprofile.health.Cus
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
+@Category(Microprofile.class)
 @RunWith(Arquillian.class)
-@Category(Standalone.class)
 public class MicroProfileHealthCheckTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
+    private static final Administration administration = new Administration(client);
+    private static final Operations operations = new Operations(client);
+
+    @BeforeClass
+    public static void prepareServer() throws Exception {
+        // Reload the server is here because when the server is not reloaded the deploy of .war packages fails.
+        // It's in @BeforeClass because it's possible that previous test left the server unreloaded.
+        administration.reloadIfRequired();
+    }
 
     @AfterClass
     public static void cleanUp() throws IOException {
@@ -75,7 +87,8 @@ public class MicroProfileHealthCheckTest {
             .textFile(PROPERTIES_FILENAME, PROPERTIES_KEY + "=" + DOWN)
             .build();
     private FinderFragment previewFinder;
-    @Inject private Console console;
+    @Inject
+    private Console console;
 
     @Test
     public void checkUp() {

@@ -57,7 +57,7 @@ public class FinderPreviewFragment {
 
     protected Map<String, WebElement> getAttributeElementMap(String heading) {
         By attributeSelector =
-            ByJQuery.selector("h2:contains('" + heading + "'):visible ~ ul." + listGroup + " > li:visible");
+            ByJQuery.selector("h2:contains('" + heading + "'):visible ~ ul." + listGroup + ":eq(0) > li:visible");
         waitGui().until().element(root, attributeSelector).is().present();
         return root.findElements(attributeSelector).stream().collect(toMap(attributeElement -> {
             return attributeElement.findElement(By.className(key)).getText();

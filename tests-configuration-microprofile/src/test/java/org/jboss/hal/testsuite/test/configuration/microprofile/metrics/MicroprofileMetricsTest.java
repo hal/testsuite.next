@@ -13,30 +13,54 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.category.Microprofile;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.page.configuration.MicroprofileMetricsPage;
+import org.junit.After;
 import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.hal.dmr.ModelDescriptionConstants.PREFIX;
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileMetricsFixtures.EXPOSED_SUBSYSTEMS;
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileMetricsFixtures.EXPOSE_ALL_SUBSYSTEMS;
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileMetricsFixtures.MICROPROFILE_METRICS_ADDRESS;
 import static org.jboss.hal.testsuite.fixtures.microprofile.MicroprofileMetricsFixtures.SECURITY_ENABLED;
 
+@Category(Microprofile.class)
 @RunWith(Arquillian.class)
 public class MicroprofileMetricsTest {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
+    private static final String STAR = "*";
+
+    private static String defaultPrefixValue = "";
+    private static ModelNode defaultExposedSystem;
+
+    @BeforeClass
+    public static void getInitialPrefixValue() throws IOException {
+        defaultPrefixValue = operations.readAttribute(MICROPROFILE_METRICS_ADDRESS, PREFIX).stringValue("result");
+        defaultExposedSystem = operations.readAttribute(MICROPROFILE_METRICS_ADDRESS, EXPOSED_SUBSYSTEMS).value();
+        operations.writeListAttribute(MICROPROFILE_METRICS_ADDRESS, EXPOSED_SUBSYSTEMS, STAR).assertSuccess();
+    }
 
     @AfterClass
-    public static void closeClient() throws IOException {
+    public static void cleanUpAndCloseClient() throws IOException {
+        operations.writeAttribute(MICROPROFILE_METRICS_ADDRESS, PREFIX, defaultPrefixValue).assertSuccess();
+        operations.writeAttribute(MICROPROFILE_METRICS_ADDRESS, EXPOSED_SUBSYSTEMS, defaultExposedSystem).assertSuccess();
         client.close();
+    }
+
+    @After
+    public void exposeAllSubsystems() throws Exception {
+        operations.writeListAttribute(MICROPROFILE_METRICS_ADDRESS, EXPOSED_SUBSYSTEMS, STAR).assertSuccess();
     }
 
     @Drone
@@ -54,7 +78,7 @@ public class MicroprofileMetricsTest {
             operations.readAttribute(MICROPROFILE_METRICS_ADDRESS,
                 EXPOSED_SUBSYSTEMS)
                 .value()
-                .equals(new ModelNodeGenerator.ModelNodeListBuilder().addAll("*").build());
+                .equals(new ModelNodeGenerator.ModelNodeListBuilder().addAll(STAR).build());
         final AtomicReference<Optional<List<String>>> exposedSubsystems = new AtomicReference<>(Optional.empty());
         page.navigate();
         crudOperations.update(MICROPROFILE_METRICS_ADDRESS, page.getMicroprofileMetricsForm(),
@@ -67,7 +91,7 @@ public class MicroprofileMetricsTest {
                     formFragment.flip(EXPOSE_ALL_SUBSYSTEMS, true);
                 }
             }, resourceVerifier -> {
-                ModelNode value = new ModelNodeGenerator.ModelNodeListBuilder().addAll("*").build();
+                ModelNode value = new ModelNodeGenerator.ModelNodeListBuilder().addAll(STAR).build();
                 if (exposeAllSubsystems) {
                     List<String> exposedSubsystemsList = exposedSubsystems.get().get();
                     value =
@@ -83,7 +107,7 @@ public class MicroprofileMetricsTest {
         boolean exposeAllSubsystems =
             operations.readAttribute(MICROPROFILE_METRICS_ADDRESS,
                 EXPOSED_SUBSYSTEMS)
-                .value().equals(new ModelNodeGenerator.ModelNodeListBuilder().addAll("*").build());
+                .value().equals(new ModelNodeGenerator.ModelNodeListBuilder().addAll(STAR).build());
         String[] exposedSubsystems = new String[] {Random.name(), Random.name()};
         page.navigate();
         crudOperations.update(MICROPROFILE_METRICS_ADDRESS, page.getMicroprofileMetricsForm(),

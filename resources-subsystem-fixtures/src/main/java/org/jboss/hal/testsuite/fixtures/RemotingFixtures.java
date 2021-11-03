@@ -34,6 +34,9 @@ public final class RemotingFixtures {
     private static final String POLICY = "policy";
     private static final String SECURITY = "security";
 
+    private static final String SOCKET = "socket";
+    private static final String LISTENER = "listener";
+
     public static final String AUTH_REALM = "auth-realm";
     public static final String AUTHENTICATION_PROVIDER = "authentication-provider";
     public static final String BACKLOG = "BACKLOG";
@@ -93,6 +96,24 @@ public final class RemotingFixtures {
     public static Address httpConnectorPolicyAddress(String name) {
         return httpConnectorSecurityAddress(name).and(SASL_POLICY, POLICY);
     }
+
+    // ------------------------------------------------------ socket for http connector
+
+    public static final String HTTP_CONNECTOR_CREATE_SOCKET  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.CREATE, SOCKET, Random.name());
+    public static final String HTTP_CONNECTOR_READ_SOCKET  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.READ, SOCKET, Random.name());
+    public static final String HTTP_CONNECTOR_UPDATE_SOCKET  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.UPDATE, SOCKET, Random.name());
+    public static final String HTTP_CONNECTOR_DELETE_SOCKET  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.DELETE, SOCKET, Random.name());
+    public static final String HTTP_CONNECTOR_SECURITY_SOCKET = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, SECURITY, SOCKET, Random.name());
+    public static final String HTTP_CONNECTOR_POLICY_SOCKET  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, POLICY, SOCKET, Random.name());
+
+    // ------------------------------------------------------ http listener for http connector
+
+    public static final String HTTP_CONNECTOR_CREATE_LISTENER  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.CREATE, LISTENER, Random.name());
+    public static final String HTTP_CONNECTOR_READ_LISTENER  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.READ, LISTENER, Random.name());
+    public static final String HTTP_CONNECTOR_UPDATE_LISTENER  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.UPDATE, LISTENER, Random.name());
+    public static final String HTTP_CONNECTOR_DELETE_LISTENER  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, CrudConstants.DELETE, LISTENER, Random.name());
+    public static final String HTTP_CONNECTOR_SECURITY_LISTENER = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, SECURITY, LISTENER, Random.name());
+    public static final String HTTP_CONNECTOR_POLICY_LISTENER  = Ids.build(HTTP_CONNECTOR_PREFIX, CONNECTOR_PREFIX, POLICY, LISTENER, Random.name());
 
     // ------------------------------------------------------ local outbound
 

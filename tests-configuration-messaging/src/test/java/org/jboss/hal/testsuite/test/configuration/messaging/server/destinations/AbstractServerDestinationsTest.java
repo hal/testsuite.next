@@ -33,12 +33,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.BINDINGS_DIRECTORY;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.JOURNAL_DIRECTORY;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.LARGE_MESSAGES_DIRECTORY;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.PAGING_DIRECTORY;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.serverAddress;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.serverPathAddress;
+import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.*;
 
 public abstract class AbstractServerDestinationsTest {
 
@@ -48,7 +43,7 @@ public abstract class AbstractServerDestinationsTest {
 
     protected static void createServer(String name) throws IOException {
         Batch batchSrvUpd = new Batch();
-        batchSrvUpd.add(serverAddress(name));
+        batchSrvUpd.add(serverAddress(name), Values.of(ELYTRON_DOMAIN, "ApplicationDomain"));
         batchSrvUpd.add(serverPathAddress(name, BINDINGS_DIRECTORY), Values.of(PATH, Random.name()));
         batchSrvUpd.add(serverPathAddress(name, JOURNAL_DIRECTORY), Values.of(PATH, Random.name()));
         batchSrvUpd.add(serverPathAddress(name, LARGE_MESSAGES_DIRECTORY), Values.of(PATH, Random.name()));
