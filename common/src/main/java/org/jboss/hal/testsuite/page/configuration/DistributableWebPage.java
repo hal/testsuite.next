@@ -20,6 +20,7 @@ import org.jboss.hal.meta.token.NameTokens;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.SelectFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.jboss.hal.testsuite.fragment.TabsFragment;
 import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.By;
@@ -38,6 +39,7 @@ public class DistributableWebPage extends BasePage {
     @FindBy(id = "dw-hotrod-sso-management-table" + WRAPPER) private TableFragment hotrodSSOManagementTable;
     @FindBy(id = "dw-hotrod-sso-management-form") private FormFragment hotrodSSOManagementForm;
     @FindBy(id = "dw-infinispan-session-management-table" + WRAPPER) private TableFragment infinispanSessionManagementTable;
+    @FindBy(id = "dw-infinispan-session-management-container") private TabsFragment infinispanSessionManagementTabs;
     @FindBy(id = "dw-infinispan-session-management-form") private FormFragment infinispanSessionManagementForm;
     @FindBy(id = "dw-infinispan-sso-management-table" + WRAPPER) private TableFragment infinispanSSOManagementTable;
     @FindBy(id = "dw-infinispan-sso-management-form") private FormFragment infinispanSSOManagementForm;
@@ -66,6 +68,18 @@ public class DistributableWebPage extends BasePage {
 
     public TableFragment getInfinispanSessionManagementTable() {
         return infinispanSessionManagementTable;
+    }
+
+    public TabsFragment getInfinispanSessionManagementTabs() {
+        return infinispanSessionManagementTabs;
+    }
+
+    public SelectFragment getSwitchAffinity() {
+        WebElement element = getRootContainer().findElement(By.cssSelector("#dw-infinispan-session-management-affinity-tab .header-form ." + bootstrapSelect));
+        if (element != null) {
+            return Graphene.createPageFragment(SelectFragment.class, element);
+        }
+        return null;
     }
 
     public FormFragment getInfinispanSessionManagementForm() {
