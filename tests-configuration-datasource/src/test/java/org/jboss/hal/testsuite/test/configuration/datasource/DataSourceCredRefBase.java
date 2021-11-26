@@ -77,14 +77,14 @@ public abstract class DataSourceCredRefBase {
         credRef.writeAttribute(dataSourceAddress(DATA_SOURCE_UPDATE), CREDENTIAL_REFERENCE,
                 CredentialReference.storeAlias(CRED_ST_UPDATE, ALIAS_VALUE, H2_PASSWORD));
         operations.batch(credRef);
-        admin.reload();
+        admin.reloadIfRequired();
     }
 
     @AfterClass
     public static void afterClass() throws Exception {
         operations.removeIfExists(dataSourceAddress(DATA_SOURCE_UPDATE));
         operations.removeIfExists(credentialStoreAddress(CRED_ST_UPDATE));
-        admin.reload();
+        admin.reloadIfRequired();
     }
 
     @Page
@@ -99,7 +99,7 @@ public abstract class DataSourceCredRefBase {
     }
 
     protected void reload() throws Exception {
-        admin.reload();
+        admin.reloadIfRequired();
         Library.letsSleep(3000);
     }
 
