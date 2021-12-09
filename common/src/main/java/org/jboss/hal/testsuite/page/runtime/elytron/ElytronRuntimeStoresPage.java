@@ -9,6 +9,7 @@ import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ALIAS;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_STORE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
 import static org.jboss.hal.resources.Ids.TABLE;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
@@ -25,11 +26,28 @@ public class ElytronRuntimeStoresPage extends BasePage {
     @FindBy(id = KEY_STORE + "-" + Ids.PAGES)
     private PagesFragment aliasesPage;
 
+    @FindBy(id = CREDENTIAL_STORE + "-" + TABLE + WRAPPER)
+    private TableFragment credentialStoreTable;
+
+    @FindBy(id = CREDENTIAL_STORE + "-" + ALIAS + "-" + TABLE + WRAPPER)
+    private TableFragment credentialStoreAliasTable;
+
+    @FindBy(id = CREDENTIAL_STORE + "-" + Ids.PAGES)
+    private PagesFragment credentialPage;
+
     public TableFragment getKeyStoreTable() {
         return keyStoreTable;
     }
 
     public TableFragment getKeyStoreAliasTable() {
         return keyStoreAliasTable;
+    }
+
+    public TableFragment getCredentialStoreTable() {
+        return credentialStoreTable;
+    }
+
+    public TableFragment getCredentialStoreAliasTable() {
+        return credentialStoreAliasTable;
     }
 }
