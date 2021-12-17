@@ -24,6 +24,10 @@
             <groupId>org.jboss.hal</groupId>
             <artifactId>tooling-ssl-operations</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.jboss.hal</groupId>
+            <artifactId>tooling-deployment</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.jboss.arquillian.junit</groupId>
