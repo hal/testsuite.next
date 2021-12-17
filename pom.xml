@@ -446,6 +446,21 @@
             </properties>
         </profile>
         <profile>
+            <id>domain-hc-dc</id>
+            <properties>
+                <suite.mode>domain</suite.mode>
+                <test.included.category>
+                    org.jboss.hal.testsuite.category.DomainHcDc
+                </test.included.category>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly.arquillian</groupId>
+                    <artifactId>wildfly-arquillian-container-domain-remote</artifactId>
+                </dependency>
+            </dependencies>
+        </profile>
+        <profile>
             <id>upstream</id>
             <properties>
                 <upstream.excluded.category>
@@ -485,7 +500,7 @@
         <repository>
             <id>jboss-public-repository-group</id>
             <name>JBoss Public Maven Repository Group</name>
-            <url>http://repository.jboss.org/nexus/content/groups/public/</url>
+            <url>https://repository.jboss.org/nexus/content/groups/public/</url>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
