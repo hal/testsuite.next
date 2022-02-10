@@ -24,7 +24,7 @@ import org.jboss.hal.testsuite.page.BasePage;
 import org.jboss.hal.testsuite.page.Place;
 import org.openqa.selenium.support.FindBy;
 
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 
 @Place(NameTokens.MAIL_SESSION)
@@ -54,5 +54,22 @@ public class MailPage extends BasePage {
 
     public FormFragment getMailServerCrForm() {
         return mailServerCrForm;
+    }
+
+    /**
+     * Navigate to SMTP in mail session
+     * navigate to Configuration > Subsystem > Mail > Mail Session > "mailSession" > Server > SMTP
+     * @param mailSession name of mail session. If is null or empty String  <i>default<i/> is used.
+     */
+    public void navigateToSMTP(String mailSession) {
+        if (mailSession == null || mailSession.isEmpty()) {
+            mailSession = "default";
+        }
+        navigate(NAME, mailSession);
+        console.waitNoNotification();
+        console.verticalNavigation().selectPrimary(Ids.MAIL_SERVER_ITEM);
+        getMailServerTabs().select(Ids.build(Ids.MAIL_SERVER, CREDENTIAL_REFERENCE, Ids.TAB));
+        getMailServerTable().select(SMTP.toUpperCase());
+        console.waitNoNotification();
     }
 }
