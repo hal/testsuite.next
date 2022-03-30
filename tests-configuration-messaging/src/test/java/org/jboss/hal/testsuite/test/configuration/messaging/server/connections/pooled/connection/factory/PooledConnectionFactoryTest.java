@@ -47,7 +47,7 @@ import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.POOL_CONN_TRY_U
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.POOL_CONN_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.SRV_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.connectionFactoryAddress;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.discoveryGroupAddress;
+import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.jgroupsDiscoveryGroupAddress;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.pooledConnectionFactoryAddress;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.serverAddress;
 
@@ -57,7 +57,7 @@ public class PooledConnectionFactoryTest extends AbstractServerConnectionsTest {
     @BeforeClass
     public static void createResources() throws IOException, TimeoutException, InterruptedException {
         createServer(SRV_UPDATE);
-        operations.add(discoveryGroupAddress(SRV_UPDATE, DG_UPDATE), Values.of(JGROUPS_CHANNEL, EE)).assertSuccess();
+        operations.add(jgroupsDiscoveryGroupAddress(SRV_UPDATE, DG_UPDATE), Values.of(JGROUPS_CHANNEL, EE)).assertSuccess();
         administration.reloadIfRequired();
         operations.add(pooledConnectionFactoryAddress(SRV_UPDATE, POOL_CONN_UPDATE),
             Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, DG_UPDATE)).assertSuccess();

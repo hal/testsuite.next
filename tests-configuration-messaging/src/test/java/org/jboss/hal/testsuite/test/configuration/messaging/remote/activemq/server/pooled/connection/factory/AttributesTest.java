@@ -43,8 +43,8 @@ public class AttributesTest extends AbstractPooledConnectionFactoryTest {
     public static void tearDown() throws IOException, OperationException {
         try {
             operations.removeIfExists(RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_UPDATE));
-            operations.removeIfExists(RemoteActiveMQServer.discoveryGroupAddress(DISCOVERY_GROUP_CREATE));
-            operations.removeIfExists(RemoteActiveMQServer.discoveryGroupAddress(DISCOVERY_GROUP_UPDATE));
+            operations.removeIfExists(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(DISCOVERY_GROUP_CREATE));
+            operations.removeIfExists(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(DISCOVERY_GROUP_UPDATE));
             operations.removeIfExists(RemoteActiveMQServer.genericConnectorAddress(GENERIC_CONNECTOR_UPDATE));
             operations.removeIfExists(JGroupsFixtures.channelAddress(JGROUPS_CHANNEL));
         } finally {

@@ -64,9 +64,9 @@ public class ConnectionFactoryTest {
 
     private static void createDiscoveryGroup(String name) throws IOException {
         Batch batch = new Batch();
-        batch.add(RemoteActiveMQServer.discoveryGroupAddress(name));
-        batch.writeAttribute(RemoteActiveMQServer.discoveryGroupAddress(name), "jgroups-channel", JGROUPS_CHANNEL);
-        batch.writeAttribute(RemoteActiveMQServer.discoveryGroupAddress(name), "jgroups-cluster", Random.name());
+        batch.add(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name));
+        batch.writeAttribute(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name), "jgroups-channel", JGROUPS_CHANNEL);
+        batch.writeAttribute(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name), "jgroups-cluster", Random.name());
         operations.batch(batch).assertSuccess();
     }
 
@@ -89,8 +89,8 @@ public class ConnectionFactoryTest {
             operations.removeIfExists(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_CREATE));
             operations.removeIfExists(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_UPDATE));
             operations.removeIfExists(RemoteActiveMQServer.connectionFactoryAddress(CONNECTION_FACTORY_DELETE));
-            operations.removeIfExists(RemoteActiveMQServer.discoveryGroupAddress(DISCOVERY_GROUP_CREATE));
-            operations.removeIfExists(RemoteActiveMQServer.discoveryGroupAddress(DISCOVERY_GROUP_UPDATE));
+            operations.removeIfExists(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(DISCOVERY_GROUP_CREATE));
+            operations.removeIfExists(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(DISCOVERY_GROUP_UPDATE));
             operations.removeIfExists(RemoteActiveMQServer.genericConnectorAddress(GENERIC_CONNECTOR_UPDATE));
             operations.removeIfExists(JGroupsFixtures.channelAddress(JGROUPS_CHANNEL));
         } finally {
