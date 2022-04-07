@@ -342,7 +342,7 @@ public class CustomConsoleTitleTest {
 
         setTitleAndReloadPage("");
 
-        Assert.assertEquals(HAL_TEST_SUITE, browser.getTitle());
+        Assert.assertEquals(HAL_MANAGEMENT_CONSOLE, browser.getTitle());
     }
 
     /**

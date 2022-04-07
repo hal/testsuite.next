@@ -54,14 +54,13 @@ public class StackProtocolTest {
 
     @BeforeClass
     public static void beforeClass() throws Exception {
-        administration.reloadIfRequired();
-
         Batch stackCreate = new Batch();
         stackCreate.add(stackAddress(STACK_CREATE));
         stackCreate.add(transportAddress(STACK_CREATE, TRANSPORT_CREATE), Values.of(SOCKET_BINDING, JGROUPS_TCP));
-        operations.batch(stackCreate);
-        operations.add(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE));
-        operations.add(protocolAddress(STACK_CREATE, PROTOCOL_DELETE));
+        operations.batch(stackCreate).assertSuccess();
+        operations.add(protocolAddress(STACK_CREATE, PROTOCOL_UPDATE)).assertSuccess();
+        operations.add(protocolAddress(STACK_CREATE, PROTOCOL_DELETE)).assertSuccess();
+        administration.reloadIfRequired();
     }
 
     @AfterClass

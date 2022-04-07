@@ -70,13 +70,13 @@ public class StoreTest {
 
     @BeforeClass
     public static void init() throws IOException, CommandFailedException {
-        operations.add(cacheContainerAddress(CACHE_CONTAINER));
-        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_FILE_STORE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_CUSTOM_STORE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_JDBC_STORE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_BINARY_JDBC_STORE));
-        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE));
+        operations.add(cacheContainerAddress(CACHE_CONTAINER)).assertSuccess();
+        operations.add(cacheContainerAddress(CACHE_CONTAINER).and(TRANSPORT, JGROUPS)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_FILE_STORE)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_CUSTOM_STORE)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_JDBC_STORE)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_BINARY_JDBC_STORE)).assertSuccess();
+        operations.add(scatteredCacheAddress(CACHE_CONTAINER, SCATTERED_CACHE_HOTROD_STORE)).assertSuccess();
         client.apply(
             new AddDataSource.Builder<>(DATA_SOURCE_JDBC).driverName("h2").jndiName(Random.jndiName()).connectionUrl(
                 DataSourceFixtures.h2ConnectionUrl(Random.name())).build());
@@ -98,7 +98,7 @@ public class StoreTest {
             Values.of("default-remote-cluster", REMOTE_CLUSTER_HOTROD))
             .add(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_HOTROD).and("remote-cluster", REMOTE_CLUSTER_HOTROD),
                 Values.of(SOCKET_BINDINGS,
-                    new ModelNodeGenerator.ModelNodeListBuilder().addAll(REMOTE_SOCKET_BINDING_HOTROD).build())));
+                    new ModelNodeGenerator.ModelNodeListBuilder().addAll(REMOTE_SOCKET_BINDING_HOTROD).build()))).assertSuccess();
     }
 
     @AfterClass

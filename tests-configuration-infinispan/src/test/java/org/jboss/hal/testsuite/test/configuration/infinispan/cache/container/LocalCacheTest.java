@@ -43,7 +43,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.CACHE_CONTAINER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EXPIRATION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.LOCKING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MODE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.MODULE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STATISTICS_ENABLED;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TRANSACTION;
@@ -102,11 +101,11 @@ public class LocalCacheTest {
         String moduleName = Random.name();
         crud.update(localCacheAddress(CC_UPDATE, LC_UPDATE), form,
                 f -> {
-                    f.text(MODULE, moduleName);
+                    f.list("modules").add(moduleName);
                     f.flip(STATISTICS_ENABLED, true);
                 },
                 resourceVerifier -> {
-                    resourceVerifier.verifyAttribute(MODULE, moduleName);
+                    resourceVerifier.verifyListAttributeContainsValue("modules", moduleName);
                     resourceVerifier.verifyAttribute(STATISTICS_ENABLED, true);
 
                 });

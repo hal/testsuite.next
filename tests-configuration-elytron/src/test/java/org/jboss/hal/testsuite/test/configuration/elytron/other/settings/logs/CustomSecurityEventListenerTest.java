@@ -2,6 +2,7 @@ package org.jboss.hal.testsuite.test.configuration.elytron.other.settings.logs;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.drone.api.annotation.Drone;
@@ -15,7 +16,6 @@ import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.fixtures.ElytronFixtures;
 import org.jboss.hal.testsuite.page.configuration.ElytronOtherSettingsPage;
-import org.jboss.hal.testsuite.util.TestsuiteEnvironmentUtils;
 import org.jboss.shrinkwrap.api.exporter.ZipExporter;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
 import org.jboss.shrinkwrap.resolver.api.maven.embedded.EmbeddedMaven;
@@ -57,10 +57,10 @@ public class CustomSecurityEventListenerTest {
 
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException {
-        System.setProperty("jboss.home.dir", TestsuiteEnvironmentUtils.getJbossHome());
+        System.setProperty("jboss.home.dir", Optional.ofNullable(System.getenv("JBOSS_HOME")).orElseThrow(() -> new RuntimeException("JBOSS_HOME variable not set")));
         JavaArchive archive = EmbeddedMaven.forProject(
             CustomSecurityEventListenerTest.class.getResource("custom-security-event-listener/pom.xml").getFile())
-            .setGoals("package").build().getDefaultBuiltArchive().as(JavaArchive.class);
+            .setGoals("package").setBatchMode(true).build().getDefaultBuiltArchive().as(JavaArchive.class);
         File archiveFile = temporaryFolder.newFile(archive.getName());
         archive.as(ZipExporter.class).exportTo(archiveFile, true);
         AddModule addModule = new AddModule.Builder(CUSTOM_SECURITY_EVENT_LISTENER_MODULE_NAME)

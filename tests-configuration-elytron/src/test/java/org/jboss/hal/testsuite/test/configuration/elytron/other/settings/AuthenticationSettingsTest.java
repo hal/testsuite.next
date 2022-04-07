@@ -17,12 +17,11 @@ package org.jboss.hal.testsuite.test.configuration.elytron.other.settings;
 
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
-import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
@@ -92,12 +91,9 @@ public class AuthenticationSettingsTest extends AbstractOtherSettingsTest {
         table.bind(form);
         table.select(AUT_CF_CR_CRT);
         page.getAuthenticationConfigurationTabs().select(Ids.build(ELYTRON_AUTHENTICATION_CONFIGURATION, CREDENTIAL_REFERENCE, TAB));
-        form.emptyState().mainAction();
+        String clearTextValue = Random.name();
+        crud.createSingleton(authenticationConfigurationAddress(AUT_CF_CR_CRT), form, formFragment -> formFragment.text("clear-text", clearTextValue), resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
         console.verifySuccess();
-        // the UI "add" operation adds a credential-reference with no inner attributes, as they are not required
-        ModelNodeResult actualResult = operations.readAttribute(authenticationConfigurationAddress(AUT_CF_CR_CRT),
-                CREDENTIAL_REFERENCE);
-        Assert.assertTrue("attribute credential-reference should exist", actualResult.value().isDefined());
     }
 
     @Test

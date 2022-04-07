@@ -53,6 +53,7 @@
 
     <properties>
         <!-- configuration settings -->
+        <jvm.options></jvm.options>
         <as.managementAddress>127.0.0.1</as.managementAddress>
         <as.managementPort>9990</as.managementPort>
         <browser>phantomjs</browser>
@@ -366,6 +367,7 @@
                         </systemPropertyVariables>
                         <groups>${test.included.category}</groups>
                         <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
+                        <argLine>${jvm.options}</argLine>
                     </configuration>
                 </plugin>
             </plugins>
@@ -397,7 +399,7 @@
                 <!-- This replaces unsupported findbugs plugin -->
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.2.0</version>
+                <version>4.2.2</version>
                 <executions>
                     <execution>
                         <id>finding-bugs</id>
@@ -412,6 +414,15 @@
     </build>
 
     <profiles>
+        <profile>
+            <id>jdk17</id>
+            <activation>
+                <jdk>[17,)</jdk>
+            </activation>
+            <properties>
+                <jvm.options>--add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</jvm.options>
+            </properties>
+        </profile>
         <profile>
             <id>all</id>
             <activation>

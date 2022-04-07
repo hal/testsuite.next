@@ -1,6 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.infinispan.remote.cache.container.configuration;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.concurrent.TimeoutException;
 
 import org.jboss.arquillian.junit.Arquillian;
@@ -67,12 +68,6 @@ public class AttributesTest extends AbstractRemoteCacheContainerTest {
     }
 
     @Test
-    public void editKeySizeEstimate() throws Exception {
-        crudOperations.update(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_TO_BE_TESTED),
-            page.getConfigurationForm(), "key-size-estimate", Random.number());
-    }
-
-    @Test
     public void editMaxRetries() throws Exception {
         crudOperations.update(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_TO_BE_TESTED),
             page.getConfigurationForm(), "max-retries", Random.number());
@@ -81,7 +76,7 @@ public class AttributesTest extends AbstractRemoteCacheContainerTest {
     @Test
     public void editModule() throws Exception {
         crudOperations.update(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_TO_BE_TESTED),
-            page.getConfigurationForm(), "module");
+            page.getConfigurationForm(), "modules", Collections.singletonList(Random.name()));
     }
 
     @Test
@@ -116,11 +111,5 @@ public class AttributesTest extends AbstractRemoteCacheContainerTest {
                 .booleanValue();
         crudOperations.update(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_TO_BE_TESTED),
             page.getConfigurationForm(), "tcp-no-delay", !tcpNoDelay);
-    }
-
-    @Test
-    public void editValueSizeEstimate() throws Exception {
-        crudOperations.update(remoteCacheContainerAddress(REMOTE_CACHE_CONTAINER_TO_BE_TESTED),
-            page.getConfigurationForm(), "value-size-estimate", Random.number());
     }
 }

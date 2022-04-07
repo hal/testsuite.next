@@ -71,13 +71,13 @@ public class CredentialReferenceTest extends AbstractPooledConnectionFactoryTest
 
     @Test
     public void createCredentialReference() throws Exception {
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         page.getPooledConnectionFactoryTable().select(POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_CREATE);
         crudOperations.createSingleton(
             RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_CREATE),
             page.getPooledConnectionFactoryCredentialReferenceForm(), formFragment -> {
-                formFragment.text(ModelDescriptionConstants.CLEAR_TEXT, clearText);
-            }, resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearText));
+                formFragment.text(ModelDescriptionConstants.CLEAR_TEXT, clearTextValue);
+            }, resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
     }
 
     @Test
@@ -117,15 +117,15 @@ public class CredentialReferenceTest extends AbstractPooledConnectionFactoryTest
 
     @Test
     public void editClearText() throws Exception {
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         page.getPooledConnectionFactoryTable().select(POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_UPDATE);
         crudOperations.update(
             RemoteActiveMQServer.pooledConnectionFactoryAddress(POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_UPDATE),
             page.getPooledConnectionFactoryCredentialReferenceForm(), formFragment -> {
                 formFragment.clear(ModelDescriptionConstants.STORE);
                 formFragment.clear(ModelDescriptionConstants.ALIAS);
-                formFragment.text(ModelDescriptionConstants.CLEAR_TEXT, clearText);
-            }, resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearText));
+                formFragment.text(ModelDescriptionConstants.CLEAR_TEXT, clearTextValue);
+            }, resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
     }
 
     @Test

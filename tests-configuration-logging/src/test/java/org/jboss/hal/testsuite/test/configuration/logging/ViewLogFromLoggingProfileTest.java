@@ -59,7 +59,7 @@ public class ViewLogFromLoggingProfileTest {
     public static void setUp() throws IOException, CommandFailedException {
         WebArchive archive =
             EmbeddedMaven.forProject(ViewLogFromLoggingProfileTest.class.getResource("pom.xml").getFile())
-                .addProperty("loggingProfile", LOGGING_PROFILE).setGoals("package").build().getDefaultBuiltArchive()
+                .addProperty("loggingProfile", LOGGING_PROFILE).setGoals("package").setBatchMode(true).build().getDefaultBuiltArchive()
                 .as(WebArchive.class);
         deploymentName = archive.getName();
         deploymentUrl = String.format("http://%s:8080/%s", System.getProperty("as.managementAddress", "localhost"),

@@ -44,7 +44,7 @@ public class ConfigurationTest {
 
     @AfterClass
     public static void tearDown() throws Exception {
-        operations.writeAttribute(SUBSYSTEM_ADDRESS, DEFAULT_CHANNEL, EE);
+        operations.writeAttribute(SUBSYSTEM_ADDRESS, DEFAULT_CHANNEL, EE).assertSuccess();
     }
 
     @Inject private Console console;

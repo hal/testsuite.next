@@ -141,22 +141,24 @@ public class MailServerCredRefTest {
 
     @Test
     public void updateClearText() throws Exception {
-        String clearText = Ids.build(CLEAR_TEXT, Random.name());
+        String clearTextValue = Ids.build(CLEAR_TEXT, Random.name());
 
         crud.update(address(), form(),
                 f -> {
                     f.clear(STORE);
                     f.clear(ALIAS);
-                    f.text(CLEAR_TEXT, clearText);
+                    f.text(CLEAR_TEXT, clearTextValue);
                 },
                 resourceVerifier -> resourceVerifier.verifyAttribute(CredentialReference.fqName(CLEAR_TEXT),
-                        clearText));
+                        clearTextValue));
     }
 
     @Test
     public void zzzDelete() throws Exception {
         crud.deleteSingleton(address(), form(),
                 resourceVerifier -> resourceVerifier.verifyAttributeIsUndefined(CREDENTIAL_REFERENCE));
+        operations.writeAttribute(serverAddress(SESSION_UPDATE, SMTP),
+                CREDENTIAL_REFERENCE, CredentialReference.storeAlias());
     }
 
 }

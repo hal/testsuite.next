@@ -7,6 +7,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.dmr.ModelNode;
 import org.jboss.hal.dmr.ModelDescriptionConstants;
 import org.jboss.hal.testsuite.Random;
+import org.jboss.hal.testsuite.dmr.ModelNodeGenerator;
 import org.jboss.hal.testsuite.fixtures.ElytronFixtures;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.test.configuration.elytron.other.settings.AbstractOtherSettingsTest;
@@ -44,15 +45,15 @@ public class CredentialReferenceTest extends AbstractOtherSettingsTest {
             ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_WITH_CREDENTIAL_REFERENCE),
             Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                 .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE)
-                .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNode().setEmptyObject()));
+                .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator().createObjectNodeWithPropertyChild(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()))).assertSuccess();
         operations.add(ElytronFixtures.certificateAuthorityAccountAddress(
             CERTIFICATE_AUTHORITY_ACCOUNT_WITHOUT_CREDENTIAL_REFERENCE),
-            Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name()).and(ModelDescriptionConstants.KEY_STORE, KEY_STORE));
+            Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name()).and(ModelDescriptionConstants.KEY_STORE, KEY_STORE)).assertSuccess();
         operations.add(
             ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_CREDENTIAL_REFERENCE_EDIT),
             Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                 .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE)
-                .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNode().setEmptyObject()));
+                .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator().createObjectNodeWithPropertyChild(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()))).assertSuccess();
     }
 
     @AfterClass
@@ -75,12 +76,12 @@ public class CredentialReferenceTest extends AbstractOtherSettingsTest {
 
     @Test
     public void create() throws Exception {
+        String clearTextValue = Random.name();
         page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_WITHOUT_CREDENTIAL_REFERENCE);
         crud.createSingleton(ElytronFixtures.certificateAuthorityAccountAddress(
             CERTIFICATE_AUTHORITY_ACCOUNT_WITHOUT_CREDENTIAL_REFERENCE),
-            page.getCertificateAuthorityAccountCredentialReferenceForm(), null,
-            resourceVerifier -> resourceVerifier.verifyAttribute(ElytronFixtures.CREDENTIAL_REFERENCE,
-                new ModelNode().setEmptyObject()));
+            page.getCertificateAuthorityAccountCredentialReferenceForm(), formFragment -> formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearTextValue),
+            resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
     }
 
     @Test
@@ -106,20 +107,20 @@ public class CredentialReferenceTest extends AbstractOtherSettingsTest {
 
     private Consumer<FormFragment> clearFields = formFragment -> {
         formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, "");
-        formFragment.text("clear-text", "");
+        formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, "");
         formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_STORE, "");
         formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_TYPE, "");
     };
 
     @Test
     public void editClearText() throws Exception {
-        String clearText = Random.name();
+        String clearTextValue = Random.name();
         page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_CREDENTIAL_REFERENCE_EDIT);
         crud.update(
             ElytronFixtures.certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_CREDENTIAL_REFERENCE_EDIT),
             page.getCertificateAuthorityAccountCredentialReferenceForm(),
-            clearFields.andThen(formFragment -> formFragment.text("clear-text", clearText)),
-            resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearText));
+            clearFields.andThen(formFragment -> formFragment.text(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, clearTextValue)),
+            resourceVerifier -> resourceVerifier.verifyAttribute("credential-reference.clear-text", clearTextValue));
     }
 
     @Test

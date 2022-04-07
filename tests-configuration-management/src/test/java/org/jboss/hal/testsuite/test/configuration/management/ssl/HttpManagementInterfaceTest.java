@@ -48,7 +48,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.READ_ALIAS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.RELOAD;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURE_SOCKET_BINDING;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_REALM;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER_SSL_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SSL_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.STORE;
@@ -701,8 +700,7 @@ public class HttpManagementInterfaceTest {
         sslOps.waitUntilServerIsRunning();
 
         httpInterfaceVerifier
-                .verifyAttributeIsUndefined(SECURE_SOCKET_BINDING)
-                .verifyAttributeIsUndefined(SECURITY_REALM);
+            .verifyAttributeIsUndefined(SECURE_SOCKET_BINDING);
 
     }
 
