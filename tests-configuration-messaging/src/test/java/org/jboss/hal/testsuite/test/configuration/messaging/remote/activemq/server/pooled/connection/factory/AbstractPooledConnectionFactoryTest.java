@@ -28,10 +28,10 @@ public abstract class AbstractPooledConnectionFactoryTest {
 
     protected static void createDiscoveryGroup(String name, String jgroupsChannel) throws IOException {
         Batch batch = new Batch();
-        batch.add(MessagingFixtures.RemoteActiveMQServer.discoveryGroupAddress(name));
-        batch.writeAttribute(MessagingFixtures.RemoteActiveMQServer.discoveryGroupAddress(name), "jgroups-channel", jgroupsChannel);
+        batch.add(MessagingFixtures.RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name));
+        batch.writeAttribute(MessagingFixtures.RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name), "jgroups-channel", jgroupsChannel);
         batch.writeAttribute(
-            MessagingFixtures.RemoteActiveMQServer.discoveryGroupAddress(name), "jgroups-cluster", Random.name());
+            MessagingFixtures.RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(name), "jgroups-cluster", Random.name());
         operations.batch(batch).assertSuccess();
     }
 

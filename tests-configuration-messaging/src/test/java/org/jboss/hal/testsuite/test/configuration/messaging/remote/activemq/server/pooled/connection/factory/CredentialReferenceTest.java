@@ -56,7 +56,7 @@ public class CredentialReferenceTest extends AbstractPooledConnectionFactoryTest
                 POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_DELETE));
             operations.removeIfExists(RemoteActiveMQServer.pooledConnectionFactoryAddress(
                 POOLED_CONNECTION_FACTORY_CREDENTIAL_REFERENCE_CREATE));
-            operations.removeIfExists(RemoteActiveMQServer.discoveryGroupAddress(DISCOVERY_GROUP));
+            operations.removeIfExists(RemoteActiveMQServer.jgroupsDiscoveryGroupAddress(DISCOVERY_GROUP));
             operations.removeIfExists(JGroupsFixtures.channelAddress(JGROUPS_CHANNEL));
         } finally {
             client.close();

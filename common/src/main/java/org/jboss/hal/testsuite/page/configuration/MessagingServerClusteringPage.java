@@ -32,10 +32,14 @@ import static org.jboss.hal.testsuite.Selectors.WRAPPER;
 @Place(NameTokens.MESSAGING_SERVER_CLUSTERING)
 public class MessagingServerClusteringPage extends BasePage {
 
-    @FindBy(id = MESSAGING_BROADCAST_GROUP + "-" + TABLE + WRAPPER) private TableFragment broadcastGroupTable;
-    @FindBy(id = MESSAGING_BROADCAST_GROUP + "-" + FORM) private FormFragment broadcastGroupForm;
-    @FindBy(id = MESSAGING_DISCOVERY_GROUP + "-" + TABLE + WRAPPER) private TableFragment discoveryGroupTable;
-    @FindBy(id = MESSAGING_DISCOVERY_GROUP + "-" + FORM) private FormFragment discoveryGroupForm;
+    @FindBy(id = MESSAGING_JGROUPS_BROADCAST_GROUP + "-" + TABLE + WRAPPER) private TableFragment jgroupsBroadcastGroupTable;
+    @FindBy(id = MESSAGING_JGROUPS_BROADCAST_GROUP + "-" + FORM) private FormFragment jgroupsBroadcastGroupForm;
+    @FindBy(id = MESSAGING_JGROUPS_DISCOVERY_GROUP + "-" + TABLE + WRAPPER) private TableFragment jgroupsDiscoveryGroupTable;
+    @FindBy(id = MESSAGING_JGROUPS_DISCOVERY_GROUP + "-" + FORM) private FormFragment jgroupsDiscoveryGroupForm;
+    @FindBy(id = MESSAGING_SOCKET_BROADCAST_GROUP + "-" + TABLE + WRAPPER) private TableFragment socketBroadcastGroupTable;
+    @FindBy(id = MESSAGING_SOCKET_BROADCAST_GROUP + "-" + FORM) private FormFragment socketBroadcastGroupForm;
+    @FindBy(id = MESSAGING_SOCKET_DISCOVERY_GROUP + "-" + TABLE + WRAPPER) private TableFragment socketDiscoveryGroupTable;
+    @FindBy(id = MESSAGING_SOCKET_DISCOVERY_GROUP + "-" + FORM) private FormFragment socketDiscoveryGroupForm;
     @FindBy(id = MESSAGING_CLUSTER_CONNECTION + "-" + TABLE + WRAPPER) private TableFragment clusterConnectionTable;
     @FindBy(id = MESSAGING_CLUSTER_CONNECTION + "-" + FORM) private FormFragment clusterConnectionForm;
     @FindBy(id = MESSAGING_GROUPING_HANDLER + "-" + TABLE + WRAPPER) private TableFragment groupingHandlerTable;
@@ -45,20 +49,36 @@ public class MessagingServerClusteringPage extends BasePage {
     @FindBy(id = MESSAGING_SERVER + "-" + CREDENTIAL_REFERENCE + "-" + FORM) private FormFragment bridgeCRForm;
     @FindBy(id = MESSAGING_SERVER + "-" +  BRIDGE + "-" + TAB_CONTAINER) private TabsFragment bridgeFormsTab;
 
-    public TableFragment getBroadcastGroupTable() {
-        return broadcastGroupTable;
+    public TableFragment getJGroupsBroadcastGroupTable() {
+        return jgroupsBroadcastGroupTable;
     }
 
-    public FormFragment getBroadcastGroupForm() {
-        return broadcastGroupForm;
+    public FormFragment getJGroupsBroadcastGroupForm() {
+        return jgroupsBroadcastGroupForm;
     }
 
-    public TableFragment getDiscoveryGroupTable() {
-        return discoveryGroupTable;
+    public TableFragment getJGroupsDiscoveryGroupTable() {
+        return jgroupsDiscoveryGroupTable;
     }
 
-    public FormFragment getDiscoveryGroupForm() {
-        return discoveryGroupForm;
+    public FormFragment getJGroupsDiscoveryGroupForm() {
+        return jgroupsDiscoveryGroupForm;
+    }
+
+    public TableFragment getSocketBroadcastGroupTable() {
+        return socketBroadcastGroupTable;
+    }
+
+    public FormFragment getSocketBroadcastGroupForm() {
+        return socketBroadcastGroupForm;
+    }
+
+    public TableFragment getSocketDiscoveryGroupTable() {
+        return socketDiscoveryGroupTable;
+    }
+
+    public FormFragment getSocketDiscoveryGroupForm() {
+        return socketDiscoveryGroupForm;
     }
 
     public TableFragment getClusterConnectionTable() {

@@ -32,7 +32,7 @@ import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.CONN_FAC_TRY_UP
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.CONN_FAC_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.SRV_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.connectionFactoryAddress;
-import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.discoveryGroupAddress;
+import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.jgroupsDiscoveryGroupAddress;
 import static org.jboss.hal.testsuite.fixtures.MessagingFixtures.serverAddress;
 
 @RunWith(Arquillian.class)
@@ -42,7 +42,7 @@ public class ConnectionFactoryTest extends AbstractServerConnectionsTest {
     public static void createResources() throws IOException, InterruptedException, TimeoutException {
         createServer(SRV_UPDATE);
         String discoveryGroup = Random.name();
-        operations.add(discoveryGroupAddress(SRV_UPDATE, discoveryGroup)).assertSuccess();
+        operations.add(jgroupsDiscoveryGroupAddress(SRV_UPDATE, discoveryGroup)).assertSuccess();
         administration.reload();
         operations.add(connectionFactoryAddress(SRV_UPDATE, CONN_FAC_UPDATE),
                 Values.ofList(ENTRIES, Random.name()).and(DISCOVERY_GROUP, discoveryGroup)).assertSuccess();

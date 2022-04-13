@@ -23,12 +23,10 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ACCEPTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ADDRESS_SETTING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.BRIDGE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.BROADCAST_GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CLUSTER_CONNECTION;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTION_FACTORY;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CONNECTOR_SERVICE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.DISCOVERY_GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.DIVERT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EXTERNAL_JMS_QUEUE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.EXTERNAL_JMS_TOPIC;
@@ -37,6 +35,8 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTP_ACCEPTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTP_CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IN_VM_ACCEPTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IN_VM_CONNECTOR;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS_BROADCAST_GROUP;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS_DISCOVERY_GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_BRIDGE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_QUEUE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_TOPIC;
@@ -48,6 +48,8 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.REMOTE_CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ROLE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_SETTING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BROADCAST_GROUP;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_DISCOVERY_GROUP;
 
 public final class MessagingFixtures {
 
@@ -373,8 +375,12 @@ public final class MessagingFixtures {
     public static final String BG_UPDATE = Ids.build(BROADCAST_GROUP_PREFIX, CrudConstants.UPDATE, Random.name());
     public static final String BG_DELETE = Ids.build(BROADCAST_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
 
-    public static Address broadcastGroupAddress(String server, String name) {
-        return serverAddress(server).and(BROADCAST_GROUP, name);
+    public static Address jgroupsBroadcastGroupAddress(String server, String name) {
+        return serverAddress(server).and(JGROUPS_BROADCAST_GROUP, name);
+    }
+
+    public static Address socketBroadcastGroupAddress(String server, String name) {
+        return serverAddress(server).and(SOCKET_BROADCAST_GROUP, name);
     }
 
 
@@ -386,8 +392,12 @@ public final class MessagingFixtures {
             Ids.build(DISCOVERY_GROUP_PREFIX, "update-alternatives", Random.name());
     public static final String DG_DELETE = Ids.build(DISCOVERY_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
 
-    public static Address discoveryGroupAddress(String server, String name) {
-        return serverAddress(server).and(DISCOVERY_GROUP, name);
+    public static Address jgroupsDiscoveryGroupAddress(String server, String name) {
+        return serverAddress(server).and(JGROUPS_DISCOVERY_GROUP, name);
+    }
+
+    public static Address socketDiscoveryGroupAddress(String server, String name) {
+        return serverAddress(server).and(SOCKET_DISCOVERY_GROUP, name);
     }
 
 
@@ -467,8 +477,12 @@ public final class MessagingFixtures {
             return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(REMOTE_CONNECTOR, name);
         }
 
-        public static Address discoveryGroupAddress(String name) {
-            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(DISCOVERY_GROUP, name);
+        public static Address jgroupsDiscoveryGroupAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(JGROUPS_DISCOVERY_GROUP, name);
+        }
+
+        public static Address socketDiscoveryGroupAddress(String name) {
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(SOCKET_DISCOVERY_GROUP, name);
         }
 
         public static Address connectionFactoryAddress(String name) {

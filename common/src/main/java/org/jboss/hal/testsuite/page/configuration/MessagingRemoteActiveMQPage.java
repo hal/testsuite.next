@@ -35,11 +35,17 @@ public class MessagingRemoteActiveMQPage extends BasePage {
     @FindBy(id = "msg-remote-remote-connector-form")
     private FormFragment remoteConnectorForm;
 
-    @FindBy(id = "msg-remote-discovery-group-table_wrapper")
-    private TableFragment discoveryGroupTable;
+    @FindBy(id = "msg-remote-jgroups-discovery-group-table_wrapper")
+    private TableFragment jgroupsDiscoveryGroupTable;
 
-    @FindBy(id = "msg-remote-discovery-group-form")
-    private FormFragment dicoveryGroupForm;
+    @FindBy(id = "msg-remote-jgroups-discovery-group-form")
+    private FormFragment jgroupsDicoveryGroupForm;
+
+    @FindBy(id = "msg-remote-socket-discovery-group-table_wrapper")
+    private TableFragment socketDiscoveryGroupTable;
+
+    @FindBy(id = "msg-remote-socket-discovery-group-form")
+    private FormFragment socketDicoveryGroupForm;
 
     @FindBy(id = "msg-remote-connection-factory-table_wrapper")
     private TableFragment connectionFactoryTable;
@@ -103,12 +109,20 @@ public class MessagingRemoteActiveMQPage extends BasePage {
         return remoteConnectorForm;
     }
 
-    public TableFragment getDiscoveryGroupTable() {
-        return discoveryGroupTable;
+    public TableFragment getJGroupsDiscoveryGroupTable() {
+        return jgroupsDiscoveryGroupTable;
     }
 
-    public FormFragment getDicoveryGroupForm() {
-        return dicoveryGroupForm;
+    public FormFragment getJGroupsDicoveryGroupForm() {
+        return jgroupsDicoveryGroupForm;
+    }
+
+    public TableFragment getSocketDiscoveryGroupTable() {
+        return socketDiscoveryGroupTable;
+    }
+
+    public FormFragment getSocketDicoveryGroupForm() {
+        return socketDicoveryGroupForm;
     }
 
     public TableFragment getConnectionFactoryTable() {
