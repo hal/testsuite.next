@@ -166,6 +166,12 @@ public class BatchFinderTest {
         private final String jobName;
         private final long stoppingInterval;
 
+        private BatchJob(Builder builder) {
+            this.deploymentName = builder.deploymentName;
+            this.jobName = builder.jobName;
+            this.stoppingInterval = builder.stoppingInterval;
+        }
+
         String getJobName() {
             return jobName;
         }
@@ -249,12 +255,6 @@ public class BatchFinderTest {
             BatchJob build() {
                 return new BatchJob(this);
             }
-        }
-
-        private BatchJob(Builder builder) {
-            this.deploymentName = builder.deploymentName;
-            this.jobName = builder.jobName;
-            this.stoppingInterval = builder.stoppingInterval;
         }
     }
 }

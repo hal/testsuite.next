@@ -37,6 +37,25 @@ public class AddSocketBinding extends SocketBindingCommand {
             .andOptional(MULTICAST_ADDRESS, multicastAddress).andOptional(MULTICAST_PORT, multicastPort).andOptional(PORT, port));
     }
 
+    private AddSocketBinding(Builder builder) {
+        this(builder.name, builder.socketBindingGroup, builder.fixedPort, builder.socketBindingInterface,
+            builder.multicastAddress, builder.multicastPort, builder.port);
+    }
+
+    public AddSocketBinding(String name) {
+        this(name, null, false, null, null, DEFAULT_MULTICAST_PORT, 0);
+    }
+
+    public AddSocketBinding(String name, String socketBindingGroup, boolean fixedPort, String socketBindingInterface,
+        String multicastAddress, int multicastPort, int port) {
+        super(name, socketBindingGroup);
+        this.fixedPort = fixedPort;
+        this.socketBindingInterface = socketBindingInterface;
+        this.multicastAddress = multicastAddress;
+        this.multicastPort = multicastPort;
+        this.port = port;
+    }
+
     public static class Builder {
 
         private String name;
@@ -91,24 +110,5 @@ public class AddSocketBinding extends SocketBindingCommand {
         public AddSocketBinding build() {
             return new AddSocketBinding(this);
         }
-    }
-
-    private AddSocketBinding(Builder builder) {
-        this(builder.name, builder.socketBindingGroup, builder.fixedPort, builder.socketBindingInterface,
-            builder.multicastAddress, builder.multicastPort, builder.port);
-    }
-
-    public AddSocketBinding(String name) {
-        this(name, null, false, null, null, DEFAULT_MULTICAST_PORT, 0);
-    }
-
-    public AddSocketBinding(String name, String socketBindingGroup, boolean fixedPort, String socketBindingInterface,
-        String multicastAddress, int multicastPort, int port) {
-        super(name, socketBindingGroup);
-        this.fixedPort = fixedPort;
-        this.socketBindingInterface = socketBindingInterface;
-        this.multicastAddress = multicastAddress;
-        this.multicastPort = multicastPort;
-        this.port = port;
     }
 }

@@ -35,8 +35,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTP_ACCEPTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.HTTP_CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IN_VM_ACCEPTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.IN_VM_CONNECTOR;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS_BROADCAST_GROUP;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.JGROUPS_DISCOVERY_GROUP;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_BRIDGE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_QUEUE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.JMS_TOPIC;
@@ -48,8 +46,6 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.REMOTE_CONNECTOR;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ROLE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_SETTING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BROADCAST_GROUP;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_DISCOVERY_GROUP;
 
 public final class MessagingFixtures {
 
@@ -376,11 +372,11 @@ public final class MessagingFixtures {
     public static final String BG_DELETE = Ids.build(BROADCAST_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
 
     public static Address jgroupsBroadcastGroupAddress(String server, String name) {
-        return serverAddress(server).and(JGROUPS_BROADCAST_GROUP, name);
+        return serverAddress(server)/*.and(JGROUPS_BROADCAST_GROUP, name)*/;
     }
 
     public static Address socketBroadcastGroupAddress(String server, String name) {
-        return serverAddress(server).and(SOCKET_BROADCAST_GROUP, name);
+        return serverAddress(server)/*.and(SOCKET_BROADCAST_GROUP, name)*/;
     }
 
 
@@ -393,11 +389,11 @@ public final class MessagingFixtures {
     public static final String DG_DELETE = Ids.build(DISCOVERY_GROUP_PREFIX, CrudConstants.DELETE, Random.name());
 
     public static Address jgroupsDiscoveryGroupAddress(String server, String name) {
-        return serverAddress(server).and(JGROUPS_DISCOVERY_GROUP, name);
+        return serverAddress(server)/*.and(JGROUPS_DISCOVERY_GROUP, name)*/;
     }
 
     public static Address socketDiscoveryGroupAddress(String server, String name) {
-        return serverAddress(server).and(SOCKET_DISCOVERY_GROUP, name);
+        return serverAddress(server)/*.and(SOCKET_DISCOVERY_GROUP, name)*/;
     }
 
 
@@ -457,6 +453,8 @@ public final class MessagingFixtures {
     public static final String SRV_RESET = Ids.build(SERVER_PREFIX, CrudConstants.UPDATE, Random.name());
     public static final String SRV_FAILOVER = Ids.build(SERVER_PREFIX, CrudConstants.UPDATE, Random.name());
 
+    private MessagingFixtures() {
+    }
     public static class RemoteActiveMQServer {
 
         public static final Address REMOTE_ACTIVEMQ_SERVER_ADDRESS = SUBSYSTEM_ADDRESS;
@@ -478,11 +476,11 @@ public final class MessagingFixtures {
         }
 
         public static Address jgroupsDiscoveryGroupAddress(String name) {
-            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(JGROUPS_DISCOVERY_GROUP, name);
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS/*.and(JGROUPS_DISCOVERY_GROUP, name)*/;
         }
 
         public static Address socketDiscoveryGroupAddress(String name) {
-            return REMOTE_ACTIVEMQ_SERVER_ADDRESS.and(SOCKET_DISCOVERY_GROUP, name);
+            return REMOTE_ACTIVEMQ_SERVER_ADDRESS/*.and(SOCKET_DISCOVERY_GROUP, name)*/;
         }
 
         public static Address connectionFactoryAddress(String name) {
@@ -504,8 +502,5 @@ public final class MessagingFixtures {
         private RemoteActiveMQServer() {
 
         }
-    }
-
-    private MessagingFixtures() {
     }
 }
