@@ -81,7 +81,7 @@
         <arquillian.drone.version>2.5.0</arquillian.drone.version>
         <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
         <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
-        <commons.io.version>2.6</commons.io.version>
+        <commons.io.version>2.7</commons.io.version>
         <commons.lang.version>3.7</commons.lang.version>
         <commons.text.version>1.2</commons.text.version>
         <creaper.version>1.6.1</creaper.version>
