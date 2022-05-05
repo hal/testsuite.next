@@ -87,7 +87,7 @@
         <graphene.version>2.3.2</graphene.version>
         <guava.version>31.1-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
-        <hal.version>3.5.12.Final</hal.version>
+        <hal.version>3.4.1.Final</hal.version>
         <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.13.1</junit.version>
@@ -380,7 +380,7 @@
                     <dependency>
                         <groupId>com.puppycrawl.tools</groupId>
                         <artifactId>checkstyle</artifactId>
-                        <version>[8.18,)</version>
+                        <version>[9,10)</version>
                     </dependency>
                 </dependencies>
                 <executions>
