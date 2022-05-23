@@ -52,7 +52,7 @@
 
     <properties>
         <!-- configuration settings -->
-        <jvm.options></jvm.options>
+        <client.jvm.jpms.args></client.jvm.jpms.args>
         <as.managementAddress>127.0.0.1</as.managementAddress>
         <as.managementPort>9990</as.managementPort>
         <browser>phantomjs</browser>
@@ -366,7 +366,7 @@
                         </systemPropertyVariables>
                         <groups>${test.included.category}</groups>
                         <excludedGroups>${test.excluded.category},${upstream.excluded.category}</excludedGroups>
-                        <argLine>${jvm.options}</argLine>
+                        <argLine>${client.jvm.jpms.args}</argLine>
                     </configuration>
                 </plugin>
             </plugins>
@@ -426,7 +426,7 @@
                 <jdk>[17,)</jdk>
             </activation>
             <properties>
-                <jvm.options>--add-opens java.base/java.security=ALL-UNNAMED --add-opens java.base/java.lang=ALL-UNNAMED</jvm.options>
+                <client.jvm.jpms.args>--add-exports=java.desktop/sun.awt=ALL-UNNAMED --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.lang.reflect=ALL-UNNAMED --add-opens=java.base/java.io=ALL-UNNAMED --add-opens=java.base/java.security=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.base/java.util.concurrent=ALL-UNNAMED --add-opens=java.management/javax.management=ALL-UNNAMED --add-opens=java.naming/javax.naming=ALL-UNNAMED</client.jvm.jpms.args>
             </properties>
         </profile>
         <profile>
