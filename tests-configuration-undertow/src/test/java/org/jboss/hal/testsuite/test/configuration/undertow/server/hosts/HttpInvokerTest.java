@@ -10,7 +10,6 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
-import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.command.BackupAndRestoreAttributes;
 import org.jboss.hal.testsuite.fixtures.ElytronFixtures;
@@ -85,7 +84,6 @@ public class HttpInvokerTest {
         crudOperations.update(UNDERTOW_DEFAULT_HOST_HTTP_INVOKER_ADDRESS, page.getHostsHttpInvokerForm(),
             formFragment -> {
                 formFragment.text("http-authentication-factory", HTTP_AUTHENTICATION_FACTORY_TO_BE_CREATED);
-                formFragment.text("security-realm", "");
             }, resourceVerifier -> resourceVerifier.verifyAttribute("http-authentication-factory",
                 HTTP_AUTHENTICATION_FACTORY_TO_BE_CREATED));
     }
@@ -93,15 +91,5 @@ public class HttpInvokerTest {
     @Test
     public void updatePath() throws Exception {
         crudOperations.update(UNDERTOW_DEFAULT_HOST_HTTP_INVOKER_ADDRESS, page.getHostsHttpInvokerForm(), "path");
-    }
-
-    @Test
-    public void updateSecurityRealm() throws Exception {
-        String securityRealm = Random.name();
-        crudOperations.update(UNDERTOW_DEFAULT_HOST_HTTP_INVOKER_ADDRESS, page.getHostsHttpInvokerForm(),
-            formFragment -> {
-                formFragment.text("http-authentication-factory", "");
-                formFragment.text("security-realm", securityRealm);
-            }, resourceVerifier -> resourceVerifier.verifyAttribute("security-realm", securityRealm));
     }
 }
