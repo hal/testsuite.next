@@ -16,7 +16,6 @@
 package org.jboss.hal.testsuite.creaper.command;
 
 import org.jboss.hal.testsuite.Random;
-import org.jboss.hal.testsuite.category.Elytron;
 import org.jboss.hal.testsuite.dmr.CredentialReference;
 import org.wildfly.extras.creaper.core.online.OnlineCommand;
 import org.wildfly.extras.creaper.core.online.OnlineCommandContext;
