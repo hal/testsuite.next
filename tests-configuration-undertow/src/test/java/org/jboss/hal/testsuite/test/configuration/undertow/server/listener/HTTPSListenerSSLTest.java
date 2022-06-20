@@ -6,24 +6,21 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
-import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
-import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.category.RequiresLetsEncrypt;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
+import org.jboss.hal.testsuite.creaper.command.AddKeyManager;
 import org.jboss.hal.testsuite.creaper.command.AddLocalSocketBinding;
 import org.jboss.hal.testsuite.fixtures.undertow.UndertowFixtures;
-import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.ssl.EnableSslWizard;
 import org.jboss.hal.testsuite.page.configuration.UndertowServerPage;
 import org.jboss.hal.testsuite.tooling.ssl.SslOperations;
 import org.junit.AfterClass;
-import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -33,30 +30,27 @@ import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
-import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.ALIAS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.CERTIFICATE_AUTHORITY_ACCOUNT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CLEAR_TEXT;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_ALIAS;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_MANAGER;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.READ_ALIAS;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_REALM;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SERVER_SSL_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SOCKET_BINDING;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SSL_CONTEXT;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TRUST_MANAGER;
+import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.KEY_MAN_CREATE;
+import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.SRV_SSL_CREATE;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.keyManagerAddress;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.keyStoreAddress;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.serverSslContextAddress;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.trustManagerAddress;
-import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.APPLICATION_REALM;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.CERT;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.CLIENT_CERTIFICATE_ALIAS;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.CLIENT_CERTIFICATE_PATH;
@@ -96,17 +90,13 @@ public class HTTPSListenerSSLTest {
         UNDERTOW_SERVER_TO_BE_TESTED = Ids.build("undertow-server-to-be-tested", Random.name()),
         HTTPS_LISTENER_TO_BE_TESTED = Ids.build("https-listener-to-be-tested", Random.name()),
         INIT_SOCKET_BINDING_NAME = Ids.build("socket-binding", Random.name()),
-        DOMAIN_NAME = "www.foobar.com",
-        HTTPS_LISTENER_ITEM = Ids.build(Ids.UNDERTOW_SERVER_HTTPS_LISTENER, "item");
+        DOMAIN_NAME = "www.foobar.com";
 
     private static final Address
         UNDERTOW_SERVER_ADRESS = UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED),
         HTTPS_LISTENER_ADDRESS = UndertowFixtures.httpsListenerAddress(UNDERTOW_SERVER_TO_BE_TESTED, HTTPS_LISTENER_TO_BE_TESTED);
 
-    private static SnapshotBackup snapshot = new SnapshotBackup();
-
-    @Inject
-    private Console console;
+    private static final SnapshotBackup snapshot = new SnapshotBackup();
 
     @Page
     private UndertowServerPage page;
@@ -114,12 +104,16 @@ public class HTTPSListenerSSLTest {
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException {
         client.apply(snapshot.backup());
+
         ops.add(UNDERTOW_SERVER_ADRESS).assertSuccess();
+
+        client.apply(new AddKeyManager(KEY_MAN_CREATE));
+        ops.add(serverSslContextAddress(SRV_SSL_CREATE), Values.of(KEY_MANAGER, KEY_MAN_CREATE));
+
         client.apply(new AddLocalSocketBinding(INIT_SOCKET_BINDING_NAME));
-        ops.add(HTTPS_LISTENER_ADDRESS,
-                Values.of(SOCKET_BINDING, INIT_SOCKET_BINDING_NAME.toLowerCase() + "ref")
-                .and(SECURITY_REALM, APPLICATION_REALM)
-                ).assertSuccess();
+        ops.add(HTTPS_LISTENER_ADDRESS, Values.of(SOCKET_BINDING, INIT_SOCKET_BINDING_NAME.toLowerCase() + "ref")
+                .and(SSL_CONTEXT, SRV_SSL_CREATE)
+        ).assertSuccess();
     }
 
     @AfterClass
@@ -127,19 +121,10 @@ public class HTTPSListenerSSLTest {
         try {
             client.apply(snapshot.restore());
             File keyStoresDir = sslOps.getKeyStoresDirectory();
-            FILE_NAMES_TO_BE_DELETED.stream().forEach(fileName -> FileUtils.deleteQuietly(new File(keyStoresDir, fileName)));
+            FILE_NAMES_TO_BE_DELETED.forEach(fileName -> FileUtils.deleteQuietly(new File(keyStoresDir, fileName)));
         } finally {
             client.close();
         }
-    }
-
-    @Before
-    public void unsetSslContextAndNavigate() throws IOException {
-        Batch disableSsl = new Batch();
-        disableSsl.undefineAttribute(HTTPS_LISTENER_ADDRESS, SSL_CONTEXT);
-        disableSsl.writeAttribute(HTTPS_LISTENER_ADDRESS, SECURITY_REALM, "ApplicationRealm");
-        ops.batch(disableSsl);
-        selectListenerInTable();
     }
 
     /**
@@ -207,7 +192,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(KEY_MANAGER, keyManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -294,7 +278,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(KEY_MANAGER, keyManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -363,7 +346,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(KEY_MANAGER, keyManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -426,7 +408,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(KEY_MANAGER, keyManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -530,7 +511,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(TRUST_MANAGER, trustManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -640,7 +620,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(TRUST_MANAGER, trustManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -740,7 +719,6 @@ public class HTTPSListenerSSLTest {
             .verifyAttribute(TRUST_MANAGER, trustManagerValue);
         new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
             .verifyAttribute(SSL_CONTEXT, serverSslContextValue)
-            .verifyAttributeIsUndefined(SECURITY_REALM)
             .verifyAttribute(VERIFY_CLIENT, NOT_REQUESTED) // default value
             .verifyAttributeIsUndefined(ENABLED_CIPHER_SUITES)
             .verifyAttributeIsUndefined(ENABLED_PROTOCOLS)
@@ -751,48 +729,5 @@ public class HTTPSListenerSSLTest {
         sslOps.assertHALisDNOrganizationUnitOf(ISSUER, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY);
         sslOps.assertHALisDNOrganizationUnitOf(SUBJECT, clientAliasResult, TRUSTED_CERTIFICATE_ENTRY);
 
-    }
-
-    /**
-     * Testing the ability to disable SSL for https listener
-     */
-    @Test
-    public void disableSSL() throws Exception {
-
-        String
-            keyStoreNameValue = Ids.build(KEY_STORE, NAME, Random.name()),
-            keyStorePasswordValue = Ids.build(KEY_STORE, PASS, Random.name()),
-            keyManagerValue = Ids.build(KEY_MANAGER, Random.name()),
-            serverSslContextValue = Ids.build(SERVER_SSL_CONTEXT, Random.name());
-        sslOps.createKeyStoreWithCertificate(keyStoreNameValue, Random.name(), keyStorePasswordValue, Random.name());
-        ops.add(keyManagerAddress(keyManagerValue), Values.of(KEY_STORE, keyStoreNameValue)
-                .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, keyStorePasswordValue))).assertSuccess();
-        ops.add(serverSslContextAddress(serverSslContextValue), Values.of(KEY_MANAGER, keyManagerValue)).assertSuccess();
-        ops.batch(new Batch()
-                .undefineAttribute(HTTPS_LISTENER_ADDRESS, SECURITY_REALM)
-                .writeAttribute(HTTPS_LISTENER_ADDRESS, SSL_CONTEXT, serverSslContextValue))
-            .assertSuccess();
-
-        ResourceVerifier httpsListenerVerifier = new ResourceVerifier(HTTPS_LISTENER_ADDRESS, client)
-                .verifyExists()
-                .verifyAttributeIsUndefined(SECURITY_REALM)
-                .verifyAttribute(SSL_CONTEXT, serverSslContextValue);
-
-        selectListenerInTable();
-        AddResourceDialogFragment dialog = page.disableSslDialog();
-        dialog.getForm().text(SECURITY_REALM, APPLICATION_REALM);
-        dialog.add();
-        console.verifySuccess();
-
-        httpsListenerVerifier
-            .verifyAttributeIsUndefined(SSL_CONTEXT)
-            .verifyAttribute(SECURITY_REALM, APPLICATION_REALM);
-
-    }
-
-    private void selectListenerInTable() {
-        page.navigateAgain(NAME, UNDERTOW_SERVER_TO_BE_TESTED);
-        console.verticalNavigation().selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, HTTPS_LISTENER_ITEM);
-        page.getHttpsListenerTable().select(HTTPS_LISTENER_TO_BE_TESTED);
     }
 }
