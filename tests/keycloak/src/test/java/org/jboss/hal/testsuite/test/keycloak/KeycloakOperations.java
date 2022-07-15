@@ -38,7 +38,9 @@ public class KeycloakOperations {
         WILDFLY_MANAGEMENT = "wildfly-management";
 
     private static final String
-        UNDERTOW_REALM = "UndertowRealm",
+        SSL_CONTEXT_NAME = "SslContext",
+        KEY_STORE_NAME = "keyStore",
+        TRUST_MANAGER_NAME = "trustManager",
         KCADMIN = "kcadmin",
         R = "-r", S = "-s";
 
@@ -55,13 +57,18 @@ public class KeycloakOperations {
 
     public KeycloakOperations enableSsl() throws IOException, InterruptedException, TimeoutException {
         ops.batch(new Batch()
-                .add(Address.coreService(MANAGEMENT).and(SECURITY_REALM, UNDERTOW_REALM))
-                .add(Address.coreService(MANAGEMENT).and(SECURITY_REALM, UNDERTOW_REALM).and("server-identity", "ssl"),
-                        Values.of("keystore-path", "keycloak.jks")
-                            .and("keystore-relative-to", "jboss.server.config.dir")
-                            .and("keystore-password", "secure"))).assertSuccess();
+                .add(Address.subsystem(ELYTRON).and(KEY_STORE, KEY_STORE_NAME), Values.of(
+                        PATH, "keycloak.jks")
+                        .and(RELATIVE_TO, "jboss.server.config.dir")
+                        .andObject(CREDENTIAL_REFERENCE, Values.of(CLEAR_TEXT, "secure")))
+                .add(Address.subsystem(ELYTRON).and(TRUST_MANAGER, TRUST_MANAGER_NAME), Values.of(
+                        KEY_STORE, KEY_STORE_NAME
+                ))
+                .add(Address.subsystem(ELYTRON).and(SERVER_SSL_CONTEXT, SSL_CONTEXT_NAME), Values.of(
+                        TRUST_MANAGER, TRUST_MANAGER_NAME
+                ))).assertSuccess();
         ops.writeAttribute(Address.subsystem(UNDERTOW).and(SERVER, "default-server").and(HTTPS_LISTENER, "https"),
-                SECURITY_REALM, UNDERTOW_REALM).assertSuccess();
+                SSL_CONTEXT, SSL_CONTEXT_NAME).assertSuccess();
         adminOps.reloadIfRequired();
         return this;
     }

@@ -33,7 +33,7 @@ public class ReplicationColocated extends AbstractHaPolicyTest {
 
     @Test
     public void editMaxBackups() throws Exception {
-        crudOperations.update(HAPolicy.SHARED_STORE_MASTER.haPolicyAddress, page.getReplicationColocatedForm(), "max-backups",
+        crudOperations.update(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress, page.getReplicationColocatedForm(), "max-backups",
             Random.number());
     }
 }

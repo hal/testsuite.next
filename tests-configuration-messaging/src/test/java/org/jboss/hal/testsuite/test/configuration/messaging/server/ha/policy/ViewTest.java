@@ -51,14 +51,14 @@ public class ViewTest extends AbstractHaPolicyTest {
     @Test
     public void createReplicationMaster() throws Exception {
         page.navigateAgain(ModelDescriptionConstants.SERVER, MessagingFixtures.SRV_UPDATE);
-        HAPolicy.REPLICATION_MASTER.create(createPolicyInView);
+        HAPolicy.SHARED_STORE_PRIMARY.create(createPolicyInView);
     }
 
     @Test
     public void removeReplicationMaster() throws Exception {
-        operations.add(HAPolicy.REPLICATION_MASTER.haPolicyAddress);
+        operations.add(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress);
         page.navigateAgain(ModelDescriptionConstants.SERVER, MessagingFixtures.SRV_UPDATE);
-        HAPolicy.REPLICATION_MASTER.remove(removePolicyInView);
+        HAPolicy.SHARED_STORE_PRIMARY.remove(removePolicyInView);
     }
 
     @Test
@@ -90,14 +90,14 @@ public class ViewTest extends AbstractHaPolicyTest {
     @Test
     public void createSharedStoreMaster() throws Exception {
         page.navigateAgain(ModelDescriptionConstants.SERVER, MessagingFixtures.SRV_UPDATE);
-        HAPolicy.SHARED_STORE_MASTER.create(createPolicyInView);
+        HAPolicy.SHARED_STORE_PRIMARY.create(createPolicyInView);
     }
 
     @Test
     public void removeSharedStoreMaster() throws Exception {
-        operations.add(HAPolicy.SHARED_STORE_MASTER.haPolicyAddress);
+        operations.add(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress);
         page.navigateAgain(ModelDescriptionConstants.SERVER, MessagingFixtures.SRV_UPDATE);
-        HAPolicy.SHARED_STORE_MASTER.remove(removePolicyInView);
+        HAPolicy.SHARED_STORE_PRIMARY.remove(removePolicyInView);
     }
 
     @Test

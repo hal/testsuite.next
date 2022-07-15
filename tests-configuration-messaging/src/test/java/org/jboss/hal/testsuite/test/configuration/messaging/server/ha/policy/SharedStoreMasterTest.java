@@ -18,12 +18,12 @@ public class SharedStoreMasterTest extends AbstractHaPolicyTest {
 
     @BeforeClass
     public static void createReplicationMasterHaPolicy() throws IOException {
-        operations.add(HAPolicy.SHARED_STORE_MASTER.haPolicyAddress).assertSuccess();
+        operations.add(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress).assertSuccess();
     }
 
     @AfterClass
     public static void removeReplicationMasterHaPolicy() throws IOException, OperationException {
-        operations.removeIfExists(HAPolicy.SHARED_STORE_MASTER.haPolicyAddress);
+        operations.removeIfExists(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress);
     }
 
     @Before
@@ -33,7 +33,7 @@ public class SharedStoreMasterTest extends AbstractHaPolicyTest {
 
     @Test
     public void editFailoverOnServerShutdown() throws Exception {
-        crudOperations.update(HAPolicy.SHARED_STORE_MASTER.haPolicyAddress, page.getSharedStoreMasterForm(),
+        crudOperations.update(HAPolicy.SHARED_STORE_PRIMARY.haPolicyAddress, page.getSharedStoreMasterForm(),
             "failover-on-server-shutdown", true);
     }
 }
