@@ -18,12 +18,12 @@ public class ReplicationMasterTest extends AbstractHaPolicyTest {
 
     @BeforeClass
     public static void createReplicationMasterHaPolicy() throws IOException {
-        operations.add(HAPolicy.REPLICATION_MASTER.haPolicyAddress).assertSuccess();
+        operations.add(HAPolicy.REPLICATION_PRIMARY.haPolicyAddress).assertSuccess();
     }
 
     @AfterClass
     public static void removeReplicationMasterHaPolicy() throws IOException, OperationException {
-        operations.removeIfExists(HAPolicy.REPLICATION_MASTER.haPolicyAddress);
+        operations.removeIfExists(HAPolicy.REPLICATION_PRIMARY.haPolicyAddress);
     }
 
     @Before
@@ -33,6 +33,6 @@ public class ReplicationMasterTest extends AbstractHaPolicyTest {
 
     @Test
     public void editClusterName() throws Exception {
-        crudOperations.update(HAPolicy.REPLICATION_MASTER.haPolicyAddress, page.getReplicationMasterForm(), "cluster-name");
+        crudOperations.update(HAPolicy.REPLICATION_PRIMARY.haPolicyAddress, page.getReplicationMasterForm(), "cluster-name");
     }
 }

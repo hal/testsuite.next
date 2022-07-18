@@ -33,7 +33,7 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.MAX_POOL_SIZE;
-import static org.jboss.hal.dmr.ModelDescriptionConstants.TIMEOUT;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.SUSPEND_TIMEOUT;
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.BP_CREATE;
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.BP_DELETE;
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.BP_READ;
@@ -102,13 +102,13 @@ public class BeanPoolTest {
     @Test
     public void updateInvalidTimeout() {
         table.select(BP_UPDATE);
-        crud.updateWithError(form, TIMEOUT, 0);
+        crud.updateWithError(form, SUSPEND_TIMEOUT, 0);
     }
 
     @Test
     public void updateTimeout() throws Exception {
         table.select(BP_UPDATE);
-        crud.update(beanPoolAddress(BP_UPDATE), form, TIMEOUT, 11L);
+        crud.update(beanPoolAddress(BP_UPDATE), form, SUSPEND_TIMEOUT, 11L);
     }
 
     @Test
