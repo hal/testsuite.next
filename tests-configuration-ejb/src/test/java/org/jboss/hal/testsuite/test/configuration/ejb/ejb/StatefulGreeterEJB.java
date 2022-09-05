@@ -1,6 +1,6 @@
 package org.jboss.hal.testsuite.test.configuration.ejb.ejb;
 
-import javax.ejb.Stateful;
+import jakarta.ejb.Stateful;
 
 @Stateful
 public class StatefulGreeterEJB implements RemoteEJBInterface {

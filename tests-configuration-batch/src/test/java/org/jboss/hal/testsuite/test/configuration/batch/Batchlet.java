@@ -2,11 +2,11 @@ package org.jboss.hal.testsuite.test.configuration.batch;
 
 import java.util.concurrent.TimeUnit;
 
-import javax.batch.api.AbstractBatchlet;
-import javax.batch.api.BatchProperty;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import jakarta.batch.api.AbstractBatchlet;
+import jakarta.batch.api.BatchProperty;
 import org.jboss.logging.Logger;
 
 @Named("testBatchlet")

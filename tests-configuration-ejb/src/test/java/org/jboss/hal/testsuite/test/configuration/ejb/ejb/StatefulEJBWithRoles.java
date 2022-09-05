@@ -1,8 +1,8 @@
 package org.jboss.hal.testsuite.test.configuration.ejb.ejb;
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RunAs;
-import javax.ejb.Stateful;
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
+import jakarta.ejb.Stateful;
 
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.ROLE_1;
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.ROLE_2;

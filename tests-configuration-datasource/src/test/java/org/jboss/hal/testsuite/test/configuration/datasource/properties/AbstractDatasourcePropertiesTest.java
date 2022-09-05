@@ -72,7 +72,7 @@ public abstract class AbstractDatasourcePropertiesTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private static final String JAVAX_API = "javax.api";
-    private static final String JAVAX_TRANSACTION_API = "javax.transaction.api";
+    private static final String JAVAX_TRANSACTION_API = "jakarta.transaction.api";
 
     @BeforeClass
     public static void setupJDBCDrivers() throws CommandFailedException, IOException {

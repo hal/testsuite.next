@@ -12,7 +12,7 @@ import java.nio.file.WatchService;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.validation.constraints.NotNull;
+import jakarta.validation.constraints.NotNull;
 
 /**
  * Represents an action to watch audit-log changes and provide changes of {@link AuditLog}.
