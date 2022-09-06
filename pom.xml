@@ -93,7 +93,7 @@
         <junit.version>4.13.2</junit.version>
         <selenium.version>3.8.1</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <wildfly.version>11.0.0.Final</wildfly.version>
+        <wildfly.version>27.0.0.Alpha4</wildfly.version>
         <wildfly.cli.version>3.0.9.Final</wildfly.cli.version>
         <surefire.version>2.21.0</surefire.version>
         <jackson.bom.version>2.9.5</jackson.bom.version>
@@ -196,6 +196,13 @@
                 <artifactId>junit</artifactId>
                 <version>${junit.version}</version>
             </dependency>
+            <!-- TODO: maybe remove -->
+            <dependency>
+                <groupId>org.jboss.arquillian.protocol</groupId>
+                <artifactId>arquillian-protocol-servlet-jakarta</artifactId>
+                <version>1.7.0.Alpha12</version>
+                <scope>test</scope>
+            </dependency>
 
             <!-- WildFly & Co -->
             <dependency>
@@ -203,6 +210,7 @@
                 <artifactId>wildfly-client-all-jakarta</artifactId>
                 <version>${wildfly.version}</version>
             </dependency>
+            <!--
             <dependency>
                 <groupId>org.wildfly.bom</groupId>
                 <artifactId>wildfly-javaee7</artifactId>
@@ -210,6 +218,7 @@
                 <type>pom</type>
                 <version>${wildfly.version}</version>
             </dependency>
+            -->
             <dependency>
                 <groupId>org.wildfly.extras.creaper</groupId>
                 <artifactId>creaper-core</artifactId>
