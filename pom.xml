@@ -87,16 +87,16 @@
         <graphene.version>3.0.0-alpha.3</graphene.version>
         <guava.version>31.1-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
-        <hal.version>3.6.1.Final</hal.version>
-        <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
+        <hal.version>3.6.4.Final</hal.version>
+        <jboss.dmr.version>1.6.1.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.13.2</junit.version>
         <selenium.version>3.8.1</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
         <wildfly.version>27.0.0.Alpha4</wildfly.version>
-        <wildfly.cli.version>3.0.9.Final</wildfly.cli.version>
+        <wildfly.cli.version>19.0.0.Beta15</wildfly.cli.version>
         <surefire.version>2.21.0</surefire.version>
-        <jackson.bom.version>2.9.5</jackson.bom.version>
+        <jackson.bom.version>2.13.4</jackson.bom.version>
     </properties>
 
     <modules>
@@ -278,7 +278,7 @@
             <dependency>
                 <groupId>jakarta.annotation</groupId>
                 <artifactId>jakarta.annotation-api</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.1</version>
             </dependency>
 
             <!-- Misc -->
@@ -333,7 +333,7 @@
             <dependency>
                 <groupId>jakarta.batch</groupId>
                 <artifactId>jakarta.batch-api</artifactId>
-                <version>2.1.0</version>
+                <version>2.1.1</version>
                 <scope>test</scope>
             </dependency>
             <dependency>
@@ -743,12 +743,6 @@
                     <groupId>jakarta.xml.bind</groupId>
                     <artifactId>jakarta.xml.bind-api</artifactId>
                     <version>4.0.0</version>
-                </dependency>
-                <dependency>
-                    <groupId>com.sun.xml.bind</groupId>
-                    <artifactId>jaxb-impl</artifactId>
-                    <version>4.0.0</version>
-                    <scope>runtime</scope>
                 </dependency>
                 <dependency>
                     <groupId>jakarta.activation</groupId>
