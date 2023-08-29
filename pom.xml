@@ -151,6 +151,15 @@
                 <groupId>org.jboss.arquillian.graphene</groupId>
                 <artifactId>arquillian-browser-screenshooter</artifactId>
                 <version>${graphene.version}</version>
+                <exclusions>
+                    <!-- https://issues.sonatype.org/browse/MVNCENTRAL-244
+                        The artifact is in the depency tree with the correct group id thanks to other dependencies.
+                        We manange the version of commons-io:commons-io in this pom.xml -->
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
