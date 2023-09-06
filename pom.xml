@@ -179,6 +179,12 @@
                 <groupId>org.jboss.arquillian.graphene</groupId>
                 <artifactId>arquillian-browser-screenshooter</artifactId>
                 <version>${graphene.version}</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>org.apache.commons</groupId>
+                        <artifactId>commons-io</artifactId>
+                    </exclusion>
+                </exclusions>
             </dependency>
             <dependency>
                 <groupId>org.wildfly.arquillian</groupId>
