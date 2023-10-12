@@ -79,7 +79,7 @@ public class ConfigUtils {
     }
 
     public static String getDefaultHost() {
-        return get("suite.domain.default.host", "master");
+        return get("suite.domain.default.host", "primary");
     }
 
     public static String getDefaultServer() {

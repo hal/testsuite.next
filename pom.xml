@@ -62,7 +62,7 @@
         <maven.compiler.source>1.8</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-        <suite.domain.default.host>master</suite.domain.default.host>
+        <suite.domain.default.host>primary</suite.domain.default.host>
         <suite.domain.default.profile>full</suite.domain.default.profile>
         <suite.domain.default.server>server-one</suite.domain.default.server>
         <suite.mode/>
