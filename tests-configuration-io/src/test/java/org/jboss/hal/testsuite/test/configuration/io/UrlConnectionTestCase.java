@@ -44,7 +44,7 @@ public class UrlConnectionTestCase {
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
     private static final Operations operations = new Operations(client);
 
-    private static final Address hostMaster = Address.of("host","master");
+    private static final Address hostMaster = Address.of("host","primary");
     private static final Address serverGroupMain = Address.of(SERVER_GROUP,"main-server-group");
 
     private static final BackupAndRestoreAttributes backupHost = new BackupAndRestoreAttributes.Builder(hostMaster).build();
