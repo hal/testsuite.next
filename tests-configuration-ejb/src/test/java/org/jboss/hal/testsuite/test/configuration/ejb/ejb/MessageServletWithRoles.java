@@ -3,19 +3,19 @@ package org.jboss.hal.testsuite.test.configuration.ejb.ejb;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import javax.annotation.Resource;
-import javax.inject.Inject;
-import javax.jms.Destination;
-import javax.jms.JMSContext;
-import javax.jms.JMSDestinationDefinition;
-import javax.jms.Queue;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.annotation.Resource;
+import jakarta.inject.Inject;
+import jakarta.jms.Destination;
+import jakarta.jms.JMSContext;
+import jakarta.jms.JMSDestinationDefinition;
+import jakarta.jms.Queue;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 @JMSDestinationDefinition(name = "java:/queue/MessageDrivenRolesQueue",
-    interfaceName = "javax.jms.Queue")
+    interfaceName = "jakarta.jms.Queue")
 @WebServlet(name = "MessageDriven", urlPatterns = "/MessageDriven")
 public class MessageServletWithRoles extends HttpServlet {
 

@@ -1,14 +1,13 @@
 package org.jboss.hal.testsuite.test.configuration.ejb.ejb;
 
-import javax.annotation.security.DeclareRoles;
-import javax.annotation.security.RunAs;
-import javax.ejb.ActivationConfigProperty;
-import javax.ejb.MessageDriven;
-import javax.jms.JMSException;
-import javax.jms.Message;
-import javax.jms.MessageListener;
-import javax.jms.TextMessage;
-
+import jakarta.annotation.security.DeclareRoles;
+import jakarta.annotation.security.RunAs;
+import jakarta.ejb.ActivationConfigProperty;
+import jakarta.ejb.MessageDriven;
+import jakarta.jms.JMSException;
+import jakarta.jms.Message;
+import jakarta.jms.MessageListener;
+import jakarta.jms.TextMessage;
 import org.jboss.logging.Logger;
 
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.ROLE_1;
@@ -16,7 +15,7 @@ import static org.jboss.hal.testsuite.fixtures.EJBFixtures.ROLE_2;
 
 @MessageDriven(activationConfig = {
     @ActivationConfigProperty(propertyName = "destinationLookup", propertyValue = "queue/MessageDrivenRolesQueue"),
-    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "javax.jms.Queue"),
+    @ActivationConfigProperty(propertyName = "destinationType", propertyValue = "jakarta.jms.Queue"),
     @ActivationConfigProperty(propertyName = "acknowledgeMode", propertyValue = "Auto-acknowledge")})
 @DeclareRoles({ROLE_1, ROLE_2})
 @RunAs(ROLE_1)

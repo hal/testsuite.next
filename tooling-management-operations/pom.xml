@@ -25,6 +25,11 @@
             <groupId>org.wildfly.core</groupId>
             <artifactId>wildfly-cli</artifactId>
         </dependency>
+        
+        <dependency>
+            <groupId>jakarta.servlet</groupId>
+            <artifactId>jakarta.servlet-api</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <plugins>
