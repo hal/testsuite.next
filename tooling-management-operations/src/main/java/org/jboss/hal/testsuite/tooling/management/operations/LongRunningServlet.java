@@ -3,9 +3,9 @@ package org.jboss.hal.testsuite.tooling.management.operations;
 import java.util.Properties;
 import java.util.concurrent.TimeUnit;
 
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
 
 @WebServlet(name = "Slow", loadOnStartup = 1)
 public class LongRunningServlet extends HttpServlet {

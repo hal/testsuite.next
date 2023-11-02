@@ -72,7 +72,7 @@ public abstract class AbstractDatasourcePropertiesTest {
     public static TemporaryFolder temporaryFolder = new TemporaryFolder();
 
     private static final String JAVAX_API = "javax.api";
-    private static final String JAVAX_TRANSACTION_API = "javax.transaction.api";
+    private static final String JAKARTA_TRANSACTION_API = "jakarta.transaction.api";
 
     @BeforeClass
     public static void setupJDBCDrivers() throws CommandFailedException, IOException {
@@ -87,25 +87,25 @@ public abstract class AbstractDatasourcePropertiesTest {
         AddModule addPGJDBCDriverModule = new AddModule.Builder(PG_MODULE_NAME)
             .resource(resolver.resolveJarArtifact(ArtifactCoordinates.fromString("org.postgresql:postgresql:42.2.4")))
             .dependency(JAVAX_API)
-            .dependency(JAVAX_TRANSACTION_API)
+            .dependency(JAKARTA_TRANSACTION_API)
             .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addMSQLJDBCDriverModule = new AddModule.Builder(MYSQL_MODULE_NAME)
             .resource(resolver.resolveJarArtifact(ArtifactCoordinates.fromString("mysql:mysql-connector-java:8.0.12")))
             .dependency(JAVAX_API)
-            .dependency(JAVAX_TRANSACTION_API)
+            .dependency(JAKARTA_TRANSACTION_API)
             .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addMSSQLJDBCDriverModule = new AddModule.Builder(MSSQL_MODULE_NAME)
             .resource(resolver.resolveJarArtifact(
                 ArtifactCoordinates.fromString("com.microsoft.sqlserver:mssql-jdbc:7.0.0.jre8")))
             .dependency(JAVAX_API)
-            .dependency(JAVAX_TRANSACTION_API)
+            .dependency(JAKARTA_TRANSACTION_API)
             .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();
         AddModule addCustomJDBCDriverModule = new AddModule.Builder(CUSTOM_MODULE_NAME)
             .dependency(JAVAX_API)
-            .dependency(JAVAX_TRANSACTION_API)
+            .dependency(JAKARTA_TRANSACTION_API)
             .resource(customModuleArchiveFile)
             .moduleRootDir(new PathOperations(client).getModulesPath().toFile())
             .build();

@@ -1,7 +1,7 @@
 package org.jboss.hal.testsuite.test.configuration.ejb.ejb;
 
-import javax.ejb.Remote;
-import javax.ejb.Stateless;
+import jakarta.ejb.Remote;
+import jakarta.ejb.Stateless;
 
 import static org.jboss.hal.testsuite.fixtures.EJBFixtures.SLEEP_TIME;
 

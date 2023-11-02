@@ -58,8 +58,8 @@
         <browser>phantomjs</browser>
         <linkXRef>false</linkXRef>
         <testsuite.config.location>${user.dir}/testsuite.properties</testsuite.config.location>
-        <maven.compiler.target>1.8</maven.compiler.target>
-        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <maven.compiler.source>11</maven.compiler.source>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <suite.domain.default.host>primary</suite.domain.default.host>
@@ -76,27 +76,28 @@
         <test.included.category/>
 
         <!-- dependency versions -->
-        <arquillian.version>1.6.0.Final</arquillian.version>
+        <arquillian.version>1.7.1.Final</arquillian.version>
         <arquillian.drone.version>2.5.0</arquillian.drone.version>
-        <arquillian.wildfly.version>2.1.0.Final</arquillian.wildfly.version>
-        <shrinkwrap.resolver.version>3.1.4</shrinkwrap.resolver.version>
-        <commons.io.version>2.7</commons.io.version>
-        <commons.lang.version>3.7</commons.lang.version>
-        <commons.text.version>1.2</commons.text.version>
-        <creaper.version>1.6.1</creaper.version>
+        <arquillian.wildfly.version>5.0.1.Final</arquillian.wildfly.version>
+        <shrinkwrap.resolver.version>3.2.1</shrinkwrap.resolver.version>
+        <commons.io.version>2.14.0</commons.io.version>
+        <commons.lang.version>3.13.0</commons.lang.version>
+        <commons.text.version>1.10.0</commons.text.version>
+        <creaper.version>2.0.2</creaper.version>
         <graphene.version>2.3.2</graphene.version>
         <guava.version>31.1-jre</guava.version>
         <gwtp.version>1.6</gwtp.version>
-        <hal.version>3.6.1.Final</hal.version>
-        <jboss.dmr.version>1.4.1.Final</jboss.dmr.version>
+        <hal.version>3.6.12.Final</hal.version>
+        <jboss.dmr.version>1.7.0.Final</jboss.dmr.version>
         <jgrapht.version>1.0.1</jgrapht.version>
         <junit.version>4.13.1</junit.version>
         <selenium.version>3.8.1</selenium.version>
         <slf4j.version>1.7.25</slf4j.version>
-        <wildfly.version>11.0.0.Final</wildfly.version>
-        <wildfly.cli.version>3.0.9.Final</wildfly.cli.version>
+        <wildfly.version>30.0.0.Final</wildfly.version>
+        <wildfly.cli.version>22.0.0.Final</wildfly.cli.version>
         <surefire.version>2.21.0</surefire.version>
         <jackson.bom.version>2.9.5</jackson.bom.version>
+        <javax.xml.bind.version>2.3.1</javax.xml.bind.version>
     </properties>
 
     <modules>
@@ -214,7 +215,7 @@
             </dependency>
             <dependency>
                 <groupId>org.wildfly.bom</groupId>
-                <artifactId>wildfly-javaee7</artifactId>
+                <artifactId>wildfly-ee</artifactId>
                 <scope>import</scope>
                 <type>pom</type>
                 <version>${wildfly.version}</version>
@@ -300,26 +301,6 @@
                 <type>pom</type>
             </dependency>
 
-            <!-- EE specs -->
-            <dependency>
-                <groupId>javax.batch</groupId>
-                <artifactId>javax.batch-api</artifactId>
-                <version>1.0.1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax.enterprise</groupId>
-                <artifactId>cdi-api</artifactId>
-                <version>2.0.SP1</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>javax</groupId>
-                <artifactId>javaee-api</artifactId>
-                <version>7.0</version>
-                <scope>test</scope>
-            </dependency>
-
             <!-- microprofile -->
             <dependency>
                 <groupId>org.eclipse.microprofile.health</groupId>
@@ -353,6 +334,14 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${javax.xml.bind.version}</version>
+        </dependency>
+    </dependencies>
 
     <build>
         <pluginManagement>
@@ -701,26 +690,6 @@
                     </plugin>
                 </plugins>
             </build>
-        </profile>
-
-        <profile>
-            <!-- JAX-B needs to be included on JDK > 8 -->
-            <id>jdk-9</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <dependencies>
-                <dependency>
-                    <groupId>javax.xml.bind</groupId>
-                    <artifactId>jaxb-api</artifactId>
-                    <version>2.3.1</version>
-                </dependency>
-                <dependency>
-                    <groupId>javax.activation</groupId>
-                    <artifactId>activation</artifactId>
-                    <version>1.1.1</version>
-                </dependency>
-            </dependencies>
         </profile>
 
         <profile>
