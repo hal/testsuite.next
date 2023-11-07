@@ -33,9 +33,6 @@ public class UndertowServerPage extends BasePage {
     @FindBy(id = Ids.UNDERTOW_HOST_HTTP_INVOKER + "-form")
     private FormFragment hostsHttpInvokerForm;
 
-    @FindBy(id = Ids.UNDERTOW_HOST_SINGLE_SIGN_ON + "-form")
-    private FormFragment hostsSingleSignOnForm;
-
     @FindBy(id = Ids.UNDERTOW_SERVER_AJP_LISTENER + "-form")
     private FormFragment ajpListenerForm;
 
@@ -75,11 +72,6 @@ public class UndertowServerPage extends BasePage {
     public FormFragment getHostsHttpInvokerForm() {
         hostsTab.select(Ids.build(Ids.UNDERTOW_HOST_HTTP_INVOKER, "tab"));
         return hostsHttpInvokerForm;
-    }
-
-    public FormFragment getHostsSingleSignOnForm() {
-        hostsTab.select(Ids.build(Ids.UNDERTOW_HOST_SINGLE_SIGN_ON,"tab"));
-        return hostsSingleSignOnForm;
     }
 
     public FormFragment getAjpListenerForm() {
