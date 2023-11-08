@@ -100,7 +100,7 @@ public class ManagementOperationsTest {
         page.navigate();
         managementOps.waitForNonProgressingOperation(25);
         page.cancelNonProgressingOperation();
-        assertTrue(managementOps.thereIsNoNonProgressingOperationATM());
+        assertTrue(managementOps.areNonProgressiveOperationsCancelledATM());
 
         deployFuture.join();
     }

@@ -49,16 +49,14 @@ public class ManagementOperations {
         return Long.parseLong(nonProgressingOperationResult.stringValue());
     }
 
-    public boolean thereIsNoNonProgressingOperationATM() throws InterruptedException, IOException {
+    public boolean areNonProgressiveOperationsCancelledATM() throws InterruptedException, IOException {
         int timeoutInMilis = 220; // just to be sure all actions are propagated
         long startTime = System.currentTimeMillis();
-        ModelNodeResult nonProgressingOperationResult = findNonProgressingOperation();
-        while (nonProgressingOperationResult.hasDefinedValue()) {
+        while (!areNonProgressiveOperationsCancelled()) {
             if (System.currentTimeMillis() - startTime > timeoutInMilis) {
                 return false;
             }
             TimeUnit.MILLISECONDS.sleep(50);
-            nonProgressingOperationResult = findNonProgressingOperation();
         }
         return true;
     }
@@ -74,5 +72,21 @@ public class ManagementOperations {
         ModelNodeResult result = ops.invoke(FIND_NON_PROGRESSING_OPERATION, MANAGEMENT_OPERATIONS_ADDRESS);
         result.assertSuccess();
         return result;
+    }
+
+    private boolean areNonProgressiveOperationsCancelled() throws IOException {
+        ModelNodeResult nonProgressingOperationResult = findNonProgressingOperation();
+        // just one operation is expected, improve this if needed
+        String operationId = nonProgressingOperationResult.get(RESULT).asStringOrNull();
+        if (operationId != null) {
+            return isActiveOperationCancelled(operationId);
+        }
+        return true;
+    }
+
+    private boolean isActiveOperationCancelled(String operationId) throws IOException {
+        ModelNodeResult result = ops.readAttribute(MANAGEMENT_OPERATIONS_ADDRESS.and(ACTIVE_OPERATION, operationId), CANCELLED);
+        result.assertSuccess();
+        return result.asBoolean();
     }
 }
