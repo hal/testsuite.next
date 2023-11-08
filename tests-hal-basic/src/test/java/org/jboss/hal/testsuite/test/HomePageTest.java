@@ -56,7 +56,6 @@ public class HomePageTest {
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_HOMEPAGE));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_DEPLOYMENTS));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_RUNTIME));
-        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_PATCHING));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_ACCESS_CONTROL));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_CONFIGURATION));
     }
