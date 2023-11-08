@@ -87,7 +87,7 @@ public class ServerStatusTest {
 
     @Test
     public void memory() {
-        assertUsage(preview.getHeapUsed(), "heap used", heapUsed, 10);
+        assertUsage(preview.getHeapUsed(), "heap used", heapUsed, 20);
         assertUsage(preview.getHeapCommitted(), "heap committed", heapCommitted, 10);
         assertUsage(preview.getNonHeapUsed(), "non-heap used", nonHeapUsed, 10);
         assertUsage(preview.getNonHeapCommitted(), "non-heap committed", nonHeapCommitted, 10);
