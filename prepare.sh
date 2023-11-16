@@ -20,7 +20,7 @@ export JBOSS_HOME=$SERVER_DIR
 
 if [ "$MODE" == "domain" ]; then
     $SERVER_DIR/bin/domain.sh &
-    $SERVER_DIR/bin/jboss-cli.sh -c '/host=master/core-service=management/management-interface=http-interface
+    $SERVER_DIR/bin/jboss-cli.sh -c '/host=primary/core-service=management/management-interface=http-interface
                                       :undefine-attribute(name=security-realm)
                                       :reload'
     sleep 40
