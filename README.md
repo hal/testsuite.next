@@ -71,6 +71,36 @@ Domain hc dc (on master)
 /host=master:reload
 ```
 
+### Alternative Setup
+* Has removed security realm
+* Using `source` to set `JBOSS_HOME` from SERVER_ZIP
+
+Standalone
+```
+source ./prepare.sh <SERVER_ZIP> standalone
+```
+Domain
+```
+source ./prepare.sh <SERVER_ZIP> domain
+```
+Domain hc dc (on master)
+```
+source ./prepare.sh <SERVER_ZIP> domain-hc-dc
+```
+#### To stop server started by `prepare.sh`
+Standalone
+```
+./shutdown.sh <SERVER_ZIP> standalone
+```
+Domain
+```
+./shutdown.sh <SERVER_ZIP> domain
+```
+Domain hc dc (on master)
+```
+./shutdown.sh <SERVER_ZIP> domain-hc-dc
+```
+
 ### Run all tests:
 
 To run the tests you need to set the ``JBOSS_HOME`` property pointing to the WildFly directory. If have run the ``start-wildfly`` script, you can see the WildFly directory printed out in the console.
