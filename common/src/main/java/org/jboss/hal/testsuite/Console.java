@@ -102,6 +102,7 @@ public class Console {
         try {
             URL url = new URL(baseUrl, hashFragment);
             browser.navigate().to(url);
+            browser.navigate().refresh();
             waitModel().until().element(selector).is().present();
             browser.manage().window().maximize();
         } catch (MalformedURLException e) {

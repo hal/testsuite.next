@@ -30,42 +30,38 @@ public class DeploymentContentPage extends BasePage {
     }
 
     public boolean isNodeVisible(String... path) {
-        return getNodeElementList(path).size() > 0;
+        return !getNodeElementList(path).isEmpty();
     }
 
     public DeploymentContentPage selectNode(String... path) {
         WebElement node = getNode(path);
         String ariaSelected = "aria-selected";
-        String selectedAttrValue = node.getAttribute(ariaSelected);
+        String selectedAttrValue = node.findElement(By.tagName("a")).getAttribute(ariaSelected);
         if (selectedAttrValue == null) {
             throw new IllegalStateException(ariaSelected + " attribute does not exist.");
         }
         boolean selected = Boolean.valueOf(selectedAttrValue);
         if (!selected) {
             node.click();
-            Graphene.waitGui().until().element(node).attribute(ariaSelected).contains("true");
+            Graphene.waitGui().until().element(node.findElement(By.tagName("a"))).attribute(ariaSelected).contains("true");
         }
         return this;
     }
 
     public DeploymentContentPage openNode(String... path) {
         WebElement node = getNode(path);
-        String ariaExpanded = "aria-expanded";
-        String expandedAttrValue = node.getAttribute(ariaExpanded);
-        if (expandedAttrValue == null) {
-            throw new IllegalStateException(ariaExpanded + " attribute does not exist.");
-        }
-        boolean expanded = Boolean.valueOf(expandedAttrValue);
+        String expandedAttrValue = node.getAttribute("class");
+        boolean expanded = expandedAttrValue.contains("jstree-open");
         if (!expanded) {
             node.findElement(By.cssSelector("i.jstree-icon")).click();
-            Graphene.waitGui().until().element(node).attribute(ariaExpanded).contains("true");
+            Graphene.waitGui().until().element(node).attribute("class").contains("jstree-open");
         }
         return this;
     }
 
     public boolean isButtonAvailable(String title) {
         List<WebElement> buttonList = getButtonList(title);
-        if (buttonList.size() > 0) {
+        if (!buttonList.isEmpty()) {
             WebElement button = buttonList.get(0);
             if (button.isDisplayed() && !button.getAttribute("class").contains(CSS.disabled)) {
                 return true;
@@ -98,7 +94,7 @@ public class DeploymentContentPage extends BasePage {
 
     private WebElement getNode(String... path) {
         List<WebElement> nodes = getNodeElementList(path);
-        if (nodes.size() == 0) {
+        if (nodes.isEmpty()) {
             throw new IllegalStateException("Node specified by path '" + join(";", path) + "' is not visible.");
         } else if (nodes.size() > 1) {
             throw new IllegalStateException("Node specified by path '" + join(";", path) + "' is ambiguous.");
