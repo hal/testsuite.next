@@ -342,7 +342,8 @@ public class CustomConsoleTitleTest {
 
         setTitleAndReloadPage("");
 
-        Assert.assertEquals(HAL_MANAGEMENT_CONSOLE, browser.getTitle());
+        // The default title is derived by browser from ts.html that is used in the test suite instead of index.html
+        Assert.assertEquals(HAL_TEST_SUITE, browser.getTitle());
     }
 
     /**

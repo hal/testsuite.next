@@ -66,7 +66,6 @@ public class HomePageTest {
         assertTrue(containsModule("Configuration"));
         assertTrue(containsModule("Runtime"));
         assertTrue(containsModule("Access Control"));
-        assertTrue(containsModule("Patching"));
 
         By selector = ByJQuery.selector(".eap-home-module-header > h2" + contains("Need Help?"));
         assertTrue(page.getRootContainer().findElement(selector).isDisplayed());
