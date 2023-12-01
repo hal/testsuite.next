@@ -62,28 +62,28 @@ public class CredentialReferenceTest {
         operations.add(ElytronFixtures.keyStoreAddress(KEY_STORE_TO_BE_ADDED),
             Values.of("type", ElytronFixtures.JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
-                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build()));
+                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())).assertSuccess();
         operations.add(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_ADDED),
             Values.of(ElytronFixtures.CREDENTIAL_STORE_CREATE, true)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
                     .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())
-                .and(LOCATION, CREDENTIAL_STORE_TO_BE_ADDED + LOCATION_SUFFIX));
+                .and(LOCATION, CREDENTIAL_STORE_TO_BE_ADDED + LOCATION_SUFFIX)).assertSuccess();
         operations.add(ElytronFixtures.credentialStoreAddress(CREDENTIAL_STORE_TO_BE_EDITED),
             Values.of(ElytronFixtures.CREDENTIAL_STORE_CREATE, true)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
                     .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())
-                .and(LOCATION, CREDENTIAL_STORE_TO_BE_EDITED + LOCATION_SUFFIX));
+                .and(LOCATION, CREDENTIAL_STORE_TO_BE_EDITED + LOCATION_SUFFIX)).assertSuccess();
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE),
-                Values.of(HTTP_SERVER_MECH_FACTORY, "global").and(SECURITY_DOMAIN, "ApplicationDomain"));
+                Values.of(HTTP_SERVER_MECH_FACTORY, "global").and(SECURITY_DOMAIN, "ApplicationDomain")).assertSuccess();
         operations.add(
             ApplicationSecurityDomainFixtures.applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
-            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, HTTP_AUTH_CREATE));
+            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, HTTP_AUTH_CREATE)).assertSuccess();
         operations.add(
             ApplicationSecurityDomainFixtures.singleSignOnAddress(APPLICATION_SECURITY_DOMAIN_WITH_SINGLE_SIGN_ON),
             Values.of(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_ALIAS, Random.name())
                 .and(ApplicationSecurityDomainFixtures.SINGLE_SIGN_ON_KEY_STORE, KEY_STORE_TO_BE_ADDED)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
-                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build()));
+                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())).assertSuccess();
     }
 
     @AfterClass

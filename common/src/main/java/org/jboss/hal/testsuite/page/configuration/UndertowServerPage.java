@@ -101,7 +101,7 @@ public class UndertowServerPage extends BasePage {
     public EnableSslWizard enableSslWizard() {
         WebElement enableSslButton;
         try {
-            enableSslButton = httpsListenerTable.button("Enable SSL");
+            enableSslButton = httpsListenerTable.button("Setup SSL");
         } catch (NoSuchElementException e) {
             throw new IllegalStateException("Enable SSL button is not present. Is a HTTPS listener selected?", e);
         }

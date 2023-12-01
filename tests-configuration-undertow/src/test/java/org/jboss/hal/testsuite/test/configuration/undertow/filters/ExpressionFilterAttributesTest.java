@@ -40,6 +40,7 @@ public class ExpressionFilterAttributesTest {
     @Page
     private UndertowFiltersPage page;
 
+    private static final String EXPRESSION_VALUE_BASE = "path(/a) -> redirect(/%s)";
     private static final String EXPRESSION_FILTER_EDIT =
         "expression-filter-to-be-created-" + RandomStringUtils.randomAlphanumeric(7);
 
@@ -50,7 +51,7 @@ public class ExpressionFilterAttributesTest {
     @BeforeClass
     public static void setUp() throws IOException {
         operations.add(UndertowFiltersFixtures.expressionFilterAddress(EXPRESSION_FILTER_EDIT),
-            Values.of("expression", Random.name()));
+            Values.of("expression", String.format(EXPRESSION_VALUE_BASE, Random.name()))).assertSuccess();
     }
 
     @AfterClass

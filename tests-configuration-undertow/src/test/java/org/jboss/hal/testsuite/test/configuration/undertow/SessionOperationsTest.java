@@ -3,6 +3,7 @@ package org.jboss.hal.testsuite.test.configuration.undertow;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -71,7 +72,7 @@ public class SessionOperationsTest {
         Deploy deploy =
             new Deploy.Builder(webArchive.as(ZipExporter.class).exportAsInputStream(), ARCHIVE_NAME, true).build();
         client.apply(deploy);
-        operations.writeAttribute(UndertowFixtures.UNDERTOW_ADDRESS, "statistics-enabled", true);
+        operations.writeAttribute(UndertowFixtures.UNDERTOW_ADDRESS, "statistics-enabled", true).assertSuccess();
     }
 
     @AfterClass
@@ -122,8 +123,12 @@ public class SessionOperationsTest {
 
     }
 
+    @SuppressWarnings("unchecked")
     private List<WebElement> getSessionsFromView() {
-        return page.getSessionsTable().getRoot().findElements(By.cssSelector("tbody > tr[role=\"row\"]"));
+        if (!page.getSessionsTable().getRoot().findElements(By.cssSelector("tbody > tr > td.dataTables_empty")).isEmpty()) {
+            return Collections.EMPTY_LIST;
+        }
+        return page.getSessionsTable().getRoot().findElements(By.cssSelector("tbody > tr"));
     }
 
     private List<WebElement> getAttributes() {
