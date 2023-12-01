@@ -68,7 +68,7 @@ public class CertificateAuthorityAccountTest {
         operations.add(ElytronFixtures.certificateAuthorityAccountAddress(name),
             Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
                 .and(ModelDescriptionConstants.KEY_STORE, KEY_STORE).and("contact-urls", new ModelNodeGenerator.ModelNodeListBuilder()
-            .addAll("mailto:example@org.com").build()));
+            .addAll("mailto:example@org.com").build())).assertSuccess();
     }
 
     private static void activateCertificateAuthorityAccount(String name) throws IOException {
@@ -130,7 +130,7 @@ public class CertificateAuthorityAccountTest {
     @Test
     public void update() throws InterruptedException {
         page.getCertificateAuthorityAccountTable().select(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE);
-        page.getCertificateAuthorityAccountTable().button("Update").click();
+        page.getCertificateAuthorityAccountTable().button("Online updates").click();
         AddResourceDialogFragment resourceDialogFragment = console.addResourceDialog();
         resourceDialogFragment.getForm().flip(AGREE_TO_TERMS_OF_SERVICE, true);
         resourceDialogFragment.add();

@@ -289,10 +289,9 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
 
         AddResourceDialogFragment addResource = console.addResourceDialog();
         addResource.getForm().text(NEW_ITEM_PATH, ANY_STRING);
-        addResource.getForm().text(NEW_ITEM_RDN, ANY_STRING);
         addResource.getPrimaryButton().click();
         try {
-            addResource.getForm().expectError(NEW_ITEM_ATTRIBUTES);
+            addResource.getForm().expectError(NEW_ITEM_RDN);
         } finally {
             addResource.getSecondaryButton().click(); // close dialog to cleanup
         }

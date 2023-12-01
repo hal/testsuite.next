@@ -41,9 +41,8 @@ public class MappedRoleMapperTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        ModelNode roleMap = new ModelNode();
-        roleMap.set(Random.name(),
-            new ModelNodeGenerator.ModelNodeListBuilder().addAll(Random.name(), Random.name()).build());
+        ModelNode roleMap = new ModelNodeGenerator.ModelNodePropertiesBuilder().addProperty("from", Random.name())
+                .addProperty("to", new ModelNodeGenerator.ModelNodeListBuilder().addAll(Random.name()).build()).build();
         operations.add(ElytronFixtures.mappedRoleMapperAddress(MAPPED_ROLE_MAPPER_UPDATE),
             Values.ofList(ElytronFixtures.ROLE_MAP, roleMap)).assertSuccess();
         operations.add(ElytronFixtures.mappedRoleMapperAddress(MAPPED_ROLE_MAPPER_DELETE),
@@ -121,9 +120,8 @@ public class MappedRoleMapperTest {
     public void editRoleMap() throws Exception {
         String key = Random.name();
         String value = Random.name();
-        ModelNode roleMap = new ModelNode();
-        roleMap.set(key,
-            new ModelNodeGenerator.ModelNodeListBuilder().addAll(value).build());
+        ModelNode roleMap = new ModelNodeGenerator.ModelNodePropertiesBuilder().addProperty("from", key)
+                .addProperty("to", new ModelNodeGenerator.ModelNodeListBuilder().addAll(value).build()).build();
         page.getMappedRoleMapperTable().select(MAPPED_ROLE_MAPPER_UPDATE);
         crudOperations.update(ElytronFixtures.mappedRoleMapperAddress(MAPPED_ROLE_MAPPER_UPDATE),
             page.getMappedRoleMapperForm(),

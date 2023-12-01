@@ -1061,6 +1061,7 @@ public final class ElytronFixtures {
     // -------------- policy
 
     public static final String POL_CREATE = Ids.build("pol", CrudConstants.CREATE, Random.name());
+    public static final String POL_JACC = "jacc";
 
     public static Address policyAddress(String name) {
         return SUBSYSTEM_ADDRESS.and(POLICY, name);
