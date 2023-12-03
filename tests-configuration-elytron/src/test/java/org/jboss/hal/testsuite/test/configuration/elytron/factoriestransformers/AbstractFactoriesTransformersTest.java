@@ -87,6 +87,7 @@ public class AbstractFactoriesTransformersTest {
         FILTER_UPDATE_MODEL.get(PATTERN_FILTER).set(FILTERS_UPDATE);
         FILTER_UPDATE_MODEL.get(ENABLING).set(true);
         FILTER_UPDATE2_MODEL.get(PATTERN_FILTER).set(FILTERS_UPDATE2);
+        FILTER_UPDATE2_MODEL.get(ENABLING).set(true);
         FILTER_DELETE_MODEL.get(PATTERN_FILTER).set(FILTERS_DELETE);
         FILTER_DELETE_MODEL.get(ENABLING).set(true);
 

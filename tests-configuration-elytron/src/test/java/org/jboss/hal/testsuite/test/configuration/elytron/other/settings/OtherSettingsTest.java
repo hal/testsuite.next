@@ -58,9 +58,11 @@ import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.DIR_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.OTHER_ITEM;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.POLICY_ITEM;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.POL_CREATE;
+import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.POL_JACC;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.PRINCIPAL;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.dirContextAddress;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.policyAddress;
+
 @RunWith(Arquillian.class)
 public class OtherSettingsTest extends AbstractOtherSettingsTest {
 
@@ -69,6 +71,7 @@ public class OtherSettingsTest extends AbstractOtherSettingsTest {
     @Test
     public void jaccPolicyCreate() throws Exception {
         operations.removeIfExists(policyAddress(POL_CREATE));
+        operations.removeIfExists(policyAddress(POL_JACC));
         console.reload();
         console.verticalNavigation().selectSecondary(OTHER_ITEM, POLICY_ITEM);
         EmptyState emptyState = page.getEmptyPolicy();
