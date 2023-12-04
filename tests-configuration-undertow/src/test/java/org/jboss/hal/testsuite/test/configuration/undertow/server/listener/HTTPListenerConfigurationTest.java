@@ -76,16 +76,16 @@ public class HTTPListenerConfigurationTest {
 
     @BeforeClass
     public static void setUp() throws IOException, CommandFailedException {
-        operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED));
-        operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED));
-        operations.add(UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED));
+        operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED)).assertSuccess();
+        operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED)).assertSuccess();
+        operations.add(UndertowFixtures.serverAddress(UNDERTOW_SERVER_TO_BE_TESTED)).assertSuccess();
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING));
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING_TO_BE_EDITED));
         client.apply(new AddLocalSocketBinding(SOCKET_REDIRECT_TO_BE_EDITED));
         operations.add(
             HTTP_LISTENER_ADDRESS,
             Values
-                .of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref"));
+                .of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref")).assertSuccess();
     }
 
     @AfterClass

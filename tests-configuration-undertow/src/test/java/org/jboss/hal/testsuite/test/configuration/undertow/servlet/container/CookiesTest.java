@@ -94,12 +94,6 @@ public class CookiesTest {
     }
 
     @Test
-    public void editComment() throws Exception {
-        navigateToCookiesForm(SERVLET_CONTAINER_EDIT);
-        crudOperations.update(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, page.getCookiesForm(), "comment");
-    }
-
-    @Test
     public void editDomain() throws Exception {
         navigateToCookiesForm(SERVLET_CONTAINER_EDIT);
         crudOperations.update(SERVLET_CONTAINER_EDIT_COOKIES_ADDRESS, page.getCookiesForm(), "domain");

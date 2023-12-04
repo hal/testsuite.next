@@ -40,6 +40,7 @@ public class ExpressionFilterTest {
     @Page
     private UndertowFiltersPage page;
 
+    private static final String EXPRESSION_VALUE_BASE = "path(/a) -> redirect(/%s)";
     private static final String EXPRESSION_FILTER_CREATE =
         "expression-filter-to-be-created-" + RandomStringUtils.randomAlphanumeric(7);
     private static final String EXPRESSION_FILTER_DELETE =
@@ -52,7 +53,7 @@ public class ExpressionFilterTest {
     @BeforeClass
     public static void setUp() throws IOException {
         operations.add(UndertowFiltersFixtures.expressionFilterAddress(EXPRESSION_FILTER_DELETE),
-            Values.of("expression", Random.name()));
+            Values.of("expression", String.format(EXPRESSION_VALUE_BASE, Random.name()))).assertSuccess();
     }
 
     @AfterClass
@@ -70,7 +71,7 @@ public class ExpressionFilterTest {
 
     @Test
     public void create() throws Exception {
-        String expression = Random.name();
+        String expression = String.format(EXPRESSION_VALUE_BASE, Random.name());
         crudOperations.create(UndertowFiltersFixtures.expressionFilterAddress(EXPRESSION_FILTER_CREATE),
             page.getExpressionFilterTable(), formFragment -> {
                 formFragment.text("name", EXPRESSION_FILTER_CREATE);

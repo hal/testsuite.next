@@ -6,9 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.io.FileUtils;
+import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
+import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.category.RequiresLetsEncrypt;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -21,6 +23,7 @@ import org.jboss.hal.testsuite.fragment.ssl.EnableSslWizard;
 import org.jboss.hal.testsuite.page.configuration.UndertowServerPage;
 import org.jboss.hal.testsuite.tooling.ssl.SslOperations;
 import org.junit.AfterClass;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
@@ -98,6 +101,9 @@ public class HTTPSListenerSSLTest {
 
     private static final SnapshotBackup snapshot = new SnapshotBackup();
 
+    @Inject
+    private Console console;
+
     @Page
     private UndertowServerPage page;
 
@@ -108,7 +114,7 @@ public class HTTPSListenerSSLTest {
         ops.add(UNDERTOW_SERVER_ADRESS).assertSuccess();
 
         client.apply(new AddKeyManager(KEY_MAN_CREATE));
-        ops.add(serverSslContextAddress(SRV_SSL_CREATE), Values.of(KEY_MANAGER, KEY_MAN_CREATE));
+        ops.add(serverSslContextAddress(SRV_SSL_CREATE), Values.of(KEY_MANAGER, KEY_MAN_CREATE)).assertSuccess();
 
         client.apply(new AddLocalSocketBinding(INIT_SOCKET_BINDING_NAME));
         ops.add(HTTPS_LISTENER_ADDRESS, Values.of(SOCKET_BINDING, INIT_SOCKET_BINDING_NAME.toLowerCase() + "ref")
@@ -125,6 +131,14 @@ public class HTTPSListenerSSLTest {
         } finally {
             client.close();
         }
+    }
+
+    @Before
+    public void initPage() {
+        page.navigate("name", UNDERTOW_SERVER_TO_BE_TESTED);
+        console.verticalNavigation()
+            .selectSecondary(Ids.UNDERTOW_SERVER_LISTENER_ITEM, Ids.build(Ids.UNDERTOW_SERVER_HTTPS_LISTENER, "item"));
+        page.getHttpsListenerTable().select(HTTPS_LISTENER_TO_BE_TESTED);
     }
 
     /**
