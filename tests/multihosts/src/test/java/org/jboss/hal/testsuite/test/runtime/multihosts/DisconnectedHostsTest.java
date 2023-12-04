@@ -60,7 +60,7 @@ public class DisconnectedHostsTest {
     private static final String
         CONNECTED_HOST_NAME = ConfigUtils.getDefaultHost(),
         CONNECTED_ICON_CLASS = "pficon-ok",
-        DISCONNECTED_HOST_NAME = "disconnected-slave",
+        DISCONNECTED_HOST_NAME = "disconnected-secondary",
         DISCONNECTED_ICON_CLASS = "fa-chain-broken";
 
     @AfterClass
