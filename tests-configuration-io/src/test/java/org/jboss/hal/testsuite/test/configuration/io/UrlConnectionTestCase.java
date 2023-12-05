@@ -28,7 +28,6 @@ import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Batch;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
-import org.wildfly.extras.creaper.core.online.operations.Values;
 import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 
@@ -44,10 +43,10 @@ public class UrlConnectionTestCase {
     private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
     private static final Operations operations = new Operations(client);
 
-    private static final Address hostMaster = Address.of("host","primary");
+    private static final Address hostPrimary = Address.of("host","primary");
     private static final Address serverGroupMain = Address.of(SERVER_GROUP,"main-server-group");
 
-    private static final BackupAndRestoreAttributes backupHost = new BackupAndRestoreAttributes.Builder(hostMaster).build();
+    private static final BackupAndRestoreAttributes backupHost = new BackupAndRestoreAttributes.Builder(hostPrimary).build();
     private static final BackupAndRestoreAttributes backupOtherServerGroup = new BackupAndRestoreAttributes.Builder(Address.of(SERVER_GROUP,"other-server-group")).build();
     private static final BackupAndRestoreAttributes backupMainServerGroup = new BackupAndRestoreAttributes.Builder(Address.of(SERVER_GROUP,"main-server-group")).build();
     private static final BackupAndRestoreAttributes backupProfile = new BackupAndRestoreAttributes.Builder(Address.of(PROFILE, DEFAULT)).build();
@@ -60,18 +59,13 @@ public class UrlConnectionTestCase {
         backupMainServerGroup.backup();
         backupProfile.backup();
 
-        operations.batch(new Batch().remove(hostMaster.and("server-config","server-three"))); // /host=master/server-config=server-three:remove()
-        operations.batch(new Batch().remove(Address.of(SERVER_GROUP,"other-server-group")));                  // /server-group=other-server-group:remove()
+        operations.batch(new Batch().writeAttribute(serverGroupMain,PROFILE, DEFAULT)).assertSuccess();
+        operations.batch(new Batch().writeAttribute(serverGroupMain,"socket-binding-group","standard-sockets")).assertSuccess();
+        administration.reloadIfRequired();
 
-        operations.batch(new Batch().add(serverGroupMain, Values.of(PROFILE, DEFAULT)));
-        operations.batch(new Batch().writeAttribute(serverGroupMain,PROFILE, DEFAULT));
-
-        operations.batch(new Batch().writeAttribute(serverGroupMain,"socket-binding-group","standard-sockets"));
-
-        operations.batch(new Batch().remove(Address.of(PROFILE,DEFAULT).and("subsystem","undertow").and("server","default-server").and("http-listener","default")));
-        operations.batch(new Batch().writeAttribute(serverGroupMain.and("jvm",DEFAULT),"heap-size", "256m"));
-        operations.batch(new Batch().writeAttribute(serverGroupMain.and("jvm",DEFAULT),"max-heap-size", "256m"));
-
+        operations.batch(new Batch().remove(Address.of(PROFILE,DEFAULT).and("subsystem","undertow").and("server","default-server").and("http-listener","default"))).assertSuccess();
+        operations.batch(new Batch().writeAttribute(serverGroupMain.and("jvm",DEFAULT),"heap-size", "256m")).assertSuccess();
+        operations.batch(new Batch().writeAttribute(serverGroupMain.and("jvm",DEFAULT),"max-heap-size", "256m")).assertSuccess();
         administration.reloadIfRequired();
 
     }
