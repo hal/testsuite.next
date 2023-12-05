@@ -30,7 +30,7 @@ public class ManagementOperationsPage extends BasePage {
         WebElement cancelButton = getRootContainer().findElement(cancelButtonSelector);
         cancelButton.click();
         console.confirmationDialog().confirm();
-        Graphene.waitGui().until().element(By.id(Ids.ACTIVE_OPERATION + "-" + operationId)).text().contains("Cancelled: true");
+        Graphene.waitGui().until().element(By.id(activeOperationId)).text().contains("Cancelled: true");
 
         return this;
     }
