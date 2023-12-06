@@ -84,9 +84,9 @@ public class TakeTourTest {
             .verifyNext(ACCESS_CONTROL_TITLE, "By default, EAP uses simple access controls",
                     finderPlace(NameTokens.ACCESS_CONTROL, null))
             .verifyNext(ACCESS_CONTROL_TITLE, "Add and assign roles to users and groups.",
-                    finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-" + "users")))
+                    finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-users")))
             .verifyNext(ACCESS_CONTROL_TITLE, "Manage the list of roles",
-                    finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-" + "roles")))
+                    finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-roles")))
             .verifyFinish();
         }
     }
@@ -128,9 +128,9 @@ public class TakeTourTest {
         .verifyNext(ACCESS_CONTROL_TITLE, "By default, EAP uses simple access controls",
                 finderPlace(NameTokens.ACCESS_CONTROL, null))
         .verifyNext(ACCESS_CONTROL_TITLE, "Add and assign roles to users and groups.",
-                finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, "users")))
+                finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-users")))
         .verifyNext(ACCESS_CONTROL_TITLE, "Manage the list of roles",
-                finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, "roles")))
+                finderPlace(NameTokens.ACCESS_CONTROL, new FinderPath().append(Ids.ACCESS_CONTROL_BROWSE_BY, Ids.ACCESS_CONTROL_BROWSE_BY + "-roles")))
         .verifyFinish();
     }
 

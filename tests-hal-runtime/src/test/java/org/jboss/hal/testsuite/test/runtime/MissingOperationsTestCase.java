@@ -39,7 +39,7 @@ public class MissingOperationsTestCase {
 
     private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
     private static final Operations operations = new Operations(client);
-    private static final String[] baseItems = {"View", "Destroy", "Kill", "Copy"};
+    private static final String[] baseItems = {"Destroy", "Kill", "Copy"};
     private static final String[] startedItems = {"Reload", "Restart", "Suspend", "Stop"};
     private static final String[] suspendedItems = {"Resume"};
     private static final String[] stoppedItems = {"Start", "Remove"};
