@@ -40,7 +40,7 @@ public class HeaderFragment {
     @FindBy(id = Ids.MESSAGES_LINK)
     private WebElement notifications;
 
-    @FindBy(id = Ids.BADEGE_ICON)
+    @FindBy(id = Ids.BADGE_ICON)
     private WebElement badgeIcon;
 
     @FindBy(css = "." + drawerPf + "." + drawerPfHal)
