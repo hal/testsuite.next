@@ -56,5 +56,10 @@ public abstract class BasePage extends AbstractPage {
     public void navigateAgain(String name, String value) {
         browser.navigate().refresh();
         navigate(name, value);
+        if (!console.verifyNoError()) {
+            // try again, the resource may be unavailable
+            browser.navigate().refresh();
+            navigate(name, value);
+        }
     }
 }

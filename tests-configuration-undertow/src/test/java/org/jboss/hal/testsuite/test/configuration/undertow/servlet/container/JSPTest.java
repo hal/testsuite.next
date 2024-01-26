@@ -18,12 +18,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 @RunWith(Arquillian.class)
@@ -62,11 +65,11 @@ public class JSPTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT));
-        operations.add(SERVLET_CONTAINER_EDIT_JSP_ADDRESS);
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_JSP_CREATE));
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_JSP_REMOVE));
-        operations.add(jspAddress(SERVLET_CONTAINER_JSP_REMOVE));
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT)).assertSuccess();
+        operations.add(SERVLET_CONTAINER_EDIT_JSP_ADDRESS).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_JSP_CREATE)).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_JSP_REMOVE)).assertSuccess();
+        operations.add(jspAddress(SERVLET_CONTAINER_JSP_REMOVE)).assertSuccess();
     }
 
     @AfterClass
@@ -79,6 +82,12 @@ public class JSPTest {
     @Test
     public void create() throws Exception {
         navigateToJSPForm(SERVLET_CONTAINER_JSP_CREATE);
+        try {
+            waitGui().until().element(By.id(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_JSP, "form-empty"))).is().visible();
+        } catch (TimeoutException ex) {
+            // ignore the intermittent exception and try again
+            navigateToJSPForm(SERVLET_CONTAINER_JSP_CREATE);
+        }
         crudOperations.createSingleton(jspAddress(SERVLET_CONTAINER_JSP_CREATE), page.getJspForm());
     }
 

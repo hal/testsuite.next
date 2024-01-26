@@ -42,6 +42,8 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
+
 @RunWith(Arquillian.class)
 public class SessionOperationsTest {
 
@@ -147,6 +149,7 @@ public class SessionOperationsTest {
 
     private void reloadSessions() {
         page.getSessionsTable().button("Reload").click();
+        waitGui().until().element(page.getSessionsTable().getRoot(), By.cssSelector("tr.odd")).is().visible();
     }
 
     @Test
@@ -212,7 +215,13 @@ public class SessionOperationsTest {
         String creationTime = selectedRowColumns.get(1).getText();
         Calendar creationTimeCalendar = Calendar.getInstance();
         creationTimeCalendar.setTimeInMillis(creationTimeInMillis);
-        Assert.assertEquals("Creation time should be matching", DATE_FORMAT.format(creationTimeCalendar.getTime()), creationTime);
+        try {
+            Assert.assertEquals("Creation time should be matching", DATE_FORMAT.format(creationTimeCalendar.getTime()), creationTime);
+        } catch (AssertionError e) {
+            // get rid of errors caused by delay when at the end of minute
+            creationTimeCalendar.add(Calendar.SECOND, 1);
+            Assert.assertEquals("Creation time should be matching", DATE_FORMAT.format(creationTimeCalendar.getTime()), creationTime);
+        }
         invalidateSession(sessionId);
     }
 
@@ -223,16 +232,21 @@ public class SessionOperationsTest {
         reloadSessions();
         String sessionId = getSessionsFromModel().get(0);
         page.getSessionsTable().select(sessionId);
-        long start = System.currentTimeMillis();
-        long end = start + TimeUnit.MINUTES.toMillis(1);
-        TimeUnit.MINUTES.sleep(1);
+        TimeUnit.SECONDS.sleep(5);
+        long accessTime = System.currentTimeMillis();
         deploymentBrowser.findElement(By.cssSelector("input[value=\"Increment\"")).click();
         reloadSessions();
         List<WebElement> selectedRowColumns = page.getSessionsTable().getRoot().findElements(By.cssSelector("tr.selected > td"));
         String lastAccessedTime = selectedRowColumns.get(2).getText();
         Calendar lastAccessedTimeCalendar = Calendar.getInstance();
-        lastAccessedTimeCalendar.setTimeInMillis(end);
-        Assert.assertEquals("Last accessed time should be matching", DATE_FORMAT.format(lastAccessedTimeCalendar.getTime()), lastAccessedTime);
+        lastAccessedTimeCalendar.setTimeInMillis(accessTime);
+        try {
+            Assert.assertEquals("Last accessed time should be matching", DATE_FORMAT.format(lastAccessedTimeCalendar.getTime()), lastAccessedTime);
+        } catch (AssertionError e) {
+            // get rid of errors caused by delay when at the end of minute
+            lastAccessedTimeCalendar.add(Calendar.SECOND, 1);
+            Assert.assertEquals("Last accessed time should be matching", DATE_FORMAT.format(lastAccessedTimeCalendar.getTime()), lastAccessedTime);
+        }
         invalidateSession(sessionId);
     }
 }

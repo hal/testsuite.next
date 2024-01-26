@@ -36,6 +36,7 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.experimental.categories.Category;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
@@ -43,6 +44,7 @@ import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static java.util.stream.Collectors.toList;
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.*;
 import static org.junit.Assert.assertArrayEquals;
 import static org.junit.Assert.assertFalse;
@@ -70,6 +72,7 @@ public class OpenPortsTest {
         FinderFragment finder = console.finder(NameTokens.RUNTIME);
         finder.column(Ids.STANDALONE_SERVER_COLUMN)
                 .selectItem(Ids.hostServer(Ids.STANDALONE_HOST, serverEnvironmentUtils.getServerHostName()));
+        waitGui().until().element(By.id("open-ports")).is().present();
         preview = finder.preview(ServerPreviewFragment.class);
     }
 

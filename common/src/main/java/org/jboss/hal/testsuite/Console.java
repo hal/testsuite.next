@@ -41,6 +41,7 @@ import org.jboss.hal.testsuite.fragment.finder.FinderSegment;
 import org.jboss.hal.testsuite.util.Library;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.StaleElementReferenceException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 
@@ -127,11 +128,18 @@ public class Console {
     /** Waits until all notifications are gone. */
     public void waitNoNotification() {
         List<WebElement> dismissibleNotifications = By.cssSelector(DOT + alertDismissable).findElements(browser);
-        for (WebElement notification : dismissibleNotifications) {
-            WebElement button = notification.findElement(By.cssSelector("button.close"));
-            if (button != null) {
-                button.click();
+        for (int remainingExpected = dismissibleNotifications.size(); !dismissibleNotifications.isEmpty()
+                && remainingExpected > 0; remainingExpected--) {
+
+            try {
+                WebElement button = dismissibleNotifications.get(0).findElement(By.cssSelector("button.close"));
+                if (button != null) {
+                    button.click();
+                }
+            } catch (StaleElementReferenceException ex) {
+                // Ignore the exception, the notification may be gone before clicking
             }
+            dismissibleNotifications = By.cssSelector(DOT + alertDismissable).findElements(browser);
         }
         waitModel().until().element(By.cssSelector(DOT + toastNotificationsListPf + ":empty")).is().present();
     }
@@ -152,7 +160,7 @@ public class Console {
     }
 
     private void verifyNotification(String css) {
-        waitModel().until() // use waitModel() since it might take some time until the notification is visible
+        waitModel().until() // use waitModel() since the notification might take some time until the notification is visible
                 .element(By.cssSelector(DOT + toastNotificationsListPf + " ." + css))
                 .is().visible();
     }

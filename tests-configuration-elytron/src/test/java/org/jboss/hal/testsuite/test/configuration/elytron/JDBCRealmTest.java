@@ -97,6 +97,7 @@ import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.SQL_UPDATE;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.SQL_UPDATE2;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.datasourceAddress;
 import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.jdbcRealmAddress;
+
 @RunWith(Arquillian.class)
 public class JDBCRealmTest {
 
@@ -628,9 +629,10 @@ public class JDBCRealmTest {
         TableFragment table = page.getPrincipalQueryTable();
         FormFragment form = page.getPrincipalQueryMcryptForm();
         table.bind(form);
+        jdbcTable.filter(JDBC_RLM_UPDATE);
         jdbcTable.action(JDBC_RLM_UPDATE, PQ_LABEL);
         waitGui().until().element(table.getRoot()).is().visible();
-        table.select(SQL_MCM_UPD);
+        table.filterAndSelect(SQL_MCM_UPD);
         page.getPrincipalQueryTabs().select(MCRYPT_MAPPER_TAB);
         long number = 23;
         ModelNode mapper = new ModelNode();

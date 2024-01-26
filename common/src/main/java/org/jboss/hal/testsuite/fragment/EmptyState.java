@@ -16,9 +16,11 @@
 package org.jboss.hal.testsuite.fragment;
 
 import org.jboss.arquillian.graphene.fragment.Root;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.resources.CSS.blankSlatePfMainAction;
 import static org.jboss.hal.resources.CSS.btnPrimary;
 
@@ -30,6 +32,7 @@ public class EmptyState {
 
     /** Clicks on the main action */
     public void mainAction() {
+        waitGui().until().element(root, By.cssSelector("." + blankSlatePfMainAction + " button." + btnPrimary)).is().visible();
         primaryButton.click();
     }
 

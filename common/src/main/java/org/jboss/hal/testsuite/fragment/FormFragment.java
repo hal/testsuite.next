@@ -26,6 +26,7 @@ import org.jboss.hal.testsuite.Console;
 import org.openqa.selenium.By;
 import org.openqa.selenium.ElementClickInterceptedException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -35,6 +36,7 @@ import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.createPageFragment;
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.*;
 import static org.jboss.hal.resources.UIConstants.MASK_CHARACTER;
 
@@ -148,8 +150,18 @@ public class FormFragment {
      * {@link #trySave()} instead.
      */
     public void save() {
-        console.scrollIntoView(saveButton).click();
-        waitGui().until().element(readOnlySection).is().visible();
+        try {
+            console.scrollIntoView(saveButton).click();
+        } catch (ElementClickInterceptedException ex) {
+            if (ex.getMessage().contains(autocompleteSuggestions)) {
+                // get rid of any open auto suggestions popup, which is interfering with the save button
+                saveButton.sendKeys(Keys.TAB);
+                waitGui().until().element(browser, ByJQuery
+                        .selector(DOT + autocompleteSuggestions + "[style*='display: none']")).is().present();
+                console.scrollIntoView(saveButton).click();
+            }
+        }
+        waitModel().until().element(readOnlySection).is().visible();
     }
 
     /**
@@ -168,6 +180,15 @@ public class FormFragment {
         waitGui().until().element(inputElement).value().equalTo("");
         inputElement.sendKeys(value);
         waitGui().until().element(inputElement).value().equalTo(value);
+
+        // get rid of any open auto suggestions popup, which might interfere with save or cancel buttons
+        if (!ByJQuery.selector(DOT + autocompleteSuggestions + "[style*='display: block']")
+                .findElements(browser).isEmpty()) {
+
+            inputElement.sendKeys(Keys.TAB);
+            waitGui().until().element(browser, ByJQuery
+                    .selector(DOT + autocompleteSuggestions + "[style*='display: none']")).is().present();
+        }
     }
 
     public void textByLabel(String labelContent, String value) {

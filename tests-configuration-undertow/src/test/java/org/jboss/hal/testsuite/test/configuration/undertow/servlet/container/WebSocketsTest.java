@@ -19,12 +19,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 @RunWith(Arquillian.class)
@@ -68,13 +71,13 @@ public class WebSocketsTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT));
-        operations.add(SERVLET_CONTAINER_EDIT_WEB_SOCKETS_ADDRESS);
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_WEB_SOCKETS_CREATE));
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_WEB_SOCKETS_REMOVE));
-        operations.add(webSocketsAddress(SERVLET_CONTAINER_WEB_SOCKETS_REMOVE));
-        operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED));
-        operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED));
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT)).assertSuccess();
+        operations.add(SERVLET_CONTAINER_EDIT_WEB_SOCKETS_ADDRESS).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_WEB_SOCKETS_CREATE)).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_WEB_SOCKETS_REMOVE)).assertSuccess();
+        operations.add(webSocketsAddress(SERVLET_CONTAINER_WEB_SOCKETS_REMOVE)).assertSuccess();
+        operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED)).assertSuccess();
+        operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED)).assertSuccess();
     }
 
     @AfterClass
@@ -89,6 +92,12 @@ public class WebSocketsTest {
     @Test
     public void create() throws Exception {
         navigateToWebSocketsForm(SERVLET_CONTAINER_WEB_SOCKETS_CREATE);
+        try {
+            waitGui().until().element(By.id(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_WEBSOCKET, "form-empty"))).is().visible();
+        } catch (TimeoutException ex) {
+            // ignore the intermittent exception and try again
+            navigateToWebSocketsForm(SERVLET_CONTAINER_WEB_SOCKETS_CREATE);
+        }
         crudOperations.createSingleton(webSocketsAddress(SERVLET_CONTAINER_WEB_SOCKETS_CREATE), page.getWebSocketsForm());
     }
 
@@ -117,7 +126,7 @@ public class WebSocketsTest {
     public void editDeflaterLevel() throws Exception {
         navigateToWebSocketsForm(SERVLET_CONTAINER_EDIT);
         crudOperations.update(SERVLET_CONTAINER_EDIT_WEB_SOCKETS_ADDRESS, page.getWebSocketsForm(), "deflater-level",
-            Random.number(0, 10));
+            Random.number(0, 9));
     }
 
     @Test

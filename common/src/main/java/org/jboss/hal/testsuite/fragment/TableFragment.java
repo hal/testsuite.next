@@ -28,6 +28,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
+import static org.jboss.arquillian.graphene.Graphene.waitModel;
 import static org.jboss.hal.resources.CSS.columnAction;
 import static org.jboss.hal.resources.CSS.halTableButtons;
 import static org.jboss.hal.testsuite.Selectors.contains;
@@ -91,6 +92,7 @@ public class TableFragment {
      */
     public void select(String value) {
         By selector = ByJQuery.selector("td" + contains(value));
+        waitModel().until().element(root, selector).is().present();
         goToPageWithElement(selector);
         WebElement rowElement = root.findElement(selector);
 
@@ -120,6 +122,7 @@ public class TableFragment {
     /** Clicks on the &lt;action&gt; column in the row which contains "&lt;value&gt;". */
     public void action(String value, String action) {
         By selector = ByJQuery.selector("td" + contains(value) + " ~ td button." + columnAction + contains(action));
+        waitModel().until().element(root, selector).is().present();
         goToPageWithElement(selector);
         root.findElement(selector).click();
     }

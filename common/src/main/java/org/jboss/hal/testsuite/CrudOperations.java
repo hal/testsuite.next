@@ -23,11 +23,14 @@ import org.jboss.dmr.ModelNode;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.creaper.ResourceVerifier;
 import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
+import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.openqa.selenium.TimeoutException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 /** Methods useful to test and verify CRUD operations in application views. */
@@ -76,7 +79,18 @@ public class CrudOperations {
     /** Adds a singleton resource using the main action of an empty state and the specified initial form values. */
     public void createSingleton(Address address, FormFragment form, Consumer<FormFragment> initialValues,
             VerifyChanges verifyChanges) throws Exception {
-        form.emptyState().mainAction();
+
+        try {
+            EmptyState emptyState = form.emptyState();
+            waitGui().until().element(emptyState.getRoot()).is().visible();
+            emptyState.mainAction();
+        } catch (TimeoutException ex) {
+            // try again to get rid of intermittent failures
+            EmptyState emptyState = form.emptyState();
+            waitGui().until().element(emptyState.getRoot()).is().visible();
+            emptyState.mainAction();
+        }
+
         if (initialValues != null) {
             AddResourceDialogFragment dialog = console.addResourceDialog();
             initialValues.accept(dialog.getForm()); // use the form of add resource dialog!
