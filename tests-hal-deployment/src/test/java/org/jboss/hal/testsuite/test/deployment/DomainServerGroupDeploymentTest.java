@@ -117,7 +117,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
     }
 
     @Test
-    public void undeployDeployment() throws Exception {
+    public void removeDeployment() throws Exception {
         Deployment deployment = createSimpleDeployment();
         client.apply(deployment.deployEnabledCommand(MAIN_SERVER_GROUP));
         new ResourceVerifier(deployment.getAddress(), client).verifyExists();
@@ -126,7 +126,7 @@ public class DomainServerGroupDeploymentTest extends AbstractDeploymentTest {
                 .verifyExists();
 
         deploymentPage.navigate();
-        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Undeploy").confirm();
+        deploymentPage.callActionOnDeploymentInServerGroup(MAIN_SERVER_GROUP, deployment.getName(), "Remove").confirm();
         deploymentInMainServerGroupVerifier.verifyDoesNotExist();
     }
 
