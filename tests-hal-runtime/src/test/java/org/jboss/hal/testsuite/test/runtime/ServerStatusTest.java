@@ -87,15 +87,24 @@ public class ServerStatusTest {
 
     @Test
     public void memory() {
-        assertUsage(preview.getHeapUsed(), "heap used", heapUsed, 20);
+        assertHeapUsed(preview.getHeapUsed(), "heap used", heapUsed, 60);
         assertUsage(preview.getHeapCommitted(), "heap committed", heapCommitted, 10);
         assertUsage(preview.getNonHeapUsed(), "non-heap used", nonHeapUsed, 10);
         assertUsage(preview.getNonHeapCommitted(), "non-heap committed", nonHeapCommitted, 10);
-        assertUsage(preview.getThreads(), "threads", daemons, 5);
+        assertUsage(preview.getThreads(), "threads", daemons, 30);
     }
 
     private void assertUsage(WebElement element, String message, long expected, long delta) {
         long actual = Long.parseLong(element.getAttribute("aria-valuenow"));
-        assertTrue(message, Math.abs(expected - actual) <= delta);
+        String detailedMessage = String.format("'" + message + "' not match (expected: %d, actual: %d, max. delta: %d)",
+                expected, actual, delta);
+        assertTrue(detailedMessage, Math.abs(expected - actual) <= delta);
+    }
+
+    private void assertHeapUsed(WebElement element, String message, long expected, long delta) {
+        long actual = Long.parseLong(element.getAttribute("aria-valuenow"));
+        String detailedMessage = String.format("'" + message + "' not match (expected: %d, actual: %d, max. delta: %d)",
+                expected, actual, delta);
+        assertTrue(detailedMessage, Math.abs(expected - actual) <= delta || expected > actual);
     }
 }

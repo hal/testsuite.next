@@ -51,9 +51,9 @@ public class Random {
         return JNDI_PREFIX + name;
     }
 
-    /** Returns a random integer between 0 and 99 */
+    /** Returns a random integer between 1 and 99 */
     public static int number() {
-        return RandomUtils.nextInt(0, 100);
+        return RandomUtils.nextInt(1, 100);
     }
 
     /** Returns a random double between 0.001 and 99.999 */

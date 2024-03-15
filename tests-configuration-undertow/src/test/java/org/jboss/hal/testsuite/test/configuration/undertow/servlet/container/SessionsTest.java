@@ -17,12 +17,15 @@ import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 
 @RunWith(Arquillian.class)
@@ -61,11 +64,11 @@ public class SessionsTest {
 
     @BeforeClass
     public static void setUp() throws IOException {
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT));
-        operations.add(SERVLET_CONTAINER_EDIT_SESSIONS_ADDRESS);
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_SESSIONS_CREATE));
-        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_SESSIONS_REMOVE));
-        operations.add(sessionsAddress(SERVLET_CONTAINER_SESSIONS_REMOVE));
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_EDIT)).assertSuccess();
+        operations.add(SERVLET_CONTAINER_EDIT_SESSIONS_ADDRESS).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_SESSIONS_CREATE)).assertSuccess();
+        operations.add(UndertowFixtures.servletContainerAddress(SERVLET_CONTAINER_SESSIONS_REMOVE)).assertSuccess();
+        operations.add(sessionsAddress(SERVLET_CONTAINER_SESSIONS_REMOVE)).assertSuccess();
     }
 
     @AfterClass
@@ -78,6 +81,12 @@ public class SessionsTest {
     @Test
     public void create() throws Exception {
         navigateToSessionsForm(SERVLET_CONTAINER_SESSIONS_CREATE);
+        try {
+            waitGui().until().element(By.id(Ids.build(Ids.UNDERTOW_SERVLET_CONTAINER_SESSION, "form-empty"))).is().visible();
+        } catch (TimeoutException ex) {
+            // ignore the intermittent exception and try again
+            navigateToSessionsForm(SERVLET_CONTAINER_SESSIONS_CREATE);
+        }
         crudOperations.createSingleton(sessionsAddress(SERVLET_CONTAINER_SESSIONS_CREATE), page.getSessionsForm());
     }
 

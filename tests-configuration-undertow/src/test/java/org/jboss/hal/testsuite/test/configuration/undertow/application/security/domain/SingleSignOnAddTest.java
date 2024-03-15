@@ -50,13 +50,13 @@ public class SingleSignOnAddTest {
     @BeforeClass
     public static void setUp() throws IOException {
         operations.add(httpAuthenticationFactoryAddress(HTTP_AUTH_CREATE),
-                Values.of(HTTP_SERVER_MECH_FACTORY, "global").and(SECURITY_DOMAIN, "ApplicationDomain"));
+                Values.of(HTTP_SERVER_MECH_FACTORY, "global").and(SECURITY_DOMAIN, "ApplicationDomain")).assertSuccess();
         operations.add(applicationSecurityDomain(APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED2),
-            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, HTTP_AUTH_CREATE));
+            Values.of(ApplicationSecurityDomainFixtures.HTTP_AUTHENTICATION_FACTORY, HTTP_AUTH_CREATE)).assertSuccess();
         operations.add(ElytronFixtures.keyStoreAddress(KEY_STORE_TO_BE_ADDED),
             Values.of(TYPE, ElytronFixtures.JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, new ModelNodeGenerator.ModelNodePropertiesBuilder()
-                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build()));
+                    .addProperty(ElytronFixtures.CREDENTIAL_REFERENCE_CLEAR_TEXT, Random.name()).build())).assertSuccess();
     }
 
     @AfterClass
