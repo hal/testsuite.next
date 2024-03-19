@@ -5,6 +5,7 @@ import java.io.IOException;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.CrudOperations;
 import org.jboss.hal.testsuite.Random;
 import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
@@ -19,11 +20,14 @@ import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.MethodSorters;
+import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
+import static org.jboss.arquillian.graphene.Graphene.waitGui;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.SECURITY_DOMAIN;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.TYPE;
@@ -69,6 +73,12 @@ public class SingleSignOnAddTest {
     @Test
     public void create() throws Exception {
         page.navigate(NAME, APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED2);
+        try {
+            waitGui().until().element(By.id(Ids.UNDERTOW_APP_SECURITY_DOMAIN_TAB)).is().visible();
+        } catch (TimeoutException ex) {
+            // ignore the intermittent exception and try again
+            page.navigate(NAME, APPLICATION_SECURITY_DOMAIN_TO_BE_TESTED2);
+        }
         String keyAlias = Random.name();
         String clearTextValue = Random.name();
         crudOperations.createSingleton(
