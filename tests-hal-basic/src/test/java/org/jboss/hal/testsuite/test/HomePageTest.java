@@ -50,7 +50,7 @@ public class HomePageTest {
     public void topLevelCategories() {
         HeaderFragment header = console.header();
         List<WebElement> topLevelCategories = header.getTopLevelCategories();
-        assertEquals(6, topLevelCategories.size());
+        assertEquals(5, topLevelCategories.size());
         assertEquals(Ids.TLC_HOMEPAGE, header.getSelectedTopLevelCategory().getAttribute("id"));
 
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_HOMEPAGE));
