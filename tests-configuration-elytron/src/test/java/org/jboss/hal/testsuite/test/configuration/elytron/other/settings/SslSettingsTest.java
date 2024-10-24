@@ -371,7 +371,7 @@ public class SslSettingsTest extends AbstractOtherSettingsTest {
         waitGui().until().element(table.getRoot()).is().visible();
 
         try {
-            crud.createWithErrorAndCancelDialog(table, f -> f.text("role-decoder", ANY_STRING), REALM);
+            crud.createWithErrorAndCancelDialog(table, f -> f.text(REALM, ""), REALM);
         } finally {
             // getting rid of action selection
             page.getSecurityDomainPages().breadcrumb().getBackToMainPage();
