@@ -176,7 +176,7 @@ public class SslSettingsTest extends AbstractOtherSettingsTest {
         crud.create(keyManagerAddress(KEY_MAN_CREATE), table, f -> {
             f.text(NAME, KEY_MAN_CREATE);
             f.text(KEY_STORE, KEY_ST_UPDATE);
-            f.text(CLEAR_TEXT, ANY_STRING);
+            f.text(CREDENTIAL_REFERENCE + CLEAR_TEXT, ANY_STRING);
         });
     }
 
