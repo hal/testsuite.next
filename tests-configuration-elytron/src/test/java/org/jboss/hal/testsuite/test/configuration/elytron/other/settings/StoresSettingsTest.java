@@ -91,7 +91,7 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
             f.text(NAME, CRED_ST_CREATE);
             f.text(PATH, ANY_STRING);
             f.flip(CREATE, true);
-            f.text(CLEAR_TEXT, ANY_STRING);
+            f.text(CREDENTIAL_REFERENCE + CLEAR_TEXT, ANY_STRING);
         });
     }
 
@@ -103,7 +103,7 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
         crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, CRED_ST_CREATE);
             f.flip(CREATE, true);
-        }, CLEAR_TEXT);
+        }, CREDENTIAL_REFERENCE + CLEAR_TEXT);
     }
 
     @Test
@@ -191,7 +191,7 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
         crud.create(keyStoreAddress(KEY_ST_CREATE), table, f -> {
             f.text(NAME, KEY_ST_CREATE);
             f.text(TYPE, JKS);
-            f.text(CLEAR_TEXT, ANY_STRING);
+            f.text(CREDENTIAL_REFERENCE + CLEAR_TEXT, ANY_STRING);
         });
     }
 
@@ -200,7 +200,7 @@ public class StoresSettingsTest extends AbstractOtherSettingsTest {
         console.verticalNavigation().selectSecondary(STORES_ITEM, KEY_STORE_ITEM);
         TableFragment table = page.getKeyStoreTable();
 
-        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), CLEAR_TEXT);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, KEY_ST_CREATE), CREDENTIAL_REFERENCE + CLEAR_TEXT);
     }
 
     @Test

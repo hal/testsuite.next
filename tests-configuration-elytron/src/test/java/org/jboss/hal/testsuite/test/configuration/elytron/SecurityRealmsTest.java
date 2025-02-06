@@ -532,8 +532,8 @@ public class SecurityRealmsTest {
 
         crud.create(propertiesRealmAddress(PROP_RLM_CREATE), table, f -> {
             f.text(NAME, PROP_RLM_CREATE);
-            f.text(PATH, APP_USERS_PROPS);
-            f.text(RELATIVE_TO, JBOSS_SRV_CONFIG_DIR);
+            f.text(USERS_PROPERTIES + PATH, APP_USERS_PROPS);
+            f.text(USERS_PROPERTIES + RELATIVE_TO, JBOSS_SRV_CONFIG_DIR);
         });
     }
 
@@ -541,7 +541,7 @@ public class SecurityRealmsTest {
     public void propertiesRealmTryCreate() throws Exception {
         console.verticalNavigation().selectSecondary(SECURITY_REALM_ITEM, PROPERTIES_REALM_ITEM);
         TableFragment table = page.getPropertiesRealmTable();
-        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, PROP_RLM_CREATE), PATH);
+        crud.createWithErrorAndCancelDialog(table, f -> f.text(NAME, PROP_RLM_CREATE), USERS_PROPERTIES + PATH);
     }
 
     @Test

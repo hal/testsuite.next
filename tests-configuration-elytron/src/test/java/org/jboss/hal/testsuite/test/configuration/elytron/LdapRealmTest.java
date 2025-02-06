@@ -177,7 +177,7 @@ public class LdapRealmTest {
         crud.create(ldapRealmAddress(LDAP_RLM_CREATE), table, f -> {
             f.text(NAME, LDAP_RLM_CREATE);
             f.text(DIR_CONTEXT, DIR_UPDATE);
-            f.text(RDN_IDENTIFIER, ANY_STRING);
+            f.text(IDENTITY_MAPPING + RDN_IDENTIFIER, ANY_STRING);
         });
     }
 
@@ -187,7 +187,7 @@ public class LdapRealmTest {
         TableFragment table = page.getLdapRealmTable();
         crud.createWithErrorAndCancelDialog(table, f -> {
             f.text(NAME, LDAP_RLM_CREATE);
-            f.text(RDN_IDENTIFIER, ANY_STRING);
+            f.text(IDENTITY_MAPPING + RDN_IDENTIFIER, ANY_STRING);
         }, DIR_CONTEXT);
     }
 
