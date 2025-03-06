@@ -67,6 +67,7 @@ import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.KEY_DN_ORGA
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.KEY_STORE_NAME;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.KEY_STORE_PASSWORD;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.KEY_STORE_PATH;
+import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.KEY_STORE_RELATIVE_TO;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.NOT_REQUESTED;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.PASS;
 import static org.jboss.hal.testsuite.fixtures.ManagementSslFixtures.SSL_SESSION_CACHE_SIZE;
@@ -234,6 +235,7 @@ public class HTTPSListenerSSLTest {
             keyStoreNameValue = Ids.build(KEY_STORE, NAME, Random.name()),
             keyStorePasswordValue = Ids.build(KEY_STORE, PASS, Random.name()),
             keyStorePathValue = Ids.build(KEY_STORE, PATH, Random.name()),
+            keyStoreRelativeToValue = "jboss.server.config.dir",
             keyAliasValue = Ids.build(KEY_ALIAS, Random.name()),
             keyManagerValue = Ids.build(KEY_MANAGER, Random.name()),
             caaName = Ids.build(CERTIFICATE_AUTHORITY_ACCOUNT, Random.name()),
@@ -265,6 +267,7 @@ public class HTTPSListenerSSLTest {
                 .editTextFiringExtraChangeEvent(KEY_STORE_NAME, keyStoreNameValue)
                 .editTextFiringExtraChangeEvent(KEY_STORE_PASSWORD, keyStorePasswordValue)
                 .editTextFiringExtraChangeEvent(KEY_STORE_PATH, keyStorePathValue)
+                .editTextFiringExtraChangeEvent(KEY_STORE_RELATIVE_TO, keyStoreRelativeToValue)
                 .editTextFiringExtraChangeEvent(KEY_ALIAS, keyAliasValue)
                 .editTextFiringExtraChangeEvent(KEY_MANAGER, keyManagerValue)
                 .editTextFiringExtraChangeEvent(SERVER_SSL_CONTEXT, serverSslContextValue)

@@ -74,6 +74,7 @@ public class KeyStoreTest {
     private static final String EXPORTED_CERT_FILENAME = "exported-" + Random.name() + ".cer";
     private static final String EXPORTED_CERT_FILENAME2 = "exported2-" + Random.name() + ".cer";
     private static final String EXPORTED_CSR_FILENAME = "exported-csr-" + Random.name() + ".cer";
+    private static final String RELATIVE_TO_CONFIG_DIR = "jboss.server.config.dir";
 
     private static final String AGREE_TO_TERMS_OF_SERVICE = "agree-to-terms-of-service";
     private static final String STAGING = "staging";
@@ -88,7 +89,7 @@ public class KeyStoreTest {
         operations.add(keyStoreAddress(KEY_STORE_NAME), Values.of(ModelDescriptionConstants.TYPE, JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
                 .and(ModelDescriptionConstants.PATH, Random.name())
-                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir")).assertSuccess();
+                .and(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR)).assertSuccess();
         // add a certificate-authority-account
         operations.add(certificateAuthorityAccountAddress(CERTIFICATE_AUTHORITY_ACCOUNT_UPDATE),
                 Values.of(ElytronFixtures.CREDENTIAL_REFERENCE_ALIAS, Random.name())
@@ -98,7 +99,7 @@ public class KeyStoreTest {
         operations.add(keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.TYPE, JKS)
                 .and(ElytronFixtures.CREDENTIAL_REFERENCE, credentialReference)
                 .and(ModelDescriptionConstants.PATH, Random.name())
-                .and(ModelDescriptionConstants.RELATIVE_TO, "jboss.server.config.dir")).assertSuccess();
+                .and(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.GENERATE_KEY_PAIR, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_RENAME)
                 .and(ModelDescriptionConstants.DISTINGUISHED_NAME, "cn=selfsigned")
                 .and(SIGNATURE_ALGORITHM, SHA_256_WITH_RSA)
@@ -117,7 +118,8 @@ public class KeyStoreTest {
                 .and(ModelDescriptionConstants.ALGORITHM, RSA)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.STORE, keyStoreAddress(KEY_STORE_NAME2)).assertSuccess();
         operations.invoke(ModelDescriptionConstants.EXPORT_CERTIFICATE, keyStoreAddress(KEY_STORE_NAME2), Values.of(ModelDescriptionConstants.ALIAS, ALIAS_TO_RENAME)
-                .and(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME)).assertSuccess();
+                .and(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME)
+                .and(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR)).assertSuccess();
     }
 
     @AfterClass
@@ -252,6 +254,7 @@ public class KeyStoreTest {
         AddResourceDialogFragment dialog = console.addResourceDialog();
         dialog.getForm().text(ModelDescriptionConstants.ALIAS, ALIAS_IMPORTED);
         dialog.getForm().text(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME);
+        dialog.getForm().text(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR);
         dialog.getForm().flip(ModelDescriptionConstants.TRUST_CACERTS, true);
         dialog.getForm().flip(ModelDescriptionConstants.VALIDATE, false);
         dialog.getPrimaryButton().click();
@@ -311,6 +314,7 @@ public class KeyStoreTest {
 
         AddResourceDialogFragment dialog = console.addResourceDialog();
         dialog.getForm().text(ModelDescriptionConstants.PATH, EXPORTED_CERT_FILENAME2);
+        dialog.getForm().text(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR);
         dialog.getPrimaryButton().click();
         console.verifySuccess();
     }
@@ -341,6 +345,7 @@ public class KeyStoreTest {
 
         AddResourceDialogFragment dialog = console.addResourceDialog();
         dialog.getForm().text(ModelDescriptionConstants.PATH, EXPORTED_CSR_FILENAME);
+        dialog.getForm().text(ModelDescriptionConstants.RELATIVE_TO, RELATIVE_TO_CONFIG_DIR);
         dialog.getPrimaryButton().click();
         console.verifySuccess();
     }

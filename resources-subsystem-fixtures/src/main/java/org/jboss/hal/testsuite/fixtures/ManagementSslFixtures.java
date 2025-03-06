@@ -7,6 +7,7 @@ import static org.jboss.hal.dmr.ModelDescriptionConstants.CREDENTIAL_REFERENCE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.KEY_STORE;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.dmr.ModelDescriptionConstants.PATH;
+import static org.jboss.hal.dmr.ModelDescriptionConstants.RELATIVE_TO;
 
 public final class ManagementSslFixtures {
 
@@ -14,6 +15,7 @@ public final class ManagementSslFixtures {
         KEY_STORE_NAME = Ids.build(KEY_STORE, NAME),
         KEY_STORE_PASSWORD = Ids.build(KEY_STORE, "password"),
         KEY_STORE_PATH = Ids.build(KEY_STORE, PATH),
+        KEY_STORE_RELATIVE_TO = Ids.build(KEY_STORE, RELATIVE_TO),
         KEY_DN_ORGANIZATION = "key-dn-organization",
         HAL = "HAL",
         CREDENTIAL_REFERENCE_CLEAR_TEXT_ATTR = CREDENTIAL_REFERENCE + "." + CLEAR_TEXT,
