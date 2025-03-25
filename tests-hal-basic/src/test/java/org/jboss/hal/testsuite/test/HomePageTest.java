@@ -15,6 +15,7 @@
  */
 package org.jboss.hal.testsuite.test;
 
+import java.io.IOException;
 import java.util.List;
 
 import org.jboss.arquillian.core.api.annotation.Inject;
@@ -23,13 +24,17 @@ import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
+import org.jboss.hal.testsuite.creaper.ManagementClientProvider;
 import org.jboss.hal.testsuite.fragment.HeaderFragment;
 import org.jboss.hal.testsuite.page.HomePage;
+import org.jboss.hal.testsuite.util.ServerEnvironmentUtils;
+import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
+import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
 
 import static org.jboss.hal.testsuite.Selectors.contains;
 import static org.junit.Assert.assertEquals;
@@ -37,6 +42,9 @@ import static org.junit.Assert.assertTrue;
 
 @RunWith(Arquillian.class)
 public class HomePageTest {
+
+    private static final OnlineManagementClient client = ManagementClientProvider.createOnlineManagementClient();
+    private static final ServerEnvironmentUtils serverEnvironmentUtils = new ServerEnvironmentUtils(client);
 
     @Page private HomePage page;
     @Inject private Console console;
@@ -46,18 +54,26 @@ public class HomePageTest {
         page.navigate();
     }
 
+    @AfterClass
+    public static void cleanUp() throws IOException {
+        client.close();
+    }
+
     @Test
     public void topLevelCategories() {
         HeaderFragment header = console.header();
         List<WebElement> topLevelCategories = header.getTopLevelCategories();
-        assertEquals(5, topLevelCategories.size());
+        assertEquals(serverEnvironmentUtils.isEAP() ? 6 : 5, topLevelCategories.size());
         assertEquals(Ids.TLC_HOMEPAGE, header.getSelectedTopLevelCategory().getAttribute("id"));
 
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_HOMEPAGE));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_DEPLOYMENTS));
+        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_CONFIGURATION));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_RUNTIME));
         assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_ACCESS_CONTROL));
-        assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_CONFIGURATION));
+        if (serverEnvironmentUtils.isEAP()) {
+            assertTrue(containsTopLevelCategory(topLevelCategories, Ids.TLC_UPDATE_MANAGER));
+        }
     }
 
     @Test
@@ -66,6 +82,9 @@ public class HomePageTest {
         assertTrue(containsModule("Configuration"));
         assertTrue(containsModule("Runtime"));
         assertTrue(containsModule("Access Control"));
+        if (serverEnvironmentUtils.isEAP()) {
+            assertTrue(containsModule("Update Manager"));
+        }
 
         By selector = ByJQuery.selector(".eap-home-module-header > h2" + contains("Need Help?"));
         assertTrue(page.getRootContainer().findElement(selector).isDisplayed());

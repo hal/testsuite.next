@@ -18,4 +18,12 @@ public class ServerEnvironmentUtils {
     public String getServerHostName() throws IOException {
         return operations.readAttribute(SERVER_ENVIRONMENT_ADDRESS, "host-name").stringValue();
     }
+
+    public boolean isEAP() {
+        try {
+            return operations.readAttribute(Address.root(), "product-name").stringValue().contains("EAP");
+        } catch (IOException ex) {
+            throw new IllegalStateException("Unable to read product-name from server CLI", ex);
+        }
+    }
 }
