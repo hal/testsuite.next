@@ -122,6 +122,8 @@ public class MissingOperationsTestCase {
                 missingItems.append(menuItem);
             }
         }
+        // start servers back again to keep original conditions for other test cases
+        changeStatusStart();
         Assert.assertTrue("Menu should contains values " + missingItems.toString() + ". See HAL-1582.", missingItems.toString().isEmpty());
     }
 
@@ -136,6 +138,15 @@ public class MissingOperationsTestCase {
         verifyServersAreInState(Arrays.asList(SERVERS_IN_SERVER_GROUP), STOPPED, 15000);
     }
 
+    private void changeStatusStart() {
+        console.finder(NameTokens.RUNTIME, SERVER_GROUP_FINDER_PATH)
+                .column(Ids.SERVER_GROUP)
+                .selectItem(SERVER_GROUP)
+                .dropdown()
+                .click("Start");
+        console.verifySuccess();
+        verifyServersAreInState(Arrays.asList(SERVERS_IN_SERVER_GROUP), RUNNING, 20000);
+    }
 
     private void verifyServersAreInState(Collection<String> servers, String state, int timeout) {
         servers.parallelStream().forEach(server -> {
