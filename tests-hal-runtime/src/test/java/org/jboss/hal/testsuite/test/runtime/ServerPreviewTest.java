@@ -35,6 +35,7 @@ public class ServerPreviewTest {
     private static final String EDIT_URL_LABEL = "Edit URL";
     private static final String CUSTOM_URL_ICON_CLASS = "fa-external-link";
     private static final String DEFAULT_URL_ICON_CLASS = "pficon-server";
+    private static final String RESET_BTN_ID = "server-url-form-server-url-form-reset";
 
     @AfterClass
     public static void cleanUp() throws IOException {
@@ -50,19 +51,23 @@ public class ServerPreviewTest {
 
     @Test
     public void editUrl() throws IOException {
-        String url = Random.name();
+        String host = Random.name();
         FinderFragment fragment = getMainAttributesFinder();
-        editUrlInFinder(url, fragment);
+        resetUrlInFinder(fragment);
+        editHostInFinder(host, fragment);
         ServerPreviewFragment serverPreviewFragment = fragment.preview(ServerPreviewFragment.class);
-        Assert.assertEquals("\"URL\" field contains value set by test",
-            serverPreviewFragment.getUrlAttributeItem().getValueElement().getText(), url);
+        Assert.assertTrue("\"URL\" field contains value set by test",
+            serverPreviewFragment.getUrlAttributeItem().getValueElement().getText().contains(host));
     }
 
     @Test
     public void editUrlAndVerifyIsClickable() throws IOException {
-        String url = String.format("http://localhost:%d", AvailablePortFinder.getNextAvailableTCPPort());
+        String host = "localhost";
+        int port = AvailablePortFinder.getNextAvailableTCPPort();
+        String url = String.format("https://%s:%d", host, port);
         FinderFragment fragment = getMainAttributesFinder();
-        editUrlInFinder(url, fragment);
+        resetUrlInFinder(fragment);
+        editUrlInFinder("https", host, port, fragment);
         fragment.preview(ServerPreviewFragment.class).getUrlAttributeItem().getValueElement()
             .findElement(By.partialLinkText(url)).click();
         verifyBrowserRedirected(url, "Browser should be redirected after clicking on the \"URL\" attribute");
@@ -73,25 +78,14 @@ public class ServerPreviewTest {
         FinderFragment fragment = getMainAttributesFinder();
         selectServer(fragment);
         ServerPreviewFragment serverPreviewFragment = fragment.preview(ServerPreviewFragment.class);
-        String className = serverPreviewFragment.getUrlAttributeItem().getValueElement()
-            .findElement(ByJQuery.selector("span > span"))
-            .getAttribute("class");
-        if (className.contains(DEFAULT_URL_ICON_CLASS)) {
-            editUrlInFinder(Random.name(), fragment);
-            verifyIconClass(serverPreviewFragment, CUSTOM_URL_ICON_CLASS,
-                "Icon for the URL should be custom");
-        } else if (className.contains(CUSTOM_URL_ICON_CLASS)) {
-            editUrlInFinder("", fragment);
-            verifyIconClass(serverPreviewFragment, DEFAULT_URL_ICON_CLASS,
-                "Icon for the URL should be the one provided by model");
-        } else {
-            Assert.fail("Unrecognised icon class");
-        }
-    }
 
-    @Test
-    public void openPorts() {
-        ServerPreviewFragment preview = getMainAttributesFinder().preview(ServerPreviewFragment.class);
+        resetUrlInFinder(fragment);
+        editHostInFinder(Random.name(), fragment);
+        verifyIconClass(serverPreviewFragment, CUSTOM_URL_ICON_CLASS,
+            "Icon for the URL should be custom");
+        resetUrlInFinder(fragment);
+        verifyIconClass(serverPreviewFragment, DEFAULT_URL_ICON_CLASS,
+            "Icon for the URL should be the one provided by model");
     }
 
     private void verifyIconClass(ServerPreviewFragment serverPreviewFragment, String iconClass, String assertMessage) {
@@ -133,10 +127,25 @@ public class ServerPreviewTest {
         }
     }
 
-    private void editUrlInFinder(String url, FinderFragment fragment) throws IOException {
+    private void editUrlInFinder(String scheme, String host, int port, FinderFragment fragment) throws IOException {
         selectServer(fragment).dropdown().click(EDIT_URL_LABEL);
         AddResourceDialogFragment editURLDialog = console.addResourceDialog();
-        editURLDialog.getForm().text("url", url);
+        editURLDialog.getForm().select("scheme", scheme);
+        editURLDialog.getForm().text("host", host);
+        editURLDialog.getForm().number("port", port);
         editURLDialog.add();
+    }
+
+    private void editHostInFinder(String host, FinderFragment fragment) throws IOException {
+        selectServer(fragment).dropdown().click(EDIT_URL_LABEL);
+        AddResourceDialogFragment editURLDialog = console.addResourceDialog();
+        editURLDialog.getForm().text("host", host);
+        editURLDialog.add();
+    }
+
+    private void resetUrlInFinder(FinderFragment fragment) throws IOException {
+        selectServer(fragment).dropdown().click(EDIT_URL_LABEL);
+        AddResourceDialogFragment editURLDialog = console.addResourceDialog();
+        editURLDialog.getRoot().findElement(By.id(RESET_BTN_ID)).click();
     }
 }
