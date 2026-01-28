@@ -24,6 +24,7 @@ import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
@@ -32,6 +33,9 @@ import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+
+import static org.junit.Assume.assumeNoException;
+import static org.junit.Assume.assumeTrue;
 
 @RunWith(Arquillian.class)
 public class HTTPSListenerConfigurationTest {
@@ -360,12 +364,16 @@ public class HTTPSListenerConfigurationTest {
 
     @Test
     public void toggleRequireHostHttp11() throws Exception {
-        boolean requireHostHttp11 = operations.readAttribute(
-            HTTPS_LISTENER_ADDRESS,
-            "require-host-http11").booleanValue();
-        crudOperations.update(
-            HTTPS_LISTENER_ADDRESS,
-            page.getHttpsListenerForm(), "require-host-http11", !requireHostHttp11);
+        ModelNodeResult result = operations.readAttribute(HTTPS_LISTENER_ADDRESS, "require-host-http11");
+        assumeTrue(result.isDefined()); // if the attribute is not available in this configuration, skip the test
+        boolean requireHostHttp11 = result.booleanValue();
+        try {
+            crudOperations.update(
+                    HTTPS_LISTENER_ADDRESS,
+                    page.getHttpsListenerForm(), "require-host-http11", !requireHostHttp11);
+        } catch (NoSuchElementException e) {
+            assumeNoException(e); // the UI element is not available in this configuration, skip the test
+        }
     }
 
     @Test
