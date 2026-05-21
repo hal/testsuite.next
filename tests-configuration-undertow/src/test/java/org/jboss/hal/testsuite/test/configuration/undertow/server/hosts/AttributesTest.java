@@ -111,7 +111,8 @@ public class AttributesTest {
     public void toggleQueueRequestsOnStart() throws Exception {
         String attrName = "queue-requests-on-start";
         FormFragment form = page.getHostsForm();
-        boolean originalValue = operations.readAttribute(UNDERTOW_DEFAULT_HOST_ADDRESS, attrName).booleanValue();
+        // Boolean attributes with undefined default value and undefined value are displayed as false by default
+        boolean originalValue = operations.readAttribute(UNDERTOW_DEFAULT_HOST_ADDRESS, attrName).booleanValue(false);
         assertEquals("The '" + attrName + "' value presented in the form differs from the one in model.",
                 originalValue, Boolean.valueOf(form.value(attrName)));
         crudOperations.update(UNDERTOW_DEFAULT_HOST_ADDRESS, form, attrName, !originalValue);
