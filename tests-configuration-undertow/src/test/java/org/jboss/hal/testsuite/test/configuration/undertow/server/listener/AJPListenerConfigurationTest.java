@@ -2,11 +2,13 @@ package org.jboss.hal.testsuite.test.configuration.undertow.server.listener;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.concurrent.TimeoutException;
 
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jboss.arquillian.core.api.annotation.Inject;
 import org.jboss.arquillian.graphene.page.Page;
 import org.jboss.arquillian.junit.Arquillian;
+import org.jboss.dmr.ModelNode;
 import org.jboss.hal.resources.Ids;
 import org.jboss.hal.testsuite.Console;
 import org.jboss.hal.testsuite.CrudOperations;
@@ -25,9 +27,11 @@ import org.junit.runner.RunWith;
 import org.wildfly.extras.creaper.core.CommandFailedException;
 import org.wildfly.extras.creaper.core.online.ModelNodeResult;
 import org.wildfly.extras.creaper.core.online.OnlineManagementClient;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.OperationException;
 import org.wildfly.extras.creaper.core.online.operations.Operations;
 import org.wildfly.extras.creaper.core.online.operations.Values;
+import org.wildfly.extras.creaper.core.online.operations.admin.Administration;
 
 import static org.jboss.hal.dmr.ModelDescriptionConstants.NAME;
 import static org.jboss.hal.testsuite.fixtures.undertow.UndertowFixtures.serverAddress;
@@ -68,15 +72,19 @@ public class AJPListenerConfigurationTest {
     private static final String WORKER_TO_BE_EDITED = "worker-to-be-edited-" + RandomStringUtils.randomAlphanumeric(7);
 
     @BeforeClass
-    public static void setUp() throws IOException, CommandFailedException {
+    public static void setUp() throws IOException, CommandFailedException, InterruptedException, TimeoutException {
         operations.add(IOFixtures.bufferPoolAddress(BUFFER_POOL_TO_BE_EDITED)).assertSuccess();
         operations.add(IOFixtures.workerAddress(WORKER_TO_BE_EDITED)).assertSuccess();
         operations.add(serverAddress(UNDERTOW_SERVER_TO_BE_TESTED)).assertSuccess();
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING));
         client.apply(new AddLocalSocketBinding(SOCKET_BINDING_TO_BE_EDITED));
         client.apply(new AddLocalSocketBinding(SOCKET_REDIRECT_TO_BE_EDITED));
+        // Adjusting REQUIRE_AJP_SECRET to satisfy the CVE-2026-15554 fix, see https://access.redhat.com/solutions/7146626
+        operations.add(Address.of("system-property", "io.undertow.ajp.REQUIRE_AJP_SECRET"),
+                Values.of("value", ModelNode.FALSE)).assertSuccess();
+        new Administration(client).restart();
         operations.add(serverAddress(UNDERTOW_SERVER_TO_BE_TESTED).and("ajp-listener", AJP_LISTENER_TO_BE_EDITED),
-            Values.of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref")).assertSuccess();
+                Values.of("socket-binding", SOCKET_BINDING.toLowerCase() + "ref")).assertSuccess();
     }
 
     @AfterClass
