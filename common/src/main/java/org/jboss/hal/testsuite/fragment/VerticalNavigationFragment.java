@@ -38,7 +38,13 @@ public class VerticalNavigationFragment {
     public void selectSecondary(String primaryId, String secondaryId) {
         WebElement primaryMenuItem = root.findElement(By.cssSelector("#" + primaryId + " > a"));
         new Actions(browser).moveToElement(primaryMenuItem).perform();
-        waitGui().until().element(By.id(primaryId + "-secondary")).is().visible();
+        try {
+            waitGui().until().element(By.id(primaryId + "-secondary")).is().visible();
+        } catch (org.openqa.selenium.TimeoutException e) {
+            // try click when hower does not work
+            primaryMenuItem.click();
+            waitGui().until().element(By.id(primaryId + "-secondary")).is().visible();
+        }
         selectItem(secondaryId);
     }
 
