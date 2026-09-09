@@ -144,7 +144,9 @@ public class DisconnectedHostsTest {
                 .mapToLong(event -> event.get(TIMESTAMP).asLong()).max().getAsLong();
         LocalDateTime ldt = LocalDateTime.ofInstant(Instant.ofEpochMilli(maxTimestamp),
                 ZoneId.systemDefault());
-        return ldt.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)) + ", "
+        String formatted = ldt.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM)) + ", "
                 + ldt.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.MEDIUM));
+        // Normalize narrow no-break space (U+202F) used by newer JDK locale data before AM/PM
+        return formatted.replace('\u202F', ' ');
     }
 }
