@@ -14,27 +14,32 @@ public class TestsuiteEnvironmentUtils {
     }
 
     static {
-        boolean found;
-        try (InputStream inputStream = TestsuiteEnvironmentUtils.class.getResourceAsStream("/testsuite.properties")) {
-            properties.load(inputStream);
-            found = true;
-        } catch (IOException e) {
+        InputStream inputStream = TestsuiteEnvironmentUtils.class.getResourceAsStream("/testsuite.properties");
+        if (inputStream != null) {
+            try (InputStream is = inputStream) {
+                properties.load(is);
+            } catch (IOException e) {
+                throw new RuntimeException("Unable to load testsuite.properties", e);
+            }
+        } else {
             String customPropertyLocation = System.getProperty("testsuite.config.location");
             if (customPropertyLocation != null) {
-                try {
-                    try (InputStream customConfig = new FileInputStream(customPropertyLocation)) {
-                        properties.load(customConfig);
-                        found = true;
-                    }
-                } catch (IOException e2) {
-                    throw new RuntimeException("Unable to load testsuite.properties", e);
+                try (InputStream customConfig = new FileInputStream(customPropertyLocation)) {
+                    properties.load(customConfig);
+                } catch (IOException e) {
+                    throw new RuntimeException("Unable to load testsuite.properties from " + customPropertyLocation, e);
                 }
             } else {
                 String jbossHome = System.getProperty(JBOSS_HOME);
+                if (jbossHome == null) {
+                    jbossHome = System.getenv(JBOSS_HOME);
+                }
                 if (jbossHome != null) {
                     properties.put(JBOSS_HOME, jbossHome);
                 } else {
-                    throw new RuntimeException("Unable to load JBOSS_HOME parameter from either testsuite.properties or as a parameter. Specify as a command line parameter.");
+                    throw new RuntimeException("Unable to load JBOSS_HOME from either testsuite.properties, "
+                            + "system property, or environment variable. "
+                            + "Specify via -DJBOSS_HOME=<path> or export JBOSS_HOME=<path>.");
                 }
             }
         }
