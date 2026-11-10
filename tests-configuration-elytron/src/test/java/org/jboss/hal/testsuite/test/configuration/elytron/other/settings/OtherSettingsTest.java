@@ -26,9 +26,13 @@ import org.jboss.hal.testsuite.fragment.AddResourceDialogFragment;
 import org.jboss.hal.testsuite.fragment.EmptyState;
 import org.jboss.hal.testsuite.fragment.FormFragment;
 import org.jboss.hal.testsuite.fragment.TableFragment;
+import org.junit.Assume;
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.By;
+import org.wildfly.extras.creaper.core.online.ModelNodeResult;
+import org.wildfly.extras.creaper.core.online.operations.Address;
 import org.wildfly.extras.creaper.core.online.operations.Values;
 
 import static org.jboss.arquillian.graphene.Graphene.waitGui;
@@ -66,6 +70,16 @@ import static org.jboss.hal.testsuite.fixtures.ElytronFixtures.policyAddress;
 @RunWith(Arquillian.class)
 public class OtherSettingsTest extends AbstractOtherSettingsTest {
 
+    protected static boolean IS_EE11_SERVER;
+
+    @BeforeClass
+    public static void determineEE11Server() throws Exception {
+        ModelNodeResult productInfoResult = operations.invoke("product-info", Address.root());
+        productInfoResult.assertSuccess();
+        String channelVersion = productInfoResult.toJSONString(true);
+        IS_EE11_SERVER = channelVersion.contains("WildFly") || channelVersion.contains("EE11");
+    }
+
     // --------------- jacc policy
 
     @Test
@@ -82,12 +96,17 @@ public class OtherSettingsTest extends AbstractOtherSettingsTest {
         addDialog.getForm().text(NAME, POL_CREATE);
         addDialog.add();
 
-        console.verifySuccess();
-        new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+        if (IS_EE11_SERVER) {
+            console.verifyError();
+        } else {
+            console.verifySuccess();
+            new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+        }
     }
 
     @Test
     public void jaccPolicyUpdate() throws Exception {
+        Assume.assumeFalse(IS_EE11_SERVER);
         if (!operations.exists(policyAddress(POL_CREATE))) {
             ModelNode empty = new ModelNode();
             empty.setEmptyObject();
@@ -102,6 +121,7 @@ public class OtherSettingsTest extends AbstractOtherSettingsTest {
 
     @Test
     public void jaccPolicyDelete() throws Exception {
+        Assume.assumeFalse(IS_EE11_SERVER);
         if (!operations.exists(policyAddress(POL_CREATE))) {
             ModelNode empty = new ModelNode();
             empty.setEmptyObject();
@@ -135,12 +155,17 @@ public class OtherSettingsTest extends AbstractOtherSettingsTest {
         addDialog.getForm().text(CLASS_NAME, ANY_STRING);
         addDialog.add();
 
-        console.verifySuccess();
-        new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+        if (IS_EE11_SERVER) {
+            console.verifyError();
+        } else {
+            console.verifySuccess();
+            new ResourceVerifier(policyAddress(POL_CREATE), client).verifyExists();
+        }
     }
 
     @Test
     public void customPolicyUpdate() throws Exception {
+        Assume.assumeFalse(IS_EE11_SERVER);
         if (!operations.exists(policyAddress(POL_CREATE))) {
             ModelNode customPolicy = new ModelNode();
             customPolicy.get(CLASS_NAME).set(ANY_STRING);
